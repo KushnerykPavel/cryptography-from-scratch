@@ -113,6 +113,26 @@ D) The modular exponentiation a^b mod n
 
 Wait for answer before moving on.
 
+**Rendering rules (critical — do not leak answers):**
+
+- **Option label** = bare answer text only. No category tags, no
+  parenthetical hints, no `(correct)` / `(common pitfall)` flags.
+- **Option description** = empty, or **neutral parallel framing** that fits
+  every option in that question identically (all four read as `"numeric
+  result"`, or all four as `"protocol property"`). Never single out the
+  right answer with phrasing like "the standard X", "the canonical Y", or a
+  topic label that matches the correct option 1:1.
+- Distractors must look as legitimate as the correct option. If you cannot
+  write neutral descriptions, write none.
+- Never echo the correct-answer line, its explanation, or the source-lesson
+  tag in a way that distinguishes options. The lesson tag in the header is
+  fine; do not repeat it next to options.
+- Reveal correct answers and "Why" explanations only in Step 7, after all 8
+  questions are answered.
+
+Self-check before sending: read option descriptions out of context. If a
+stranger could pick the right answer from descriptions alone, rewrite.
+
 ### Step 5: Track and Score
 
 Running tally:

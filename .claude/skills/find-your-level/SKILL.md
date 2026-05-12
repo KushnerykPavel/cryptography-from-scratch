@@ -32,6 +32,32 @@ Greet briefly, then jump into Round 1. Use **AskUserQuestion** for every
 question. After each round, announce area score (e.g. "Number Theory: 2/2").
 Keep commentary short. Do not explain answers until the end.
 
+### Rendering rules (critical — do not leak answers)
+
+When building `AskUserQuestion` options, follow these rules strictly:
+
+- **Option label** = the bare answer text from the markdown below
+  (e.g. `"2"`, `"Completeness, soundness, zero-knowledge"`). Do NOT add
+  category tags, hint phrases, parenthetical numbers, or commentary.
+- **Option description** = leave empty, or use **neutral parallel framing**
+  that applies equally to every option in that question (e.g. all four
+  descriptions are the same shape: `"numeric result"`, `"numeric result"`,
+  `"numeric result"`, `"numeric result"`). Never describe one option as
+  "the classic X", "the correct trinity", "the standard answer", or any
+  phrasing that singles out the right choice.
+- **Never** echo the `**Correct: ...**` line, the parenthetical explanation
+  next to it (e.g. `(343 mod 11 = 2)`, `(Sony PS3 case)`), or any topic
+  label that maps 1:1 to the correct answer.
+- Distractors must look as legitimate as the correct option. If you cannot
+  write a neutral description, write none.
+- Reveal the `**Correct: ...**` text and its parenthetical context only
+  AFTER the user submits — and only in the final per-question recap at the
+  end of the quiz, not between rounds.
+
+Self-check before sending each question: read the four option descriptions
+out of context. If a stranger could pick the right answer from descriptions
+alone, rewrite them.
+
 ---
 
 ### Round 1 — Number Theory & Modular Arithmetic
