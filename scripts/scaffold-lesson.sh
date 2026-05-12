@@ -141,7 +141,6 @@ EOF
 
 cat >"$LESSON_DIR/quiz.json" <<EOF
 {
-  "title": "$PRETTY_TITLE",
   "questions": []
 }
 EOF

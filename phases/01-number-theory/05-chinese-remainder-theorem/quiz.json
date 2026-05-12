@@ -1,4 +1,100 @@
 {
-  "title": "Chinese Remainder Theorem",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Find x with x ≡ 2 (mod 3) and x ≡ 3 (mod 5) in the range [0, 14].",
+      "options": [
+        "2, satisfying only the first congruence in the system",
+        "8, since 8 mod 3 = 2 and 8 mod 5 = 3",
+        "11, since 11 mod 3 = 2 and 11 mod 5 = 1",
+        "13, since 13 mod 3 = 1 and 13 mod 5 = 3"
+      ],
+      "correct": 1,
+      "explanation": "Check 8: 8 = 2·3+2 (✓), 8 = 1·5+3 (✓). Unique solution mod 15."
+    },
+    {
+      "stage": "pre",
+      "question": "What condition must the moduli n₁, n₂, …, nₖ satisfy for CRT to apply?",
+      "options": [
+        "All moduli must be prime numbers strictly greater than two",
+        "All moduli must be pairwise coprime (gcd of any pair equals 1)",
+        "All moduli must share at least one common prime factor each",
+        "All moduli must be powers of the same single prime number p"
+      ],
+      "correct": 1,
+      "explanation": "CRT requires pairwise coprimality: gcd(nᵢ, nⱼ) = 1 for i ≠ j. Then Z/(n₁·…·nₖ)Z ≅ ⊕ Z/nᵢZ."
+    },
+    {
+      "stage": "post",
+      "question": "CRT states that the system of congruences x ≡ aᵢ (mod nᵢ) has what kind of solution?",
+      "options": [
+        "Infinitely many incompatible solutions modulo each individual nᵢ",
+        "A unique solution modulo N = n₁·n₂·…·nₖ when nᵢ are pairwise coprime",
+        "A unique rational solution that may not be an integer modulo any nᵢ",
+        "Exactly k solutions, one for each modulus, that must agree pairwise"
+      ],
+      "correct": 1,
+      "explanation": "CRT: unique solution in Z/NZ where N = product of nᵢ, given pairwise-coprime moduli."
+    },
+    {
+      "stage": "post",
+      "question": "Why does CRT make RSA decryption ~4× faster?",
+      "options": [
+        "It replaces one mod n exponentiation with two half-size mod p, mod q ones",
+        "It caches partial products of d mod φ(n) across separate decryptions",
+        "It avoids modular exponentiation by precomputing m for every possible c",
+        "It runs decryption in parallel by splitting n into k coprime moduli"
+      ],
+      "correct": 0,
+      "explanation": "Decrypt mod p and mod q separately (each ~|n|/2 bits), then CRT-combine. Each modexp is ~8× cheaper; net ~4× speedup."
+    },
+    {
+      "stage": "post",
+      "question": "Garner's algorithm reconstructs x from residues (a₁, …, aₖ) iteratively. Why prefer it over the textbook CRT formula?",
+      "options": [
+        "It avoids computing the full product N = n₁·…·nₖ before reconstruction",
+        "It works for non-coprime moduli where the textbook formula fails outright",
+        "It uses floating-point arithmetic for speed at the cost of small errors",
+        "It returns negative representatives in the symmetric range (−N/2, N/2]"
+      ],
+      "correct": 0,
+      "explanation": "Garner builds x = a₁ + n₁·(... ) incrementally without computing N explicitly. Better numerical and cache behavior; standard in RSA-CRT implementations."
+    },
+    {
+      "stage": "post",
+      "question": "Given x ≡ 1 (mod 5) and x ≡ 2 (mod 7), what is x in [0, 34]?",
+      "options": [
+        "9, since 9 mod 5 = 4 and 9 mod 7 = 2 only partially",
+        "16, since 16 mod 5 = 1 and 16 mod 7 = 2",
+        "23, since 23 mod 5 = 3 and 23 mod 7 = 2 fails first congruence",
+        "30, since 30 mod 5 = 0 and 30 mod 7 = 2 fails first congruence"
+      ],
+      "correct": 1,
+      "explanation": "16 = 3·5+1 (✓), 16 = 2·7+2 (✓). Unique mod 35."
+    },
+    {
+      "stage": "post",
+      "question": "Why is RSA-CRT signing dangerous without fault protection?",
+      "options": [
+        "A glitch in computing s_p but not s_q lets attacker compute gcd(s^e − m, n) = p",
+        "CRT recombination uses Euler's totient which leaks the private exponent d",
+        "Garner's algorithm caches m mod p in memory, recoverable via cold-boot",
+        "CRT decryption is timing-leaky regardless of constant-time multiplication"
+      ],
+      "correct": 0,
+      "explanation": "Bellcore attack: if s_p is correct but s_q is faulted, then s^e ≢ m (mod q) but s^e ≡ m (mod p). gcd(s^e − m, n) = p factors n instantly."
+    },
+    {
+      "stage": "post",
+      "question": "Hastad's broadcast attack uses CRT against RSA with which weakness?",
+      "options": [
+        "Same plaintext m sent to k recipients with same small e and coprime moduli nᵢ",
+        "Same ciphertext c reused across k different keys sharing one prime each",
+        "Same private exponent d reused across k separate moduli to save space",
+        "Same modulus n shared across k users with different small public exponents e"
+      ],
+      "correct": 0,
+      "explanation": "If m^e fits in N = n₁·…·nₖ, CRT-combine k ciphertexts to recover m^e over integers, then take the e-th root. Padding (OAEP) defends."
+    }
+  ]
 }

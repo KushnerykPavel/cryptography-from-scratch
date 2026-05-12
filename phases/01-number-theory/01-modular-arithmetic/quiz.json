@@ -1,4 +1,100 @@
 {
-  "title": "Modular Arithmetic from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the remainder when 17 is divided by 5?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correct": 0,
+      "explanation": "17 = 3·5 + 2, so 17 mod 5 = 2. This is the everyday meaning of modulo."
+    },
+    {
+      "stage": "pre",
+      "question": "Which set of integers does `Z/12Z` represent?",
+      "options": [
+        "All integers from −12 to 12 inclusive",
+        "The set {0, 1, 2, …, 11} under arithmetic mod 12",
+        "All multiples of 12 starting from 0 upward",
+        "The set {1, 2, 3, …, 12} under arithmetic mod 12"
+      ],
+      "correct": 1,
+      "explanation": "Z/nZ denotes integers reduced mod n, giving residues {0, 1, …, n−1}. For n = 12 you get the 12-hour clock face."
+    },
+    {
+      "stage": "post",
+      "question": "When does `a ≡ b (mod n)` hold?",
+      "options": [
+        "When a equals b after both wrap around n once",
+        "When n divides the difference (a − b)",
+        "When a and b have the same number of digits modulo n",
+        "When n divides the product (a · b) exactly"
+      ],
+      "correct": 1,
+      "explanation": "Definition: a ≡ b (mod n) iff n | (a − b). Equivalently, a and b leave the same remainder when divided by n."
+    },
+    {
+      "stage": "post",
+      "question": "Which structure does `Z/nZ` form when n is prime?",
+      "options": [
+        "A commutative ring where no element has an inverse",
+        "A field where every non-zero element has an inverse",
+        "A multiplicative group that includes zero as identity",
+        "A monoid under addition with no multiplication defined"
+      ],
+      "correct": 1,
+      "explanation": "When n = p is prime, every non-zero element of Z/pZ has a multiplicative inverse, making it the finite field F_p (also written GF(p))."
+    },
+    {
+      "stage": "post",
+      "question": "Why can you reduce mod n during a long modular computation instead of waiting until the end?",
+      "options": [
+        "Because addition is associative on integers in general",
+        "Because reduction mod n is a homomorphism from Z to Z/nZ",
+        "Because Python's `%` operator returns non-negative results",
+        "Because all integers must fit into a 64-bit register"
+      ],
+      "correct": 1,
+      "explanation": "Reduction is a ring homomorphism, so it commutes with +, −, ·. Reducing intermediates keeps numbers small without changing the final result."
+    },
+    {
+      "stage": "post",
+      "question": "When does `a` have a multiplicative inverse modulo n?",
+      "options": [
+        "Always, provided a is strictly greater than zero",
+        "When gcd(a, n) equals 1, i.e. a and n are coprime",
+        "When a is strictly less than n and divides n exactly",
+        "When n is composite and a is itself a prime number"
+      ],
+      "correct": 1,
+      "explanation": "a⁻¹ mod n exists iff gcd(a, n) = 1. The Extended Euclidean Algorithm (lesson 2) computes it."
+    },
+    {
+      "stage": "post",
+      "question": "What is `7^3 mod 11`?",
+      "options": [
+        "2 (since 343 = 31·11 + 2)",
+        "5 (since 343 = 31·11 + 5)",
+        "8 (since 343 = 30·11 + 8)",
+        "9 (since 343 = 30·11 + 9)"
+      ],
+      "correct": 0,
+      "explanation": "7^3 = 343. 343 = 31·11 + 2, so 343 mod 11 = 2."
+    },
+    {
+      "stage": "post",
+      "question": "Two parties encrypt the same m with RSA using the same modulus n but different exponents e1, e2 (gcd(e1, e2) = 1). What can an attacker who captures c1, c2 recover?",
+      "options": [
+        "Nothing — RSA security holds even with a shared modulus n",
+        "Only the public exponents e1, e2 via Fermat factoring on n",
+        "The plaintext m, via Bezout coefficients s·e1 + t·e2 = 1",
+        "The private key d, via Wiener's continued-fraction attack"
+      ],
+      "correct": 2,
+      "explanation": "Common-modulus attack. Find s, t with s·e1 + t·e2 = 1 via extended Euclid, then c1^s · c2^t ≡ m^1 ≡ m (mod n). Never reuse n across users in textbook RSA."
+    }
+  ]
 }

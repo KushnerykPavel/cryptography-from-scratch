@@ -92,35 +92,37 @@ a code generator. Do not silently fill in stubs.
    - Render quiz via `AskUserQuestion`, one Q at a time, following the same
      rendering rules as `check-understanding` (bare option labels, neutral
      parallel descriptions, length parity, no answer leakage).
-   - Score 0–8. Persist to `.progress.json` under `phases.<N>.lessons.<M>`.
-   - 7–8: passed. Offer next lesson.
-   - 4–6: review weak areas before moving on.
-   - 0–3: redo the lesson.
+   - Score post questions only (0–6). Pre questions inform pacing, not
+     grading. Persist to `.progress.json` under `phases.<N>.lessons.<M>`.
+   - 5–6: passed. Offer next lesson.
+   - 3–4: review weak areas before moving on.
+   - 0–2: redo the lesson.
 7. Only after the lesson quiz: offer the next lesson. Once all lessons in a
    phase are built and quizzed, offer `/check-understanding <phase>` as the
    phase-level checkpoint.
 
-**Lesson `quiz.json` schema:**
+**Lesson `quiz.json` schema (LOCKED — matches AI Engineering from Scratch parent):**
+
+See `LESSON_TEMPLATE.md` for the full spec. Summary:
 
 ```json
 {
-  "title": "<lesson title>",
   "questions": [
     {
-      "id": 1,
-      "type": "conceptual" | "practical" | "attack",
-      "prompt": "<question text>",
-      "options": ["A text", "B text", "C text", "D text"],
-      "correct": "B",
-      "explanation": "<1-2 sentences, shown only after answer>",
-      "source": "<lesson section: Concept | Build | Attack | Use>"
+      "stage": "pre" | "post",
+      "question": "<text>",
+      "options": ["A", "B", "C", "D"],
+      "correct": <int index>,
+      "explanation": "<1-2 sentences, shown only after answer>"
     }
   ]
 }
 ```
 
-8 questions total: 4 conceptual + 3 practical + 1 attack (for primitive
-lessons). For `Learn` lessons: 5 conceptual + 3 practical, no attack.
+8 questions total: 2 `stage: "pre"` + 6 `stage: "post"`. Build lessons
+must include ≥1 attack-themed post question. Learn lessons have no attack
+requirement. `correct` is an integer index into `options` (0-based), not a
+letter. Validate schema (see `LESSON_TEMPLATE.md`) before writing the file.
 
 **When you MAY write code in a lesson directory:**
 

@@ -1,4 +1,100 @@
 {
-  "title": "Prime Generation \u2014 Trial Division to Sieves",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the smallest prime greater than 30?",
+      "options": [
+        "31, the next integer after 30 with no divisors above 1",
+        "33, since 33 = 3·11 makes it semiprime not prime",
+        "37, skipping composite 31 which factors as a product",
+        "41, the next safe prime exceeding 30 in residue class"
+      ],
+      "correct": 0,
+      "explanation": "31 is prime: not divisible by 2, 3, or 5; √31 < 6 so trial division ends."
+    },
+    {
+      "stage": "pre",
+      "question": "How does trial division test n for primality?",
+      "options": [
+        "Check whether every prime p ≤ √n divides n; if none does, n is prime",
+        "Check whether n divides every prime p ≤ √n cleanly leaving zero remainder",
+        "Check whether n^2 mod each small prime equals zero across all bases",
+        "Check whether gcd(n, k) = 1 for every k ≤ n/2 in the integer range"
+      ],
+      "correct": 0,
+      "explanation": "If no prime p ≤ √n divides n, then n is prime. Otherwise we'd already have found a factor smaller than √n."
+    },
+    {
+      "stage": "post",
+      "question": "What is the time complexity of trial division for testing n?",
+      "options": [
+        "O(√n / ln n) using the prime number theorem to count primes up to √n",
+        "O(log² n) by reducing the problem to modular exponentiation only",
+        "O(n) checking every integer in the range [2, n − 1] once each",
+        "O(n log log n) matching the Sieve of Eratosthenes complexity exactly"
+      ],
+      "correct": 0,
+      "explanation": "Primes up to √n number π(√n) ≈ √n / ln(√n). Trial division does one modular operation per candidate."
+    },
+    {
+      "stage": "post",
+      "question": "What does the Sieve of Eratosthenes compute, and in what time?",
+      "options": [
+        "All primes up to N in O(N log log N) time and O(N) memory",
+        "Primality of a single n in O(log² n) deterministic time per query",
+        "All composites up to N in O(N) time using only constant extra memory",
+        "Smallest prime factor of n in O(N) time by trial division up to N"
+      ],
+      "correct": 0,
+      "explanation": "Eratosthenes marks multiples of each prime up to √N. Total work O(N log log N), memory O(N)."
+    },
+    {
+      "stage": "post",
+      "question": "How does the segmented sieve enable finding primes near 2^60 without storing 2^60 bytes?",
+      "options": [
+        "Sieve fixed-size windows [L, R] using only primes up to √R, requiring O(√R) memory",
+        "Skip multiples of 2, 3, 5, 7 first, then sieve a much smaller residual interval",
+        "Trial-divide each candidate by all primes computed from a small fixed bootstrap sieve",
+        "Replace the boolean array with a Bloom filter that probabilistically identifies primes"
+      ],
+      "correct": 0,
+      "explanation": "Sieve a window [L, L+W] at a time using primes up to √(L+W). Memory = O(W + √R), independent of L. Standard for finding large primes."
+    },
+    {
+      "stage": "post",
+      "question": "How many primes exist below 100?",
+      "options": [
+        "21, including 1 as the smallest prime by older convention",
+        "25, matching π(100) = 25 from the prime number theorem",
+        "27, counting 2 and including some pseudoprime composites",
+        "30, approximating π(100) ≈ 100/ln(100) = 21.7 rounded up"
+      ],
+      "correct": 1,
+      "explanation": "π(100) = 25. Primes ≤ 100: {2,3,5,7,…,97}."
+    },
+    {
+      "stage": "post",
+      "question": "Why is trial division alone insufficient to generate cryptographic primes?",
+      "options": [
+        "For 2048-bit n, √n ≈ 2^1024 candidates make trial division infeasible to complete",
+        "Trial division yields composites for some inputs because of Carmichael number behavior",
+        "Trial division finds factors but cannot certify primality of any specific composite",
+        "Trial division uses floating-point square root, introducing rounding errors at scale"
+      ],
+      "correct": 0,
+      "explanation": "√n for cryptographic n is ~2^1024 — far beyond any feasible loop. Use trial division with small primes for screening, then Miller-Rabin (lesson 10)."
+    },
+    {
+      "stage": "post",
+      "question": "OpenSSL once generated RSA primes using a buggy random-number source on Debian. What was the consequence?",
+      "options": [
+        "Only 32,768 distinct keys were ever generated; mass key recovery via gcd of moduli",
+        "Random bias caused some primes to be Carmichael numbers, breaking decryption",
+        "Trial division failed silently, producing composite moduli accepted by servers",
+        "Sieve-based generation skipped 7-smooth primes, leading to weak p − 1 structure"
+      ],
+      "correct": 0,
+      "explanation": "Debian OpenSSL 2006–2008 had a broken PRNG seeding only with PID. ~32K possible keys. Attackers gcd'd public moduli to factor them. Bad prime *generation* (RNG), not bad primality testing."
+    }
+  ]
 }

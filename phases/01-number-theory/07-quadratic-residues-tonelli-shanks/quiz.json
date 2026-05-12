@@ -1,4 +1,100 @@
 {
-  "title": "Quadratic Residues & Tonelli-Shanks",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Is 2 a quadratic residue mod 7?",
+      "options": [
+        "Yes, since 2 = 3² mod 7 (9 mod 7 = 2)",
+        "No, since no x in {1,…,6} satisfies x² ≡ 2 (mod 7)",
+        "Yes, since 2 is itself a square in the integers (√2 is real)",
+        "No, since only odd residues can be squares modulo primes p > 2"
+      ],
+      "correct": 0,
+      "explanation": "3² = 9 ≡ 2 (mod 7). Also 4² = 16 ≡ 2. So 2 is a QR mod 7."
+    },
+    {
+      "stage": "pre",
+      "question": "How many quadratic residues exist in `(Z/pZ)*` for an odd prime p?",
+      "options": [
+        "p, since every residue squares to something in the field",
+        "(p − 1)/2, since x and −x square to the same value",
+        "p − 1, half the field plus an extra from the identity element",
+        "(p + 1)/2, including zero as a quadratic residue by convention"
+      ],
+      "correct": 1,
+      "explanation": "Map x ↦ x² is 2-to-1 on (Z/pZ)* since x and −x have the same square. So exactly (p−1)/2 distinct non-zero QRs."
+    },
+    {
+      "stage": "post",
+      "question": "Euler's criterion identifies QRs how?",
+      "options": [
+        "a is a QR mod p iff a^((p−1)/2) ≡ 1 (mod p); otherwise it ≡ −1",
+        "a is a QR mod p iff a^(p−1) ≡ 1 (mod p) by Fermat's little theorem",
+        "a is a QR mod p iff a divides p − 1 cleanly without remainder",
+        "a is a QR mod p iff gcd(a, p−1) = 1 in the multiplicative group"
+      ],
+      "correct": 0,
+      "explanation": "Euler's criterion: a^((p−1)/2) ≡ +1 (mod p) if a is a QR, ≡ −1 if non-QR (a ≠ 0, p odd prime)."
+    },
+    {
+      "stage": "post",
+      "question": "Tonelli-Shanks computes what?",
+      "options": [
+        "Modular inverse a⁻¹ mod p when gcd(a, p) = 1 in logarithmic time",
+        "Square root x with x² ≡ a (mod p) when a is a quadratic residue",
+        "Discrete log x with g^x ≡ a (mod p) for a given generator g",
+        "Primitive root g such that g generates (Z/pZ)* of full order p − 1"
+      ],
+      "correct": 1,
+      "explanation": "Tonelli-Shanks: given a QR a mod p, find x with x² ≡ a (mod p). Handles all odd primes; runs in O(log² p)."
+    },
+    {
+      "stage": "post",
+      "question": "For p ≡ 3 (mod 4), modular square root has a closed form. What is it for QR a?",
+      "options": [
+        "x ≡ a^((p+1)/4) (mod p), which avoids Tonelli-Shanks's loop entirely",
+        "x ≡ a^((p−1)/2) (mod p), giving the Euler criterion value as root",
+        "x ≡ a^((p+1)/2) (mod p), one extra exponentiation beyond Euler",
+        "x ≡ a^(p−2) (mod p), the Fermat-inverse-based fallback for roots"
+      ],
+      "correct": 0,
+      "explanation": "When p ≡ 3 (mod 4), x = a^((p+1)/4) mod p. Check: x² = a^((p+1)/2) = a · a^((p−1)/2) ≡ a · 1 = a (mod p)."
+    },
+    {
+      "stage": "post",
+      "question": "Find a square root of 3 mod 11 (i.e. x with x² ≡ 3).",
+      "options": [
+        "x = 4, since 4² = 16 ≡ 5 (mod 11) which differs from 3",
+        "x = 5, since 5² = 25 = 22 + 3 ≡ 3 (mod 11)",
+        "x = 6, since 6² = 36 = 33 + 3 ≡ 3 (mod 11) ✓ same as ±5",
+        "x = 7, since 7² = 49 ≡ 5 (mod 11) which is not the target"
+      ],
+      "correct": 1,
+      "explanation": "5² = 25 ≡ 3 (mod 11). Also (−5) ≡ 6, and 6² = 36 ≡ 3 (mod 11). Both roots: ±5 ≡ {5, 6}."
+    },
+    {
+      "stage": "post",
+      "question": "Why is square-root mod a composite n = p·q believed to be as hard as factoring?",
+      "options": [
+        "Computing four roots mod pq via CRT requires p, q separately, and recovering distinct ±r mod p and ±s mod q yields gcd(r−s, n) = a factor",
+        "Square roots mod composites do not exist; the problem is provably unsolvable for all composite n",
+        "Tonelli-Shanks succeeds mod composites only when n is a Carmichael number, which is rare for RSA",
+        "Quadratic residue testing mod composites equals discrete log, which is harder than factoring asymptotically"
+      ],
+      "correct": 0,
+      "explanation": "A square-root oracle gives you both √a (mod p) and (mod q). Two random independent roots r, s with r² ≡ s² ≡ a give gcd(r ± s, n) = p or q. Used in Rabin cryptosystem."
+    },
+    {
+      "stage": "post",
+      "question": "Goldwasser-Micali encryption uses QR hardness mod composite n. What does the attacker need to distinguish to break it?",
+      "options": [
+        "Square roots from non-square roots — equivalent to computing them outright",
+        "QRs from QNRs with Jacobi symbol +1 — believed hard without factoring n",
+        "Even-indexed residues from odd-indexed ones in the cyclic subgroup",
+        "Primes p from composites n efficiently — requires polynomial-time AKS"
+      ],
+      "correct": 1,
+      "explanation": "Quadratic Residuosity Problem: given a with Jacobi(a/n)=+1, decide if a is a true QR mod n=pq or a pseudosquare. Believed as hard as factoring."
+    }
+  ]
 }

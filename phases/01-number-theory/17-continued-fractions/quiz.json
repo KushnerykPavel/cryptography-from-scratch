@@ -1,4 +1,100 @@
 {
-  "title": "Continued Fractions for Cryptanalysis",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Continued fraction expansion of `7/22`?",
+      "options": [
+        "[0; 3, 7], since 7/22 = 0 + 1/(3 + 1/7) decomposes cleanly via Euclid",
+        "[0; 3, 6], since 7/22 ≈ 0.318 reduces via floor-and-flip sequence to this list",
+        "[7; 22], a single layer of the integer parts before any inversion happens",
+        "[0; 22, 7], reading the divisor sequence directly from naive long division"
+      ],
+      "correct": 0,
+      "explanation": "7/22: 22 = 3·7 + 1, 7 = 7·1 + 0. Convergent sequence yields [0; 3, 7]."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a convergent of a continued fraction?",
+      "options": [
+        "A best rational approximation pₙ/qₙ obtained from truncating after n terms",
+        "A geometric series formed by multiplying successive partial quotients together",
+        "A continued radical that arises after rationalizing each denominator step",
+        "The decimal expansion of the original real number truncated to n digits"
+      ],
+      "correct": 0,
+      "explanation": "Convergent pₙ/qₙ from truncating [a₀; a₁, …, aₙ]. Best rational approximation: no p'/q' with q' ≤ qₙ is closer to x."
+    },
+    {
+      "stage": "post",
+      "question": "Legendre's theorem on continued fractions states: if `|x − p/q| < 1/(2q²)`, then:",
+      "options": [
+        "p/q is a convergent of the continued fraction expansion of x — exact match",
+        "p/q approximates x within machine epsilon for q-bit floating-point arithmetic",
+        "p/q must be a Stern-Brocot mediant of two consecutive convergents of x",
+        "p/q gives a Bezout coefficient pair via the Euclidean algorithm on (p, q)"
+      ],
+      "correct": 0,
+      "explanation": "Legendre: any rational p/q within 1/(2q²) of x is a convergent of x's CF. Core of Wiener's attack."
+    },
+    {
+      "stage": "post",
+      "question": "Wiener's attack on RSA recovers `d` when:",
+      "options": [
+        "d < n^(1/4)/3 — small private exponent appears as a convergent of e/n",
+        "d > n^(1/2) — large private exponent reveals d via Pollard-rho on (e, d)",
+        "d shares small gcd with φ(n) — Bezout coefficients leak d through Euler",
+        "d ≡ 1 (mod p) — d's residue equals one allowing direct CRT factoring"
+      ],
+      "correct": 0,
+      "explanation": "Wiener (1990): if d < n^(1/4)/3, then k/d is a convergent of e/n (where ed = kφ(n) + 1). Walk convergents of e/n, test each, recover d."
+    },
+    {
+      "stage": "post",
+      "question": "Why does using a small private exponent `d` (e.g. d = 3) appeal to implementers, but break RSA?",
+      "options": [
+        "Small d speeds decryption ×log(n)/log(d); but d < n^(1/4) makes Wiener trivial",
+        "Small d enables CRT decryption with two passes only, halving the work cleanly",
+        "Small d prevents timing attacks since the exponent is too short to leak any bits",
+        "Small d compresses certificate size in TLS handshake messages by 256 bytes each"
+      ],
+      "correct": 0,
+      "explanation": "Decryption cost is O(log d). Picking small d would 100× speed it up, but Wiener breaks it. Modern keygen picks d ≈ n; small e (65537) is fine since encryption is rarely the bottleneck."
+    },
+    {
+      "stage": "post",
+      "question": "How does CFRAC (Continued Fraction Factorization) factor n?",
+      "options": [
+        "Use convergents of √n to find x² ≡ smooth (mod n), then linear-algebra for squares",
+        "Use convergents of e/n to recover d, then derive p, q from φ(n) = ed − 1",
+        "Use convergents of 1/n to detect periodicity in the decimal expansion of 1/n",
+        "Use convergents of (n − 1)/n to recover Carmichael λ(n) and split via Euler"
+      ],
+      "correct": 0,
+      "explanation": "CFRAC (Morrison-Brillhart 1975): x² ≡ y (mod n) from convergents of √n give small |y|, more likely smooth. Predecessor of QS; L_n[1/2, √2] complexity."
+    },
+    {
+      "stage": "post",
+      "question": "What is the period of the continued fraction expansion of `√d` for non-square d?",
+      "options": [
+        "Always periodic; period bounded by O(√d · log d) — Lagrange's theorem on quadratic irrationals",
+        "Always finite; the algorithm terminates after O(log d) iterations for any d",
+        "Always infinite and non-periodic; √d has no exploitable structure as a CF",
+        "Periodic only when d ≡ 1 (mod 4); otherwise infinite and aperiodic in nature"
+      ],
+      "correct": 0,
+      "explanation": "Lagrange: real x has eventually periodic CF iff x is a quadratic irrational. √d for non-square d: purely periodic after a₀ = ⌊√d⌋."
+    },
+    {
+      "stage": "post",
+      "question": "Boneh-Durfee improved Wiener's bound to which value via Coppersmith lattice methods?",
+      "options": [
+        "d < n^0.292 — modest gain over Wiener's n^0.25, uses small-roots lattice attack",
+        "d < n^0.5 — square-root bound, matching the BSGS / Pollard-rho generic limit",
+        "d < n^0.75 — leaves Wiener-style attacks behind by exploiting partial-key leakage",
+        "d < n — any d is recoverable in polynomial time given sufficient ciphertext samples"
+      ],
+      "correct": 0,
+      "explanation": "Boneh-Durfee (1999): d < n^0.292 via Coppersmith's small-roots / lattice. Conjectured tight bound is d < n^(1/2). Practical lesson: pick d ≈ n."
+    }
+  ]
 }

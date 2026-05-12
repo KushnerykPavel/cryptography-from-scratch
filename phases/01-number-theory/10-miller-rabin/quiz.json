@@ -1,4 +1,100 @@
 {
-  "title": "Miller-Rabin Primality Testing",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why does the Fermat primality test fail on Carmichael numbers like 561?",
+      "options": [
+        "Carmichael numbers satisfy a^(n−1) ≡ 1 (mod n) for every base a coprime to n",
+        "Carmichael numbers are primes that fail Fermat for a small bounded set of bases",
+        "Fermat's test fails on all even numbers regardless of being Carmichael ones",
+        "Carmichael numbers always divide their own a^(n−1) − 1, giving zero remainder"
+      ],
+      "correct": 0,
+      "explanation": "Carmichael composites pass Fermat for every coprime base — undetectable by Fermat. Miller-Rabin fixes this."
+    },
+    {
+      "stage": "pre",
+      "question": "Write n − 1 = 2^s · d with d odd. For n = 13, what are s, d?",
+      "options": [
+        "s = 1, d = 6, since 12 = 2¹·6 splits the even factor once",
+        "s = 2, d = 3, since 12 = 2²·3 fully extracts the power of two",
+        "s = 3, d = 1.5, since 12 = 2³·1.5 distributes the factor three times",
+        "s = 4, d = 0.75, since 12 / 16 = 0.75 keeps d as a fractional value"
+      ],
+      "correct": 1,
+      "explanation": "n − 1 = 12 = 4·3 = 2²·3. So s = 2, d = 3."
+    },
+    {
+      "stage": "post",
+      "question": "Miller-Rabin tests `n` by checking which property of base `a`?",
+      "options": [
+        "a^d ≡ 1 (mod n) OR a^(2^r · d) ≡ −1 (mod n) for some r ∈ [0, s−1]",
+        "a^(n−1) ≡ 1 (mod n) holds for every base a in the range [2, n − 2]",
+        "gcd(a^d − 1, n) > 1 for at least one round chosen from random bases",
+        "a^d mod n equals exactly d for each randomly chosen witness base a"
+      ],
+      "correct": 0,
+      "explanation": "Miller-Rabin: write n−1 = 2^s·d (d odd). a is a witness for compositeness if a^d ≢ 1 and a^(2^r·d) ≢ −1 (mod n) for all r ∈ [0, s−1]."
+    },
+    {
+      "stage": "post",
+      "question": "For a composite n, what fraction of bases a ∈ [2, n − 2] are Miller-Rabin liars (falsely declare prime)?",
+      "options": [
+        "At most 1/4 — proven bound, hence error ≤ (1/4)^k after k rounds",
+        "At most 1/2 — same bound as Solovay-Strassen primality testing",
+        "Exactly 0 — Miller-Rabin is deterministic for all composite numbers",
+        "Up to 1 — Miller-Rabin fails entirely on strong Carmichael composites"
+      ],
+      "correct": 0,
+      "explanation": "Rabin's theorem: liars ≤ φ(n)/4 < n/4. After k independent witnesses, error ≤ 4^{−k}."
+    },
+    {
+      "stage": "post",
+      "question": "For n < 3,317,044,064,679,887,385,961,981, which fixed bases give a deterministic Miller-Rabin?",
+      "options": [
+        "{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37} — proven by Sorenson & Webster (2015)",
+        "{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 41} — a slight variant covering more n",
+        "{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 43} — different prime set giving same range",
+        "{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 47} — common implementation choice"
+      ],
+      "correct": 0,
+      "explanation": "Sorenson-Webster 2015: bases {2,3,5,7,11,13,17,19,23,29,31,37} are deterministic up to ~3.3·10²⁴. Used in many libraries."
+    },
+    {
+      "stage": "post",
+      "question": "Run Miller-Rabin on n = 9 with base a = 2. Witness?",
+      "options": [
+        "Yes — n − 1 = 8 = 2³·1, a^1 = 2, a^2 = 4, a^4 = 16 ≡ 7 (none equal ±1)",
+        "No — 2^8 mod 9 equals 4, so n looks prime under one round at base 2",
+        "Yes — 2^9 ≡ 2 (mod 9), and 2 ≢ 2 mod 9 makes 2 a Fermat liar",
+        "No — gcd(2, 9) = 1 implies a is not a witness to compositeness here"
+      ],
+      "correct": 0,
+      "explanation": "n−1 = 8 = 2³·1, so s=3, d=1. 2^1 = 2 ≢ ±1 (mod 9). 2^2 = 4 ≢ ±1. 2^4 = 16 ≡ 7 ≢ ±1. Witness — n is composite (correctly: 9 = 3²)."
+    },
+    {
+      "stage": "post",
+      "question": "Why prefer Miller-Rabin over the Fermat test in production RSA keygen?",
+      "options": [
+        "Miller-Rabin's worst-case liar fraction is 1/4; Fermat has no such bound (Carmichaels)",
+        "Miller-Rabin runs in O(log n) modular exponentiations; Fermat runs in O(log² n)",
+        "Miller-Rabin handles even n correctly while Fermat fails on every even input",
+        "Miller-Rabin avoids modular exponentiation entirely using only Jacobi symbols"
+      ],
+      "correct": 0,
+      "explanation": "Fermat has no upper bound on liars — Carmichael numbers fool every coprime base. Miller-Rabin proven ≤ 1/4 liars worst case."
+    },
+    {
+      "stage": "post",
+      "question": "ROCA (Infineon TPM, 2017) generated RSA primes of the form `k·M + (65537^a mod M)` — a structure detectable from the public key. What does the attack exploit?",
+      "options": [
+        "Limited 'address space' of valid primes; Coppersmith factoring recovers a from N",
+        "Miller-Rabin liars in the chosen base set; switching bases factors N",
+        "Carmichael numbers slipped through the primality check during key generation",
+        "Bias in modular square root used during prime construction inside the chip"
+      ],
+      "correct": 0,
+      "explanation": "ROCA: primes have specific algebraic form, so N = pq has known structure. Coppersmith's small-roots lattice recovers a in seconds for 512-bit keys, hours for 1024-bit, ~$40K for 2048-bit. Fix: uniform random primes."
+    }
+  ]
 }

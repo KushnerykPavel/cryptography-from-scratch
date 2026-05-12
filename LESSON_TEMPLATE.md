@@ -17,6 +17,7 @@ NN-lesson-name/
 │   └── lesson.ipynb       (Jupyter for experimentation)
 ├── docs/
 │   └── en.md              (lesson documentation)
+├── quiz.json              (pre/post lesson quiz — schema below)
 └── outputs/
     ├── prompt-*.md
     ├── skill-*.md
@@ -104,6 +105,63 @@ Code must pass all vectors in `tests/vectors.json`.]
 - [Resource 1](url) — [why it's worth reading]
 - [Resource 2](url) — [why it's worth reading]
 ```
+
+## Quiz Format (`quiz.json`)
+
+**Schema is locked.** Matches the parent project (AI Engineering from
+Scratch) so cross-project tooling stays compatible. Do not introduce new
+fields. Do not rename existing fields.
+
+```json
+{
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Question text (one or two sentences).",
+      "options": [
+        "Option A text",
+        "Option B text",
+        "Option C text",
+        "Option D text"
+      ],
+      "correct": 1,
+      "explanation": "Why the correct answer is correct, 1–2 sentences. Shown only after the learner answers."
+    }
+  ]
+}
+```
+
+Field rules:
+
+- `stage` — `"pre"` (before reading the lesson) or `"post"` (after). Pre
+  questions test prior knowledge / setup; post questions test the lesson
+  content.
+- `question` — string. The prompt. No markdown headers.
+- `options` — array of 3 or 4 strings. **Length parity required:** all
+  options within ~25% character count of each other. Distractors must look
+  legitimate. Never single out the correct option by length or phrasing.
+- `correct` — integer index into `options` (0-based). Not a letter.
+- `explanation` — 1–2 sentences. Revealed only after the user answers.
+
+Question count per lesson:
+
+- **Build lessons:** 2 pre + 6 post = 8 total. Of the 6 post, ≥1 must be
+  an attack-themed question (textbook RSA pitfall, ECDSA nonce reuse,
+  AES-ECB pattern leak, biased Gaussian sampler, etc).
+- **Learn lessons:** 2 pre + 6 post = 8 total. No attack requirement.
+
+Validation before writing `quiz.json`:
+
+1. JSON parses.
+2. Every question has all six fields.
+3. `correct` is integer in `[0, len(options))`.
+4. `len(options)` ∈ {3, 4}.
+5. Option-length parity holds (max length ≤ 1.25 × min length).
+6. No option string contains the substring `"(correct)"`, `"correct"`,
+   or any hint phrasing referencing the answer.
+
+If any check fails, do not write the file. Surface the failures and ask
+the user to confirm before relaxing a rule.
 
 ## Code File Guidelines
 

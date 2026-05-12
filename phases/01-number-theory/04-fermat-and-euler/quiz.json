@@ -1,4 +1,100 @@
 {
-  "title": "Fermat's Little Theorem & Euler's Theorem",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "If p is prime and `gcd(a, p) = 1`, what does Fermat's Little Theorem say about `a^(p-1) mod p`?",
+      "options": [
+        "It equals 0, since p divides a^(p-1) for all a coprime to p",
+        "It equals 1, the multiplicative identity of the finite field F_p",
+        "It equals a, since the exponent reduces the base back to itself",
+        "It equals p − 1, the maximum residue in the field F_p"
+      ],
+      "correct": 1,
+      "explanation": "FLT: a^(p-1) ≡ 1 (mod p) when p is prime and gcd(a, p) = 1."
+    },
+    {
+      "stage": "pre",
+      "question": "What is `φ(12)`?",
+      "options": [
+        "2, counting only the primes below 12",
+        "4, counting integers in [1,12] coprime to 12",
+        "6, counting integers in [1,12] less than 12/2",
+        "11, counting all positive integers less than 12"
+      ],
+      "correct": 1,
+      "explanation": "φ(12) counts integers in [1,12] coprime to 12: {1, 5, 7, 11}, so φ(12) = 4."
+    },
+    {
+      "stage": "post",
+      "question": "Euler's theorem generalizes FLT how?",
+      "options": [
+        "For any modulus n and any a, a^n ≡ 1 (mod n) regardless of gcd",
+        "For any n and a with gcd(a, n) = 1, a^φ(n) ≡ 1 (mod n)",
+        "For any prime power p^k, a^(p^k − 1) ≡ 1 (mod p^k) for all a",
+        "For any composite n, a^(n−1) ≡ 1 (mod n) if a is non-zero"
+      ],
+      "correct": 1,
+      "explanation": "Euler: a^φ(n) ≡ 1 (mod n) when gcd(a, n) = 1. FLT is the special case n = p prime, where φ(p) = p − 1."
+    },
+    {
+      "stage": "post",
+      "question": "How does RSA decryption rely on Euler's theorem?",
+      "options": [
+        "Key generation picks d with e·d ≡ 1 (mod φ(n)); then m^(ed) ≡ m (mod n)",
+        "Encryption picks e with e·d ≡ φ(n) (mod n); decryption inverts via FLT",
+        "Decryption uses d = e^φ(n) mod n, leveraging the totient as the inverse",
+        "Signing uses Carmichael's function λ(n) which equals φ(n) for any RSA n"
+      ],
+      "correct": 0,
+      "explanation": "RSA: m^(e·d) = m^(1 + k·φ(n)) = m · (m^φ(n))^k ≡ m · 1 ≡ m (mod n) by Euler when gcd(m, n) = 1."
+    },
+    {
+      "stage": "post",
+      "question": "Compute `2^100 mod 13` using FLT.",
+      "options": [
+        "2, since 2^4 ≡ 3 and 100 = 25·4 reduces to 2",
+        "3, since 100 ≡ 4 (mod 12), so 2^100 ≡ 2^4 = 16 ≡ 3 (mod 13)",
+        "5, since 2^6 ≡ 12 and 100 ≡ 4 (mod 6) gives 2^4 = 16 ≡ 5",
+        "8, since 2^100 wraps modulo 13 to one less than half the modulus"
+      ],
+      "correct": 1,
+      "explanation": "FLT: 2^12 ≡ 1 (mod 13). 100 = 8·12 + 4, so 2^100 ≡ 2^4 = 16 ≡ 3 (mod 13)."
+    },
+    {
+      "stage": "post",
+      "question": "What is `7^222 mod 11`?",
+      "options": [
+        "1, since 222 = 22·10 + 2 but FLT cycles every 10 reducing this to 1",
+        "5, since 222 ≡ 2 (mod 10) so 7^222 ≡ 7^2 = 49 ≡ 5 (mod 11)",
+        "7, since 222 ≡ 1 (mod 10) so the result returns the original base",
+        "9, since 222 ≡ 3 (mod 10) so 7^222 ≡ 7^3 = 343 ≡ 2 (mod 11)"
+      ],
+      "correct": 1,
+      "explanation": "FLT: 7^10 ≡ 1 (mod 11). 222 = 22·10 + 2, so 7^222 ≡ 7^2 = 49 = 4·11 + 5 ≡ 5 (mod 11)."
+    },
+    {
+      "stage": "post",
+      "question": "FLT also gives a primality test. What does the Fermat test do?",
+      "options": [
+        "Returns prime iff a^(n−1) ≡ 1 (mod n) for one randomly chosen a coprime to n",
+        "Returns composite iff a^(n−1) ≡ 1 (mod n) for the smallest prime a < n",
+        "Returns prime iff a^n ≡ a (mod n) for every base a in {1, 2, …, n−1}",
+        "Returns composite iff gcd(a, n) > 1 for at least one randomly chosen a"
+      ],
+      "correct": 0,
+      "explanation": "Fermat test: pick a coprime to n, check a^(n−1) ≡ 1 (mod n). If not, n is composite. If yes, n is *probably* prime."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the Fermat primality test broken — what are Carmichael numbers?",
+      "options": [
+        "Composites n where a^(n−1) ≡ 1 (mod n) for every a coprime to n",
+        "Primes p where a^(p−1) ≡ 1 (mod p) fails for some non-trivial base a",
+        "Numbers n where φ(n) coincidentally equals n − 1 despite n being composite",
+        "Composites n with a single large prime factor that escapes trial division"
+      ],
+      "correct": 0,
+      "explanation": "Carmichael numbers (561, 1105, 1729, …) fool Fermat for every coprime base. Miller-Rabin (lesson 10) fixes this with the strong-witness test."
+    }
+  ]
 }

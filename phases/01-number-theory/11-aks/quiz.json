@@ -1,4 +1,100 @@
 {
-  "title": "AKS & Provable Primality",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does 'deterministic polynomial-time primality test' mean?",
+      "options": [
+        "Algorithm outputs prime/composite with 100% certainty in time polynomial in log n",
+        "Algorithm outputs the smallest prime factor of n using random oracle access",
+        "Algorithm needs exponential time but never errs on prime / composite inputs",
+        "Algorithm runs in O(log n) time and answers correctly only with high probability"
+      ],
+      "correct": 0,
+      "explanation": "Deterministic + polynomial-time in log n + always correct. AKS (2002) was the first."
+    },
+    {
+      "stage": "pre",
+      "question": "Before AKS, what was the status of deterministic primality testing?",
+      "options": [
+        "Best deterministic test was conditional on Generalized Riemann Hypothesis (Miller)",
+        "Best test was sub-exponential and unconditional via the Quadratic Sieve method",
+        "All deterministic tests were exponential; no polynomial algorithm existed",
+        "Miller-Rabin was already deterministic when checking enough fixed-base witnesses"
+      ],
+      "correct": 0,
+      "explanation": "Pre-2002: Miller's deterministic test was poly-time but assumed GRH. APR test was sub-exponential. AKS gave the first unconditional polynomial deterministic test."
+    },
+    {
+      "stage": "post",
+      "question": "AKS is based on which identity?",
+      "options": [
+        "(X + a)^n ≡ X^n + a (mod n, X^r − 1) iff n is prime (for suitable r, a)",
+        "n^(n−1) ≡ 1 (mod n) for every coprime base, iff n is prime (Fermat-style)",
+        "Σ_{k=1}^{n} k^(n−1) ≡ −1 (mod n) iff n is a prime by Wilson generalization",
+        "Π_{a=1}^{n−1} (X − a) ≡ X^(n−1) − 1 (mod n) iff n is prime (Lagrange)"
+      ],
+      "correct": 0,
+      "explanation": "AKS core identity: for n > 1 and gcd(a, n) = 1, (X+a)^n ≡ X^n + a (mod n) in Z[X]/(X^r − 1) iff n is prime (for suitable r and enough a's)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the runtime of the original AKS algorithm in `b = log n` bits?",
+      "options": [
+        "O(b^12) — later improved to Õ(b^6) by Lenstra-Pomerance and other refinements",
+        "O(b^2) — same as schoolbook multiplication of two n-bit integers exactly",
+        "O(b) — linear in the bit length but with massive hidden constants in practice",
+        "O(2^b) — exponential because AKS sweeps every possible witness base a"
+      ],
+      "correct": 0,
+      "explanation": "Original AKS: Õ(b^12). Lenstra-Pomerance variant: Õ(b^6). Polynomial, but vastly slower than Miller-Rabin in practice."
+    },
+    {
+      "stage": "post",
+      "question": "Why is AKS rarely used in production cryptography?",
+      "options": [
+        "Constant factors dwarf Miller-Rabin; MR's 4^{−k} error suffices for keygen",
+        "AKS only works for primes of special form like Mersenne or Fermat primes",
+        "AKS leaks the bit-length of n via timing channels in its polynomial loop",
+        "AKS depends on the Generalized Riemann Hypothesis, like the Miller test"
+      ],
+      "correct": 0,
+      "explanation": "Miller-Rabin with 40+ rounds gives error < 2^−80 in milliseconds. AKS takes minutes-to-hours on cryptographic-sized n. Theoretically beautiful, practically dominated by MR + ECPP for certification."
+    },
+    {
+      "stage": "post",
+      "question": "What does ECPP (Elliptic Curve Primality Proving) give that AKS does not?",
+      "options": [
+        "A short verifiable certificate of primality that anyone can recheck quickly",
+        "A faster deterministic test running in O(log² n) time without GRH assumptions",
+        "A randomized test with provable success probability above 99.99% per attempt",
+        "A test that works for composite n by returning the smallest non-trivial factor"
+      ],
+      "correct": 0,
+      "explanation": "ECPP produces a primality certificate (Atkin-Morain). Verifying is O(log⁴ n); generating is heuristically Õ(log⁴ n). Used to certify primes in databases."
+    },
+    {
+      "stage": "post",
+      "question": "The choice of `r` in AKS satisfies: order of n modulo r is greater than what?",
+      "options": [
+        "log² n — the threshold from the AKS theorem that guarantees correctness",
+        "log n — sufficient for the simpler Fouvry-style variants but not full AKS",
+        "√n — chosen to balance the size of the polynomial ring against trial division",
+        "n^(1/3) — picked to minimize total work across the AKS verification loop"
+      ],
+      "correct": 0,
+      "explanation": "AKS picks smallest r with ord_r(n) > log² n. Such r exists with r = O(log⁵ n) (Fouvry's theorem)."
+    },
+    {
+      "stage": "post",
+      "question": "An attacker tricks a verifier into accepting a composite `n` as prime using which strategy?",
+      "options": [
+        "Submit a forged ECPP-style certificate referencing a non-existent prime factor",
+        "Exploit Miller-Rabin liars for n by choosing bases that happen to be silent witnesses",
+        "Run AKS on a known Carmichael composite knowing the test will misclassify it",
+        "Trick the verifier into trial-dividing only by primes that miss n's small factors"
+      ],
+      "correct": 0,
+      "explanation": "Forged certificates: if the verifier doesn't recursively check each prime factor cited, attacker can lie. Real primality proofs (ECPP, Pratt) are self-verifying — every cited prime gets its own certificate."
+    }
+  ]
 }

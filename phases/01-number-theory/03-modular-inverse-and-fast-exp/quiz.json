@@ -1,4 +1,100 @@
 {
-  "title": "Modular Inverse & Fast Exponentiation",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Compute `3^4 mod 7` by hand.",
+      "options": [
+        "1, since 81 = 11·7 + 4 then reduced once more",
+        "4, since 81 = 11·7 + 4",
+        "5, since 81 = 10·7 + 11 wraps once",
+        "6, since 81 mod 7 lands one below the modulus"
+      ],
+      "correct": 1,
+      "explanation": "3^4 = 81. 81 = 11·7 + 4, so 81 mod 7 = 4."
+    },
+    {
+      "stage": "pre",
+      "question": "Why would you compute `a^k mod n` instead of `(a^k) mod n` separately?",
+      "options": [
+        "To avoid floating-point error in intermediate exponentiations",
+        "To keep intermediates bounded; a^k itself can have billions of digits",
+        "To make the result fit into a fixed 32-bit integer representation",
+        "To ensure the result is always positive regardless of sign of a"
+      ],
+      "correct": 1,
+      "explanation": "For RSA k ≈ 2^2048, so a^k would have ~10^617 digits. Reducing each step keeps multiplicands bounded by n²."
+    },
+    {
+      "stage": "post",
+      "question": "Square-and-multiply computes `a^k mod n` in how many multiplications?",
+      "options": [
+        "Linear in k, requiring one multiplication per increment of k",
+        "Logarithmic in k, roughly 2·log₂(k) multiplications total",
+        "Constant in k once a precomputed window table exists for n",
+        "Quadratic in the bit length of k due to repeated squaring loops"
+      ],
+      "correct": 1,
+      "explanation": "Each bit of k contributes one squaring; set bits also contribute one multiply. Total ~2·log₂(k) multiplications mod n."
+    },
+    {
+      "stage": "post",
+      "question": "How does the Extended Euclidean method find `a⁻¹ mod n`?",
+      "options": [
+        "Compute (s, t) with s·a + t·n = gcd(a,n)=1; then a⁻¹ ≡ s (mod n)",
+        "Compute a^φ(n) mod n via Euler; the result equals a⁻¹ for any a",
+        "Run Miller-Rabin on n until a primality witness gives the inverse",
+        "Take s = n − a so that s·a wraps to 1 modulo n in one step"
+      ],
+      "correct": 0,
+      "explanation": "EEA returns Bezout (s, t) with s·a + t·n = 1. Reducing mod n: s·a ≡ 1 (mod n), so s ≡ a⁻¹."
+    },
+    {
+      "stage": "post",
+      "question": "Fermat's-method inverse computes `a⁻¹ mod p` (for prime p) as which expression?",
+      "options": [
+        "a^(p−1) mod p, then divided by p−1 to normalize the residue",
+        "a^(p−2) mod p, since a^(p−1) ≡ 1 (mod p) implies a · a^(p−2) ≡ 1",
+        "(p − a) mod p, exploiting the negation rule for prime moduli",
+        "a · (p−1) mod p, scaling by the order of the multiplicative group"
+      ],
+      "correct": 1,
+      "explanation": "FLT: a^(p−1) ≡ 1 (mod p). Multiplying both sides by a⁻¹ gives a⁻¹ ≡ a^(p−2) (mod p). Constant-time when p is fixed."
+    },
+    {
+      "stage": "post",
+      "question": "Why is Python's built-in `pow(a, k, n)` preferred over a hand-rolled `mod_pow` in production?",
+      "options": [
+        "Because it is GMP-backed and constant-time-aware for cryptographic use",
+        "Because it caches results across invocations using a global LRU table",
+        "Because it always returns a canonical signed representative in (−n/2, n/2]",
+        "Because it ignores the exponent when smaller than the modulus n"
+      ],
+      "correct": 0,
+      "explanation": "CPython's `pow(a, k, n)` uses GMP / mpz_powm, which is highly optimized and uses sliding-window exponentiation. Cryptographic libraries also expose constant-time variants."
+    },
+    {
+      "stage": "post",
+      "question": "What is `mod_inverse(3, 11)`?",
+      "options": [
+        "4, since 3·4 = 12 ≡ 1 (mod 11)",
+        "7, since 3·7 = 21 ≡ 10 (mod 11)",
+        "8, since 3·8 = 24 ≡ 2 (mod 11)",
+        "9, since 3·9 = 27 ≡ 5 (mod 11)"
+      ],
+      "correct": 0,
+      "explanation": "3·4 = 12 = 11 + 1, so 3·4 ≡ 1 (mod 11). Thus 3⁻¹ ≡ 4 (mod 11)."
+    },
+    {
+      "stage": "post",
+      "question": "A naive RSA decryption uses textbook square-and-multiply where each multiplication is timed differently for set vs cleared bits of `d`. What attack does this enable?",
+      "options": [
+        "Wiener's attack, recovering d from a small public exponent estimate",
+        "Timing side channel: bit-by-bit recovery of d from decryption latency",
+        "Common-modulus attack, exploiting two parties sharing the modulus n",
+        "Hastad broadcast, exploiting low public exponent across many recipients"
+      ],
+      "correct": 1,
+      "explanation": "If multiply runs only on set bits of d, latency reveals d's Hamming pattern. Constant-time exponentiation (Montgomery ladder, always-multiply) closes the channel."
+    }
+  ]
 }

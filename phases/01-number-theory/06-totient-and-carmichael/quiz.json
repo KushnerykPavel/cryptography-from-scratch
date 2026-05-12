@@ -1,4 +1,100 @@
 {
-  "title": "Euler's Totient & Carmichael Function",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "If n = p·q with p, q distinct primes, what is φ(n)?",
+      "options": [
+        "n − 1, the count of non-zero residues in Z/nZ",
+        "(p − 1)·(q − 1), the count of integers in [1,n] coprime to n",
+        "p + q − 1, since each prime contributes its index to n",
+        "(p − 1) + (q − 1), summing residues coprime to each factor"
+      ],
+      "correct": 1,
+      "explanation": "φ is multiplicative on coprime factors. φ(p) = p−1, φ(q) = q−1, so φ(pq) = (p−1)(q−1)."
+    },
+    {
+      "stage": "pre",
+      "question": "Why must RSA know `φ(n)` and yet keep it secret?",
+      "options": [
+        "Needed to pick e; knowing φ(n) lets anyone factor n trivially via Euler",
+        "Needed to compute d = e⁻¹ mod φ(n); knowing it lets anyone recover d",
+        "Needed only during encryption; safe to publish alongside the modulus n",
+        "Not needed at all; RSA uses Carmichael λ(n) instead in modern variants"
+      ],
+      "correct": 1,
+      "explanation": "d ≡ e⁻¹ (mod φ(n)). Anyone with φ(n) computes d. Equivalent to factoring n since φ(n) and n determine p, q via a quadratic."
+    },
+    {
+      "stage": "post",
+      "question": "Euler's totient `φ(n)` for general n = p₁^a₁ · … · pₖ^aₖ equals:",
+      "options": [
+        "n · ∏(1 − 1/pᵢ) over distinct prime factors pᵢ of n",
+        "n − ∑pᵢ subtracting each prime once from the modulus",
+        "∏(pᵢ − 1) ignoring the exponent of each prime in n",
+        "n / ∏pᵢ dividing out one copy of each distinct prime"
+      ],
+      "correct": 0,
+      "explanation": "φ(n) = n · ∏(1 − 1/p) over distinct primes p | n. Equivalent: ∏ pᵢ^(aᵢ−1)·(pᵢ − 1)."
+    },
+    {
+      "stage": "post",
+      "question": "What does Carmichael's λ(n) compute, and how does it relate to φ(n)?",
+      "options": [
+        "λ(n) is φ(n) divided by the number of distinct prime factors of n",
+        "λ(n) is the exponent of (Z/nZ)*: smallest k with a^k ≡ 1 for all coprime a; λ(n) | φ(n)",
+        "λ(n) is the order of the largest cyclic subgroup of (Z/nZ)*; equal to φ(n) only when n is prime",
+        "λ(n) is the count of primitive roots mod n, always strictly less than φ(n)"
+      ],
+      "correct": 1,
+      "explanation": "λ(n) = exponent of the unit group: smallest k with a^k ≡ 1 (mod n) ∀ gcd(a,n)=1. Always λ(n) | φ(n); often strictly smaller."
+    },
+    {
+      "stage": "post",
+      "question": "For RSA n = p·q with distinct primes, what is λ(n)?",
+      "options": [
+        "λ(n) = (p − 1)·(q − 1) = φ(n) — they always coincide for two-prime RSA",
+        "λ(n) = lcm(p − 1, q − 1) — can be much smaller than φ(n) for some primes",
+        "λ(n) = gcd(p − 1, q − 1) — always small, hence avoided in RSA design",
+        "λ(n) = p + q − 1 — derives from the sum of orders of subgroups"
+      ],
+      "correct": 1,
+      "explanation": "λ(pq) = lcm(p−1, q−1). PKCS#1 v2 uses d = e⁻¹ mod λ(n) for a shorter private exponent (still secure)."
+    },
+    {
+      "stage": "post",
+      "question": "Compute φ(36).",
+      "options": [
+        "10, counting residues less than half of 36 that are prime",
+        "12, since 36 = 2²·3² gives φ(36) = 36·(1−1/2)·(1−1/3) = 12",
+        "18, half of 36 since 2 divides 36 evenly with no further reduction",
+        "20, counting odd residues less than 36 that avoid the factor 3"
+      ],
+      "correct": 1,
+      "explanation": "36 = 2²·3². φ(36) = 36 · (1 − 1/2) · (1 − 1/3) = 36 · (1/2) · (2/3) = 12."
+    },
+    {
+      "stage": "post",
+      "question": "If an attacker learns φ(n) for an RSA modulus n = p·q, how do they factor n?",
+      "options": [
+        "Solve the quadratic x² − (n − φ(n) + 1)·x + n = 0; roots are p, q",
+        "Compute gcd(φ(n), n); the result equals p, the smaller prime factor",
+        "Apply Fermat factorization starting from ⌈√φ(n)⌉ instead of ⌈√n⌉",
+        "Run Miller-Rabin with φ(n) as the witness base to identify p, q quickly"
+      ],
+      "correct": 0,
+      "explanation": "p + q = n − φ(n) + 1 and p·q = n. Roots of x² − (p+q)x + pq = 0 are p, q. Hence knowing φ(n) ⇔ knowing the factorization."
+    },
+    {
+      "stage": "post",
+      "question": "Why must RSA primes p, q never be chosen so that p − 1 and q − 1 share a large smooth common factor?",
+      "options": [
+        "Then λ(n) = lcm(p−1, q−1) is small, making d small and exposing it to brute force",
+        "Then φ(n) becomes divisible by 4, breaking the Euler-based decryption identity",
+        "Then gcd(p, q) > 1, violating RSA's distinct-prime requirement at key generation",
+        "Then Carmichael numbers appear in (Z/nZ)*, defeating Miller-Rabin verification"
+      ],
+      "correct": 0,
+      "explanation": "Small λ(n) makes the order of every element small. Pollard p−1 also exploits smooth p−1. Use safe primes (p = 2p′+1 with p′ prime)."
+    }
+  ]
 }

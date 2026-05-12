@@ -99,13 +99,52 @@ they want to build it now or skip to the quiz.
 
 ### Step 8 — End-of-lesson quiz (mandatory, no exceptions)
 
-Load `phases/<phase>/<lesson>/quiz.json`. If `questions` is empty, ask:
+Load `phases/<phase>/<lesson>/quiz.json`. **Read it directly. Do not
+invent questions.** The schema is locked — see `LESSON_TEMPLATE.md`.
 
-> "This lesson's quiz.json is a stub. Want me to generate 8 questions from
-> the lesson doc for your review, then quiz you? Or skip the quiz?"
+**Schema (LOCKED — matches AI Engineering from Scratch parent):**
 
-Render the 8 questions via `AskUserQuestion` (or chat-multiple-choice if
-`AskUserQuestion` is unavailable). **One question at a time.** Score 0–8.
+```json
+{
+  "questions": [
+    {
+      "stage": "pre" | "post",
+      "question": "<text>",
+      "options": ["A", "B", "C", "D"],
+      "correct": <int index 0..len(options)-1>,
+      "explanation": "<1-2 sentences>"
+    }
+  ]
+}
+```
+
+Count: 8 total = 2 pre + 6 post. Build lessons must include ≥1 attack
+question among the post questions. Learn lessons no attack required.
+
+**If `questions` is empty (stub):**
+
+> "This lesson's quiz.json is a stub. Want me to author 8 questions
+> (2 pre + 6 post) from the lesson doc using the locked schema? I'll
+> validate the schema and show them before writing."
+
+If user says yes:
+1. Draft 8 questions in chat for review (do not write yet).
+2. After user confirms, **validate** before writing:
+   - JSON parses
+   - Every question has `stage`, `question`, `options`, `correct`,
+     `explanation`
+   - `stage` ∈ {"pre", "post"}; exactly 2 pre, 6 post
+   - `len(options)` ∈ {3, 4}
+   - `correct` is integer in `[0, len(options))`
+   - Option length parity: `max_len ≤ 1.25 × min_len`
+   - No option string contains "correct" or hint phrasing
+3. If any check fails, surface the failure. Do not write.
+4. Write `quiz.json` only after all checks pass.
+
+**Rendering** (after `questions` populated): one question at a time via
+`AskUserQuestion`. Show pre questions before walking the doc; show post
+questions after Build/Use/Attack/Ship complete. Score post-questions 0–6
+for grading; pre-questions inform pacing but don't count.
 
 **Quiz rendering rules (must follow):**
 
@@ -122,12 +161,14 @@ Render the 8 questions via `AskUserQuestion` (or chat-multiple-choice if
   before the learner submits.
 - Reveal correct answer + explanation only after the learner answers.
 
-**Scoring:**
+**Scoring (post questions only, 0–6):**
 
-- 7–8: passed. Offer the next lesson.
-- 4–6: review weak areas. List which sections the missed questions
+- 5–6: passed. Offer the next lesson.
+- 3–4: review weak areas. List which sections the missed questions
   came from. Offer to re-quiz or move on.
-- 0–3: redo the lesson. Do not move forward.
+- 0–2: redo the lesson. Do not move forward.
+
+Pre-question results are informational (gauge prior knowledge), not graded.
 
 ### Step 9 — Persist progress
 

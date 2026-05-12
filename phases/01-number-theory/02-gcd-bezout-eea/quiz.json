@@ -1,4 +1,100 @@
 {
-  "title": "GCD, Bezout, Extended Euclidean Algorithm",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does `gcd(a, b)` compute?",
+      "options": [
+        "The smallest positive integer dividing both a and b cleanly",
+        "The largest positive integer dividing both a and b cleanly",
+        "The product of distinct prime factors common to a and b",
+        "The least common multiple of a and b divided by max(a, b)"
+      ],
+      "correct": 1,
+      "explanation": "GCD = greatest common divisor: the largest positive integer that divides both a and b without remainder."
+    },
+    {
+      "stage": "pre",
+      "question": "Computing `gcd(240, 46)` by hand via the Euclidean algorithm gives which value?",
+      "options": [
+        "1, since 46 is not a multiple of 240",
+        "2, since 240 and 46 share only the factor 2",
+        "4, since 4 divides 240 but only partially divides 46",
+        "23, since 46 = 2·23 and 240 shares the 23"
+      ],
+      "correct": 1,
+      "explanation": "240 = 5·46 + 10; 46 = 4·10 + 6; 10 = 1·6 + 4; 6 = 1·4 + 2; 4 = 2·2 + 0. Last non-zero remainder is 2."
+    },
+    {
+      "stage": "post",
+      "question": "What does Bezout's identity guarantee for any integers a, b?",
+      "options": [
+        "There exist integers s, t with s + t equal to gcd(a, b)",
+        "There exist integers s, t with s·a + t·b equal to gcd(a, b)",
+        "There exist primes p, q with p·a + q·b equal to lcm(a, b)",
+        "There exist rationals s, t with s/a + t/b equal to 1/gcd(a,b)"
+      ],
+      "correct": 1,
+      "explanation": "Bezout's identity: for any integers a, b there exist integers s, t such that s·a + t·b = gcd(a, b). EEA computes them."
+    },
+    {
+      "stage": "post",
+      "question": "What does the Extended Euclidean Algorithm return beyond `gcd(a, b)`?",
+      "options": [
+        "The list of all primes dividing both a and b in order",
+        "The Bezout coefficients s, t such that s·a + t·b = gcd(a, b)",
+        "The continued fraction expansion of the ratio a / b modulo n",
+        "The Carmichael lambda function value for the modulus a · b"
+      ],
+      "correct": 1,
+      "explanation": "EEA computes the Bezout coefficients s, t alongside the gcd by back-substituting the quotient chain."
+    },
+    {
+      "stage": "post",
+      "question": "Why does `a` have a multiplicative inverse mod n iff `gcd(a, n) = 1`?",
+      "options": [
+        "Because Bezout gives s·a + t·n = 1, so s·a ≡ 1 (mod n), hence s ≡ a⁻¹",
+        "Because every non-zero residue mod n is automatically invertible",
+        "Because Fermat's little theorem gives a^(n−1) ≡ 1 (mod n) for any a",
+        "Because Z/nZ is always a field whenever a divides n exactly once"
+      ],
+      "correct": 0,
+      "explanation": "From s·a + t·n = gcd(a,n) = 1, reducing mod n gives s·a ≡ 1, so s ≡ a⁻¹ (mod n). No inverse if gcd > 1."
+    },
+    {
+      "stage": "post",
+      "question": "Given `extended_gcd(35, 15)` returns `(g, s, t)`, what must hold?",
+      "options": [
+        "g equals 35 − 15 and the pair (s, t) is unique up to sign change",
+        "g equals 5 and s·35 + t·15 equals 5 for the returned (s, t)",
+        "g equals 1 and s·35 − t·15 equals 1 for any returned (s, t)",
+        "g equals 15 and s·35 + t·15 equals 35 for the returned (s, t)"
+      ],
+      "correct": 1,
+      "explanation": "gcd(35, 15) = 5. EEA returns (s, t) with s·35 + t·15 = 5 (e.g. s=1, t=−2: 35 − 30 = 5)."
+    },
+    {
+      "stage": "post",
+      "question": "Why is `extended_gcd` unsuitable for production constant-time RSA decryption?",
+      "options": [
+        "Because its iteration count and branches depend on the input bits",
+        "Because the algorithm cannot compute inverses for primes above 1024 bits",
+        "Because Bezout coefficients can grow larger than the modulus n",
+        "Because Python's recursion limit blocks 2048-bit RSA key sizes"
+      ],
+      "correct": 0,
+      "explanation": "EEA has data-dependent loop counts and branches — a timing side channel. Constant-time RSA uses Fermat's-method inverse (a^(p−2) mod p) or specialized constant-time routines."
+    },
+    {
+      "stage": "post",
+      "question": "An RSA implementation generates `(e=65537, n)` but skips the `gcd(e, φ(n)) = 1` check. The chosen prime gives `φ(n) = 65537·k`. What breaks?",
+      "options": [
+        "Nothing — the public key is still usable for encryption only",
+        "Signing breaks silently because d does not exist; decryption returns garbage",
+        "Encryption breaks because e is no longer prime in the modulus",
+        "Key generation succeeds but ciphertexts leak via pattern correlation"
+      ],
+      "correct": 1,
+      "explanation": "If gcd(e, φ(n)) ≠ 1, no modular inverse d exists. Decryption / signing silently produces garbage. EEA's gcd check is the mandatory key-generation gate."
+    }
+  ]
 }

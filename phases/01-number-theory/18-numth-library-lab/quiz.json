@@ -1,4 +1,100 @@
 {
-  "title": "Number Theory Lab \u2014 Build a numth Library",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which primitives belong in a from-scratch `numth` number-theory library?",
+      "options": [
+        "gcd, mod_inverse, mod_pow, prime test, factor, CRT, sqrt mod p, totient",
+        "AES key schedule, SHA-256 compression, ChaCha20 cipher, BLAKE3 hashing",
+        "Elliptic curve point addition, scalar multiplication, curve point validation",
+        "Lattice basis reduction (LLL), shortest vector, closest vector heuristics"
+      ],
+      "correct": 0,
+      "explanation": "Number-theory library exposes the primitives from Phase 1: arithmetic mod n, gcd/inverse, primality, factoring, CRT, sqrt mod p, totient/Carmichael."
+    },
+    {
+      "stage": "pre",
+      "question": "Why expose `mod_inverse(a, n)` as a separate API rather than computing via Fermat each time?",
+      "options": [
+        "Fermat-method works only when n is prime; gcd-method handles composite n too",
+        "Fermat-method is slower than EEA-based inverse for all input sizes uniformly",
+        "Fermat-method requires φ(n) which is private; exposing it would leak the key",
+        "Fermat-method returns negative residues; users must normalize the result manually"
+      ],
+      "correct": 0,
+      "explanation": "Fermat a^(p−2) mod p only works for prime p. EEA-based mod_inverse handles general n given gcd(a, n) = 1 (or raises)."
+    },
+    {
+      "stage": "post",
+      "question": "Which library API is the right tool for RSA decryption: `pow(c, d, n)` vs `mod_pow(c, d, n)` (custom)?",
+      "options": [
+        "Use `pow(c, d, n)` — CPython's GMP-backed implementation is faster and well-tested",
+        "Use `mod_pow(c, d, n)` — custom code is more secure because it avoids GMP backdoors",
+        "Use either — performance and correctness are identical for cryptographic input sizes",
+        "Use neither — RSA decryption should never call modular exponentiation directly"
+      ],
+      "correct": 0,
+      "explanation": "`pow(c, d, n)` is GMP-backed sliding-window modexp. Always prefer it for correctness and speed. Hand-rolled `mod_pow` is for *teaching*; never ship it."
+    },
+    {
+      "stage": "post",
+      "question": "Your `numth.factor(n)` should fall back through which algorithms in order?",
+      "options": [
+        "Trial division (small primes) → Pollard rho → Pollard p−1 → Quadratic Sieve → GNFS",
+        "AKS (primality) → Miller-Rabin (primality) → BSGS (DLP) → Pollard rho (factor)",
+        "Quadratic Sieve → Pollard rho → Trial division — start expensive then bail out cheap",
+        "Random sampling of divisors — uniform over [2, √n] until gcd > 1 emerges from chance"
+      ],
+      "correct": 0,
+      "explanation": "Cost-ordered: trial divide by primes up to ~10⁶, then Pollard rho/p−1 (good for n with smooth or moderate factors), then QS for ~50–100 digit n, GNFS beyond. Detect prime at any step via Miller-Rabin."
+    },
+    {
+      "stage": "post",
+      "question": "Why must `numth.is_prime(n)` use Miller-Rabin instead of Fermat?",
+      "options": [
+        "Carmichael numbers fool Fermat for every coprime base; Miller-Rabin bounds liars ≤ 1/4",
+        "Fermat requires gcd(a, n) = 1 always; Miller-Rabin skips that prerequisite step",
+        "Miller-Rabin is faster than Fermat for all input sizes due to its strong test",
+        "Fermat returns probabilistic results while Miller-Rabin is fully deterministic"
+      ],
+      "correct": 0,
+      "explanation": "Fermat liars are unbounded for Carmichael composites. Miller-Rabin proven ≤ 1/4 liars. For n < ~3·10²⁴, twelve fixed bases give deterministic MR."
+    },
+    {
+      "stage": "post",
+      "question": "Your library exposes `mod_sqrt(a, p)`. Which fallback chain should it use?",
+      "options": [
+        "If p ≡ 3 (mod 4): a^((p+1)/4) mod p; else: Tonelli-Shanks loop on general odd p",
+        "Always Tonelli-Shanks regardless of p mod 4 to keep one code path simple",
+        "Always closed form a^((p+1)/4) and document failure when p ≡ 1 (mod 4)",
+        "Trial: enumerate every x in [1, p − 1] and test x² ≡ a until match found"
+      ],
+      "correct": 0,
+      "explanation": "p ≡ 3 (mod 4) → closed form, no loop. p ≡ 1 (mod 4) → Tonelli-Shanks. Reject when (a/p) = −1. Standard structure in well-implemented libraries."
+    },
+    {
+      "stage": "post",
+      "question": "What should `numth.crt(residues, moduli)` validate before computing?",
+      "options": [
+        "All moduli pairwise coprime; raise if any pair shares a non-trivial common factor",
+        "All residues fit in 64-bit integers; raise on overflow to avoid silent corruption",
+        "All moduli are prime; CRT does not apply to composite moduli in any case",
+        "All residues equal each other; CRT solution is then simply that common residue"
+      ],
+      "correct": 0,
+      "explanation": "CRT requires pairwise coprime moduli. If not, raise — or extend to handle the generalized non-coprime case explicitly. Silent acceptance of non-coprime moduli is a footgun."
+    },
+    {
+      "stage": "post",
+      "question": "A user writes `key = mod_inverse(e, phi)` without checking `gcd(e, phi) == 1`. What's the library's responsibility?",
+      "options": [
+        "Raise an explicit `NoInverseError` from inside mod_inverse — never return garbage silently",
+        "Return 0 to signal no inverse exists, letting the caller branch on the result value",
+        "Return e itself unchanged so downstream RSA code surfaces the issue eventually",
+        "Log a warning but continue computing a meaningless residue; RSA will fail anyway"
+      ],
+      "correct": 0,
+      "explanation": "Library APIs MUST fail loudly on broken preconditions. Silent 0 / garbage breeds production-RSA disasters (Debian 2008, ROCA 2017). Raise typed exceptions; document them."
+    }
+  ]
 }

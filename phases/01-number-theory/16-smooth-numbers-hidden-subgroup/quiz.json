@@ -1,4 +1,100 @@
 {
-  "title": "Smooth Numbers & Hidden Subgroup",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "An integer n is B-smooth if:",
+      "options": [
+        "Every prime factor of n is ≤ B, letting n factor over the small-prime base",
+        "n is divisible by every prime up to B, regardless of multiplicities involved",
+        "n has exactly B prime factors when counted with multiplicity (Ω(n) = B)",
+        "n ≡ 0 (mod B!) — equivalent to having every small prime as a factor once"
+      ],
+      "correct": 0,
+      "explanation": "B-smooth: all prime factors ≤ B. Density Ψ(x, B) is the Dickman function."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the Hidden Subgroup Problem (HSP)?",
+      "options": [
+        "Given f: G → S constant on cosets of an unknown H ≤ G, find a generating set of H",
+        "Given a subgroup H of G, list all of its non-trivial cosets and their representatives",
+        "Given a function f on G, decide whether f has any periodic structure at all",
+        "Given a permutation of G, find its order via repeated composition with itself"
+      ],
+      "correct": 0,
+      "explanation": "HSP: f hides H by being constant on each coset and distinct between cosets. Find H. Many crypto problems reduce here (factoring, DLP, hidden shift)."
+    },
+    {
+      "stage": "post",
+      "question": "Why does Shor's quantum algorithm factor `n` in polynomial time?",
+      "options": [
+        "It solves HSP on Z (period finding for f(x) = a^x mod n) via quantum Fourier transform",
+        "It runs Pollard-rho on a quantum computer with O(√p) qubit parallelism per iteration",
+        "It applies Grover's search over divisors d ≤ √n in O(n^(1/4)) quantum queries",
+        "It uses Quantum Index Calculus directly on the multiplicative group (Z/nZ)*"
+      ],
+      "correct": 0,
+      "explanation": "Shor reduces factoring to finding the period r of f(x) = a^x mod n. Quantum period-finding (HSP on Z) is poly-time via QFT."
+    },
+    {
+      "stage": "post",
+      "question": "What is the smooth-number density Ψ(x, x^(1/u)) asymptotically?",
+      "options": [
+        "ρ(u)·x where ρ is the Dickman function — most integers near x are NOT u-smooth",
+        "x / log u — logarithmic decay, mild smoothness loss as u grows beyond 2",
+        "x^(1 − 1/u) — polynomial decay, used in Pollard-rho complexity analysis",
+        "exp(−u) · x — exponential decay, justifying the L-notation for sieves"
+      ],
+      "correct": 0,
+      "explanation": "Ψ(x, x^(1/u)) ~ ρ(u)·x where ρ(u) is the Dickman function. ρ(2) ≈ 0.307, ρ(3) ≈ 0.049, ρ(5) ≈ 0.0035 — drops fast."
+    },
+    {
+      "stage": "post",
+      "question": "Why are smooth numbers central to sub-exponential factoring (QS, NFS)?",
+      "options": [
+        "Smooth values factor over a fixed small-prime base, enabling F₂ linear algebra to find squares",
+        "Smooth values are prime themselves, providing direct factors of n upon discovery",
+        "Smooth values increase the probability that Pollard-rho cycles converge quickly",
+        "Smooth values make modular exponentiation cheaper via the Pohlig-Hellman trick"
+      ],
+      "correct": 0,
+      "explanation": "Sieve relations only when Q-values are B-smooth → factor over the prime base. The trade-off (small B → few relations smooth; large B → many primes to track) gives the L[1/2] / L[1/3] complexity."
+    },
+    {
+      "stage": "post",
+      "question": "Which problems reduce to HSP on abelian groups (solvable by Shor-style quantum algorithm)?",
+      "options": [
+        "Factoring integers, DLP in (Z/pZ)*, and DLP on elliptic curves all reduce to abelian HSP",
+        "Factoring and DLP do; lattice problems like SVP reduce to non-abelian HSP only",
+        "Only DLP in finite fields reduces; factoring reduces to a distinct quantum routine",
+        "Only DLP on elliptic curves reduces; factoring and (Z/pZ)*-DLP are unaffected"
+      ],
+      "correct": 0,
+      "explanation": "Factoring ↔ Period finding on Z. DLP (any group) ↔ HSP on Z×Z. EC-DLP same. All abelian HSP, all poly-time on quantum. Lattice problems reduce to dihedral HSP — believed quantum-hard."
+    },
+    {
+      "stage": "post",
+      "question": "Optimal smoothness bound B for QS is approximately:",
+      "options": [
+        "B = exp(½ · √(ln n · ln ln n)) — balancing sieve cost against linear-algebra cost",
+        "B = √n — half the bit length of n for efficient trial-divide sieving above this",
+        "B = log² n — keeps the factor base polynomial in the input size of n",
+        "B = (log n)^3 — matches the size of the linear system Gaussian elimination handles"
+      ],
+      "correct": 0,
+      "explanation": "Optimal B = L_n[1/2, 1/2]. Balances expected number of smooth relations with sieve interval and matrix size. Gives QS its L_n[1/2, 1] runtime."
+    },
+    {
+      "stage": "post",
+      "question": "Post-quantum schemes (Kyber, Dilithium) resist Shor because their hard problems:",
+      "options": [
+        "Reduce to non-abelian HSP (dihedral) or lattice problems with no known abelian-HSP form",
+        "Use quantum-resistant primes p ≡ 1 (mod 2^256) that defeat Shor's period finding",
+        "Replace integer arithmetic with floating-point operations, breaking unitarity assumptions",
+        "Encode messages in entangled qubit states that defeat measurement-based attacks"
+      ],
+      "correct": 0,
+      "explanation": "Lattice / code / hash problems: no known reduction to abelian HSP. Dihedral HSP gives a quantum sub-exponential attack on lattices, but parameters are chosen well beyond that threshold."
+    }
+  ]
 }

@@ -1,4 +1,100 @@
 {
-  "title": "Baby-Step Giant-Step & Pollard's Rho for DLP",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Baby-Step Giant-Step (BSGS) trades what for what?",
+      "options": [
+        "Memory for time — O(√q) space, O(√q) time, vs trial's O(q) time and O(1) space",
+        "Randomness for determinism — same asymptotic but always correct vs random fail",
+        "Time for accuracy — sub-exponential but with bounded false-positive rate per query",
+        "Communication for compute — distributes work but assumes a shared lookup oracle"
+      ],
+      "correct": 0,
+      "explanation": "BSGS uses O(√q) memory and O(√q) time, vs naive O(q). Classic space-time tradeoff."
+    },
+    {
+      "stage": "pre",
+      "question": "In a group ⟨g⟩ of order q, how many evaluations of g^k does BSGS perform?",
+      "options": [
+        "About 2√q — √q 'baby' steps populating a table, √q 'giant' steps querying it",
+        "About q^(1/3) — three-stage breakdown saves an order compared with baby-giant",
+        "About log q — one per bit of q using square-and-multiply exponentiation",
+        "About q — same as exhaustive search through every possible exponent value"
+      ],
+      "correct": 0,
+      "explanation": "Pick m = ⌈√q⌉. Baby steps: store {g^j : 0 ≤ j < m}. Giant steps: query h·(g^{−m})^i. Match → x = im + j."
+    },
+    {
+      "stage": "post",
+      "question": "Pollard's rho for DLP differs from BSGS how?",
+      "options": [
+        "O(√q) time, O(1) memory — random walk + cycle detection, no large table needed",
+        "O(q) time, O(log q) memory — deterministic search with binary-search-like queries",
+        "O(log² q) time — polynomial in log q, like AKS for primality testing",
+        "O(q^(1/3)) time, O(q^(1/3)) memory — three-way meet in the middle algorithm"
+      ],
+      "correct": 0,
+      "explanation": "Pollard-rho-for-DLP: random walk x ← f(x), look for collisions via Floyd/Brent cycle detection. Same √q time as BSGS but constant memory."
+    },
+    {
+      "stage": "post",
+      "question": "What is Pollard's lambda (kangaroo) algorithm useful for?",
+      "options": [
+        "DLP when x is known to lie in a small interval [a, b]; runs in O(√(b − a)) time",
+        "DLP in groups with sub-exponential index calculus, replacing the linear algebra phase",
+        "DLP only on elliptic curves of CM-type with extra structure exploited heuristically",
+        "DLP combined with the Pohlig-Hellman reduction over smooth-order group factors"
+      ],
+      "correct": 0,
+      "explanation": "Lambda algorithm: when x is in a small range, two 'kangaroos' (tame + wild) walk pseudo-randomly. Collision recovers x in O(√(range)) — much better than √q if range << q."
+    },
+    {
+      "stage": "post",
+      "question": "Pohlig-Hellman reduces DLP in a group of order `q = q₁^a₁ · … · qₖ^aₖ` to:",
+      "options": [
+        "k subproblems of DLP in groups of prime order qᵢ; total time O(∑ aᵢ · √qᵢ)",
+        "k subproblems of integer factoring on each prime power qᵢ^aᵢ via Pollard-rho",
+        "A single DLP in a group of order ∏ qᵢ, recombined via the Chinese Remainder Theorem",
+        "One DLP in a group of order max(qᵢ), since the smaller subgroups give zero info"
+      ],
+      "correct": 0,
+      "explanation": "Pohlig-Hellman: solve DLP mod each qᵢ^aᵢ separately, CRT-combine. Total dominated by largest prime factor of q. Defense: use prime-order subgroups."
+    },
+    {
+      "stage": "post",
+      "question": "Solve `g^x ≡ h (mod p)` for g = 5, h = 8, p = 23 (order p − 1 = 22).",
+      "options": [
+        "x = 6, since 5^6 = 15625 = 679·23 + 8 ≡ 8 (mod 23)",
+        "x = 9, since 5^9 ≡ 12 (mod 23), failing the discrete log target",
+        "x = 11, since 5^11 ≡ 22 (mod 23), the order-2 element distinct from 8",
+        "x = 14, since 5^14 ≡ 17 (mod 23), missing the target value 8"
+      ],
+      "correct": 0,
+      "explanation": "5^6 = 15625. 15625 mod 23 = 15625 − 679·23 = 15625 − 15617 = 8. So log_5(8) ≡ 6 (mod 22)."
+    },
+    {
+      "stage": "post",
+      "question": "Why must elliptic-curve DLP-based protocols use a generator of prime-order subgroup, not the full curve group?",
+      "options": [
+        "Otherwise Pohlig-Hellman exploits any small prime factor in the group order to break DLP",
+        "Otherwise Pollard-rho fails to detect cycles when the order has small composite parts",
+        "Otherwise BSGS table construction overflows on subgroups of size > 2^32 in memory",
+        "Otherwise the curve becomes singular and the addition law admits a closed-form attack"
+      ],
+      "correct": 0,
+      "explanation": "If group order = p·k with small k, Pohlig-Hellman reduces DLP to one in subgroup of order p (still hard) + one of order k (trivial). Use prime-order generators (e.g. Curve25519 uses order 8 · ℓ with ℓ prime; use ℓ-order subgroup, clamp scalars)."
+    },
+    {
+      "stage": "post",
+      "question": "An attacker uses small-subgroup confinement on a DH server. What's the attack?",
+      "options": [
+        "Send a public key of order k (small) instead of order ℓ; server's response leaks shared secret mod k",
+        "Send a malformed public key triggering the server's BSGS routine to time-out and crash",
+        "Send a non-curve point passing input validation; addition law leaks the private key bytes",
+        "Reuse a known DLP precomputation from a prior session against the new shared parameters"
+      ],
+      "correct": 0,
+      "explanation": "Subgroup confinement: attacker chooses A of order k. Shared secret K = A^b lives in subgroup of order k. Brute-force k possibilities → b mod k. Repeat over different small k, CRT to recover b. Fix: validate public keys lie in the prime-order subgroup."
+    }
+  ]
 }

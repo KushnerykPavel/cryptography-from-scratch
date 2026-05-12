@@ -1,4 +1,100 @@
 {
-  "title": "Pollard Rho & Pollard p-1 Factoring",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "If n is the product of two distinct large primes p, q, how hard is factoring believed to be classically?",
+      "options": [
+        "Sub-exponential: best known is GNFS, time exp(O((log n)^(1/3) (log log n)^(2/3)))",
+        "Polynomial: AKS factors n in time O(log^12 n) similar to its primality test",
+        "Exponential: no algorithm runs in time better than O(2^(log n)) on average",
+        "Linear: trial division up to √n finishes in O(n^(1/2)) wall-clock seconds"
+      ],
+      "correct": 0,
+      "explanation": "GNFS (General Number Field Sieve) is sub-exponential, the asymptotic record. AKS factors nothing (it's a primality test). Trial division is √n — too slow for cryptographic sizes."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the birthday paradox bound for collisions in a set of size N?",
+      "options": [
+        "Expected collision after sampling ~√N elements at random with replacement",
+        "Expected collision after sampling ~log N elements at random with replacement",
+        "Expected collision only after sampling all N elements at least once each",
+        "Expected collision after sampling N/2 elements assuming uniform distribution"
+      ],
+      "correct": 0,
+      "explanation": "Birthday: ~√N samples suffice for a collision with constant probability. Pollard-rho uses this to find x ≡ y (mod p) inside Z/nZ."
+    },
+    {
+      "stage": "post",
+      "question": "How does Pollard's rho algorithm find a factor of n?",
+      "options": [
+        "Iterate x ← f(x) mod n; gcd(|x_i − x_j|, n) > 1 reveals a factor when x_i ≡ x_j (mod p)",
+        "Trial-divide n by every prime up to n^(1/3), with random skipping for speed",
+        "Compute (a^k − 1) mod n for k = lcm(1..B); gcd of result with n gives a factor",
+        "Run Miller-Rabin until n is declared composite, then output the smallest witness"
+      ],
+      "correct": 0,
+      "explanation": "Pollard-rho: iterate x ← x²+c (mod n). By birthday, expect cycle in Z/pZ after ~√p ≈ n^(1/4) steps. gcd of difference with n yields p."
+    },
+    {
+      "stage": "post",
+      "question": "What is the expected time complexity of Pollard's rho on n = p·q with p < q?",
+      "options": [
+        "O(p^(1/2)·polylog n) — Birthday bound on the smaller prime p",
+        "O(n^(1/2)·polylog n) — Same as trial division up to √n exactly",
+        "O(p·polylog n) — Linear in the smaller prime factor p of n",
+        "O(log^2 n) — Polynomial because Pollard-rho runs deterministically"
+      ],
+      "correct": 0,
+      "explanation": "Pollard-rho finds smallest prime factor p in expected O(√p) iterations ≈ n^(1/4) for balanced semiprimes."
+    },
+    {
+      "stage": "post",
+      "question": "Pollard's `p − 1` algorithm factors `n = p·q` efficiently when:",
+      "options": [
+        "`p − 1` is B-smooth for some small bound B; then a^(B!) ≡ 1 (mod p) and gcd(a^(B!) − 1, n) = p",
+        "`p` and `q` are close to each other; Fermat factorization finds them via √n",
+        "`p + 1` factors into small primes; then ECM converges in O(log² n) steps",
+        "`p` is a safe prime of the form `2p′ + 1`; safe primes are special-attack-prone"
+      ],
+      "correct": 0,
+      "explanation": "Pollard p−1: if p−1 = ∏ small primes ≤ B, then for any a coprime to p, a^M ≡ 1 (mod p) where M = lcm(1..B). gcd(a^M − 1, n) = p. Defense: choose p with large prime factor of p−1 ('safe' or 'strong' primes)."
+    },
+    {
+      "stage": "post",
+      "question": "Brent's improvement to Pollard-rho does what?",
+      "options": [
+        "Replaces tortoise-and-hare cycle detection with a smarter scheme using ~24% fewer iterations",
+        "Adds quadratic sieving as a fallback when the rho loop exceeds expected √p time",
+        "Uses elliptic curves to speed up gcd computation inside the main rho iteration",
+        "Caches all previous x values to detect non-cycle collisions across attempts"
+      ],
+      "correct": 0,
+      "explanation": "Brent's cycle detection replaces Floyd's tortoise-and-hare with a power-of-two stride. ~24% faster, same asymptotic."
+    },
+    {
+      "stage": "post",
+      "question": "Find the factors of n = 8051 using Pollard-rho with f(x) = x² + 1, x₀ = 2.",
+      "options": [
+        "97 and 83, since 8051 = 83·97 (verify: 83·97 = 8051)",
+        "89 and 91, since 8051 = 89·91 (verify: 89·91 = 8099 — incorrect)",
+        "71 and 113, since 8051 = 71·113 (verify: 71·113 = 8023 — incorrect)",
+        "59 and 137, since 8051 = 59·137 (verify: 59·137 = 8083 — incorrect)"
+      ],
+      "correct": 0,
+      "explanation": "8051 = 83 · 97. Pollard-rho with x²+1 typically finds 83 within a dozen iterations."
+    },
+    {
+      "stage": "post",
+      "question": "Why must RSA primes p be 'safe' (with p − 1 having a large prime factor)?",
+      "options": [
+        "Otherwise Pollard p−1 factors n if any chosen prime has B-smooth p − 1 structure",
+        "Otherwise Miller-Rabin liars exist for n with high probability across most bases",
+        "Otherwise AKS misclassifies n as prime during the key generation procedure",
+        "Otherwise φ(n) becomes a prime power, invalidating CRT decryption optimization"
+      ],
+      "correct": 0,
+      "explanation": "Safe primes p = 2p′+1 ensure p−1 = 2p′ is not smooth. Defends against Pollard p−1 and Williams p+1. NIST and PKCS recommendations require strong primes for older RSA keygen."
+    }
+  ]
 }

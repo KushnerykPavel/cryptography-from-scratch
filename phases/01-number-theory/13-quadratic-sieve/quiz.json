@@ -1,4 +1,100 @@
 {
-  "title": "Quadratic Sieve \u2014 Idea and Implementation",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the central identity used by Fermat-style factoring of n?",
+      "options": [
+        "x² ≡ y² (mod n) with x ≢ ±y gives a non-trivial gcd(x − y, n) = factor",
+        "x² + y² ≡ n (mod p) gives a non-trivial factor whenever p ≡ 1 (mod 4)",
+        "x² + y² ≡ 0 (mod n) gives a non-trivial factor for every prime p of n",
+        "x² − y² ≡ 1 (mod n) gives a non-trivial factor when gcd(x, n) = 1"
+      ],
+      "correct": 0,
+      "explanation": "If x² ≡ y² (mod n) and x ≢ ±y, then (x−y)(x+y) ≡ 0 (mod n) but neither factor is 0. gcd(x−y, n) splits n."
+    },
+    {
+      "stage": "pre",
+      "question": "What does it mean for an integer x to be B-smooth?",
+      "options": [
+        "Every prime factor of x is at most B in size, so x factors over the B-prime base",
+        "x is divisible by exactly B distinct primes, regardless of the size of each one",
+        "x ≡ 0 (mod B!) so x contains every small prime up to B as a factor exactly once",
+        "x − 1 is prime when B is prime, generalizing the safe-prime condition for x"
+      ],
+      "correct": 0,
+      "explanation": "B-smooth: all prime factors ≤ B. Smooth numbers factor cleanly over the small-prime factor base, enabling sieving."
+    },
+    {
+      "stage": "post",
+      "question": "Quadratic Sieve constructs candidates of the form `Q(x) = x² − n`. What property makes a candidate useful?",
+      "options": [
+        "Q(x) is B-smooth so it factors over the chosen small-prime factor base",
+        "Q(x) is itself prime, providing a single large prime to use as a factor of n",
+        "Q(x) equals a perfect square, immediately giving x² ≡ y² (mod n) directly",
+        "Q(x) shares gcd > 1 with n, yielding a factor without further linear algebra"
+      ],
+      "correct": 0,
+      "explanation": "Q(x) = x²−n ≈ small values when x ≈ √n. If Q(x) is B-smooth, its factorization vector goes into a matrix. Find linear dependencies → x² ≡ y² (mod n)."
+    },
+    {
+      "stage": "post",
+      "question": "How does QS find a relation `x² ≡ y² (mod n)` from sieved Q(xᵢ) values?",
+      "options": [
+        "Solve a binary linear system over F₂ for parity dependencies among prime exponent vectors",
+        "Multiply all sieved smooth Q(xᵢ) together until the product is a perfect square trivially",
+        "Apply Pollard-rho to each smooth Q(xᵢ) until two share a common gcd with the modulus",
+        "Use the Tonelli-Shanks algorithm to compute √(Q(xᵢ) mod n) for each smooth candidate"
+      ],
+      "correct": 0,
+      "explanation": "Each smooth Q(xᵢ) gives a row of prime-exponent parities mod 2. Find a non-trivial F₂-null-space vector → product of corresponding Q(xᵢ) is a perfect square. Block Lanczos / Wiedemann does the linear algebra at scale."
+    },
+    {
+      "stage": "post",
+      "question": "What is the asymptotic complexity of the Quadratic Sieve for factoring n?",
+      "options": [
+        "L_n[1/2, 1] = exp((1 + o(1))·√(ln n · ln ln n)) sub-exponential time",
+        "L_n[1/3, ...] = exp((c + o(1))·(ln n)^(1/3)·(ln ln n)^(2/3)) like GNFS asymptotic",
+        "Polynomial in log n similar to AKS but adapted for factoring rather than primality",
+        "Exponential in log n with base 2 matching the cost of brute-force trial division"
+      ],
+      "correct": 0,
+      "explanation": "QS is L_n[1/2, 1] sub-exponential. Faster than Pollard-rho on balanced semiprimes, slower than GNFS for n > ~110 digits."
+    },
+    {
+      "stage": "post",
+      "question": "What is the factor base in QS?",
+      "options": [
+        "Primes p ≤ B such that n is a QR mod p (so Q(x) ≡ 0 (mod p) has solutions)",
+        "Random primes selected uniformly from the range [B/2, B] for each sieving round",
+        "All primes up to B regardless of whether n is a quadratic residue mod each one",
+        "Primes used in Pollard's rho cycle plus all primes dividing the candidate x² − n"
+      ],
+      "correct": 0,
+      "explanation": "Only primes p with (n/p) = +1 enter the factor base — others can't divide x²−n. Cuts the base ~in half."
+    },
+    {
+      "stage": "post",
+      "question": "What is the Multiple Polynomial Quadratic Sieve (MPQS) variant?",
+      "options": [
+        "Switch to many Q_a(x) = (ax+b)² − n polynomials; gives more smooth values per sieve interval",
+        "Run QS in parallel across many machines, each sieving a disjoint x interval at a time",
+        "Combine QS with Pollard p−1 to handle composite n with one smooth prime factor",
+        "Use ECM as a preprocessing step before applying the single-polynomial QS algorithm"
+      ],
+      "correct": 0,
+      "explanation": "MPQS uses many quadratic polynomials with small coefficients, keeping Q values small over short intervals. Mainstream QS variant. Standard for RSA-100 to RSA-130 era factorizations."
+    },
+    {
+      "stage": "post",
+      "question": "QS sieving requires solving x² ≡ n (mod p) for each factor-base prime p. Which lesson algorithm computes this?",
+      "options": [
+        "Tonelli-Shanks (lesson 07) — modular square root for QRs mod odd primes",
+        "Miller-Rabin (lesson 10) — probabilistic primality determination for n",
+        "Extended Euclidean (lesson 02) — computes modular inverses, not roots",
+        "Pollard rho (lesson 12) — finds factors of n, but not roots mod p"
+      ],
+      "correct": 0,
+      "explanation": "Each sieve location needs sqrt(n) mod p. Tonelli-Shanks handles general odd primes; closed form works for p ≡ 3 (mod 4)."
+    }
+  ]
 }

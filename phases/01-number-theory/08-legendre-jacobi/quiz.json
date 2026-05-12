@@ -1,4 +1,100 @@
 {
-  "title": "Legendre & Jacobi Symbols",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does the Legendre symbol (a/p) equal when a is a non-zero quadratic residue mod prime p?",
+      "options": [
+        "0, by convention for non-zero residues that are perfect squares",
+        "+1, indicating a is a quadratic residue modulo the prime p",
+        "−1, indicating a is a quadratic non-residue modulo the prime",
+        "a itself reduced mod p, with no further normalization applied"
+      ],
+      "correct": 1,
+      "explanation": "Legendre symbol: (a/p) = +1 if a is a QR mod p, −1 if non-QR, 0 if p | a."
+    },
+    {
+      "stage": "pre",
+      "question": "How is the Legendre symbol computed via Euler's criterion?",
+      "options": [
+        "(a/p) ≡ a^((p+1)/2) (mod p), giving the value as a residue itself",
+        "(a/p) ≡ a^((p−1)/2) (mod p), interpreting the result as ±1",
+        "(a/p) ≡ a^(p−2) (mod p), the Fermat inverse formula for primes",
+        "(a/p) ≡ a^p mod (p−1), reducing the exponent mod the order"
+      ],
+      "correct": 1,
+      "explanation": "Euler: a^((p−1)/2) ≡ (a/p) (mod p), where the result is +1 or −1."
+    },
+    {
+      "stage": "post",
+      "question": "The Jacobi symbol (a/n) generalizes Legendre to which moduli?",
+      "options": [
+        "Any odd positive composite n, defined multiplicatively over its prime factors",
+        "Any even composite n, computable via factoring the smallest prime factor",
+        "Any prime power p^k, generalizing Legendre to higher exponents only",
+        "Any positive integer n, including evens via a special factor of two rule"
+      ],
+      "correct": 0,
+      "explanation": "Jacobi (a/n) for odd positive n = p₁^a₁ · … · pₖ^aₖ is defined as ∏ (a/pᵢ)^aᵢ — product of Legendre symbols."
+    },
+    {
+      "stage": "post",
+      "question": "If Jacobi (a/n) = −1, what can you conclude about a's quadratic residuosity mod n?",
+      "options": [
+        "a is definitely a quadratic non-residue mod n (no x with x² ≡ a exists)",
+        "a is definitely a quadratic residue mod n with exactly two roots",
+        "a may be either a residue or non-residue; Jacobi is inconclusive here",
+        "a divides n exactly, so the symbol takes the conventional value zero"
+      ],
+      "correct": 0,
+      "explanation": "(a/n) = −1 ⇒ at least one Legendre factor is −1 ⇒ a is non-QR mod some pᵢ ⇒ a is non-QR mod n. The +1 case is ambiguous."
+    },
+    {
+      "stage": "post",
+      "question": "Quadratic reciprocity (Gauss) states for distinct odd primes p, q:",
+      "options": [
+        "(p/q) · (q/p) = (−1)^((p−1)/2 · (q−1)/2), letting you flip the symbol",
+        "(p/q) + (q/p) = 0 always, regardless of the parity of p and q involved",
+        "(p/q) = (q/p) holds unconditionally for any distinct odd prime pair",
+        "(p/q) · (q/p) = +1 unless p = q = 3 (mod 4), the exceptional case only"
+      ],
+      "correct": 0,
+      "explanation": "QR: (p/q)(q/p) = (−1)^((p−1)/2·(q−1)/2). Flip is free unless both p, q ≡ 3 (mod 4), then symbols flip sign."
+    },
+    {
+      "stage": "post",
+      "question": "Compute the Jacobi symbol (3/35) where 35 = 5·7.",
+      "options": [
+        "+1, since (3/5)(3/7) = (−1)·(−1) = +1 via Euler on each prime",
+        "−1, since (3/5)·(3/7) = (−1)·(+1) makes the product negative",
+        "0, since 3 divides 35 evenly leaving no quadratic residue class",
+        "+3, which is 3 itself unreduced under multiplicative composition"
+      ],
+      "correct": 0,
+      "explanation": "(3/5): 3 ≡ 3 (mod 5); QRs mod 5 are {1, 4}, so (3/5) = −1. (3/7): QRs mod 7 are {1, 2, 4}, so (3/7) = −1. Product = +1."
+    },
+    {
+      "stage": "post",
+      "question": "Solovay-Strassen primality test uses Jacobi how?",
+      "options": [
+        "n is prime iff Jacobi(a/n) ≡ a^((n−1)/2) (mod n) for every base a coprime to n",
+        "n is prime iff Jacobi(a/n) = +1 for at least half the bases a in [1, n−1]",
+        "n is composite iff Jacobi(a/n) divides a^(n−1) mod n for some base a",
+        "n is composite iff Jacobi(n/a) = 0 for any prime a less than √n"
+      ],
+      "correct": 0,
+      "explanation": "Solovay-Strassen: pick random a, compute Jacobi(a/n) and a^((n−1)/2) mod n. If they disagree, n is composite. Probabilistic, error ≤ 1/2 per round."
+    },
+    {
+      "stage": "post",
+      "question": "An attacker uses Jacobi(a/n) = +1 on Goldwasser-Micali ciphertexts to do what?",
+      "options": [
+        "Distinguish pseudosquares from real QRs — believed as hard as factoring n",
+        "Recover the plaintext bit directly from the ciphertext without factoring",
+        "Compute the modular square root of the ciphertext using Tonelli-Shanks",
+        "Factor n by exploiting collisions between Jacobi and Legendre evaluations"
+      ],
+      "correct": 0,
+      "explanation": "GM encrypts bit 0 as a true QR mod n (Jacobi=+1) and bit 1 as a pseudosquare (Jacobi=+1, but non-QR). Distinguishing them is the QR Problem — as hard as factoring."
+    }
+  ]
 }
