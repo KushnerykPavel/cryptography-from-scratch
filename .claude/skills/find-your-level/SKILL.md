@@ -58,6 +58,11 @@ Self-check before sending each question: read the four option descriptions
 out of context. If a stranger could pick the right answer from descriptions
 alone, rewrite them.
 
+**Length parity:** all options in a question must be within ~25% of each
+other in character count. A noticeably longer option screams "correct
+answer". If the right answer needs more words, pad distractors with
+plausible technical detail until lengths match.
+
 ---
 
 ### Round 1 — Number Theory & Modular Arithmetic
@@ -86,19 +91,19 @@ alone, rewrite them.
 
 **Q3.** Why is AES-ECB unsafe for encrypting images?
 
-- A) ECB is slow
-- B) Identical plaintext blocks produce identical ciphertext blocks, leaking patterns
-- C) ECB has no key schedule
-- D) ECB only works on text
+- A) ECB throughput is too low for large files
+- B) Equal plaintext blocks map to equal ciphertext blocks
+- C) ECB lacks a proper key schedule for 256-bit keys
+- D) ECB cannot encrypt non-ASCII byte sequences
 
-**Correct: B) Identical plaintext blocks produce identical ciphertext blocks, leaking patterns**
+**Correct: B) Equal plaintext blocks map to equal ciphertext blocks**
 
 **Q4.** In RSA, if `n = p·q`, `e = 65537`, what is the private exponent `d`?
 
-- A) `d = e mod n`
-- B) `d ≡ e^(-1) mod φ(n)` where `φ(n) = (p-1)(q-1)`
-- C) `d = (p+q)/2`
-- D) `d = n - e`
+- A) `d ≡ e mod n`
+- B) `d ≡ e^(-1) mod φ(n)`, `φ(n)=(p-1)(q-1)`
+- C) `d ≡ (p+q)·e^(-1) mod n`
+- D) `d ≡ n·e^(-1) mod φ(n)`
 
 **Correct: B) `d ≡ e^(-1) mod φ(n)` where `φ(n) = (p-1)(q-1)`**
 
@@ -109,20 +114,20 @@ alone, rewrite them.
 **Q5.** On an elliptic curve over `F_p`, what does scalar multiplication `k·P`
 mean?
 
-- A) Multiply the x-coordinate by k
-- B) Add the point P to itself k times using the curve group law
-- C) Multiply each coordinate by k mod p
-- D) Compute `(k·x, k·y)` mod p
+- A) Multiply x-coordinate by k, reduce mod p
+- B) Add P to itself k times under the group law
+- C) Multiply both coordinates by k, reduce mod p
+- D) Raise x to the k-th power, reduce mod p
 
 **Correct: B) Add the point P to itself k times using the curve group law**
 
 **Q6.** What goes wrong in ECDSA if you reuse the random nonce `k` across two
 signatures with the same key?
 
-- A) Nothing — `k` is throwaway
-- B) Signatures become invalid
+- A) Nothing — `k` is regenerated internally
+- B) Both signatures fail verification against the public key
 - C) An attacker recovers the private key from the two signatures
-- D) Hash collisions occur
+- D) The hash output collides, leaking the message digest
 
 **Correct: C) An attacker recovers the private key from the two signatures** (Sony PS3 case)
 
@@ -141,10 +146,10 @@ signatures with the same key?
 
 **Q8.** What does the Fiat-Shamir heuristic do?
 
-- A) Speeds up modular exponentiation
-- B) Turns an interactive Σ-protocol into a non-interactive proof by replacing the verifier's challenge with a hash
-- C) Compresses a SNARK proof
-- D) Prevents nonce reuse in ECDSA
+- A) Speeds up modular exponentiation via windowed scalar tables
+- B) Replaces the verifier's challenge with a hash, removing interaction
+- C) Compresses a SNARK proof using polynomial commitments
+- D) Prevents nonce reuse in ECDSA by deriving k from the message
 
 **Correct: B) Turns an interactive Σ-protocol into a non-interactive proof by replacing the verifier's challenge with a hash**
 
@@ -154,10 +159,10 @@ signatures with the same key?
 
 **Q9.** Why does Shor's algorithm threaten RSA but not AES-128?
 
-- A) RSA uses smaller keys
-- B) Shor solves factoring and discrete log in polynomial time on a quantum computer; AES has no such structure — Grover only halves the security level
-- C) AES is information-theoretically secure
-- D) RSA is already broken classically
+- A) RSA uses smaller keys, so quantum search converges faster
+- B) Shor breaks factoring/DLP in poly time; AES only loses half its bits to Grover
+- C) AES is information-theoretically secure against any quantum adversary
+- D) RSA is already broken classically via the GNFS at 2048-bit sizes
 
 **Correct: B) Shor solves factoring and discrete log in polynomial time on a quantum computer; AES has no such structure — Grover only halves the security level**
 

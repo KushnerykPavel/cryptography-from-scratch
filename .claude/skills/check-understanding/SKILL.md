@@ -133,6 +133,11 @@ Wait for answer before moving on.
 Self-check before sending: read option descriptions out of context. If a
 stranger could pick the right answer from descriptions alone, rewrite.
 
+**Length parity:** all option labels in a question must be within ~25% of
+each other in character count. A noticeably longer option telegraphs the
+correct answer. Pad distractors with plausible technical detail to match,
+or trim the correct option — never let one stand out by size.
+
 ### Step 5: Track and Score
 
 Running tally:
