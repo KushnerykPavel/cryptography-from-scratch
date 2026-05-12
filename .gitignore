@@ -1,0 +1,33 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+target/
+node_modules/
+dist/
+build/
+*.so
+*.dylib
+*.dll
+.DS_Store
+.idea/
+.vscode/
+*.log
+*.key
+*.pem
+keys/
+
+# OpenCode session artifacts (commands/ is tracked, everything else isn't)
+.opencode/node_modules/
+.opencode/package.json
+.opencode/package-lock.json
+.opencode/.opencode/
+.opencode/AGENTS.md
+.opencode/opencode.json
+.opencode/.gitignore
+
+# Personal progress state written by /find-your-level + /check-understanding
+.progress.json

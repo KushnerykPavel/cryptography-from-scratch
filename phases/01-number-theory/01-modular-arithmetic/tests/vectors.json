@@ -1,0 +1,13 @@
+{
+  "source": "project-internal + RFC 8017 §C",
+  "vectors": [
+    {"op": "mod_pow", "base": 2, "exp": 10, "n": 1000, "expected": 24},
+    {"op": "mod_pow", "base": 7, "exp": 13, "n": 19, "expected": 7},
+    {"op": "mod_pow", "base": 4, "exp": 13, "n": 497, "expected": 445},
+    {"op": "mod_pow", "base": 0, "exp": 0, "n": 7, "expected": 1},
+    {"op": "mod_pow", "base": 5, "exp": 0, "n": 1, "expected": 0},
+    {"op": "mod_add", "a": 7, "b": 5, "n": 12, "expected": 0},
+    {"op": "mod_sub", "a": 3, "b": 7, "n": 11, "expected": 7},
+    {"op": "mod_mul", "a": 6, "b": 7, "n": 41, "expected": 1}
+  ]
+}

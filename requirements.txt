@@ -1,0 +1,12 @@
+cryptography>=42.0
+pycryptodome>=3.20
+gmpy2>=2.1
+sympy>=1.12
+numpy>=1.26
+galois>=0.3
+fpylll>=0.6
+py_ecc>=7.0
+ecdsa>=0.18
+pynacl>=1.5
+pytest>=8.0
+hypothesis>=6.100
