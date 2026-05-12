@@ -85,6 +85,7 @@ Three slash commands ship with the repo and work in both **Claude Code** and **O
 |---------|--------------|
 | `/find-your-level` | 🧭 10-question quiz that maps your knowledge to a starting phase and builds a personalized path with hour estimates |
 | `/check-understanding <phase>` | 📝 Per-phase quiz (8 questions) with feedback and specific lessons to review |
+| `/lesson <phase> <lesson>` | 🎓 **OpenCode tutor mode** — walks you through a single lesson (Problem → Concept → Build → Use → Attack → Ship → 8-Q quiz). You write the code; the tutor hints, runs tests, and quizzes you. Never auto-fills `NotImplementedError` stubs |
 | `/my-progress` | 📊 Personal dashboard — phases mastered, hours done / remaining, pace estimate, next step |
 
 Progress is persisted to `.progress.json` (git-ignored, personal). For manual tracking see [`PROGRESS.md`](PROGRESS.md).
@@ -93,6 +94,7 @@ Examples:
 
 ```
 /find-your-level
+/lesson 1 2          # Phase 1, Lesson 2 (GCD + Extended Euclidean) in tutor mode
 /check-understanding 4
 /check-understanding zero-knowledge
 /my-progress
@@ -101,9 +103,9 @@ Examples:
 | Agent | Source |
 |-------|--------|
 | Claude Code | [`.claude/skills/`](.claude/skills/) |
-| OpenCode | [`.opencode/commands/`](.opencode/commands/) (delegates to the same SKILL.md procedure) |
+| OpenCode | [`.opencode/commands/`](.opencode/commands/) (slash commands) + [`.opencode/agent/crypto-tutor.md`](.opencode/agent/crypto-tutor.md) (tutor agent) |
 
-Project-wide agent context lives in [`AGENTS.md`](AGENTS.md), which OpenCode reads natively and Claude Code picks up via fallback.
+Project-wide agent context lives in [`AGENTS.md`](AGENTS.md), which OpenCode reads natively and Claude Code picks up via fallback. The **Teaching mode** section in `AGENTS.md` is mandatory reading for any agent — it forbids auto-implementing lessons and defines the tutor loop. OpenCode users get a dedicated `crypto-tutor` agent (with `edit: ask` / `write: ask` permission gates) so stub-filling cannot happen silently.
 
 ## Contributing
 

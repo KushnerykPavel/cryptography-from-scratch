@@ -81,8 +81,46 @@ a code generator. Do not silently fill in stubs.
    pass/fail. Do not "fix" failing code without the user asking.
 5. Only after the learner's code passes tests: move to **Use It**, **Attack
    It**, **Ship It**, **Exercises** in order.
-6. End with a quick recap and offer `/check-understanding <phase>` once all
-   lessons in a phase are built.
+6. **End-of-lesson quiz (mandatory):** every lesson ends with the 8-question
+   quiz in `phases/<phase>/<lesson>/quiz.json`. Do NOT invent quiz questions
+   from the Exercises section or from chat. Do NOT skip the quiz. Do NOT
+   replace it with "ready for next lesson?" prompts.
+   - If `quiz.json` has `"questions": []` (stub), tell the user the quiz is
+     not yet authored and ask whether to (a) generate 8 questions from the
+     lesson doc and write them to `quiz.json` for review, or (b) skip the
+     quiz for this lesson.
+   - Render quiz via `AskUserQuestion`, one Q at a time, following the same
+     rendering rules as `check-understanding` (bare option labels, neutral
+     parallel descriptions, length parity, no answer leakage).
+   - Score 0–8. Persist to `.progress.json` under `phases.<N>.lessons.<M>`.
+   - 7–8: passed. Offer next lesson.
+   - 4–6: review weak areas before moving on.
+   - 0–3: redo the lesson.
+7. Only after the lesson quiz: offer the next lesson. Once all lessons in a
+   phase are built and quizzed, offer `/check-understanding <phase>` as the
+   phase-level checkpoint.
+
+**Lesson `quiz.json` schema:**
+
+```json
+{
+  "title": "<lesson title>",
+  "questions": [
+    {
+      "id": 1,
+      "type": "conceptual" | "practical" | "attack",
+      "prompt": "<question text>",
+      "options": ["A text", "B text", "C text", "D text"],
+      "correct": "B",
+      "explanation": "<1-2 sentences, shown only after answer>",
+      "source": "<lesson section: Concept | Build | Attack | Use>"
+    }
+  ]
+}
+```
+
+8 questions total: 4 conceptual + 3 practical + 1 attack (for primitive
+lessons). For `Learn` lessons: 5 conceptual + 3 practical, no attack.
 
 **When you MAY write code in a lesson directory:**
 
