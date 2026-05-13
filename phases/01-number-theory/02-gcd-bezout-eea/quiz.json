@@ -74,15 +74,15 @@
     },
     {
       "stage": "post",
-      "question": "Why is `extended_gcd` unsuitable for production constant-time RSA decryption?",
+      "question": "What should this lesson's implementation return for `gcd(0, 0)` and `extended_gcd(0, 0)`?",
       "options": [
-        "Because its iteration count and branches depend on the input bits",
-        "Because the algorithm cannot compute inverses for primes above 1024 bits",
-        "Because Bezout coefficients can grow larger than the modulus n",
-        "Because Python's recursion limit blocks 2048-bit RSA key sizes"
+        "`gcd(0, 0) = 1` and `extended_gcd(0, 0)` should return coefficients for 1",
+        "`gcd(0, 0) = 0` and `extended_gcd(0, 0)` should return `(0, 0, 0)`",
+        "`gcd(0, 0)` is undefined so both functions must raise immediately",
+        "`gcd(0, 0) = 0` and `extended_gcd(0, 0)` should return `(1, 0, 0)`"
       ],
-      "correct": 0,
-      "explanation": "EEA has data-dependent loop counts and branches — a timing side channel. Constant-time RSA uses Fermat's-method inverse (a^(p−2) mod p) or specialized constant-time routines."
+      "correct": 1,
+      "explanation": "This lesson defines the degenerate case explicitly: `gcd(0, 0) = 0`, and `extended_gcd(0, 0)` returns `(0, 0, 0)`, which still satisfies `s*a + t*b = g`."
     },
     {
       "stage": "post",

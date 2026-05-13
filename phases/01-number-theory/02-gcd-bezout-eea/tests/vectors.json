@@ -1,1 +1,18 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "project-internal Euclidean algorithm and Bezout identity examples",
+  "vectors": [
+    {"op": "gcd", "a": 240, "b": 46, "expected": 2},
+    {"op": "gcd", "a": 35, "b": 15, "expected": 5},
+    {"op": "gcd", "a": 17, "b": 31, "expected": 1},
+    {"op": "gcd", "a": -99, "b": 78, "expected": 3},
+    {"op": "gcd", "a": 0, "b": 13, "expected": 13},
+    {"op": "gcd", "a": 0, "b": 0, "expected": 0},
+    {"op": "extended_gcd", "a": 240, "b": 46, "expected_gcd": 2},
+    {"op": "extended_gcd", "a": 35, "b": 15, "expected_gcd": 5},
+    {"op": "extended_gcd", "a": 17, "b": 31, "expected_gcd": 1},
+    {"op": "extended_gcd", "a": -99, "b": 78, "expected_gcd": 3},
+    {"op": "extended_gcd", "a": 0, "b": 13, "expected_gcd": 13},
+    {"op": "extended_gcd", "a": 27, "b": 0, "expected_gcd": 27},
+    {"op": "extended_gcd", "a": 0, "b": 0, "expected_gcd": 0}
+  ]
+}

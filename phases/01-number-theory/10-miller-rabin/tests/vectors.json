@@ -1,1 +1,44 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal Miller-Rabin examples cross-checked with Python pow; deterministic fixed-base bound from Jonathan Sorenson and Jonathan Webster, Strong Pseudoprimes to Twelve Prime Bases, 2015.",
+  "vectors": [
+    {"op": "decompose_n_minus_one", "n": 13, "expected": [2, 3]},
+    {"op": "decompose_n_minus_one", "n": 561, "expected": [4, 35]},
+    {"op": "decompose_n_minus_one", "n": 2, "expected_error": "n must be an odd integer greater than 2"},
+
+    {"op": "strong_liar_sequence", "a": 2, "n": 9, "expected": [2, 4, 7]},
+    {"op": "strong_liar_sequence", "a": 2, "n": 13, "expected": [8, 12]},
+
+    {"op": "miller_rabin_witness", "a": 2, "n": 9, "expected": true},
+    {"op": "miller_rabin_witness", "a": 2, "n": 13, "expected": false},
+    {"op": "miller_rabin_witness", "a": 2, "n": 561, "expected": true},
+    {"op": "miller_rabin_witness", "a": 50, "n": 91, "expected": true},
+
+    {"op": "is_probable_prime", "n": 2, "bases": [2, 3, 5], "expected": true},
+    {"op": "is_probable_prime", "n": 97, "bases": [2, 3, 5], "expected": true},
+    {"op": "is_probable_prime", "n": 2047, "bases": [2], "expected": true},
+    {"op": "is_probable_prime", "n": 2047, "bases": [2, 3], "expected": false},
+    {"op": "is_probable_prime", "n": 3215031751, "bases": [2, 3, 5, 7], "expected": true},
+    {"op": "is_probable_prime", "n": 3215031751, "bases": [2, 3, 5, 7, 11], "expected": false},
+
+    {"op": "deterministic_bases_for", "n": 40, "expected": [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]},
+    {"op": "deterministic_bases_for", "n": 3, "expected": [2]},
+    {"op": "deterministic_bases_for", "n": 3317044064679887385961981, "expected_error": "n exceeds this lesson's deterministic fixed-base range"},
+
+    {"op": "is_prime_deterministic", "n": 0, "expected": false},
+    {"op": "is_prime_deterministic", "n": 2, "expected": true},
+    {"op": "is_prime_deterministic", "n": 97, "expected": true},
+    {"op": "is_prime_deterministic", "n": 561, "expected": false},
+    {"op": "is_prime_deterministic", "n": 2305843009213693951, "expected": true},
+
+    {"op": "find_miller_rabin_liars", "n": 9, "expected": []},
+    {"op": "find_miller_rabin_liars", "n": 91, "expected": [9, 10, 12, 16, 17, 22, 29, 38, 53, 62, 69, 74, 75, 79, 81, 82]},
+    {"op": "find_miller_rabin_liars", "n": 561, "expected": [50, 101, 103, 256, 305, 458, 460, 511]},
+
+    {"op": "normalize_odd_candidate", "raw": 18, "bits": 5, "expected": 19},
+    {"op": "normalize_odd_candidate", "raw": 2, "bits": 8, "expected": 131},
+    {"op": "normalize_odd_candidate", "raw": 7, "bits": 1, "expected_error": "bits must be at least 2"},
+
+    {"op": "generate_probable_prime", "bits": 8, "raw_values": [130, 132, 134, 136], "expected": [131, 1]},
+    {"op": "generate_probable_prime", "bits": 8, "raw_values": [140, 142, 150], "expected": [151, 3]}
+  ]
+}

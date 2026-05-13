@@ -1,4 +1,100 @@
 {
-  "title": "Groups \u2014 Definition, Examples, Order",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which data must be specified before you can decide whether something is a group?",
+      "options": [
+        "A set of elements and the operation used to combine two elements",
+        "A prime number and a public exponent chosen for encryption",
+        "A list of generators without any rule for combining elements",
+        "A modulus n and an unrelated hash function over byte strings"
+      ],
+      "correct": 0,
+      "explanation": "A group is a set together with one operation. The axioms are about that specific pair."
+    },
+    {
+      "stage": "pre",
+      "question": "In Z/5Z under addition, which element acts as the identity?",
+      "options": [
+        "1, because it is the first nonzero residue modulo 5",
+        "0, because adding it leaves every residue unchanged",
+        "4, because it is congruent to -1 modulo 5",
+        "5, because it is the modulus used to define the clock"
+      ],
+      "correct": 1,
+      "explanation": "The additive identity is 0: for every a, 0 + a ≡ a + 0 ≡ a (mod 5)."
+    },
+    {
+      "stage": "post",
+      "question": "Which list gives the four group axioms?",
+      "options": [
+        "Closure, associativity, identity, and inverses",
+        "Primality, randomness, compression, and padding",
+        "Commutativity, ordering, hashing, and sampling",
+        "Factoring, exponentiation, reduction, and encoding"
+      ],
+      "correct": 0,
+      "explanation": "A group requires closure, associativity, an identity element, and an inverse for every element."
+    },
+    {
+      "stage": "post",
+      "question": "Why is Z/8Z under multiplication not a group?",
+      "options": [
+        "The multiplication operation is not defined for residues modulo 8",
+        "The identity element 1 is outside the residue set modulo 8",
+        "Some residues, such as 2, have no multiplicative inverse modulo 8",
+        "The product of any two residues is always larger than the modulus"
+      ],
+      "correct": 2,
+      "explanation": "A multiplicative group needs inverses. Only residues coprime to 8 are invertible, so all of Z/8Z fails."
+    },
+    {
+      "stage": "post",
+      "question": "What is the group order of (Z/8Z)^* = {1, 3, 5, 7}?",
+      "options": [
+        "8, because multiplication is computed modulo 8",
+        "2, because every non-identity element squares to 1",
+        "1, because 1 is the multiplicative identity",
+        "4, because the set contains four invertible residues"
+      ],
+      "correct": 3,
+      "explanation": "Group order means the number of elements in the group. The unit group modulo 8 has four elements."
+    },
+    {
+      "stage": "post",
+      "question": "In Z/6Z under addition, what is the order of the element 2?",
+      "options": [
+        "2, because the element itself is the residue 2",
+        "4, because 2 + 2 ≡ 4 (mod 6)",
+        "3, because 2 + 2 + 2 ≡ 0 (mod 6)",
+        "6, because the whole additive group has six elements"
+      ],
+      "correct": 2,
+      "explanation": "The element order is the repeat count needed to return to the identity. For 2 mod 6, that count is 3."
+    },
+    {
+      "stage": "post",
+      "question": "What does closure mean for a finite operation table?",
+      "options": [
+        "Every row is sorted in increasing numerical order",
+        "Every element appears exactly once in the first column",
+        "Every table entry is one of the elements in the declared set",
+        "Every non-identity element has prime-numbered order"
+      ],
+      "correct": 2,
+      "explanation": "Closure means combining valid elements never leaves the set."
+    },
+    {
+      "stage": "post",
+      "question": "Why can accepting small-order elements be dangerous in a crypto protocol?",
+      "options": [
+        "They force every modular multiplication to become a floating-point calculation",
+        "They make repeated operations cycle through few values, leaking constraints on secrets",
+        "They turn every finite group into a non-associative operation table",
+        "They prevent public keys from being serialized into byte strings"
+      ],
+      "correct": 1,
+      "explanation": "Small-order elements can trap secret-dependent operations in tiny cycles, which is the core risk behind small-subgroup attacks."
+    }
+  ]
 }

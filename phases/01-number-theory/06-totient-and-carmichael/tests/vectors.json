@@ -1,1 +1,43 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "project-internal totient and Carmichael examples cross-checked with elementary formulas and Python pow",
+  "vectors": [
+    {"op": "prime_factorization", "n": 1, "expected": []},
+    {"op": "prime_factorization", "n": 36, "expected": [[2, 2], [3, 2]]},
+    {"op": "prime_factorization", "n": 561, "expected": [[3, 1], [11, 1], [17, 1]]},
+
+    {"op": "euler_totient", "n": 1, "expected": 1},
+    {"op": "euler_totient", "n": 36, "expected": 12},
+    {"op": "euler_totient", "n": 45, "expected": 24},
+    {"op": "euler_totient", "n": 3233, "expected": 3120},
+    {"op": "euler_totient", "n": 0, "expected_error": "n must be positive"},
+
+    {"op": "carmichael_prime_power", "p": 2, "exponent": 1, "expected": 1},
+    {"op": "carmichael_prime_power", "p": 2, "exponent": 5, "expected": 8},
+    {"op": "carmichael_prime_power", "p": 3, "exponent": 2, "expected": 6},
+    {"op": "carmichael_prime_power", "p": 9, "exponent": 1, "expected_error": "p must be prime"},
+
+    {"op": "carmichael_lambda", "n": 1, "expected": 1},
+    {"op": "carmichael_lambda", "n": 8, "expected": 2},
+    {"op": "carmichael_lambda", "n": 15, "expected": 4},
+    {"op": "carmichael_lambda", "n": 36, "expected": 6},
+    {"op": "carmichael_lambda", "n": 45, "expected": 12},
+    {"op": "carmichael_lambda", "n": 3233, "expected": 780},
+
+    {"op": "reduce_exponent_lambda", "base": 7, "exp": 222, "n": 15, "expected": 4},
+    {"op": "reduce_exponent_lambda", "base": 13, "exp": 12345, "n": 77, "expected": 76},
+    {"op": "reduce_exponent_lambda", "base": 6, "exp": 20, "n": 15, "expected_error": "base must be coprime to n"},
+    {"op": "reduce_exponent_lambda", "base": 7, "exp": -1, "n": 15, "expected_error": "negative exponent requires modular inverse"},
+
+    {"op": "rsa_private_exponent", "e": 17, "p": 61, "q": 53, "expected": 413},
+    {"op": "rsa_private_exponent", "e": 6, "p": 61, "q": 53, "expected_error": "e must be coprime to lambda(n)"},
+    {"op": "rsa_private_exponent", "e": 17, "p": 61, "q": 61, "expected_error": "p and q must be distinct"},
+
+    {"op": "factor_semiprime_from_phi", "n": 3233, "phi_n": 3120, "expected": [61, 53]},
+    {"op": "factor_semiprime_from_phi", "n": 15, "phi_n": 9, "expected_error": "no integer factors match n and phi(n)"},
+
+    {"op": "is_carmichael_korselt", "n": 561, "expected": true},
+    {"op": "is_carmichael_korselt", "n": 1105, "expected": true},
+    {"op": "is_carmichael_korselt", "n": 45, "expected": false},
+    {"op": "is_carmichael_korselt", "n": 17, "expected": false}
+  ]
+}

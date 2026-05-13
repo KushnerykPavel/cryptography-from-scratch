@@ -2,99 +2,99 @@
   "questions": [
     {
       "stage": "pre",
-      "question": "Compute `3^4 mod 7` by hand.",
+      "question": "What does it mean for an integer `a` to have an inverse modulo `n`?",
       "options": [
-        "1, since 81 = 11·7 + 4 then reduced once more",
-        "4, since 81 = 11·7 + 4",
-        "5, since 81 = 10·7 + 11 wraps once",
-        "6, since 81 mod 7 lands one below the modulus"
+        "There exists `x` with `a + x ≡ 0 (mod n)`",
+        "There exists `x` with `a · x ≡ 1 (mod n)`",
+        "There exists `x` with `a − x ≡ n (mod n)`",
+        "There exists `x` with `a / x = n` over the integers"
       ],
       "correct": 1,
-      "explanation": "3^4 = 81. 81 = 11·7 + 4, so 81 mod 7 = 4."
+      "explanation": "A modular inverse is a multiplicative inverse: some residue x with a·x ≡ 1 (mod n). It is modular division in the only sense that works in Z/nZ."
     },
     {
       "stage": "pre",
-      "question": "Why would you compute `a^k mod n` instead of `(a^k) mod n` separately?",
+      "question": "Why is repeated squaring useful for computing `a^k mod n`?",
       "options": [
-        "To avoid floating-point error in intermediate exponentiations",
-        "To keep intermediates bounded; a^k itself can have billions of digits",
-        "To make the result fit into a fixed 32-bit integer representation",
-        "To ensure the result is always positive regardless of sign of a"
+        "It replaces division by multiplication in every modular ring",
+        "It lets you use the binary expansion of `k` instead of multiplying `a` exactly `k` times",
+        "It avoids the need to reduce modulo `n` until the final step",
+        "It guarantees the exponentiation result is prime whenever `n` is prime"
       ],
       "correct": 1,
-      "explanation": "For RSA k ≈ 2^2048, so a^k would have ~10^617 digits. Reducing each step keeps multiplicands bounded by n²."
+      "explanation": "Binary exponentiation reads the exponent bit by bit, so the work scales with the bit length of k rather than the numeric value of k."
     },
     {
       "stage": "post",
-      "question": "Square-and-multiply computes `a^k mod n` in how many multiplications?",
+      "question": "If `extended_gcd(a, n)` returns `(1, s, t)`, what does `s` represent modulo `n`?",
       "options": [
-        "Linear in k, requiring one multiplication per increment of k",
-        "Logarithmic in k, roughly 2·log₂(k) multiplications total",
-        "Constant in k once a precomputed window table exists for n",
-        "Quadratic in the bit length of k due to repeated squaring loops"
+        "The additive inverse of `a` modulo `n`",
+        "The multiplicative inverse of `a` modulo `n`",
+        "The least residue of `n` modulo `a`",
+        "The quotient used in the last Euclidean step"
       ],
       "correct": 1,
-      "explanation": "Each bit of k contributes one squaring; set bits also contribute one multiply. Total ~2·log₂(k) multiplications mod n."
+      "explanation": "From s·a + t·n = 1, reducing modulo n gives s·a ≡ 1 (mod n). So s is an inverse of a, usually normalized as s % n."
     },
     {
       "stage": "post",
-      "question": "How does the Extended Euclidean method find `a⁻¹ mod n`?",
+      "question": "When does `a` fail to have a modular inverse modulo `n`?",
       "options": [
-        "Compute (s, t) with s·a + t·n = gcd(a,n)=1; then a⁻¹ ≡ s (mod n)",
-        "Compute a^φ(n) mod n via Euler; the result equals a⁻¹ for any a",
-        "Run Miller-Rabin on n until a primality witness gives the inverse",
-        "Take s = n − a so that s·a wraps to 1 modulo n in one step"
+        "When `a` is larger than `n` before reduction",
+        "When `gcd(a, n)` is not equal to 1",
+        "When `n` is prime and `a` is odd",
+        "When `a` is negative and `n` is positive"
+      ],
+      "correct": 1,
+      "explanation": "Invertibility in Z/nZ is exactly the coprimality condition gcd(a, n) = 1. If the gcd is larger than 1, no multiplicative inverse exists."
+    },
+    {
+      "stage": "post",
+      "question": "Why does `a^(p−2) mod p` equal `a^(-1) mod p` when `p` is prime and `a` is non-zero mod `p`?",
+      "options": [
+        "Because `a^(p−1) ≡ 1 (mod p)` by Fermat, so multiplying by `a^(-1)` gives `a^(p−2) ≡ a^(-1)`",
+        "Because `p−2` is always the unique inverse exponent in any composite modulus as well",
+        "Because repeated squaring forces every non-zero residue to square to 1 modulo a prime",
+        "Because the Euclidean algorithm returns the exponent `p−2` directly from the quotient chain"
       ],
       "correct": 0,
-      "explanation": "EEA returns Bezout (s, t) with s·a + t·n = 1. Reducing mod n: s·a ≡ 1 (mod n), so s ≡ a⁻¹."
+      "explanation": "Fermat's little theorem gives a^(p−1) ≡ 1 for non-zero a mod p. Rearranging inside the multiplicative group yields a^(p−2) ≡ a^(-1)."
     },
     {
       "stage": "post",
-      "question": "Fermat's-method inverse computes `a⁻¹ mod p` (for prime p) as which expression?",
+      "question": "What is `mod_inverse(10, 17)`?",
       "options": [
-        "a^(p−1) mod p, then divided by p−1 to normalize the residue",
-        "a^(p−2) mod p, since a^(p−1) ≡ 1 (mod p) implies a · a^(p−2) ≡ 1",
-        "(p − a) mod p, exploiting the negation rule for prime moduli",
-        "a · (p−1) mod p, scaling by the order of the multiplicative group"
+        "5, since `10·5 = 50 ≡ 16 (mod 17)`",
+        "7, since `10·7 = 70 ≡ 2 (mod 17)`",
+        "12, since `10·12 = 120 ≡ 1 (mod 17)`",
+        "15, since `10·15 = 150 ≡ 14 (mod 17)`"
       ],
-      "correct": 1,
-      "explanation": "FLT: a^(p−1) ≡ 1 (mod p). Multiplying both sides by a⁻¹ gives a⁻¹ ≡ a^(p−2) (mod p). Constant-time when p is fixed."
+      "correct": 2,
+      "explanation": "120 = 7·17 + 1, so 10·12 ≡ 1 (mod 17). That makes 12 the inverse of 10 modulo 17."
     },
     {
       "stage": "post",
-      "question": "Why is Python's built-in `pow(a, k, n)` preferred over a hand-rolled `mod_pow` in production?",
+      "question": "How many loop iterations does square-and-multiply need relative to the exponent `k`?",
       "options": [
-        "Because it is GMP-backed and constant-time-aware for cryptographic use",
-        "Because it caches results across invocations using a global LRU table",
-        "Because it always returns a canonical signed representative in (−n/2, n/2]",
-        "Because it ignores the exponent when smaller than the modulus n"
+        "About `k` iterations, one per multiplication in the full expansion",
+        "About `sqrt(k)` iterations, because squaring halves the work each time",
+        "About `log2(k)` iterations, one per exponent bit",
+        "Exactly `n` iterations, because reduction controls the loop count"
+      ],
+      "correct": 2,
+      "explanation": "The algorithm shifts the exponent right one bit per pass, so the number of loop iterations is proportional to the bit length of k, i.e. O(log k)."
+    },
+    {
+      "stage": "post",
+      "question": "A secret-key routine uses textbook square-and-multiply and only performs the multiply step when the current exponent bit is 1. What does this risk?",
+      "options": [
+        "A timing side channel that leaks exponent bits from runtime differences",
+        "A common-modulus attack that recovers plaintext from two ciphertexts",
+        "A broadcast attack that requires three recipients with low public exponent",
+        "A factoring shortcut that reveals the prime divisors from the square steps"
       ],
       "correct": 0,
-      "explanation": "CPython's `pow(a, k, n)` uses GMP / mpz_powm, which is highly optimized and uses sliding-window exponentiation. Cryptographic libraries also expose constant-time variants."
-    },
-    {
-      "stage": "post",
-      "question": "What is `mod_inverse(3, 11)`?",
-      "options": [
-        "4, since 3·4 = 12 ≡ 1 (mod 11)",
-        "7, since 3·7 = 21 ≡ 10 (mod 11)",
-        "8, since 3·8 = 24 ≡ 2 (mod 11)",
-        "9, since 3·9 = 27 ≡ 5 (mod 11)"
-      ],
-      "correct": 0,
-      "explanation": "3·4 = 12 = 11 + 1, so 3·4 ≡ 1 (mod 11). Thus 3⁻¹ ≡ 4 (mod 11)."
-    },
-    {
-      "stage": "post",
-      "question": "A naive RSA decryption uses textbook square-and-multiply where each multiplication is timed differently for set vs cleared bits of `d`. What attack does this enable?",
-      "options": [
-        "Wiener's attack, recovering d from a small public exponent estimate",
-        "Timing side channel: bit-by-bit recovery of d from decryption latency",
-        "Common-modulus attack, exploiting two parties sharing the modulus n",
-        "Hastad broadcast, exploiting low public exponent across many recipients"
-      ],
-      "correct": 1,
-      "explanation": "If multiply runs only on set bits of d, latency reveals d's Hamming pattern. Constant-time exponentiation (Montgomery ladder, always-multiply) closes the channel."
+      "explanation": "If the multiply branch runs only for 1-bits, timing can reveal the private exponent's bit pattern. Constant-time exponentiation avoids that data-dependent control flow."
     }
   ]
 }

@@ -1,4 +1,100 @@
 {
-  "title": "Cyclic Groups & Generators",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does it mean for an element g to generate a group G?",
+      "options": [
+        "Repeating g with the group operation reaches every element of G",
+        "The value g is larger than every other encoded group element",
+        "The element g has no inverse under the group operation",
+        "Hashing g produces a uniformly random element of G"
+      ],
+      "correct": 0,
+      "explanation": "The generated subgroup <g> contains all repeated powers or sums of g. If <g> = G, then g generates G."
+    },
+    {
+      "stage": "pre",
+      "question": "In a multiplicative group, what is the identity element usually written as?",
+      "options": [
+        "0, because multiplication starts counting from zero",
+        "1, because multiplying by it leaves elements unchanged",
+        "-1, because it reverses every multiplication",
+        "The modulus, because all arithmetic is reduced by it"
+      ],
+      "correct": 1,
+      "explanation": "The multiplicative identity is 1: for every element a, 1*a = a*1 = a."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement describes a cyclic group?",
+      "options": [
+        "A group whose elements can all be reached by repeating one element",
+        "A group whose operation table must be sorted in increasing order",
+        "A group that has no identity element but still has inverses",
+        "A group that only exists when the modulus is a composite number"
+      ],
+      "correct": 0,
+      "explanation": "A cyclic group has at least one generator g such that <g> is the entire group."
+    },
+    {
+      "stage": "post",
+      "question": "In Z/6Z under addition, why is 2 not a generator?",
+      "options": [
+        "It has no additive inverse modulo 6",
+        "Its repeated sums cycle through 0, 2, and 4 only",
+        "It is not a valid residue modulo 6",
+        "It makes addition modulo 6 non-associative"
+      ],
+      "correct": 1,
+      "explanation": "The generated subgroup <2> is {0, 2, 4}, so it does not reach every residue modulo 6."
+    },
+    {
+      "stage": "post",
+      "question": "In (Z/7Z)^*, the element 3 has order 6. What does that imply?",
+      "options": [
+        "3 is a generator of the whole multiplicative group modulo 7",
+        "3 is outside the multiplicative group modulo 7",
+        "3 has no multiplicative inverse modulo 7",
+        "3 generates only the identity element"
+      ],
+      "correct": 0,
+      "explanation": "(Z/7Z)^* has six elements. If an element has order six, its powers reach the whole group."
+    },
+    {
+      "stage": "post",
+      "question": "What is a primitive root modulo a prime p?",
+      "options": [
+        "A generator of the multiplicative group (Z/pZ)^*",
+        "Any residue whose decimal representation starts with 1",
+        "A number that divides p without leaving a remainder",
+        "The additive identity of Z/pZ"
+      ],
+      "correct": 0,
+      "explanation": "A primitive root modulo p is a generator of the nonzero residues under multiplication modulo p."
+    },
+    {
+      "stage": "post",
+      "question": "Why is a small-order base dangerous in a Diffie-Hellman-like protocol?",
+      "options": [
+        "It makes modular multiplication impossible to compute",
+        "It restricts public values to a short cycle, leaking information about secret exponents",
+        "It guarantees every secret exponent is a prime number",
+        "It prevents public keys from being represented as integers"
+      ],
+      "correct": 1,
+      "explanation": "If the base has small order, g^x depends only on x modulo that small order. That leaks constraints on the secret."
+    },
+    {
+      "stage": "post",
+      "question": "What does a brute-force discrete logarithm search do in a small generated subgroup?",
+      "options": [
+        "It tries e, g, g^2, and so on until the target appears",
+        "It factors the modulus before checking whether the target is prime",
+        "It changes the group operation so every element becomes a generator",
+        "It hashes the target repeatedly until the identity disappears"
+      ],
+      "correct": 0,
+      "explanation": "The brute-force attack walks the generated cycle and returns the exponent where the target first appears."
+    }
+  ]
 }

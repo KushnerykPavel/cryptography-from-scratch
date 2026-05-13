@@ -1,4 +1,101 @@
 {
   "title": "Rings, Ideals, Quotient Rings",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What distinguishes a ring from an abelian group?",
+      "options": [
+        "A ring has a second operation that is associative and distributes over addition",
+        "A ring requires every element to have a multiplicative inverse",
+        "A ring forbids commutativity of addition",
+        "A ring is always finite"
+      ],
+      "correct": 0,
+      "explanation": "A ring is an abelian group under addition with an additional associative multiplication that distributes over addition. Multiplicative inverses are not required."
+    },
+    {
+      "stage": "pre",
+      "question": "Which subset of Z/12Z is NOT an ideal?",
+      "options": [
+        "{0, 1}",
+        "{0, 6}",
+        "{0, 3, 6, 9}",
+        "{0, 4, 8}"
+      ],
+      "correct": 0,
+      "explanation": "{0, 1} fails additive closure (1 + 1 = 2) and absorption (2 * 1 = 2). The other three are principal ideals (6), (3), and (4)."
+    },
+    {
+      "stage": "post",
+      "question": "What does the absorption rule require of an ideal I in a ring R?",
+      "options": [
+        "For every r in R and s in I, both r * s and s * r lie in I",
+        "Every element of R must equal some element of I",
+        "The product of any two elements of I must equal 1",
+        "I must contain the multiplicative identity"
+      ],
+      "correct": 0,
+      "explanation": "Absorption: multiplying any ring element by any ideal element stays in the ideal. This is precisely what makes coset multiplication well-defined."
+    },
+    {
+      "stage": "post",
+      "question": "Why is Z/nZ a field exactly when n is prime?",
+      "options": [
+        "When n is prime, every nonzero element is coprime to n, so it has a multiplicative inverse",
+        "Composite n always lacks an additive identity",
+        "Prime n forces multiplication to be non-commutative",
+        "Prime n removes the need for distributivity"
+      ],
+      "correct": 0,
+      "explanation": "For prime n, gcd(a, n) = 1 for every nonzero a, so every nonzero element is a unit. Composite n produces zero divisors and breaks invertibility."
+    },
+    {
+      "stage": "post",
+      "question": "In Z/12Z, what is the principal ideal (4)?",
+      "options": [
+        "{0, 4, 8}",
+        "{0, 3, 6, 9}",
+        "{4, 8, 12}",
+        "All multiples of 4 in Z"
+      ],
+      "correct": 0,
+      "explanation": "(4) = { r * 4 mod 12 : r in Z/12Z } = {0, 4, 8}."
+    },
+    {
+      "stage": "post",
+      "question": "How many cosets does Z/12Z / (3) have?",
+      "options": [
+        "3",
+        "4",
+        "9",
+        "12"
+      ],
+      "correct": 0,
+      "explanation": "The ideal (3) = {0, 3, 6, 9} has 4 elements; |Z/12Z| / |(3)| = 12 / 4 = 3 cosets, with canonical representatives 0, 1, 2."
+    },
+    {
+      "stage": "post",
+      "question": "Why must I be an ideal — not just an additive subgroup — for R/I to be a ring?",
+      "options": [
+        "Without absorption, multiplication of cosets depends on the representative chosen",
+        "Without absorption, addition of cosets becomes non-associative",
+        "Without absorption, the zero coset disappears",
+        "Without absorption, the cosets cease to partition R"
+      ],
+      "correct": 0,
+      "explanation": "Coset multiplication (a + I)(b + I) = ab + I is well-defined only because r * s lands in I for every r in R and s in I."
+    },
+    {
+      "stage": "post",
+      "question": "Which cryptographic object is the quotient ring F_2[x] / (x^8 + x^4 + x^3 + x + 1)?",
+      "options": [
+        "The AES finite field GF(2^8)",
+        "The RSA group (Z/nZ)*",
+        "The secp256k1 scalar field",
+        "The Kyber polynomial ring"
+      ],
+      "correct": 0,
+      "explanation": "AES arithmetic happens in GF(2^8), constructed as the quotient of F_2[x] by the irreducible polynomial x^8 + x^4 + x^3 + x + 1."
+    }
+  ]
 }

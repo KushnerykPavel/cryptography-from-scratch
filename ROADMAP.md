@@ -6,6 +6,8 @@ Progress tracking for every phase and lesson.
 
 **Legend:** ✅ Complete | 🚧 In Progress | ⬚ Planned
 
+**Status:** Phase 1 (Number Theory) complete — 18/18 lessons. Phase 2 (Abstract Algebra) in progress — 5/14 lessons complete (groups, cyclic, subgroups/cosets, homomorphisms, rings). Phase 0 and Phases 3–20 are scaffolded placeholders awaiting content.
+
 ## Phase 0: Setup & Tooling — ⬚ (~9 hours)
 
 | # | Lesson | Status | Est. |
@@ -19,38 +21,38 @@ Progress tracking for every phase and lesson.
 | 07 | Threat Modeling Basics | ⬚ | ~75 min |
 | 08 | Reproducible Builds & Signed Releases | ⬚ | ~75 min |
 
-## Phase 1: Math Foundations I — Number Theory — ⬚ (~21 hours)
+## Phase 1: Math Foundations I — Number Theory — ✅ (~21 hours)
 
 | # | Lesson | Status | Est. |
 |---|--------|--------|------|
-| 01 | Modular Arithmetic from Scratch | ⬚ | ~75 min |
-| 02 | GCD, Bezout, Extended Euclidean Algorithm | ⬚ | ~75 min |
-| 03 | Modular Inverse & Fast Exponentiation | ⬚ | ~75 min |
-| 04 | Fermat's Little Theorem & Euler's Theorem | ⬚ | ~45 min |
-| 05 | Chinese Remainder Theorem | ⬚ | ~75 min |
-| 06 | Euler's Totient & Carmichael Function | ⬚ | ~45 min |
-| 07 | Quadratic Residues & Tonelli-Shanks | ⬚ | ~75 min |
-| 08 | Legendre & Jacobi Symbols | ⬚ | ~45 min |
-| 09 | Prime Generation — Trial Division to Sieves | ⬚ | ~75 min |
-| 10 | Miller-Rabin Primality Testing | ⬚ | ~75 min |
-| 11 | AKS & Provable Primality | ⬚ | ~45 min |
-| 12 | Pollard Rho & Pollard p-1 Factoring | ⬚ | ~75 min |
-| 13 | Quadratic Sieve — Idea and Implementation | ⬚ | ~75 min |
-| 14 | Index Calculus & Discrete Log | ⬚ | ~75 min |
-| 15 | Baby-Step Giant-Step & Pollard's Rho for DLP | ⬚ | ~75 min |
-| 16 | Smooth Numbers & Hidden Subgroup | ⬚ | ~45 min |
-| 17 | Continued Fractions for Cryptanalysis | ⬚ | ~45 min |
-| 18 | Number Theory Lab — Build a `numth` Library | ⬚ | ~120 min |
+| 01 | Modular Arithmetic from Scratch | ✅ | ~75 min |
+| 02 | GCD, Bezout, Extended Euclidean Algorithm | ✅ | ~75 min |
+| 03 | Modular Inverse & Fast Exponentiation | ✅ | ~75 min |
+| 04 | Fermat's Little Theorem & Euler's Theorem | ✅ | ~45 min |
+| 05 | Chinese Remainder Theorem | ✅ | ~75 min |
+| 06 | Euler's Totient & Carmichael Function | ✅ | ~45 min |
+| 07 | Quadratic Residues & Tonelli-Shanks | ✅ | ~75 min |
+| 08 | Legendre & Jacobi Symbols | ✅ | ~45 min |
+| 09 | Prime Generation — Trial Division to Sieves | ✅ | ~75 min |
+| 10 | Miller-Rabin Primality Testing | ✅ | ~75 min |
+| 11 | AKS & Provable Primality | ✅ | ~45 min |
+| 12 | Pollard Rho & Pollard p-1 Factoring | ✅ | ~75 min |
+| 13 | Quadratic Sieve — Idea and Implementation | ✅ | ~75 min |
+| 14 | Index Calculus & Discrete Log | ✅ | ~75 min |
+| 15 | Baby-Step Giant-Step & Pollard's Rho for DLP | ✅ | ~75 min |
+| 16 | Smooth Numbers & Hidden Subgroup | ✅ | ~45 min |
+| 17 | Continued Fractions for Cryptanalysis | ✅ | ~45 min |
+| 18 | Number Theory Lab — Build a `numth` Library | ✅ | ~120 min |
 
-## Phase 2: Math Foundations II — Abstract Algebra — ⬚ (~16 hours)
+## Phase 2: Math Foundations II — Abstract Algebra — 🚧 (~16 hours)
 
 | # | Lesson | Status | Est. |
 |---|--------|--------|------|
-| 01 | Groups — Definition, Examples, Order | ⬚ | ~75 min |
-| 02 | Cyclic Groups & Generators | ⬚ | ~45 min |
-| 03 | Subgroups, Cosets, Lagrange's Theorem | ⬚ | ~75 min |
-| 04 | Group Homomorphisms & Isomorphisms | ⬚ | ~45 min |
-| 05 | Rings, Ideals, Quotient Rings | ⬚ | ~75 min |
+| 01 | Groups — Definition, Examples, Order | ✅ | ~75 min |
+| 02 | Cyclic Groups & Generators | ✅ | ~45 min |
+| 03 | Subgroups, Cosets, Lagrange's Theorem | ✅ | ~75 min |
+| 04 | Group Homomorphisms & Isomorphisms | ✅ | ~45 min |
+| 05 | Rings, Ideals, Quotient Rings | ✅ | ~75 min |
 | 06 | Fields and Field Extensions | ⬚ | ~75 min |
 | 07 | Finite Fields GF(p) | ⬚ | ~75 min |
 | 08 | Finite Fields GF(2^n) — Binary Polynomial Math | ⬚ | ~75 min |

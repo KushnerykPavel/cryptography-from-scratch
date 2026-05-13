@@ -1,1 +1,30 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "project-internal theorem examples + Carmichael counterexamples cross-checked with Python pow",
+  "vectors": [
+    {"op": "euler_totient_naive", "n": 1, "expected": 1},
+    {"op": "euler_totient_naive", "n": 10, "expected": 4},
+    {"op": "euler_totient_naive", "n": 12, "expected": 4},
+    {"op": "fermat_residue", "a": 2, "p": 13, "expected": 1},
+    {"op": "fermat_residue", "a": 7, "p": 11, "expected": 1},
+    {"op": "fermat_residue", "a": 2, "p": 15, "expected_error": "p must be prime"},
+    {"op": "fermat_holds", "a": 2, "p": 13, "expected": true},
+    {"op": "fermat_holds", "a": 13, "p": 13, "expected": false},
+    {"op": "euler_residue", "a": 3, "n": 10, "expected": 1},
+    {"op": "euler_residue", "a": 7, "n": 15, "expected": 1},
+    {"op": "euler_holds", "a": 3, "n": 10, "expected": true},
+    {"op": "euler_holds", "a": 2, "n": 8, "expected": false},
+    {"op": "reduce_exponent_prime", "base": 2, "exp": 100, "p": 13, "expected": 3},
+    {"op": "reduce_exponent_prime", "base": 7, "exp": 222, "p": 11, "expected": 5},
+    {"op": "reduce_exponent_euler", "base": 3, "exp": 100, "n": 10, "expected": 1},
+    {"op": "reduce_exponent_euler", "base": 7, "exp": 40, "n": 15, "expected": 1},
+    {"op": "fermat_primality_test", "n": 13, "bases": [2, 3, 5], "expected": true},
+    {"op": "fermat_primality_test", "n": 15, "bases": [2], "expected": false},
+    {"op": "fermat_primality_test", "n": 561, "bases": [2, 10, 50], "expected": true},
+    {"op": "is_carmichael_naive", "n": 561, "expected": true},
+    {"op": "is_carmichael_naive", "n": 15, "expected": false},
+    {"op": "euler_residue", "a": 2, "n": 8, "expected_error": "a must be coprime to n"},
+    {"op": "reduce_exponent_prime", "base": 2, "exp": 20, "p": 15, "expected_error": "p must be prime"},
+    {"op": "reduce_exponent_prime", "base": 13, "exp": 9, "p": 13, "expected_error": "base must be coprime to p"},
+    {"op": "reduce_exponent_euler", "base": 6, "exp": 20, "n": 15, "expected_error": "base must be coprime to n"}
+  ]
+}

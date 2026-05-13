@@ -1,1 +1,72 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal educational Quadratic Sieve examples cross-checked with direct integer arithmetic. Algorithm reference: Carl Pomerance, The Quadratic Sieve Factoring Algorithm, EUROCRYPT 1984.",
+  "vectors": [
+    {"op": "ceil_sqrt", "n": 1649, "expected": 41},
+    {"op": "ceil_sqrt", "n": 1681, "expected": 41},
+    {"op": "ceil_sqrt", "n": -1, "expected_error": "n must be non-negative"},
+
+    {"op": "is_square", "n": 1681, "expected": true},
+    {"op": "is_square", "n": 1649, "expected": false},
+    {"op": "is_square", "n": -4, "expected": false},
+
+    {"op": "primes_up_to", "limit": 1, "expected": []},
+    {"op": "primes_up_to", "limit": 20, "expected": [2, 3, 5, 7, 11, 13, 17, 19]},
+
+    {"op": "legendre_symbol", "a": 1649, "p": 23, "expected": 1},
+    {"op": "legendre_symbol", "a": 1649, "p": 3, "expected": -1},
+    {"op": "legendre_symbol", "a": 1649, "p": 2, "expected": 1},
+    {"op": "legendre_symbol", "a": 10, "p": 1, "expected_error": "p must be prime"},
+
+    {"op": "tonelli_shanks", "n": 1649, "p": 23, "expected": 4},
+    {"op": "tonelli_shanks", "n": 1649, "p": 3, "expected": null},
+    {"op": "tonelli_shanks", "n": 1649, "p": 2, "expected": 1},
+    {"op": "tonelli_shanks", "n": 10, "p": 8, "expected_error": "p must be an odd prime"},
+
+    {"op": "factor_base", "n": 1649, "bound": 30, "expected": [2, 5, 7, 23, 29]},
+    {"op": "factor_base", "n": 91, "bound": 20, "expected": [2, 3, 5, 11]},
+    {"op": "factor_base", "n": 1, "bound": 20, "expected_error": "n must be greater than 1"},
+    {"op": "factor_base", "n": 91, "bound": 1, "expected_error": "bound must be at least 2"},
+
+    {
+      "op": "roots_for_factor_base",
+      "n": 1649,
+      "base": [2, 5, 7, 23, 29],
+      "expected": {"2": [1], "5": [2, 3], "7": [2, 5], "23": [4, 19], "29": [5, 24]}
+    },
+
+    {"op": "factor_over_base", "value": 560, "base": [2, 5, 7, 23, 29], "expected": [4, 1, 1, 0, 0]},
+    {"op": "factor_over_base", "value": 34, "base": [2, 5, 7, 23, 29], "expected": null},
+    {"op": "factor_over_base", "value": 0, "base": [2, 5, 7, 23, 29], "expected": null},
+
+    {"op": "parity_vector", "exponents": [4, 1, 1, 0, 0], "expected": 6},
+    {"op": "parity_vector", "exponents": [5, 0, 0, 0, 0], "expected": 1},
+
+    {
+      "op": "collect_relations",
+      "n": 1649,
+      "bound": 30,
+      "interval": 12,
+      "expected": [
+        {"x": 41, "qx": 32, "exponents": [5, 0, 0, 0, 0], "parity": 1},
+        {"x": 42, "qx": 115, "exponents": [0, 1, 0, 1, 0], "parity": 10},
+        {"x": 43, "qx": 200, "exponents": [3, 2, 0, 0, 0], "parity": 1},
+        {"x": 47, "qx": 560, "exponents": [4, 1, 1, 0, 0], "parity": 6}
+      ]
+    },
+    {"op": "collect_relations", "n": 1649, "bound": 30, "interval": 0, "expected_error": "interval must be positive"},
+
+    {"op": "dependency_masks", "vectors": [1, 10, 1, 6, 0], "expected": [5, 16]},
+    {"op": "mask_indices", "mask": 5, "expected": [0, 2]},
+
+    {"op": "build_congruence", "n": 1649, "bound": 30, "interval": 100, "indices": [0, 2], "expected": [114, 80]},
+    {"op": "extract_factor", "n": 1649, "x": 114, "y": 80, "expected": 17},
+    {"op": "extract_factor", "n": 91, "x": 1, "y": 90, "expected": null},
+
+    {"op": "quadratic_sieve", "n": 91, "bound": 20, "interval": 100, "expected": [7, 13]},
+    {"op": "quadratic_sieve", "n": 1649, "bound": 30, "interval": 100, "expected": [17, 97]},
+    {"op": "quadratic_sieve", "n": 2491, "bound": 50, "interval": 300, "expected": [47, 53]},
+    {"op": "quadratic_sieve", "n": 10403, "bound": 50, "interval": 500, "expected": [101, 103]},
+    {"op": "quadratic_sieve", "n": 97, "bound": 30, "interval": 100, "expected": null},
+    {"op": "quadratic_sieve", "n": 1, "bound": 30, "interval": 100, "expected_error": "n must be greater than 1"}
+  ]
+}

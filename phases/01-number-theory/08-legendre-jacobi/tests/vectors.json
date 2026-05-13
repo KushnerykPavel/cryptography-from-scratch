@@ -1,1 +1,38 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal theorem examples cross-checked against Euler's criterion, quadratic reciprocity, and direct square enumeration for small composite moduli.",
+  "vectors": [
+    {"op": "legendre_symbol", "a": 0, "p": 11, "expected": 0},
+    {"op": "legendre_symbol", "a": 1, "p": 11, "expected": 1},
+    {"op": "legendre_symbol", "a": 2, "p": 7, "expected": 1},
+    {"op": "legendre_symbol", "a": 3, "p": 7, "expected": -1},
+    {"op": "legendre_symbol", "a": 10, "p": 11, "expected": -1},
+    {"op": "legendre_symbol", "a": 5, "p": 15, "expected_error": "p must be an odd prime"},
+
+    {"op": "jacobi_symbol", "a": 3, "n": 35, "expected": 1},
+    {"op": "jacobi_symbol", "a": 2, "n": 15, "expected": 1},
+    {"op": "jacobi_symbol", "a": 10, "n": 21, "expected": -1},
+    {"op": "jacobi_symbol", "a": 7, "n": 21, "expected": 0},
+    {"op": "jacobi_symbol", "a": 19, "n": 45, "expected": 1},
+    {"op": "jacobi_symbol", "a": -1, "n": 11, "expected": -1},
+    {"op": "jacobi_symbol", "a": 5, "n": 14, "expected_error": "n must be a positive odd integer"},
+
+    {"op": "jacobi_symbol_by_factorization", "a": 3, "n": 35, "expected": 1},
+    {"op": "jacobi_symbol_by_factorization", "a": 10, "n": 21, "expected": -1},
+    {"op": "jacobi_symbol_by_factorization", "a": 7, "n": 21, "expected": 0},
+
+    {"op": "is_quadratic_residue_bruteforce", "a": 4, "n": 21, "expected": true},
+    {"op": "is_quadratic_residue_bruteforce", "a": 5, "n": 21, "expected": false},
+    {"op": "is_quadratic_residue_bruteforce", "a": 10, "n": 21, "expected": false},
+
+    {"op": "find_pseudosquares", "n": 21, "expected": [5, 17, 20]},
+    {"op": "find_pseudosquares", "n": 35, "expected": [3, 12, 13, 17, 27, 33]},
+
+    {"op": "solovay_strassen_witness", "a": 2, "n": 561, "expected": false},
+    {"op": "solovay_strassen_witness", "a": 3, "n": 561, "expected": true},
+    {"op": "solovay_strassen_witness", "a": 2, "n": 15, "expected": true},
+
+    {"op": "solovay_strassen_primality_test", "n": 101, "bases": [2, 3, 5, 7], "expected": true},
+    {"op": "solovay_strassen_primality_test", "n": 561, "bases": [2], "expected": true},
+    {"op": "solovay_strassen_primality_test", "n": 561, "bases": [2, 3], "expected": false}
+  ]
+}

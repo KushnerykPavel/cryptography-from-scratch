@@ -1,1 +1,18 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "project-internal inverse examples + cross-checks against Python modular arithmetic semantics",
+  "vectors": [
+    {"op": "mod_pow", "base": 2, "exp": 10, "n": 1000, "expected": 24},
+    {"op": "mod_pow", "base": 7, "exp": 13, "n": 19, "expected": 7},
+    {"op": "mod_pow", "base": 4, "exp": 13, "n": 497, "expected": 445},
+    {"op": "mod_pow", "base": 0, "exp": 0, "n": 7, "expected": 1},
+    {"op": "mod_pow", "base": 5, "exp": 0, "n": 1, "expected": 0},
+    {"op": "mod_inverse", "a": 3, "n": 11, "expected": 4},
+    {"op": "mod_inverse", "a": 10, "n": 17, "expected": 12},
+    {"op": "mod_inverse", "a": -3, "n": 11, "expected": 7},
+    {"op": "mod_inverse", "a": 1, "n": 2, "expected": 1},
+    {"op": "mod_inverse", "a": 6, "n": 9, "expected_error": "not invertible modulo n"},
+    {"op": "mod_inverse_prime", "a": 2, "p": 13, "expected": 7},
+    {"op": "mod_inverse_prime", "a": 5, "p": 13, "expected": 8},
+    {"op": "mod_inverse_prime", "a": 0, "p": 13, "expected_error": "zero has no inverse modulo p"}
+  ]
+}

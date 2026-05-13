@@ -1,1 +1,92 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic textbook examples for smoothness, cyclic hidden periods, and Shor classical post-processing; not RFC/NIST primitive vectors.",
+  "smoothness": [
+    {
+      "value": 72,
+      "bound": 3,
+      "exponents": {
+        "2": 3,
+        "3": 2
+      },
+      "remaining": 1,
+      "is_smooth": true
+    },
+    {
+      "value": 84,
+      "bound": 5,
+      "exponents": {
+        "2": 2,
+        "3": 1
+      },
+      "remaining": 7,
+      "is_smooth": false
+    },
+    {
+      "value": 84,
+      "bound": 7,
+      "exponents": {
+        "2": 2,
+        "3": 1,
+        "7": 1
+      },
+      "remaining": 1,
+      "is_smooth": true
+    },
+    {
+      "value": 1001,
+      "bound": 11,
+      "exponents": {
+        "7": 1,
+        "11": 1
+      },
+      "remaining": 13,
+      "is_smooth": false
+    },
+    {
+      "value": 1001,
+      "bound": 13,
+      "exponents": {
+        "7": 1,
+        "11": 1,
+        "13": 1
+      },
+      "remaining": 1,
+      "is_smooth": true
+    }
+  ],
+  "smooth_values": [
+    {
+      "limit": 30,
+      "bound": 5,
+      "values": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 16, 18, 20, 24, 25, 27, 30]
+    }
+  ],
+  "hidden_periods": [
+    {
+      "group_size": 12,
+      "period": 4,
+      "table": [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3],
+      "hidden_subgroup": [0, 4, 8]
+    },
+    {
+      "group_size": 18,
+      "period": 6,
+      "table": [0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5],
+      "hidden_subgroup": [0, 6, 12]
+    }
+  ],
+  "period_factoring": [
+    {
+      "n": 15,
+      "base": 2,
+      "period": 4,
+      "factors": [3, 5]
+    },
+    {
+      "n": 21,
+      "base": 2,
+      "period": 6,
+      "factors": [3, 7]
+    }
+  ]
+}

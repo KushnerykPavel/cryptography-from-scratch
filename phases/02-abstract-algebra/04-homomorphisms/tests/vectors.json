@@ -1,1 +1,131 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal finite group examples cross-checked by direct modular arithmetic over Z/nZ and generated subgroups of (Z/nZ)^*. The kernel/image size relation is the finite first isomorphism theorem.",
+  "vectors": [
+    {
+      "op": "is_homomorphism",
+      "case": "add_reduce",
+      "domain_n": 12,
+      "codomain_n": 4,
+      "expected": true
+    },
+    {
+      "op": "kernel",
+      "case": "add_reduce",
+      "domain_n": 12,
+      "codomain_n": 4,
+      "expected": [0, 4, 8]
+    },
+    {
+      "op": "image",
+      "case": "add_reduce",
+      "domain_n": 12,
+      "codomain_n": 4,
+      "expected": [0, 1, 2, 3]
+    },
+    {
+      "op": "injective",
+      "case": "add_reduce",
+      "domain_n": 12,
+      "codomain_n": 4,
+      "expected": false
+    },
+    {
+      "op": "surjective",
+      "case": "add_reduce",
+      "domain_n": 12,
+      "codomain_n": 4,
+      "expected": true
+    },
+    {
+      "op": "first_isomorphism_size_check",
+      "case": "add_reduce",
+      "domain_n": 12,
+      "codomain_n": 4,
+      "expected": true
+    },
+    {
+      "op": "homomorphism_report",
+      "case": "add_multiply",
+      "domain_n": 6,
+      "codomain_n": 6,
+      "factor": 2,
+      "expected": {
+        "domain_order": 6,
+        "codomain_order": 6,
+        "domain_is_group": true,
+        "codomain_is_group": true,
+        "is_homomorphism": true,
+        "table": {"0": 0, "1": 2, "2": 4, "3": 0, "4": 2, "5": 4},
+        "kernel": [0, 3],
+        "image": [0, 2, 4],
+        "injective": false,
+        "surjective": false,
+        "isomorphism": false,
+        "first_isomorphism_size_check": true
+      }
+    },
+    {
+      "op": "isomorphism",
+      "case": "add_multiply_subgroup",
+      "domain_n": 4,
+      "codomain_n": 8,
+      "factor": 2,
+      "expected": true
+    },
+    {
+      "op": "inverse_isomorphism_table",
+      "case": "add_multiply_subgroup",
+      "domain_n": 4,
+      "codomain_n": 8,
+      "factor": 2,
+      "expected": {"0": 0, "2": 1, "4": 2, "6": 3}
+    },
+    {
+      "op": "isomorphism",
+      "case": "exponent_map",
+      "domain_n": 5,
+      "base": 3,
+      "modulus": 11,
+      "expected": true
+    },
+    {
+      "op": "image",
+      "case": "exponent_map",
+      "domain_n": 5,
+      "base": 3,
+      "modulus": 11,
+      "expected": [1, 3, 9, 5, 4]
+    },
+    {
+      "op": "preserves_repetition",
+      "case": "exponent_map",
+      "domain_n": 5,
+      "base": 3,
+      "modulus": 11,
+      "element": 2,
+      "exponent": 4,
+      "expected": true
+    },
+    {
+      "op": "is_homomorphism",
+      "case": "add_reduce",
+      "domain_n": 12,
+      "codomain_n": 5,
+      "expected": false
+    },
+    {
+      "op": "kernel",
+      "case": "add_reduce",
+      "domain_n": 12,
+      "codomain_n": 5,
+      "expected_error": "mapping must be a homomorphism"
+    },
+    {
+      "op": "inverse_isomorphism_table",
+      "case": "add_reduce",
+      "domain_n": 12,
+      "codomain_n": 4,
+      "expected_error": "mapping must be an isomorphism"
+    }
+  ]
+}

@@ -76,10 +76,10 @@
       "stage": "post",
       "question": "What is the period of the continued fraction expansion of `√d` for non-square d?",
       "options": [
-        "Always periodic; period bounded by O(√d · log d) — Lagrange's theorem on quadratic irrationals",
-        "Always finite; the algorithm terminates after O(log d) iterations for any d",
-        "Always infinite and non-periodic; √d has no exploitable structure as a CF",
-        "Periodic only when d ≡ 1 (mod 4); otherwise infinite and aperiodic in nature"
+        "Always periodic; this is Lagrange's theorem for quadratic irrational values",
+        "Always finite; the Euclidean-style algorithm terminates after logarithmic steps",
+        "Always non-periodic; irrational square roots do not repeat in continued fractions",
+        "Periodic only when d ≡ 1 mod 4; other square roots stay aperiodic forever"
       ],
       "correct": 0,
       "explanation": "Lagrange: real x has eventually periodic CF iff x is a quadratic irrational. √d for non-square d: purely periodic after a₀ = ⌊√d⌋."

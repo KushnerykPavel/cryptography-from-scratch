@@ -1,1 +1,34 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "project-internal theorem examples cross-checked with Python pow and CRT recombination identities",
+  "vectors": [
+    {"op": "legendre_symbol", "a": 0, "p": 11, "expected": 0},
+    {"op": "legendre_symbol", "a": 2, "p": 7, "expected": 1},
+    {"op": "legendre_symbol", "a": 3, "p": 7, "expected": -1},
+    {"op": "legendre_symbol", "a": 5, "p": 15, "expected_error": "p must be an odd prime"},
+
+    {"op": "is_quadratic_residue_prime", "a": 2, "p": 7, "expected": true},
+    {"op": "is_quadratic_residue_prime", "a": 3, "p": 7, "expected": false},
+
+    {"op": "find_quadratic_non_residue", "p": 7, "expected": 3},
+    {"op": "find_quadratic_non_residue", "p": 15, "expected_error": "p must be an odd prime"},
+
+    {"op": "sqrt_mod_prime_3mod4", "a": 2, "p": 7, "expected": 3},
+    {"op": "sqrt_mod_prime_3mod4", "a": 3, "p": 11, "expected": 5},
+    {"op": "sqrt_mod_prime_3mod4", "a": 5, "p": 13, "expected_error": "p must satisfy p % 4 == 3"},
+    {"op": "sqrt_mod_prime_3mod4", "a": 2, "p": 11, "expected_error": "a is not a quadratic residue mod p"},
+
+    {"op": "tonelli_shanks", "a": 5, "p": 41, "expected": 13},
+    {"op": "tonelli_shanks", "a": 9, "p": 41, "expected": 3},
+    {"op": "tonelli_shanks", "a": 0, "p": 41, "expected": 0},
+    {"op": "tonelli_shanks", "a": 3, "p": 41, "expected_error": "a is not a quadratic residue mod p"},
+
+    {"op": "all_square_roots_prime", "a": 5, "p": 41, "expected": [13, 28]},
+    {"op": "all_square_roots_prime", "a": 0, "p": 41, "expected": [0]},
+
+    {"op": "sqrt_mod_semiprime_via_crt", "a": 9, "p": 7, "q": 11, "expected": [3, 25, 52, 74]},
+    {"op": "sqrt_mod_semiprime_via_crt", "a": 5, "p": 7, "q": 11, "expected_error": "a is not a quadratic residue mod p"},
+
+    {"op": "recover_factor_from_roots", "n": 77, "r": 3, "s": 25, "expected": 11},
+    {"op": "recover_factor_from_roots", "n": 77, "r": 3, "s": 74, "expected_error": "roots must be distinct and not negatives modulo n"}
+  ]
+}

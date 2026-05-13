@@ -1,1 +1,182 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Derived from Phase 1 lesson examples plus standard textbook number-theory identities: gcd/EEA, CRT, Euler phi, Carmichael lambda, Miller-Rabin pseudoprime checks, Legendre/Jacobi symbols, Tonelli-Shanks square roots, Pollard factorization smoke cases.",
+  "vectors": [
+    {
+      "op": "gcd",
+      "a": -240,
+      "b": 46,
+      "expected": 2
+    },
+    {
+      "op": "extended_gcd",
+      "a": 240,
+      "b": 46,
+      "expected": [
+        2,
+        -9,
+        47
+      ]
+    },
+    {
+      "op": "mod_pow",
+      "base": 7,
+      "exponent": 128,
+      "modulus": 19,
+      "expected": 11
+    },
+    {
+      "op": "mod_inverse",
+      "a": 17,
+      "modulus": 3120,
+      "expected": 2753
+    },
+    {
+      "op": "mod_inverse",
+      "a": 12,
+      "modulus": 18,
+      "expected_error": "NoInverseError"
+    },
+    {
+      "op": "crt",
+      "residues": [
+        2,
+        3,
+        2
+      ],
+      "moduli": [
+        3,
+        5,
+        7
+      ],
+      "expected": [
+        23,
+        105
+      ]
+    },
+    {
+      "op": "crt",
+      "residues": [
+        1,
+        2
+      ],
+      "moduli": [
+        6,
+        10
+      ],
+      "expected_error": "ValueError"
+    },
+    {
+      "op": "is_prime",
+      "n": 2305843009213693951,
+      "expected": true
+    },
+    {
+      "op": "is_prime",
+      "n": 561,
+      "expected": false
+    },
+    {
+      "op": "prime_sieve",
+      "limit": 30,
+      "expected": [
+        2,
+        3,
+        5,
+        7,
+        11,
+        13,
+        17,
+        19,
+        23,
+        29
+      ]
+    },
+    {
+      "op": "factor",
+      "n": 8051,
+      "expected": [
+        83,
+        97
+      ]
+    },
+    {
+      "op": "factor",
+      "n": -360,
+      "expected": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        5,
+        -1
+      ]
+    },
+    {
+      "op": "phi",
+      "n": 36,
+      "expected": 12
+    },
+    {
+      "op": "carmichael_lambda",
+      "n": 36,
+      "expected": 6
+    },
+    {
+      "op": "legendre_symbol",
+      "a": 5,
+      "p": 41,
+      "expected": 1
+    },
+    {
+      "op": "legendre_symbol",
+      "a": 3,
+      "p": 41,
+      "expected": -1
+    },
+    {
+      "op": "jacobi_symbol",
+      "a": 1001,
+      "n": 9907,
+      "expected": -1
+    },
+    {
+      "op": "mod_sqrt",
+      "a": 5,
+      "p": 41,
+      "expected": 13
+    },
+    {
+      "op": "mod_sqrt",
+      "a": 3,
+      "p": 41,
+      "expected_error": "NoSquareRootError"
+    },
+    {
+      "op": "all_mod_sqrt",
+      "a": 9,
+      "p": 43,
+      "expected": [
+        3,
+        40
+      ]
+    },
+    {
+      "op": "multiplicative_order",
+      "a": 2,
+      "n": 101,
+      "expected": 100
+    },
+    {
+      "op": "continued_fraction",
+      "numerator": 415,
+      "denominator": 93,
+      "expected": [
+        4,
+        2,
+        6,
+        7
+      ]
+    }
+  ]
+}

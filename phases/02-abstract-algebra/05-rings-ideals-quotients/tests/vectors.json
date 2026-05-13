@@ -1,1 +1,173 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal finite ring examples over Z/nZ. Principal ideals and quotient rings are verified by exhaustive coset-rep computation. Unit and zero-divisor sets are cross-checked against gcd(a, n) = 1.",
+  "vectors": [
+    {
+      "op": "is_ring",
+      "case": "z_mod",
+      "n": 12,
+      "expected": true
+    },
+    {
+      "op": "is_ring",
+      "case": "z_mod",
+      "n": 7,
+      "expected": true
+    },
+    {
+      "op": "ring_report",
+      "case": "z_mod",
+      "n": 12,
+      "expected": {
+        "order": 12,
+        "is_ring": true,
+        "is_commutative_ring": true,
+        "additive_identity": 0,
+        "multiplicative_identity": 1,
+        "zero_divisors": [2, 3, 4, 6, 8, 9, 10],
+        "units": [1, 5, 7, 11]
+      }
+    },
+    {
+      "op": "ring_report",
+      "case": "z_mod",
+      "n": 5,
+      "expected": {
+        "order": 5,
+        "is_ring": true,
+        "is_commutative_ring": true,
+        "additive_identity": 0,
+        "multiplicative_identity": 1,
+        "zero_divisors": [],
+        "units": [1, 2, 3, 4]
+      }
+    },
+    {
+      "op": "principal_ideal",
+      "case": "z_mod",
+      "n": 12,
+      "generator": 3,
+      "expected": [0, 3, 6, 9]
+    },
+    {
+      "op": "principal_ideal",
+      "case": "z_mod",
+      "n": 12,
+      "generator": 4,
+      "expected": [0, 4, 8]
+    },
+    {
+      "op": "principal_ideal",
+      "case": "z_mod",
+      "n": 6,
+      "generator": 2,
+      "expected": [0, 2, 4]
+    },
+    {
+      "op": "principal_ideal",
+      "case": "z_mod",
+      "n": 8,
+      "generator": 4,
+      "expected": [0, 4]
+    },
+    {
+      "op": "is_ideal",
+      "case": "z_mod_subset",
+      "n": 12,
+      "subset": [0, 3, 6, 9],
+      "expected": true
+    },
+    {
+      "op": "is_ideal",
+      "case": "z_mod_subset",
+      "n": 6,
+      "subset": [0, 1],
+      "expected": false
+    },
+    {
+      "op": "is_ideal",
+      "case": "z_mod_subset",
+      "n": 12,
+      "subset": [0, 6],
+      "expected": true
+    },
+    {
+      "op": "quotient_coset_reps",
+      "case": "z_mod_subset",
+      "n": 12,
+      "subset": [0, 3, 6, 9],
+      "expected": [0, 1, 2]
+    },
+    {
+      "op": "quotient_coset_reps",
+      "case": "z_mod_subset",
+      "n": 8,
+      "subset": [0, 4],
+      "expected": [0, 1, 2, 3]
+    },
+    {
+      "op": "ideal_report",
+      "case": "z_mod_subset",
+      "n": 12,
+      "subset": [0, 3, 6, 9],
+      "expected": {
+        "size": 4,
+        "is_ideal": true,
+        "coset_reps": [0, 1, 2],
+        "quotient_order": 3,
+        "quotient_is_ring": true
+      }
+    },
+    {
+      "op": "ideal_report",
+      "case": "z_mod_subset",
+      "n": 6,
+      "subset": [0, 2, 4],
+      "expected": {
+        "size": 3,
+        "is_ideal": true,
+        "coset_reps": [0, 1],
+        "quotient_order": 2,
+        "quotient_is_ring": true
+      }
+    },
+    {
+      "op": "ideal_report",
+      "case": "z_mod_subset",
+      "n": 6,
+      "subset": [0, 1],
+      "expected": {
+        "size": 2,
+        "is_ideal": false,
+        "coset_reps": [],
+        "quotient_order": 0,
+        "quotient_is_ring": false
+      }
+    },
+    {
+      "op": "quotient_is_ring",
+      "case": "z_mod_subset",
+      "n": 12,
+      "subset": [0, 4, 8],
+      "expected": true
+    },
+    {
+      "op": "zero_divisors",
+      "case": "z_mod",
+      "n": 8,
+      "expected": [2, 4, 6]
+    },
+    {
+      "op": "units",
+      "case": "z_mod",
+      "n": 8,
+      "expected": [1, 3, 5, 7]
+    },
+    {
+      "op": "quotient_coset_reps",
+      "case": "z_mod_subset",
+      "n": 6,
+      "subset": [0, 1],
+      "expected_error": "subset must be an ideal of the ring"
+    }
+  ]
+}

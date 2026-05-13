@@ -1,1 +1,163 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal finite cyclic group examples cross-checked by direct modular arithmetic over Z/nZ and (Z/pZ)^*.",
+  "vectors": [
+    {
+      "op": "is_prime",
+      "n": 2,
+      "expected": true
+    },
+    {
+      "op": "is_prime",
+      "n": 21,
+      "expected": false
+    },
+    {
+      "op": "repeat_operation_add_mod",
+      "element": 5,
+      "exponent": 4,
+      "n": 6,
+      "expected": 2
+    },
+    {
+      "op": "repeat_operation_mul_mod",
+      "element": 3,
+      "exponent": 4,
+      "n": 7,
+      "expected": 4
+    },
+    {
+      "op": "element_order_add_mod",
+      "element": 2,
+      "n": 6,
+      "expected": 3
+    },
+    {
+      "op": "element_order_add_mod",
+      "element": 5,
+      "n": 6,
+      "expected": 6
+    },
+    {
+      "op": "generated_subgroup_add_mod",
+      "element": 2,
+      "n": 6,
+      "expected": [0, 2, 4]
+    },
+    {
+      "op": "generated_subgroup_add_mod",
+      "element": 5,
+      "n": 6,
+      "expected": [0, 5, 4, 3, 2, 1]
+    },
+    {
+      "op": "generators_add_mod",
+      "n": 6,
+      "expected": [1, 5]
+    },
+    {
+      "op": "is_cyclic_add_mod",
+      "n": 8,
+      "expected": true
+    },
+    {
+      "op": "element_order_units_mod",
+      "element": 3,
+      "n": 7,
+      "expected": 6
+    },
+    {
+      "op": "element_order_units_mod",
+      "element": 2,
+      "n": 7,
+      "expected": 3
+    },
+    {
+      "op": "generated_subgroup_units_mod",
+      "element": 3,
+      "n": 7,
+      "expected": [1, 3, 2, 6, 4, 5]
+    },
+    {
+      "op": "generators_units_mod",
+      "n": 7,
+      "expected": [3, 5]
+    },
+    {
+      "op": "primitive_roots_mod_prime",
+      "p": 11,
+      "expected": [2, 6, 7, 8]
+    },
+    {
+      "op": "generators_units_mod",
+      "n": 8,
+      "expected": []
+    },
+    {
+      "op": "is_cyclic_units_mod",
+      "n": 8,
+      "expected": false
+    },
+    {
+      "op": "discrete_log_bruteforce_units_mod",
+      "base": 3,
+      "target": 6,
+      "n": 7,
+      "expected": 3
+    },
+    {
+      "op": "discrete_log_bruteforce_units_mod",
+      "base": 2,
+      "target": 3,
+      "n": 7,
+      "expected": null
+    },
+    {
+      "op": "cyclic_group_report_add_mod",
+      "n": 6,
+      "expected": {
+        "order": 6,
+        "identity": 0,
+        "is_group": true,
+        "is_cyclic": true,
+        "generators": [1, 5],
+        "element_orders": {
+          "0": 1,
+          "1": 6,
+          "2": 3,
+          "3": 2,
+          "4": 3,
+          "5": 6
+        }
+      }
+    },
+    {
+      "op": "cyclic_group_report_units_mod",
+      "n": 8,
+      "expected": {
+        "order": 4,
+        "identity": 1,
+        "is_group": true,
+        "is_cyclic": false,
+        "generators": [],
+        "element_orders": {
+          "1": 1,
+          "3": 2,
+          "5": 2,
+          "7": 2
+        }
+      }
+    },
+    {
+      "op": "primitive_roots_mod_prime",
+      "p": 12,
+      "expected_error": "modulus must be prime"
+    },
+    {
+      "op": "repeat_operation_add_mod",
+      "element": 1,
+      "exponent": -1,
+      "n": 5,
+      "expected_error": "exponent must be non-negative"
+    }
+  ]
+}

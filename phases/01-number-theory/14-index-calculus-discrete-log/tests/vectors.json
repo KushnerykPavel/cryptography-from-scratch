@@ -1,1 +1,85 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal educational index-calculus examples over the order-509 quadratic-residue subgroup of F_1019*. Cross-checked by direct modular exponentiation.",
+  "vectors": [
+    {"op": "primes_up_to", "limit": 20, "expected": [2, 3, 5, 7, 11, 13, 17, 19]},
+    {"op": "prime_factors", "n": 1018, "expected": [2, 509]},
+    {"op": "is_prime", "n": 1019, "expected": true},
+    {"op": "is_prime", "n": 1021, "expected": true},
+    {"op": "is_prime", "n": 1023, "expected": false},
+
+    {"op": "mod_inverse", "a": 37, "modulus": 509, "expected": 454},
+    {"op": "mod_inverse", "a": 6, "modulus": 21, "expected_error": "inverse does not exist"},
+
+    {"op": "primitive_root", "p": 1019, "expected": 2},
+    {"op": "subgroup_generator", "p": 1019, "q": 509, "expected": 4},
+    {"op": "subgroup_generator", "p": 1019, "q": 7, "expected_error": "q must be a prime divisor of p - 1"},
+
+    {
+      "op": "factor_base_for_subgroup",
+      "p": 1019,
+      "q": 509,
+      "bound": 50,
+      "expected": [3, 5, 11, 17, 19, 23, 29, 31, 43]
+    },
+    {"op": "factor_base_for_subgroup", "p": 1019, "q": 509, "bound": 1, "expected_error": "bound must be at least 2"},
+
+    {
+      "op": "factor_over_base",
+      "value": 867,
+      "base": [3, 5, 11, 17, 19, 23, 29, 31, 43],
+      "expected": [1, 0, 0, 2, 0, 0, 0, 0, 0]
+    },
+    {
+      "op": "factor_over_base",
+      "value": 1018,
+      "base": [3, 5, 11, 17, 19, 23, 29, 31, 43],
+      "expected": null
+    },
+
+    {
+      "op": "collect_relations",
+      "p": 1019,
+      "g": 4,
+      "q": 509,
+      "base": [3, 5, 11, 17, 19, 23, 29, 31, 43],
+      "needed": 5,
+      "expected": [
+        {"exponent": 5, "value": 5, "exponents": [0, 1, 0, 0, 0, 0, 0, 0, 0]},
+        {"exponent": 9, "value": 261, "exponents": [2, 0, 0, 0, 0, 0, 1, 0, 0]},
+        {"exponent": 10, "value": 25, "exponents": [0, 2, 0, 0, 0, 0, 0, 0, 0]},
+        {"exponent": 15, "value": 125, "exponents": [0, 3, 0, 0, 0, 0, 0, 0, 0]},
+        {"exponent": 18, "value": 867, "exponents": [1, 0, 0, 2, 0, 0, 0, 0, 0]}
+      ]
+    },
+
+    {
+      "op": "solve_linear_mod_prime",
+      "matrix": [[1, 1], [1, 2]],
+      "rhs": [9, 14],
+      "modulus": 509,
+      "expected": [4, 5]
+    },
+    {
+      "op": "factor_base_logs",
+      "p": 1019,
+      "g": 4,
+      "q": 509,
+      "base": [3, 5, 11, 17, 19, 23, 29, 31, 43],
+      "expected": {"3": 479, "5": 5, "11": 378, "17": 24, "19": 271, "23": 57, "29": 69, "31": 162, "43": 173}
+    },
+    {
+      "op": "descend_target",
+      "p": 1019,
+      "g": 4,
+      "q": 509,
+      "h": 504,
+      "base": [3, 5, 11, 17, 19, 23, 29, 31, 43],
+      "logs": {"3": 479, "5": 5, "11": 378, "17": 24, "19": 271, "23": 57, "29": 69, "31": 162, "43": 173},
+      "expected": [3, 667, [0, 0, 0, 0, 0, 1, 1, 0, 0], 123]
+    },
+
+    {"op": "index_calculus_log", "p": 1019, "g": 4, "q": 509, "h": 706, "bound": 50, "expected": 37},
+    {"op": "index_calculus_log", "p": 1019, "g": 4, "q": 509, "h": 504, "bound": 50, "expected": 123},
+    {"op": "index_calculus_log", "p": 1019, "g": 4, "q": 509, "h": 967, "bound": 50, "expected": 400}
+  ]
+}

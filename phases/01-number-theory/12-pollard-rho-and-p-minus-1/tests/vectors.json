@@ -1,1 +1,43 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal Pollard rho and Pollard p-1 examples cross-checked with Python math.gcd and modular exponentiation; algorithm references: Pollard 1975, Brent 1980, and Handbook of Applied Cryptography section 3.2.",
+  "vectors": [
+    {"op": "rho_polynomial", "x": 2, "n": 8051, "c": 1, "expected": 5},
+    {"op": "rho_polynomial", "x": 5, "n": 8051, "c": 1, "expected": 26},
+    {"op": "rho_polynomial", "x": 2, "n": 1, "c": 1, "expected_error": "n must be greater than 1"},
+
+    {"op": "pollard_rho_floyd", "n": 8051, "x0": 2, "c": 1, "max_steps": 100, "expected": [97, 3]},
+    {"op": "pollard_rho_floyd", "n": 91, "x0": 2, "c": 1, "max_steps": 100, "expected": [7, 1]},
+    {"op": "pollard_rho_floyd", "n": 97, "x0": 2, "c": 1, "max_steps": 20, "expected": [null, 3]},
+    {"op": "pollard_rho_floyd", "n": 10403, "x0": 2, "c": 1, "max_steps": 100, "expected": [101, 9]},
+
+    {"op": "pollard_rho_brent", "n": 8051, "x0": 2, "c": 1, "batch_size": 32, "max_steps": 100, "expected": [97, 6]},
+    {"op": "pollard_rho_brent", "n": 91, "x0": 2, "c": 1, "batch_size": 32, "max_steps": 100, "expected": [7, 7]},
+    {"op": "pollard_rho_brent", "n": 10403, "x0": 2, "c": 1, "batch_size": 32, "max_steps": 100, "expected": [101, 31]},
+    {"op": "pollard_rho_brent", "n": 2, "x0": 2, "c": 1, "batch_size": 32, "max_steps": 100, "expected": [null, 0]},
+
+    {"op": "lcm_upto", "bound": 1, "expected": 1},
+    {"op": "lcm_upto", "bound": 5, "expected": 60},
+    {"op": "lcm_upto", "bound": 10, "expected": 2520},
+    {"op": "lcm_upto", "bound": 0, "expected_error": "bound must be at least 1"},
+
+    {"op": "is_b_smooth", "value": 96, "bound": 3, "expected": true},
+    {"op": "is_b_smooth", "value": 100, "bound": 5, "expected": true},
+    {"op": "is_b_smooth", "value": 106, "bound": 25, "expected": false},
+    {"op": "is_b_smooth", "value": 1, "bound": 1, "expected": true},
+    {"op": "is_b_smooth", "value": 0, "bound": 5, "expected_error": "value must be positive"},
+
+    {"op": "pollard_p_minus_one", "n": 91, "bound": 3, "a": 2, "expected": [7, 6]},
+    {"op": "pollard_p_minus_one", "n": 91, "bound": 5, "a": 2, "expected": [null, 60]},
+    {"op": "pollard_p_minus_one", "n": 10807, "bound": 25, "a": 2, "expected": [101, 26771144400]},
+    {"op": "pollard_p_minus_one", "n": 8051, "bound": 10, "a": 2, "expected": [null, 2520]},
+    {"op": "pollard_p_minus_one", "n": 35, "bound": 5, "a": 5, "expected": [5, 0]},
+
+    {"op": "factor_pair", "n": 8051, "factor": 97, "expected": [83, 97]},
+    {"op": "factor_pair", "n": 8051, "factor": 1, "expected": null},
+    {"op": "factor_pair", "n": 8051, "factor": null, "expected": null},
+
+    {"op": "factor_with_pollard", "n": 8051, "bound": 10, "expected": [83, 97]},
+    {"op": "factor_with_pollard", "n": 10807, "bound": 25, "expected": [101, 107]},
+    {"op": "factor_with_pollard", "n": 10403, "bound": 10, "expected": [101, 103]}
+  ]
+}

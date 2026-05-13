@@ -1,1 +1,39 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Prime tables cross-checked against OEIS A000040 (primes), OEIS A006880 (prime-counting function), and direct divisibility identities for small composite examples.",
+  "vectors": [
+    {"op": "trial_division_factor", "n": 2, "expected": null},
+    {"op": "trial_division_factor", "n": 91, "expected": 7},
+    {"op": "trial_division_factor", "n": 221, "expected": 13},
+
+    {"op": "is_prime_trial", "n": 0, "expected": false},
+    {"op": "is_prime_trial", "n": 1, "expected": false},
+    {"op": "is_prime_trial", "n": 2, "expected": true},
+    {"op": "is_prime_trial", "n": 97, "expected": true},
+    {"op": "is_prime_trial", "n": 561, "expected": false},
+
+    {"op": "sieve_primes_up_to", "limit": 1, "expected": []},
+    {"op": "sieve_primes_up_to", "limit": 30, "expected": [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]},
+
+    {"op": "prime_count", "limit": 100, "expected": 25},
+    {"op": "prime_count", "limit": 1000, "expected": 168},
+
+    {"op": "nth_prime", "index": 1, "expected": 2},
+    {"op": "nth_prime", "index": 25, "expected": 97},
+    {"op": "nth_prime", "index": 0, "expected_error": "index must be positive"},
+
+    {"op": "primes_in_segment", "low": 100, "high": 150, "expected": [101, 103, 107, 109, 113, 127, 131, 137, 139, 149]},
+    {"op": "primes_in_segment", "low": 1000, "high": 1030, "expected": [1009, 1013, 1019, 1021]},
+    {"op": "primes_in_segment", "low": 20, "high": 10, "expected": []},
+
+    {"op": "next_prime", "n": 0, "expected": 2},
+    {"op": "next_prime", "n": 30, "expected": 31},
+    {"op": "next_prime", "n": 1000, "expected": 1009},
+
+    {"op": "normalize_odd_candidate", "raw": 18, "bits": 5, "expected": 19},
+    {"op": "normalize_odd_candidate", "raw": 2, "bits": 8, "expected": 131},
+    {"op": "normalize_odd_candidate", "raw": 7, "bits": 1, "expected_error": "bits must be at least 2"},
+
+    {"op": "generate_prime_by_trial", "bits": 8, "raw_values": [130, 132, 134, 136], "expected": [131, 1]},
+    {"op": "generate_prime_by_trial", "bits": 8, "raw_values": [140, 142, 150], "expected": [151, 3]}
+  ]
+}

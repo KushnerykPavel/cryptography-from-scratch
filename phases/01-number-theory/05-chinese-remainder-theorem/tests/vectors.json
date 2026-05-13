@@ -1,1 +1,63 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "project-internal CRT examples cross-checked against direct congruence arithmetic and the classic small RSA example (p=61, q=53, e=17, d=2753)",
+  "vectors": [
+    {
+      "op": "crt",
+      "residues": [2, 3],
+      "moduli": [3, 5],
+      "expected": [8, 15]
+    },
+    {
+      "op": "crt",
+      "residues": [1, 2],
+      "moduli": [5, 7],
+      "expected": [16, 35]
+    },
+    {
+      "op": "crt",
+      "residues": [2, 3, 2],
+      "moduli": [3, 5, 7],
+      "expected": [23, 105]
+    },
+    {
+      "op": "crt",
+      "residues": [4],
+      "moduli": [9],
+      "expected": [4, 9]
+    },
+    {
+      "op": "crt",
+      "residues": [1, 2],
+      "moduli": [6, 9],
+      "expected_error": "moduli must be pairwise coprime"
+    },
+    {
+      "op": "garner",
+      "residues": [2, 3],
+      "moduli": [3, 5],
+      "expected": [8, 15]
+    },
+    {
+      "op": "garner",
+      "residues": [2, 3, 2],
+      "moduli": [3, 5, 7],
+      "expected": [23, 105]
+    },
+    {
+      "op": "rsa_crt_recombine",
+      "m_p": 4,
+      "m_q": 12,
+      "p": 11,
+      "q": 13,
+      "expected": 103
+    },
+    {
+      "op": "rsa_crt_decrypt",
+      "ciphertext": 2790,
+      "d": 2753,
+      "p": 61,
+      "q": 53,
+      "expected": 65
+    }
+  ]
+}

@@ -28,13 +28,13 @@
       "stage": "post",
       "question": "Which library API is the right tool for RSA decryption: `pow(c, d, n)` vs `mod_pow(c, d, n)` (custom)?",
       "options": [
-        "Use `pow(c, d, n)` — CPython's GMP-backed implementation is faster and well-tested",
+        "Use `pow(c, d, n)` — Python's built-in implementation is faster and well-tested",
         "Use `mod_pow(c, d, n)` — custom code is more secure because it avoids GMP backdoors",
         "Use either — performance and correctness are identical for cryptographic input sizes",
         "Use neither — RSA decryption should never call modular exponentiation directly"
       ],
       "correct": 0,
-      "explanation": "`pow(c, d, n)` is GMP-backed sliding-window modexp. Always prefer it for correctness and speed. Hand-rolled `mod_pow` is for *teaching*; never ship it."
+      "explanation": "`pow(c, d, n)` is a heavily tested built-in modular-exponentiation path. Always prefer it for correctness and speed. Hand-rolled `mod_pow` is for teaching; never ship it."
     },
     {
       "stage": "post",
