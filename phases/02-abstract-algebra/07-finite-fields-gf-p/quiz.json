@@ -1,4 +1,101 @@
 {
   "title": "Finite Fields GF(p)",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What property makes Z/pZ a field when p is prime?",
+      "options": [
+        "Every nonzero residue has an inverse",
+        "Every residue has additive order p",
+        "Every product avoids modular wrap",
+        "Every integer becomes a generator"
+      ],
+      "correct": 0,
+      "explanation": "When p is prime, each nonzero residue is coprime to p. Extended Euclid gives a multiplicative inverse for every such residue."
+    },
+    {
+      "stage": "pre",
+      "question": "Why should a field element carry its modulus?",
+      "options": [
+        "It prevents mixing values from different fields",
+        "It avoids reducing after multiplication steps",
+        "It makes composite moduli behave like primes",
+        "It replaces inverses with ordinary division"
+      ],
+      "correct": 0,
+      "explanation": "The same integer value can mean different elements in different fields. Carrying p lets code reject accidental cross-field arithmetic."
+    },
+    {
+      "stage": "post",
+      "question": "What is the inverse of 5 in F_17?",
+      "options": [
+        "7, since 5 times 7 equals 1 mod 17",
+        "5, since every element is its own inverse",
+        "12, since negative five wraps in F_17",
+        "0, since inverses vanish after reduction"
+      ],
+      "correct": 0,
+      "explanation": "5 * 7 = 35, and 35 mod 17 is 1. Therefore 7 is the multiplicative inverse of 5 in F_17."
+    },
+    {
+      "stage": "post",
+      "question": "What happens when code treats Z/15Z as GF(15)?",
+      "options": [
+        "Nonzero values may multiply to zero",
+        "Addition stops being closed in the set",
+        "The residue zero gains many inverses",
+        "Every denominator becomes invertible"
+      ],
+      "correct": 0,
+      "explanation": "In Z/15Z, 3 and 5 are nonzero but 3 * 5 = 0 mod 15. That zero-divisor behavior means the ring is not a field."
+    },
+    {
+      "stage": "post",
+      "question": "In F_p, what does the multiplicative order of a nonzero element measure?",
+      "options": [
+        "The first k where a to the k equals 1",
+        "The count of additions needed to reach p",
+        "The largest residue produced by powers of a",
+        "The number of primes smaller than p"
+      ],
+      "correct": 0,
+      "explanation": "The multiplicative order of a is the smallest positive k with a^k = 1 in the field. Generators have order p - 1."
+    },
+    {
+      "stage": "post",
+      "question": "Why must Lagrange interpolation use distinct x-coordinates modulo p?",
+      "options": [
+        "Repeated x values create zero denominators",
+        "Repeated x values remove all coefficients",
+        "Repeated x values force p to be composite",
+        "Repeated x values change addition rules"
+      ],
+      "correct": 0,
+      "explanation": "Lagrange basis terms divide by x_i - x_j. If two x-coordinates are equal modulo p, that denominator is zero and cannot be inverted."
+    },
+    {
+      "stage": "post",
+      "question": "What does it mean for g to be a generator of F_p^*?",
+      "options": [
+        "Its powers list every nonzero element",
+        "Its additions list every field element",
+        "Its inverse is always equal to itself",
+        "Its value is larger than all residues"
+      ],
+      "correct": 0,
+      "explanation": "A generator has multiplicative order p - 1. Its powers enumerate the entire nonzero multiplicative group."
+    },
+    {
+      "stage": "post",
+      "question": "What is the safer engineering habit for GF(p) code?",
+      "options": [
+        "Validate p, normalize values, reject zero division",
+        "Accept any modulus, normalize values, skip inverses",
+        "Validate p, skip reduction, allow mixed moduli",
+        "Accept any modulus, allow division by residues"
+      ],
+      "correct": 0,
+      "explanation": "Prime-field code should verify the modulus, keep values canonical, and reject impossible divisions. Those checks prevent composite-modulus and mixed-field bugs."
+    }
+  ]
 }

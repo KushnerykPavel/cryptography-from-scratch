@@ -1,1 +1,52 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal threat model one-pager format; vectors validate schema checks + deterministic Markdown rendering.",
+  "vectors": [
+    {
+      "op": "render",
+      "spec": {
+        "system": {
+          "name": "Encrypted Notes (toy)",
+          "description": "A single-user notes app that syncs to a server."
+        },
+        "assets": [
+          {"name": "note contents", "why": "privacy", "impact": "high"},
+          {"name": "encryption keys", "why": "all notes depend on them", "impact": "critical"}
+        ],
+        "trust_boundaries": [{"from": "device", "to": "sync server", "data": "ciphertext + metadata"}],
+        "adversaries": [
+          {"name": "passive network observer", "capabilities": ["eavesdrop"]},
+          {"name": "server compromise", "capabilities": ["read stored ciphertext", "tamper with stored blobs"]}
+        ],
+        "security_goals": ["confidentiality", "integrity", "replay resistance"],
+        "out_of_scope": ["device compromise (this toy app assumes the OS is not malware)"],
+        "notes": ["Use an audited AEAD library; never roll your own."]
+      },
+      "expected": "# Threat Model — Encrypted Notes (toy)\n\n## System\nA single-user notes app that syncs to a server.\n\n## Assets\n| Asset           | Why it matters           | Impact   |\n|-----------------|--------------------------|----------|\n| note contents   | privacy                  | high     |\n| encryption keys | all notes depend on them | critical |\n\n## Trust Boundaries\n| From   | To          | Data that crosses     |\n|--------|-------------|-----------------------|\n| device | sync server | ciphertext + metadata |\n\n## Adversaries\n- **passive network observer** (eavesdrop)\n- **server compromise** (read stored ciphertext, tamper with stored blobs)\n\n## Security Goals\n- confidentiality\n- integrity\n- replay resistance\n\n## Out of Scope\n- device compromise (this toy app assumes the OS is not malware)\n\n## Notes\n- Use an audited AEAD library; never roll your own.\n\n## Review Checklist\n- [ ] Is the primary adversary named in one sentence?\n- [ ] Are trust boundaries explicit?\n- [ ] Do the goals mention integrity/authentication (not just encryption)?\n- [ ] Is replay/freshness addressed where relevant?\n- [ ] Is key management specified (generation, storage, rotation, revocation)?\n- [ ] Are out-of-scope items explicit (and acceptable)?\n"
+    },
+    {
+      "op": "parse_error",
+      "spec": {
+        "assets": [
+          {"name": "k", "why": "oops", "impact": "high"}
+        ]
+      },
+      "expected_error": "missing required field: system"
+    },
+    {
+      "op": "parse_error",
+      "spec": {
+        "system": {"name": "X", "description": ""},
+        "assets": []
+      },
+      "expected_error": "field must be a non-empty string: description"
+    },
+    {
+      "op": "parse_error",
+      "spec": {
+        "system": {"name": "X", "description": "Y"},
+        "adversaries": [{"name": "attacker", "capabilities": [""]}]
+      },
+      "expected_error": "capabilities[0] must be a non-empty string"
+    }
+  ]
+}

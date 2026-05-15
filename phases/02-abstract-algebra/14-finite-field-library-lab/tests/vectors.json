@@ -1,1 +1,154 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal finite-field library checks derived from Phase 2 field lessons plus AES GF(2^8) examples from NIST FIPS 197, Section 4.2.",
+  "vectors": [
+    {
+      "op": "is_prime",
+      "n": 97,
+      "expected": true
+    },
+    {
+      "op": "is_prime",
+      "n": 91,
+      "expected": false
+    },
+    {
+      "op": "is_irreducible",
+      "p": 5,
+      "modulus": [2, 0, 1],
+      "expected": true
+    },
+    {
+      "op": "is_irreducible",
+      "p": 5,
+      "modulus": [1, 0, 1],
+      "expected": false
+    },
+    {
+      "op": "fp_add",
+      "p": 17,
+      "a": 15,
+      "b": 9,
+      "expected": 7
+    },
+    {
+      "op": "fp_mul",
+      "p": 17,
+      "a": 13,
+      "b": 8,
+      "expected": 2
+    },
+    {
+      "op": "fp_div",
+      "p": 17,
+      "a": 3,
+      "b": 5,
+      "expected": 4
+    },
+    {
+      "op": "fp_pow",
+      "p": 17,
+      "a": 5,
+      "exponent": -1,
+      "expected": 7
+    },
+    {
+      "op": "fp_pow",
+      "p": 17,
+      "a": 0,
+      "exponent": -1,
+      "expected_error": "NoInverseError"
+    },
+    {
+      "op": "fp_mix",
+      "p1": 17,
+      "p2": 19,
+      "a": 1,
+      "b": 1,
+      "expected_error": "InvalidFieldError"
+    },
+    {
+      "op": "fq_construct",
+      "p": 5,
+      "modulus": [1, 0, 1],
+      "expected_error": "NotIrreducibleError"
+    },
+    {
+      "op": "fq_add",
+      "p": 5,
+      "modulus": [2, 0, 1],
+      "a": [3, 4],
+      "b": [2, 1],
+      "expected": [0]
+    },
+    {
+      "op": "fq_mul",
+      "p": 5,
+      "modulus": [2, 0, 1],
+      "a": [3, 4],
+      "b": [2, 1],
+      "expected": [3, 1]
+    },
+    {
+      "op": "fq_inv",
+      "p": 5,
+      "modulus": [2, 0, 1],
+      "a": [2, 1],
+      "expected": [2, 4]
+    },
+    {
+      "op": "fq_div",
+      "p": 5,
+      "modulus": [2, 0, 1],
+      "a": [3, 4],
+      "b": [2, 1],
+      "expected": [4]
+    },
+    {
+      "op": "fq_pow",
+      "p": 5,
+      "modulus": [2, 0, 1],
+      "a": [3, 4],
+      "exponent": 7,
+      "expected": [3, 4]
+    },
+    {
+      "op": "fq_inv",
+      "p": 5,
+      "modulus": [2, 0, 1],
+      "a": [0],
+      "expected_error": "NoInverseError"
+    },
+    {
+      "op": "fq_mix",
+      "p1": 5,
+      "modulus1": [2, 0, 1],
+      "p2": 5,
+      "modulus2": [3, 0, 1],
+      "a": [1],
+      "b": [1],
+      "expected_error": "InvalidFieldError"
+    },
+    {
+      "op": "aes_mul",
+      "a": 87,
+      "b": 131,
+      "expected": 193
+    },
+    {
+      "op": "aes_mul",
+      "a": 87,
+      "b": 19,
+      "expected": 254
+    },
+    {
+      "op": "aes_inverse",
+      "byte": 83,
+      "expected": 202
+    },
+    {
+      "op": "aes_inverse",
+      "byte": 0,
+      "expected_error": "NoInverseError"
+    }
+  ]
+}

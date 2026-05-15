@@ -1,4 +1,101 @@
 {
   "title": "Discrete Gaussian Sampling",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does it mean to sample from a centered discrete Gaussian over Z with parameter σ?",
+      "options": [
+        "Choose an integer x with probability proportional to exp(-x^2/(2σ^2))",
+        "Choose a real x from N(0, σ^2) and keep it as a real number",
+        "Choose an integer uniformly from [-σ, σ]",
+        "Choose the shortest non-zero lattice vector"
+      ],
+      "correct": 0,
+      "explanation": "A discrete Gaussian over integers assigns mass to each integer x proportional to exp(-x^2/(2σ^2)) (then normalizes)."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is a deterministic RNG useful when writing test vectors for a sampler?",
+      "options": [
+        "It makes the same seed produce the same sample sequence across runs",
+        "It makes sampling constant-time by construction",
+        "It increases the variance of the sampled noise automatically",
+        "It removes the need to normalize probabilities"
+      ],
+      "correct": 0,
+      "explanation": "Test vectors need reproducible outputs; a deterministic RNG provides stable sequences for a fixed seed and implementation."
+    },
+    {
+      "stage": "post",
+      "question": "In a CDF-table sampler scaled to 2^64 buckets, what must the last CDF endpoint equal?",
+      "options": [
+        "2^64",
+        "2^32",
+        "σ",
+        "The tail parameter t"
+      ],
+      "correct": 0,
+      "explanation": "If you scale probabilities into 2^64 buckets, the cumulative sum must end at exactly 2^64."
+    },
+    {
+      "stage": "post",
+      "question": "What is the purpose of the tail cut (truncation) parameter t in a discrete Gaussian sampler?",
+      "options": [
+        "Make the infinite support finite by restricting to a window [c-t, c+t]",
+        "Ensure the sampled integers are always non-negative",
+        "Guarantee the distribution is exactly continuous Gaussian",
+        "Guarantee the sampler is constant-time"
+      ],
+      "correct": 0,
+      "explanation": "Discrete Gaussians have infinite support; truncation makes a finite table at the cost of a small statistical error."
+    },
+    {
+      "stage": "post",
+      "question": "If you increase σ (keeping the same center), what happens to the discrete Gaussian distribution over integers?",
+      "options": [
+        "It spreads out and assigns more mass to larger |x| values",
+        "It concentrates more tightly at x = 0",
+        "It becomes uniform over the truncated window",
+        "It becomes supported only on even integers"
+      ],
+      "correct": 0,
+      "explanation": "Larger σ increases the standard deviation, so larger-magnitude integers become more likely."
+    },
+    {
+      "stage": "post",
+      "question": "Attack intuition: why is predictable randomness in a noise sampler dangerous for LWE-like constructions?",
+      "options": [
+        "If an attacker can predict the noise, they can remove it and recover the underlying linear structure",
+        "It forces the lattice determinant to be 0, making the system singular",
+        "It makes Gram–Schmidt orthogonalization undefined",
+        "It makes the sampler output only zeros"
+      ],
+      "correct": 0,
+      "explanation": "Noise is what hides the secret; predictable noise can let an attacker reconstruct clean equations and recover secrets."
+    },
+    {
+      "stage": "post",
+      "question": "Attack intuition: what can go wrong if you truncate too aggressively (t too small) or bias the sampler?",
+      "options": [
+        "The distribution can be distinguishable and effectively less noisy, which can weaken security",
+        "The sampled values become exactly uniform, which strengthens security",
+        "The distribution becomes independent of σ, which strengthens security",
+        "Nothing changes as long as σ is positive"
+      ],
+      "correct": 0,
+      "explanation": "Heavy truncation or bias changes the intended distribution and can reduce effective noise, enabling distinguishers or easier lattice attacks."
+    },
+    {
+      "stage": "post",
+      "question": "Why normalize probabilities into exact integer bucket counts (e.g. summing to 2^64) instead of relying on floating-point thresholds?",
+      "options": [
+        "It makes the table deterministic and avoids cumulative rounding drift",
+        "It guarantees the sampler is cryptographically secure in Python",
+        "It guarantees the distribution has infinite support",
+        "It guarantees the distribution is perfectly continuous"
+      ],
+      "correct": 0,
+      "explanation": "Using exact integer bucket totals gives stable, reproducible behavior and avoids floating-point edge cases in comparisons."
+    }
+  ]
 }

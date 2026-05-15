@@ -1,1 +1,26 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "project-internal toy curve E: y^2 = x^3 + 7 over F_211; affine short-Weierstrass group law cross-checked by independent script",
+  "vectors": [
+    {"op": "is_on_curve", "point": null, "expected": true},
+    {"op": "is_on_curve", "point": [3, 33], "expected": true},
+    {"op": "is_on_curve", "point": [3, 34], "expected": false},
+    {"op": "point_neg", "point": [3, 33], "expected": [3, 178]},
+
+    {"op": "point_add", "p": [3, 33], "q": null, "expected": [3, 33]},
+    {"op": "point_add", "p": [3, 33], "q": [3, 178], "expected": null},
+    {"op": "point_add", "p": [3, 33], "q": [3, 33], "expected": [94, 112]},
+    {"op": "point_add", "p": [94, 112], "q": [3, 33], "expected": [92, 59]},
+
+    {"op": "scalar_mul", "k": 0, "point": [3, 33], "expected": null},
+    {"op": "scalar_mul", "k": 1, "point": [3, 33], "expected": [3, 33]},
+    {"op": "scalar_mul", "k": 2, "point": [3, 33], "expected": [94, 112]},
+    {"op": "scalar_mul", "k": 3, "point": [3, 33], "expected": [92, 59]},
+    {"op": "scalar_mul", "k": 10, "point": [3, 33], "expected": [190, 36]},
+    {"op": "scalar_mul", "k": 123, "point": [3, 33], "expected": [175, 68]},
+    {"op": "scalar_mul", "k": 198, "point": [3, 33], "expected": [3, 178]},
+    {"op": "scalar_mul", "k": 199, "point": [3, 33], "expected": null},
+
+    {"op": "discrete_log_bruteforce", "base": [3, 33], "target": [175, 68], "expected": 123},
+    {"op": "add_mul_consistency", "k1": 20, "k2": 77, "base": [3, 33], "expected": [188, 194]}
+  ]
+}

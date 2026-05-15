@@ -6,7 +6,7 @@ Progress tracking for every phase and lesson.
 
 **Legend:** ✅ Complete | 🚧 In Progress | ⬚ Planned
 
-**Status:** Phase 1 (Number Theory) complete — 18/18 lessons. Phase 2 (Abstract Algebra) in progress — 5/14 lessons complete (groups, cyclic, subgroups/cosets, homomorphisms, rings). Phase 0 and Phases 3–20 are scaffolded placeholders awaiting content.
+**Status:** Phase 1 (Number Theory) complete — 18/18 lessons. Phase 2 (Abstract Algebra) in progress — 9/14 lessons complete (groups, cyclic, subgroups/cosets, homomorphisms, rings, fields, binary fields, polynomial rings, irreducible polynomials). Phase 0 and Phases 3–20 are scaffolded placeholders awaiting content.
 
 ## Phase 0: Setup & Tooling — ⬚ (~9 hours)
 
@@ -53,11 +53,11 @@ Progress tracking for every phase and lesson.
 | 03 | Subgroups, Cosets, Lagrange's Theorem | ✅ | ~75 min |
 | 04 | Group Homomorphisms & Isomorphisms | ✅ | ~45 min |
 | 05 | Rings, Ideals, Quotient Rings | ✅ | ~75 min |
-| 06 | Fields and Field Extensions | ⬚ | ~75 min |
+| 06 | Fields and Field Extensions | ✅ | ~75 min |
 | 07 | Finite Fields GF(p) | ⬚ | ~75 min |
-| 08 | Finite Fields GF(2^n) — Binary Polynomial Math | ⬚ | ~75 min |
-| 09 | Polynomial Rings — Add, Mul, Mod, Division | ⬚ | ~75 min |
-| 10 | Irreducible Polynomials & Field Construction | ⬚ | ~75 min |
+| 08 | Finite Fields GF(2^n) — Binary Polynomial Math | ✅ | ~75 min |
+| 09 | Polynomial Rings — Add, Mul, Mod, Division | ✅ | ~75 min |
+| 10 | Irreducible Polynomials & Field Construction | ✅ | ~75 min |
 | 11 | Roots of Unity & Cyclotomic Polynomials | ⬚ | ~75 min |
 | 12 | NTT — Number Theoretic Transform | ⬚ | ~75 min |
 | 13 | FFT for Polynomial Multiplication | ⬚ | ~75 min |

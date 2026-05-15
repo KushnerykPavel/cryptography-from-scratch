@@ -1,4 +1,100 @@
 {
-  "title": "Roots of Unity & Cyclotomic Polynomials",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "When does F_p contain a primitive n-th root of unity?",
+      "options": [
+        "When n divides p-1",
+        "When p divides n",
+        "When n is prime",
+        "When p equals n plus one"
+      ],
+      "correct": 0,
+      "explanation": "The multiplicative group F_p* has order p-1. A subgroup of order n exists exactly when n divides p-1."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a primitive n-th root of unity?",
+      "options": [
+        "An element with multiplicative order exactly n",
+        "Any element whose n-th power is zero",
+        "The smallest element satisfying x^n = 1",
+        "An element equal to the field generator raised to n"
+      ],
+      "correct": 0,
+      "explanation": "Primitive means generating the full cyclic subgroup of order n. The order must be exactly n, not any proper divisor of n."
+    },
+    {
+      "stage": "post",
+      "question": "How do you find a primitive n-th root of unity in F_p when n divides p-1?",
+      "options": [
+        "Raise a primitive root g to the power (p-1)/n",
+        "Take any element and reduce it modulo n",
+        "Compute n modulo p and test each result",
+        "Multiply the n-th prime by the field characteristic"
+      ],
+      "correct": 0,
+      "explanation": "g^((p-1)/n) has order exactly n because g has order p-1 and (p-1)/n is the minimal reduction that keeps the result nontrivial."
+    },
+    {
+      "stage": "post",
+      "question": "What identity connects all cyclotomic polynomials?",
+      "options": [
+        "x^n - 1 equals the product of Phi_d for all divisors d of n",
+        "Phi_n equals x^n minus the sum of all smaller cyclotomic polynomials",
+        "x^n + 1 factors as the product of Phi_d for prime d only",
+        "Phi_n evaluated at 1 always equals the characteristic of the field"
+      ],
+      "correct": 0,
+      "explanation": "Every divisor d of n contributes one cyclotomic factor Phi_d. Their product recovers x^n - 1, and this drives the recursive construction."
+    },
+    {
+      "stage": "post",
+      "question": "What is the degree of the n-th cyclotomic polynomial?",
+      "options": [
+        "Euler's totient phi(n)",
+        "n minus one",
+        "The largest prime factor of n",
+        "The number of divisors of n"
+      ],
+      "correct": 0,
+      "explanation": "Phi_n has exactly phi(n) roots — the primitive n-th roots — so its degree equals phi(n)."
+    },
+    {
+      "stage": "post",
+      "question": "Why does an NTT of length n require n to divide p-1?",
+      "options": [
+        "The transform needs a primitive n-th root of unity as a twiddle factor",
+        "Dividing by n requires n to be the field characteristic",
+        "The polynomial x^n - 1 must be irreducible over F_p",
+        "The NTT butterfly network only works for prime-length inputs"
+      ],
+      "correct": 0,
+      "explanation": "Each butterfly stage multiplies by successive powers of a primitive n-th root omega. That root only exists in F_p when n divides p-1."
+    },
+    {
+      "stage": "post",
+      "question": "What goes wrong if you run an NTT with a prime p where n does not divide p-1?",
+      "options": [
+        "You get fewer than n distinct roots, making the twiddle factors repeat and the transform matrix singular",
+        "The field characteristic changes and addition wraps incorrectly",
+        "The primitive root raises to a complex number instead of a field element",
+        "Every output becomes zero because the polynomial has no roots"
+      ],
+      "correct": 0,
+      "explanation": "Without n | (p-1) there are only gcd(n, p-1) roots of unity instead of n, so twiddle factors repeat and the DFT matrix is rank-deficient."
+    },
+    {
+      "stage": "post",
+      "question": "How does the multiplicative order algorithm avoid testing all values from 1 to p-1?",
+      "options": [
+        "It starts from p-1 and divides down by prime factors as long as a^(order/q) equals 1",
+        "It uses the extended Euclidean algorithm on a and p",
+        "It factors the polynomial x^a - 1 over F_p directly",
+        "It squares a repeatedly until the result exceeds p"
+      ],
+      "correct": 0,
+      "explanation": "The order divides p-1 by Lagrange's theorem. Dividing by each prime factor q while the power test still returns 1 finds the minimum order efficiently."
+    }
+  ]
 }

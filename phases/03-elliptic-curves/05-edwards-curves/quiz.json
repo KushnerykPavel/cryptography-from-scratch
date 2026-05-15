@@ -1,4 +1,101 @@
 {
-  "title": "Edwards & Twisted Edwards Curves",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In affine coordinates on a twisted Edwards curve, what point acts as the identity element?",
+      "options": [
+        "Affine point (0, 1)",
+        "Affine point (1, 0)",
+        "Affine point (0, 0)",
+        "Affine point infinity"
+      ],
+      "correct": 0,
+      "explanation": "For Edwards/twisted Edwards curves the neutral element is the ordinary affine point (0,1), not a special point at infinity."
+    },
+    {
+      "stage": "pre",
+      "question": "In Ed25519 compressed point encoding, what information is stored directly in the 32-byte string?",
+      "options": [
+        "The y-coordinate plus one x bit",
+        "The x-coordinate plus one y bit",
+        "Both coordinates stored in full",
+        "Only the Montgomery u coordinate"
+      ],
+      "correct": 0,
+      "explanation": "Ed25519 encodes y (255 bits, little-endian) and one sign bit for x."
+    },
+
+    {
+      "stage": "post",
+      "question": "Why do extended Edwards coordinates speed up point addition and doubling compared to affine formulas?",
+      "options": [
+        "They avoid inversions during add/double",
+        "They avoid reductions during add/double",
+        "They avoid using the curve equation",
+        "They avoid tracking any Z coordinate"
+      ],
+      "correct": 0,
+      "explanation": "Extended/projective-style coordinates replace division by Z with extra multiplications, avoiding expensive modular inversions in the main loop."
+    },
+    {
+      "stage": "post",
+      "question": "For Edwards25519, what is the curve cofactor (the small factor multiplying the large prime subgroup order)?",
+      "options": [
+        "The curve cofactor is 8",
+        "The curve cofactor is 4",
+        "The curve cofactor is 2",
+        "The curve cofactor is 1"
+      ],
+      "correct": 0,
+      "explanation": "Edwards25519 has group order 8·l, so the cofactor is 8."
+    },
+    {
+      "stage": "post",
+      "question": "What does a prime-subgroup membership check for Edwards25519 typically verify?",
+      "options": [
+        "It checks that l·P equals the identity",
+        "It checks that 8·P equals the identity",
+        "It checks that P has x equal to zero",
+        "It checks that y is below p"
+      ],
+      "correct": 0,
+      "explanation": "Being in the prime-order subgroup of size l means multiplying by l yields the identity element."
+    },
+    {
+      "stage": "post",
+      "question": "If a protocol computes shared = secret·P on Edwards25519 with attacker-chosen P, which attacker choice best enables a small-subgroup confinement attack?",
+      "options": [
+        "A small-order torsion point P",
+        "A random prime-subgroup point P",
+        "The standard basepoint B",
+        "Any point with even y value"
+      ],
+      "correct": 0,
+      "explanation": "A torsion point of order 2/4/8 forces the result into a tiny set, leaking secret modulo that small order."
+    },
+    {
+      "stage": "post",
+      "question": "Which mitigation most directly prevents small-subgroup confinement when using attacker-supplied Edwards25519 points in scalar multiplication?",
+      "options": [
+        "Reject points not in the l subgroup",
+        "Hash the shared secret afterward",
+        "Use a shorter secret scalar value",
+        "Encode the point as base64 first"
+      ],
+      "correct": 0,
+      "explanation": "Subgroup validation (l·P = identity) or an equivalent defense ensures the attacker cannot force computations into the small torsion subgroup."
+    },
+    {
+      "stage": "post",
+      "question": "What does clearing the cofactor on Edwards25519 mean in practice for a point P?",
+      "options": [
+        "Replace P with 8·P before use",
+        "Replace P with l·P before use",
+        "Replace P with P plus the identity",
+        "Replace P with the basepoint B"
+      ],
+      "correct": 0,
+      "explanation": "Multiplying by the cofactor (8) maps any on-curve point into the prime-order subgroup, removing the torsion component."
+    }
+  ]
 }

@@ -1,1 +1,202 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal examples for arithmetic in F_p[x], checked against the standard polynomial long-division identities used in quotient rings F_p[x]/(m(x)).",
+  "vectors": [
+    {
+      "op": "normalize",
+      "coefficients": [6, -1, 0, 10],
+      "p": 5,
+      "expected": [1, 4]
+    },
+    {
+      "op": "poly_degree",
+      "coefficients": [0, 0, 3, 0],
+      "p": 5,
+      "expected": 2
+    },
+    {
+      "op": "poly_to_string",
+      "coefficients": [1, 2, 0, 1],
+      "p": 5,
+      "expected": "x^3 + 2x + 1"
+    },
+    {
+      "op": "poly_add",
+      "a": [1, 2, 0, 1],
+      "b": [4, 1, 1],
+      "p": 5,
+      "expected": [0, 3, 1, 1]
+    },
+    {
+      "op": "poly_neg",
+      "a": [1, 2, 0, 1],
+      "p": 5,
+      "expected": [4, 3, 0, 4]
+    },
+    {
+      "op": "poly_sub",
+      "a": [1, 2, 0, 1],
+      "b": [4, 1, 1],
+      "p": 5,
+      "expected": [2, 1, 4, 1]
+    },
+    {
+      "op": "poly_scale",
+      "a": [1, 2, 0, 1],
+      "scalar": 3,
+      "p": 5,
+      "expected": [3, 1, 0, 3]
+    },
+    {
+      "op": "poly_mul",
+      "a": [1, 2, 0, 1],
+      "b": [4, 1, 1],
+      "p": 5,
+      "expected": [4, 4, 3, 1, 1, 1]
+    },
+    {
+      "op": "poly_divmod",
+      "dividend": [1, 2, 0, 1],
+      "divisor": [4, 1, 1],
+      "p": 5,
+      "expected": [[4, 1], [0, 4]]
+    },
+    {
+      "op": "poly_mod",
+      "poly": [1, 2, 0, 1],
+      "modulus": [4, 1, 1],
+      "p": 5,
+      "expected": [0, 4]
+    },
+    {
+      "op": "poly_gcd",
+      "a": [1, 0, 4, 1],
+      "b": [4, 1, 1],
+      "p": 5,
+      "expected": [3, 1]
+    },
+    {
+      "op": "poly_extended_gcd",
+      "a": [1, 0, 4, 1],
+      "b": [4, 1, 1],
+      "p": 5,
+      "expected": [[3, 1], [2], [4, 3]]
+    },
+    {
+      "op": "poly_eval",
+      "coefficients": [1, 2, 0, 1],
+      "x": 3,
+      "p": 5,
+      "expected": 4
+    },
+    {
+      "op": "quotient_add",
+      "a": [3, 4],
+      "b": [2, 1],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [0]
+    },
+    {
+      "op": "quotient_sub",
+      "a": [3, 4],
+      "b": [2, 1],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [1, 3]
+    },
+    {
+      "op": "quotient_mul",
+      "a": [3, 4],
+      "b": [2, 1],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [3, 1]
+    },
+    {
+      "op": "quotient_pow",
+      "a": [2, 1],
+      "exponent": 3,
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [1]
+    },
+    {
+      "op": "quotient_inverse",
+      "a": [2, 1],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [2, 4]
+    },
+    {
+      "op": "quotient_div",
+      "a": [3, 4],
+      "b": [2, 1],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [4]
+    },
+    {
+      "op": "zero_divisor_pair",
+      "modulus": [0, 0, 1],
+      "p": 5,
+      "expected": [[0, 1], [0, 1]]
+    },
+    {
+      "op": "polynomial_ring_report",
+      "modulus": [0, 0, 1],
+      "p": 5,
+      "expected": {
+        "p": 5,
+        "modulus": [0, 0, 1],
+        "modulus_terms": "x^2",
+        "quotient_order": 25,
+        "representatives": [
+          [0], [1], [2], [3], [4],
+          [0, 1], [1, 1], [2, 1], [3, 1], [4, 1],
+          [0, 2], [1, 2], [2, 2], [3, 2], [4, 2],
+          [0, 3], [1, 3], [2, 3], [3, 3], [4, 3],
+          [0, 4], [1, 4], [2, 4], [3, 4], [4, 4]
+        ],
+        "zero_divisor_pair": [[0, 1], [0, 1]]
+      }
+    },
+    {
+      "op": "poly_expression",
+      "f": [1, 2, 0, 1],
+      "g": [4, 1, 1],
+      "scalar": [3],
+      "p": 5,
+      "expected": [3, 0, 3, 1]
+    },
+    {
+      "op": "quotient_expression",
+      "a": [3, 4],
+      "b": [2, 1],
+      "add": [1],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [4, 1]
+    },
+    {
+      "op": "poly_divmod",
+      "dividend": [1, 2, 3],
+      "divisor": [0],
+      "p": 5,
+      "expected_error": "zero polynomial is not allowed"
+    },
+    {
+      "op": "quotient_inverse",
+      "a": [0, 1],
+      "modulus": [0, 0, 1],
+      "p": 5,
+      "expected_error": "element is not invertible with this modulus"
+    },
+    {
+      "op": "quotient_inverse",
+      "a": [0],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected_error": "zero has no multiplicative inverse"
+    }
+  ]
+}

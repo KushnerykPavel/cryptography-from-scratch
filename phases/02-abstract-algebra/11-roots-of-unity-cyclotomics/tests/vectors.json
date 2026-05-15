@@ -1,1 +1,217 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal examples for roots of unity and cyclotomic polynomials in F_p, verified against known group orders, Euler's totient values, and standard cyclotomic polynomial tables.",
+  "vectors": [
+    {
+      "op": "divisors",
+      "n": 12,
+      "expected": [1, 2, 3, 4, 6, 12]
+    },
+    {
+      "op": "divisors",
+      "n": 8,
+      "expected": [1, 2, 4, 8]
+    },
+    {
+      "op": "euler_phi",
+      "n": 8,
+      "expected": 4
+    },
+    {
+      "op": "euler_phi",
+      "n": 6,
+      "expected": 2
+    },
+    {
+      "op": "euler_phi",
+      "n": 12,
+      "expected": 4
+    },
+    {
+      "op": "multiplicative_order",
+      "a": 3,
+      "p": 7,
+      "expected": 6
+    },
+    {
+      "op": "multiplicative_order",
+      "a": 2,
+      "p": 7,
+      "expected": 3
+    },
+    {
+      "op": "multiplicative_order",
+      "a": 2,
+      "p": 17,
+      "expected": 8
+    },
+    {
+      "op": "multiplicative_order",
+      "a": 1,
+      "p": 17,
+      "expected": 1
+    },
+    {
+      "op": "is_primitive_nth_root",
+      "a": 2,
+      "n": 4,
+      "p": 5,
+      "expected": true
+    },
+    {
+      "op": "is_primitive_nth_root",
+      "a": 4,
+      "n": 4,
+      "p": 5,
+      "expected": false
+    },
+    {
+      "op": "is_primitive_nth_root",
+      "a": 1,
+      "n": 4,
+      "p": 5,
+      "expected": false
+    },
+    {
+      "op": "nth_roots_of_unity",
+      "n": 4,
+      "p": 5,
+      "expected": [1, 2, 3, 4]
+    },
+    {
+      "op": "nth_roots_of_unity",
+      "n": 2,
+      "p": 7,
+      "expected": [1, 6]
+    },
+    {
+      "op": "nth_roots_of_unity",
+      "n": 8,
+      "p": 17,
+      "expected": [1, 2, 4, 8, 9, 13, 15, 16]
+    },
+    {
+      "op": "primitive_nth_roots",
+      "n": 4,
+      "p": 5,
+      "expected": [2, 3]
+    },
+    {
+      "op": "primitive_nth_roots",
+      "n": 6,
+      "p": 7,
+      "expected": [3, 5]
+    },
+    {
+      "op": "primitive_nth_roots",
+      "n": 8,
+      "p": 17,
+      "expected": [2, 8, 9, 15]
+    },
+    {
+      "op": "primitive_root",
+      "p": 5,
+      "expected": 2
+    },
+    {
+      "op": "primitive_root",
+      "p": 7,
+      "expected": 3
+    },
+    {
+      "op": "primitive_root",
+      "p": 17,
+      "expected": 3
+    },
+    {
+      "op": "find_primitive_nth_root",
+      "n": 4,
+      "p": 5,
+      "expected": 2
+    },
+    {
+      "op": "find_primitive_nth_root",
+      "n": 6,
+      "p": 7,
+      "expected": 3
+    },
+    {
+      "op": "find_primitive_nth_root",
+      "n": 8,
+      "p": 17,
+      "expected": 9
+    },
+    {
+      "op": "find_primitive_nth_root",
+      "n": 3,
+      "p": 7,
+      "expected": 2
+    },
+    {
+      "op": "cyclotomic_poly_z",
+      "n": 1,
+      "expected": [-1, 1]
+    },
+    {
+      "op": "cyclotomic_poly_z",
+      "n": 2,
+      "expected": [1, 1]
+    },
+    {
+      "op": "cyclotomic_poly_z",
+      "n": 4,
+      "expected": [1, 0, 1]
+    },
+    {
+      "op": "cyclotomic_poly_z",
+      "n": 6,
+      "expected": [1, -1, 1]
+    },
+    {
+      "op": "cyclotomic_poly_z",
+      "n": 8,
+      "expected": [1, 0, 0, 0, 1]
+    },
+    {
+      "op": "cyclotomic_poly",
+      "n": 4,
+      "p": 5,
+      "expected": [1, 0, 1]
+    },
+    {
+      "op": "cyclotomic_poly",
+      "n": 6,
+      "p": 7,
+      "expected": [1, 6, 1]
+    },
+    {
+      "op": "cyclotomic_poly",
+      "n": 8,
+      "p": 17,
+      "expected": [1, 0, 0, 0, 1]
+    },
+    {
+      "op": "cyclotomic_roots",
+      "n": 4,
+      "p": 5,
+      "expected": [2, 3]
+    },
+    {
+      "op": "cyclotomic_roots",
+      "n": 6,
+      "p": 7,
+      "expected": [3, 5]
+    },
+    {
+      "op": "find_primitive_nth_root",
+      "n": 6,
+      "p": 5,
+      "expected_error": "n=6 does not divide p-1=4, no primitive 6-th root in F_5"
+    },
+    {
+      "op": "multiplicative_order",
+      "a": 0,
+      "p": 7,
+      "expected_error": "zero has no multiplicative order"
+    }
+  ]
+}

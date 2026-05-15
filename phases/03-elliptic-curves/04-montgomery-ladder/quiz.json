@@ -1,4 +1,101 @@
 {
   "title": "Montgomery Ladder & Constant-Time Scalar Mul",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the core side-channel problem with a naive double-and-add scalar multiplication?",
+      "options": [
+        "It conditionally performs point additions based on secret scalar bits, leaking information via timing/power",
+        "It always performs exactly one addition and one doubling per bit, making it constant-time by design",
+        "It requires factoring the field prime p, so the scalar can be recovered mathematically",
+        "It only works on Montgomery-form curves, so it fails on short-Weierstrass curves"
+      ],
+      "correct": 0,
+      "explanation": "Double-and-add’s control flow depends on secret bits (add happens only for 1 bits), which can leak via side channels."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the high-level goal of using a Montgomery ladder style for scalar multiplication?",
+      "options": [
+        "Make per-bit behavior uniform so the operation pattern does not reveal scalar bits",
+        "Compute discrete logarithms faster by reducing the number of doublings",
+        "Avoid having to validate whether points are on the curve",
+        "Guarantee correctness without handling any edge cases in point addition"
+      ],
+      "correct": 0,
+      "explanation": "The ladder aims for a fixed operation pattern per bit (e.g., one add + one double), reducing simple leakage."
+    },
+    {
+      "stage": "post",
+      "question": "In a typical Montgomery ladder loop, how many point operations are performed per processed scalar bit (ignoring swaps/selects)?",
+      "options": [
+        "Exactly one point addition and one point doubling",
+        "Exactly one point addition and zero doublings",
+        "Exactly two point doublings and no additions",
+        "A variable number of additions depending on the number of 1 bits"
+      ],
+      "correct": 0,
+      "explanation": "The key property is a fixed add+double pattern per bit, regardless of the bit value."
+    },
+    {
+      "stage": "post",
+      "question": "In the two-register ladder form with accumulators (R0, R1) initialized as (0·P, 1·P), what updates correspond to a bit value of 0?",
+      "options": [
+        "R1 = R0 + R1 and R0 = 2·R0",
+        "R0 = R0 + R1 and R1 = 2·R1",
+        "R0 = 2·R0 and R1 = 2·R1",
+        "R0 = R0 + P and R1 = R1 + P"
+      ],
+      "correct": 0,
+      "explanation": "For bit 0, the ladder keeps the lower multiple in R0 by doubling R0 and updates R1 via an addition."
+    },
+    {
+      "stage": "post",
+      "question": "Why is a Python implementation of the ladder still not truly constant-time, even if the high-level loop structure is fixed?",
+      "options": [
+        "Python big integers and the interpreter introduce value-dependent timing and the point formulas still branch on edge cases",
+        "Because Montgomery ladders only work for RSA exponentiation, not elliptic curves",
+        "Because the ladder requires floating-point arithmetic, which is nondeterministic in Python",
+        "Because scalar bits are always printed to stdout by the interpreter"
+      ],
+      "correct": 0,
+      "explanation": "Constant-time is an end-to-end property: runtime behavior and low-level arithmetic must also be secret-independent."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: in a double-and-add implementation, what does an observed “extra” point addition most directly indicate?",
+      "options": [
+        "The currently processed scalar bit is 1 (or the current digit is nonzero in a signed-digit method)",
+        "The curve parameters (a, b) are invalid",
+        "The point is not on the curve and must be rejected",
+        "The scalar is guaranteed to be prime"
+      ],
+      "correct": 0,
+      "explanation": "In double-and-add, the addition is conditional on the bit being 1, which is exactly the leakage SPA exploits."
+    },
+    {
+      "stage": "post",
+      "question": "A common ladder invariant is that after processing some prefix of bits, R0 and R1 represent two consecutive multiples of P. Which statement best matches that idea?",
+      "options": [
+        "R0 = m·P and R1 = (m+1)·P for some m determined by the processed bits",
+        "R0 = P and R1 = 2P for all iterations, independent of the scalar",
+        "R0 and R1 are random points unrelated to P to hide side channels",
+        "R0 holds only the x-coordinate while R1 holds only the y-coordinate"
+      ],
+      "correct": 0,
+      "explanation": "The ladder keeps adjacent multiples so that each iteration can update them with one add and one double."
+    },
+    {
+      "stage": "post",
+      "question": "How should a scalar multiplication routine handle a negative scalar k < 0 in an elliptic-curve group?",
+      "options": [
+        "Compute (−k)·(−P) instead, since (−k)·(−P) = k·P",
+        "Return the identity element because negative scalars are undefined",
+        "Reduce k modulo the field prime p and treat the result as the scalar",
+        "Negate only the x-coordinate of the output point"
+      ],
+      "correct": 0,
+      "explanation": "In an abelian group, negating both the scalar and the point preserves the product."
+    }
+  ]
 }

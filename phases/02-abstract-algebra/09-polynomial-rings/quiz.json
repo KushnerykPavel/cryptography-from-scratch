@@ -1,4 +1,100 @@
 {
-  "title": "Polynomial Rings \u2014 Add, Mul, Mod, Division",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does the list [1, 2, 0, 1] represent in this lesson's polynomial convention?",
+      "options": [
+        "1 + 2x + x^3 over the coefficient field",
+        "x + 2x^2 + x^4 over the coefficient field",
+        "A base-p integer with digits read left first",
+        "Four unrelated field elements with no powers"
+      ],
+      "correct": 0,
+      "explanation": "The lesson stores coefficients from low degree to high degree. Index 0 is the constant term, index 1 is the coefficient of x, and so on."
+    },
+    {
+      "stage": "pre",
+      "question": "Why must the coefficient modulus p be prime for the division algorithm used here?",
+      "options": [
+        "Every nonzero leading coefficient has an inverse",
+        "Every polynomial then has only one possible root",
+        "All polynomials become monic without scaling",
+        "Multiplication becomes faster than addition"
+      ],
+      "correct": 0,
+      "explanation": "Long division cancels the leading term by multiplying by the inverse of the divisor's leading coefficient. That inverse is guaranteed in a field such as F_p."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main purpose of normalizing polynomial coefficient lists?",
+      "options": [
+        "Give each polynomial one stable representation",
+        "Make every polynomial irreducible over F_p",
+        "Sort coefficients by their numeric magnitude",
+        "Convert quotient rings into integer rings"
+      ],
+      "correct": 0,
+      "explanation": "Normalization reduces coefficients modulo p and removes trailing zeros. This prevents the same polynomial from having many spellings."
+    },
+    {
+      "stage": "post",
+      "question": "In polynomial long division, what condition stops the loop?",
+      "options": [
+        "The remainder degree is below the divisor degree",
+        "The quotient degree equals the divisor degree",
+        "The dividend coefficients are all nonzero values",
+        "The leading coefficient becomes exactly p"
+      ],
+      "correct": 0,
+      "explanation": "Division ends when no shifted copy of the divisor can cancel the remainder's leading term. The remainder then has smaller degree than the divisor."
+    },
+    {
+      "stage": "post",
+      "question": "What does reduction modulo m(x) do in F_p[x]/(m(x))?",
+      "options": [
+        "Keeps the division remainder as the representative",
+        "Evaluates the polynomial at the integer m",
+        "Drops all coefficients below the top degree",
+        "Changes the coefficient field from F_p to F_m"
+      ],
+      "correct": 0,
+      "explanation": "A quotient-ring element is represented by the remainder after division by m(x). That representative has degree less than deg(m)."
+    },
+    {
+      "stage": "post",
+      "question": "How does extended Euclid produce an inverse of a(x) modulo m(x)?",
+      "options": [
+        "It finds s and t with s*a + t*m = 1",
+        "It evaluates a at every field element",
+        "It searches for roots of m one by one",
+        "It pads a with zeros until degrees match"
+      ],
+      "correct": 0,
+      "explanation": "If extended Euclid finds s*a + t*m = 1, then reducing modulo m leaves s*a = 1. That makes s the inverse of a modulo m."
+    },
+    {
+      "stage": "post",
+      "question": "What can go wrong if a reducible modulus is treated as if it defined a field?",
+      "options": [
+        "Nonzero elements can multiply to zero",
+        "Coefficient addition stops being modular",
+        "The zero polynomial gains many degrees",
+        "Long division loses all remainders"
+      ],
+      "correct": 0,
+      "explanation": "Reducible quotient moduli can create zero divisors. In F_5[x]/(x^2), the nonzero element x satisfies x*x = 0."
+    },
+    {
+      "stage": "post",
+      "question": "Why should a PolyMod value carry both p and m(x)?",
+      "options": [
+        "The field and modulus define the arithmetic",
+        "The degree alone determines every product",
+        "The value list already names the quotient",
+        "The constant term stores all parameters"
+      ],
+      "correct": 0,
+      "explanation": "The same coefficient list can mean different elements in different quotient rings. Carrying p and m(x) prevents accidental cross-ring arithmetic."
+    }
+  ]
 }

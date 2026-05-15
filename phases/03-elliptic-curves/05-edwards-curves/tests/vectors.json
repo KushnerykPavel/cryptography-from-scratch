@@ -1,1 +1,78 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Ed25519 point encoding/decoding and extended-coordinate formulas follow RFC 8032 (Jan 2017). The basepoint encoding and group order l are from RFC 8032 / RFC 7748. The remaining vectors (small scalar multiples and torsion/cofactor checks) are project-internal, derived from those formulas and cross-checked by an independent script.",
+  "vectors": [
+    {
+      "op": "decode",
+      "enc_hex": "5866666666666666666666666666666666666666666666666666666666666666",
+      "expected": {
+        "x": 15112221349535400772501151409588531511454012693041857206046113283949847762202,
+        "y": 46316835694926478169428394003475163141307993866256225615783033603165251855960
+      }
+    },
+    {
+      "op": "encode",
+      "point": { "x": 0, "y": 1 },
+      "expected_hex": "0100000000000000000000000000000000000000000000000000000000000000"
+    },
+
+    {
+      "op": "scalar_mul",
+      "k": 2,
+      "point_enc_hex": "5866666666666666666666666666666666666666666666666666666666666666",
+      "expected_enc_hex": "c9a3f86aae465f0e56513864510f3997561fa2c9e85ea21dc2292309f3cd6022"
+    },
+    {
+      "op": "scalar_mul",
+      "k": 3,
+      "point_enc_hex": "5866666666666666666666666666666666666666666666666666666666666666",
+      "expected_enc_hex": "d4b4f5784868c3020403246717ec169ff79e26608ea126a1ab69ee77d1b16712"
+    },
+    {
+      "op": "scalar_mul",
+      "k": 5,
+      "point_enc_hex": "5866666666666666666666666666666666666666666666666666666666666666",
+      "expected_enc_hex": "edc876d6831fd2105d0b4389ca2e283166469289146e2ce06faefe98b22548df"
+    },
+    {
+      "op": "scalar_mul",
+      "k": 7237005577332262213973186563042994240857116359379907606001950938285454250989,
+      "point_enc_hex": "5866666666666666666666666666666666666666666666666666666666666666",
+      "expected_enc_hex": "0100000000000000000000000000000000000000000000000000000000000000"
+    },
+
+    {
+      "op": "add",
+      "p_enc_hex": "5866666666666666666666666666666666666666666666666666666666666666",
+      "q_enc_hex": "5866666666666666666666666666666666666666666666666666666666666666",
+      "expected_enc_hex": "c9a3f86aae465f0e56513864510f3997561fa2c9e85ea21dc2292309f3cd6022"
+    },
+
+    {
+      "op": "is_in_prime_subgroup",
+      "point_enc_hex": "c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a",
+      "expected": false
+    },
+    {
+      "op": "clear_cofactor",
+      "point_enc_hex": "c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a",
+      "expected_enc_hex": "0100000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "op": "scalar_mul",
+      "k": 4,
+      "point_enc_hex": "c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a",
+      "expected_enc_hex": "ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"
+    },
+
+    {
+      "op": "is_in_prime_subgroup",
+      "point_enc_hex": "0000000000000000000000000000000000000000000000000000000000000000",
+      "expected": false
+    },
+    {
+      "op": "clear_cofactor",
+      "point_enc_hex": "0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_enc_hex": "0100000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

@@ -1,4 +1,101 @@
 {
   "title": "Babai's Nearest Plane Algorithm",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "If a lattice basis is perfectly orthogonal, what does CVP reduce to for integer targets?",
+      "options": [
+        "Independent rounding of each coordinate in the orthogonal basis",
+        "Solving a shortest vector problem (SVP) in the dual lattice",
+        "Running LLL until the determinant decreases",
+        "Enumerating all integer combinations in a coefficient window"
+      ],
+      "correct": 0,
+      "explanation": "With an orthogonal basis, the Voronoi cell is an axis-aligned box in that coordinate system, so rounding each coordinate gives a closest lattice point."
+    },
+    {
+      "stage": "pre",
+      "question": "What does Gram–Schmidt produce from a basis b1,...,bn that Babai/LLL rely on?",
+      "options": [
+        "Orthogonal vectors b* plus projection coefficients μ",
+        "A unimodular matrix U with det(U)=±1",
+        "A shortest non-zero lattice vector",
+        "A factorization of the determinant into primes"
+      ],
+      "correct": 0,
+      "explanation": "Gram–Schmidt gives orthogonal b* vectors and projection coefficients μ that describe how basis vectors project onto earlier directions."
+    },
+    {
+      "stage": "post",
+      "question": "In Babai’s nearest-plane algorithm, in what order do you process the basis directions?",
+      "options": [
+        "From the last Gram–Schmidt direction down to the first",
+        "From the first basis vector up to the last",
+        "In an arbitrary order; it does not matter",
+        "Only the shortest basis vector is used"
+      ],
+      "correct": 0,
+      "explanation": "Babai rounds the coefficient along b*_n, subtracts, then continues with b*_{n-1}, and so on down to b*_1."
+    },
+    {
+      "stage": "post",
+      "question": "What quantity does Babai round at step i (using the Gram–Schmidt data)?",
+      "options": [
+        "<residual, b*_i> / <b*_i, b*_i>",
+        "<residual, b_i> / <b_i, b_i>",
+        "<b_i, b_i> / <b*_i, b*_i>",
+        "det([b1 ... bn]) / det([b1* ... bn*])"
+      ],
+      "correct": 0,
+      "explanation": "Babai rounds the coordinate of the residual along the orthogonal direction b*_i: <r,b*_i>/<b*_i,b*_i>."
+    },
+    {
+      "stage": "post",
+      "question": "Why do we typically run LLL (or BKZ) before Babai in practical workflows?",
+      "options": [
+        "Babai’s quality depends strongly on basis orthogonality; reduction makes the basis less skew",
+        "Babai requires the determinant to be 1, and LLL enforces that",
+        "Babai only works when all basis vectors have the same length, which LLL guarantees",
+        "LLL converts CVP into an exact SVP instance"
+      ],
+      "correct": 0,
+      "explanation": "Babai is basis-dependent; reducing the basis usually improves Gram–Schmidt geometry, making the rounding decisions more reliable."
+    },
+    {
+      "stage": "post",
+      "question": "Which failure mode best explains how Babai can return a non-optimal lattice vector on a skew basis?",
+      "options": [
+        "An early rounding decision sends the residual to the wrong affine coset, and later steps cannot recover",
+        "The lattice stops being discrete when the basis is skew",
+        "Gram–Schmidt only works for prime determinants",
+        "Babai always solves exact CVP, so it cannot fail"
+      ],
+      "correct": 0,
+      "explanation": "On a skew basis, rounding along b*_i can choose the wrong hyperplane; the remaining steps only search within that choice."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson implement Gram–Schmidt with exact Fractions instead of floats?",
+      "options": [
+        "To avoid numerical noise that can flip ‘round to nearest integer’ decisions",
+        "Because floats cannot represent integers at all",
+        "Because Fractions are asymptotically faster than floats",
+        "Because LLL/Babai require constant-time arithmetic"
+      ],
+      "correct": 0,
+      "explanation": "Babai/LLL depend on comparisons to 1/2 and nearest-integer rounding; small floating errors can change decisions on integer inputs."
+    },
+    {
+      "stage": "post",
+      "question": "In a bounded-distance decoding (BDD) setting, what is the typical role of Babai’s output?",
+      "options": [
+        "A fast candidate that is often correct when the target is sufficiently close to the lattice",
+        "A proof that the basis is unimodular",
+        "A way to compute the exact smoothing parameter",
+        "A method to factor the determinant"
+      ],
+      "correct": 0,
+      "explanation": "BDD assumes the target is near the lattice; with a reduced basis, Babai frequently returns the intended nearest lattice vector."
+    }
+  ]
 }

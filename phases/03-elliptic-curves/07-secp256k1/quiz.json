@@ -1,4 +1,101 @@
 {
   "title": "secp256k1 \u2014 Bitcoin's Curve",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the defining curve equation for secp256k1 over its prime field?",
+      "options": [
+        "y\u00b2 \u2261 x\u00b3 + 7 (mod p)",
+        "y\u00b2 \u2261 x\u00b3 + x + 7 (mod p)",
+        "y\u00b2 \u2261 x\u00b3 + 486662\u00b7x\u00b2 + x (mod p)",
+        "y\u00b2 \u2261 x\u00b3 + ax\u00b2 + b (mod 2)"
+      ],
+      "correct": 0,
+      "explanation": "secp256k1 is the short-Weierstrass curve y\u00b2 = x\u00b3 + 7 over a prime field."
+    },
+    {
+      "stage": "pre",
+      "question": "What does a compressed secp256k1 public key typically contain?",
+      "options": [
+        "A 1-byte prefix (02/03) and a 32-byte x-coordinate",
+        "A 1-byte prefix (04) and 32-byte x and y coordinates",
+        "A 32-byte x-coordinate and a 32-byte y-coordinate (no prefix)",
+        "A 32-byte scalar and a 32-byte u-coordinate"
+      ],
+      "correct": 0,
+      "explanation": "Compressed SEC1-style encodings keep x and one bit of information via the 02/03 prefix."
+    },
+    {
+      "stage": "post",
+      "question": "In a compressed secp256k1 public key, what information does the first byte (0x02 or 0x03) encode?",
+      "options": [
+        "Whether the y-coordinate is even or odd",
+        "Whether the x-coordinate is even or odd",
+        "Whether the point is in the correct subgroup",
+        "Whether the scalar was reduced modulo n"
+      ],
+      "correct": 0,
+      "explanation": "The prefix selects which of the two possible y values (y or \u2212y mod p) to use by encoding y parity."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it possible to reconstruct the full point (x, y) from a compressed key that only includes x plus one bit?",
+      "options": [
+        "For a given x, the curve equation yields 0 or 2 y values, and they differ by sign (y and \u2212y)",
+        "For a given x, the curve equation yields exactly one y value for every x in the field",
+        "The missing y-coordinate is always 0 for secp256k1 points",
+        "The missing y-coordinate is recovered by hashing x with SHA-256"
+      ],
+      "correct": 0,
+      "explanation": "Over a prime field, solutions for y come in pairs (y, \u2212y) when they exist, so one extra bit disambiguates."
+    },
+    {
+      "stage": "post",
+      "question": "For secp256k1, p \u2261 3 (mod 4). What does this enable for computing square roots modulo p (when they exist)?",
+      "options": [
+        "Compute sqrt(a) as a^((p+1)/4) (mod p) and verify the result",
+        "Compute sqrt(a) as a^(p\u22121) (mod p) without any verification",
+        "Compute sqrt(a) as a^((p\u22121)/2) (mod p) and use it directly as the root",
+        "Avoid modular square roots entirely because secp256k1 uses only x-coordinates"
+      ],
+      "correct": 0,
+      "explanation": "When p \u2261 3 (mod 4), exponentiation to (p+1)/4 yields a square root for quadratic residues, and you still verify x\u00b2 \u2261 a."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what information can leak from a naive double-and-add scalar multiplication implementation?",
+      "options": [
+        "Scalar bits can leak because additions occur only when a bit is 1",
+        "The field prime p can be recovered from a single public key",
+        "The discrete logarithm problem becomes easy because the curve has a = 0",
+        "Public keys can be forged because compressed keys omit y"
+      ],
+      "correct": 0,
+      "explanation": "If an attacker can distinguish \u201cdouble only\u201d from \u201cdouble+add\u201d (timing/power/cache), they learn information about secret bits."
+    },
+    {
+      "stage": "post",
+      "question": "What is the standard validity range for a secp256k1 private key scalar k, assuming the group order is n?",
+      "options": [
+        "1 \u2264 k < n",
+        "0 \u2264 k \u2264 n",
+        "1 \u2264 k \u2264 p",
+        "0 \u2264 k < p"
+      ],
+      "correct": 0,
+      "explanation": "Private scalars are taken modulo n, but 0 is rejected; the conventional range is 1..n\u22121."
+    },
+    {
+      "stage": "post",
+      "question": "When parsing an uncompressed secp256k1 public key (04 || x || y), which check is essential to prevent accepting invalid points?",
+      "options": [
+        "Verify that (x, y) satisfies y\u00b2 \u2261 x\u00b3 + 7 (mod p)",
+        "Verify that x is less than n (the group order)",
+        "Verify that the byte string is little-endian encoded",
+        "Verify that x has an even least significant bit"
+      ],
+      "correct": 0,
+      "explanation": "The core validity check is \u201con-curve\u201d: the coordinates must satisfy the curve equation modulo p."
+    }
+  ]
 }

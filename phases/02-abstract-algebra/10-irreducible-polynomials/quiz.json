@@ -1,4 +1,100 @@
 {
-  "title": "Irreducible Polynomials & Field Construction",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does it mean for a polynomial to factor over F_p?",
+      "options": [
+        "It splits into lower-degree polynomials with coefficients in F_p",
+        "It evaluates to zero at every possible coefficient in F_p",
+        "It has leading coefficient one after modular reduction",
+        "It uses powers larger than the chosen field characteristic"
+      ],
+      "correct": 0,
+      "explanation": "Factoring over F_p means writing the polynomial as a product of lower-degree polynomials whose coefficients are also in F_p."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is irreducibility needed when constructing F_p[x]/(m) as a field?",
+      "options": [
+        "It prevents nonzero elements from becoming zero divisors",
+        "It makes every coefficient list have the same length",
+        "It changes polynomial addition into integer addition",
+        "It removes the need for modular coefficient arithmetic"
+      ],
+      "correct": 0,
+      "explanation": "If m factors, the quotient can contain nonzero zero divisors. Irreducibility is what makes the quotient a field."
+    },
+    {
+      "stage": "post",
+      "question": "What does finding a root r of f(x) over F_p immediately tell you?",
+      "options": [
+        "A root r shows that x-r divides the polynomial",
+        "A root r proves every coefficient must be zero",
+        "A root r makes the polynomial automatically monic",
+        "A root r changes the coefficient field size"
+      ],
+      "correct": 0,
+      "explanation": "The factor theorem says that f(r)=0 means x-r divides f(x). This gives a direct reducibility witness."
+    },
+    {
+      "stage": "post",
+      "question": "Why are root checks not enough for every irreducibility test?",
+      "options": [
+        "A quartic can split into two quadratic factors",
+        "A quartic cannot be evaluated over finite fields",
+        "A quartic always has four visible linear roots",
+        "A quartic has no meaningful leading coefficient"
+      ],
+      "correct": 0,
+      "explanation": "For degree at least four, a polynomial may factor without having a linear factor. A root check only detects linear factors."
+    },
+    {
+      "stage": "post",
+      "question": "What is the core move in Rabin's irreducibility criterion?",
+      "options": [
+        "Check Frobenius powers and gcds modulo f",
+        "Try random integer division until one works",
+        "Count coefficient lists shorter than f only",
+        "Compare decimal encodings of the polynomial"
+      ],
+      "correct": 0,
+      "explanation": "Rabin's criterion checks Frobenius powers of x modulo f and uses gcds to rule out lower-degree factors."
+    },
+    {
+      "stage": "post",
+      "question": "What should happen to x^(p^n) modulo an irreducible degree-n polynomial f?",
+      "options": [
+        "x^(p^n) reduces back to x modulo f",
+        "x^(p^n) becomes the constant zero",
+        "x^(p^n) lists all roots in order",
+        "x^(p^n) removes the leading term"
+      ],
+      "correct": 0,
+      "explanation": "In the degree-n extension field, every element satisfies a^(p^n)=a. Testing this on x is part of the irreducibility check."
+    },
+    {
+      "stage": "post",
+      "question": "What is the concrete attack witness when a reducible modulus is accepted?",
+      "options": [
+        "Find nonzero factors whose product is zero",
+        "Choose a larger prime for faster exponentiation",
+        "Pad each coefficient list with extra zeros",
+        "Replace every inverse with ordinary division"
+      ],
+      "correct": 0,
+      "explanation": "If m=a*b, then a and b are nonzero in the quotient but multiply to zero. That breaks field-style division assumptions."
+    },
+    {
+      "stage": "post",
+      "question": "Why should ExtensionField reject a reducible modulus before arithmetic starts?",
+      "options": [
+        "Later division may silently face noninvertible values",
+        "Addition would stop reducing coefficients modulo p",
+        "The polynomial degree would become hard to print",
+        "Root searches would always return empty lists"
+      ],
+      "correct": 0,
+      "explanation": "Reducible moduli create zero divisors, so some nonzero values lack inverses. Rejecting the modulus prevents fake-field arithmetic."
+    }
+  ]
 }

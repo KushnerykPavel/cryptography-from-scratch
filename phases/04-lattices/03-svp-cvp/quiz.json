@@ -1,4 +1,101 @@
 {
   "title": "SVP and CVP \u2014 The Hard Problems",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "SVP (Shortest Vector Problem) asks you to find:",
+      "options": [
+        "a shortest non-zero lattice vector (by norm) given a basis",
+        "the shortest basis vector in the given basis",
+        "the lattice point closest to a target t",
+        "a unimodular matrix that shortens the basis"
+      ],
+      "correct": 0,
+      "explanation": "SVP is about the lattice set L(B), not the specific basis vectors, and it forbids the zero vector."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is brute-forcing SVP/CVP in high dimension usually infeasible?",
+      "options": [
+        "The naive search space grows exponentially in the dimension n",
+        "Integer arithmetic cannot represent the needed numbers",
+        "Determinants cannot be computed exactly",
+        "Unimodular matrices do not exist in high dimensions"
+      ],
+      "correct": 0,
+      "explanation": "If you brute-force coefficients z in a window [-k,k]^n, the candidate count is (2k+1)^n."
+    },
+    {
+      "stage": "post",
+      "question": "CVP (Closest Vector Problem) asks you to find:",
+      "options": [
+        "a lattice vector v minimizing ||v - t|| for a given target t",
+        "a lattice vector v minimizing ||v|| among non-zero vectors",
+        "a basis with minimal determinant",
+        "a basis where Gram\u2013Schmidt vectors are orthogonal"
+      ],
+      "correct": 0,
+      "explanation": "CVP fixes an external target t and asks for the nearest lattice point."
+    },
+    {
+      "stage": "post",
+      "question": "If the target t is itself a lattice point (t \u2208 L), then the optimal CVP distance is:",
+      "options": [
+        "0",
+        "1",
+        "the determinant det(L)",
+        "\u03bb1(L)"
+      ],
+      "correct": 0,
+      "explanation": "If t is in the lattice, the closest lattice point can be t itself, giving distance 0."
+    },
+    {
+      "stage": "post",
+      "question": "Why does solving CVP with target t=0 not solve SVP?",
+      "options": [
+        "CVP with t=0 returns v=0, but SVP forbids the zero vector",
+        "SVP and CVP are identical problems",
+        "CVP requires a determinant input and SVP does not",
+        "SVP is only defined in 2D"
+      ],
+      "correct": 0,
+      "explanation": "SVP asks for the shortest non-zero lattice vector; CVP at the origin trivially returns 0."
+    },
+    {
+      "stage": "post",
+      "question": "You brute-force z \u2208 [-3,3]^8 for SVP/CVP. How many coefficient vectors z are there?",
+      "options": [
+        "7^8",
+        "6^8",
+        "8^7",
+        "3^8"
+      ],
+      "correct": 0,
+      "explanation": "There are (2k+1)^n candidates, so with k=3 and n=8 you get 7^8."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement is the best \"attack\" on the naive heuristic: \"If I publish a basis with long vectors, my lattice has no short vectors\"?",
+      "options": [
+        "A unimodular change of basis can make basis vectors look long while the lattice still contains the same short vectors",
+        "Long basis vectors force det(L) to be large, which implies \u03bb1(L) is large",
+        "Basis vectors uniquely define the lattice, so long vectors mean a sparse lattice",
+        "If the basis is long, every lattice vector must be long"
+      ],
+      "correct": 0,
+      "explanation": "A basis is not unique; changing basis can hide or reveal short lattice vectors without changing the lattice."
+    },
+    {
+      "stage": "post",
+      "question": "In lattice cryptography, why do reductions often discuss approximate SVP/CVP (not exact)?",
+      "options": [
+        "Exact SVP/CVP are too hard in high dimension, and many security statements naturally use approximation factors",
+        "Approximate problems are always easier than exact ones",
+        "Approximate SVP/CVP are only defined in 2D",
+        "Approximation removes the need for a basis"
+      ],
+      "correct": 0,
+      "explanation": "Security arguments frequently relate schemes to lattice problems within approximation factors; exact versions are generally intractable at cryptographic dimensions."
+    }
+  ]
 }

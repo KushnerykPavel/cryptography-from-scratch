@@ -1,4 +1,101 @@
 {
   "title": "FFT for Polynomial Multiplication",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "If a has length m and b has length n, what is the length of the (linear) polynomial product a*b?",
+      "options": [
+        "m + n - 1 coefficients",
+        "max(m, n) coefficients",
+        "m * n coefficients",
+        "m + n coefficients"
+      ],
+      "correct": 0,
+      "explanation": "Degree adds under multiplication, so coefficient length becomes (m-1)+(n-1)+1 = m+n-1."
+    },
+    {
+      "stage": "pre",
+      "question": "In the complex DFT of length N, which points are used to evaluate a coefficient vector?",
+      "options": [
+        "Powers of ω = exp(2πi/N) on the unit circle",
+        "Any N distinct real points on a number line",
+        "Residues 0..N-1 interpreted modulo a prime",
+        "Random complex points drawn from a Gaussian"
+      ],
+      "correct": 0,
+      "explanation": "The DFT evaluates at powers of ω = exp(2πi/N), i.e., the N equally spaced roots of unity."
+    },
+    {
+      "stage": "post",
+      "question": "Why does an iterative in-place Cooley–Tukey FFT perform a bit-reversal permutation first?",
+      "options": [
+        "So butterfly stages work on contiguous memory blocks",
+        "So inputs are sorted by magnitude to reduce error",
+        "So the inverse FFT works without the 1/N scaling",
+        "So ω becomes a primitive root for the chosen N"
+      ],
+      "correct": 0,
+      "explanation": "Bit-reversal reorders indices so that the iterative butterfly schedule matches the recursive factorization without extra data movement."
+    },
+    {
+      "stage": "post",
+      "question": "In a stage of size len in a length-N FFT, what is the correct per-stage twiddle base wlen?",
+      "options": [
+        "wlen = exp(±2πi/len), sign depends on direction",
+        "wlen = exp(±2πi/N), sign depends on direction",
+        "wlen = exp(±2πi·len), sign depends on direction",
+        "wlen = exp(±2πi/(N·len)), sign depends on direction"
+      ],
+      "correct": 0,
+      "explanation": "At stage len you need a principal len-th root so that powers step correctly across the half-block butterflies."
+    },
+    {
+      "stage": "post",
+      "question": "Besides using the opposite sign in the exponent, what final step is required in an inverse FFT implementation?",
+      "options": [
+        "Divide every output by N (scale by 1/N)",
+        "Multiply every output by N (scale by N)",
+        "Reduce every output modulo N for normalization",
+        "Reverse the output list to undo permutation"
+      ],
+      "correct": 0,
+      "explanation": "The inverse DFT matrix is (1/N) times the conjugate/root-inverse DFT matrix, so you must scale by 1/N."
+    },
+    {
+      "stage": "post",
+      "question": "You multiply polynomials using FFT but choose N smaller than len(a)+len(b)-1. What failure should you expect?",
+      "options": [
+        "You compute a circular convolution, so terms wrap around",
+        "You get the correct product but with bit-reversed indices",
+        "You get the correct product but only for prime lengths",
+        "You get the right length product but the last term is wrong"
+      ],
+      "correct": 0,
+      "explanation": "An N-point FFT corresponds to multiplication modulo (x^N - 1). Without enough zero padding, high-degree terms alias into low degrees."
+    },
+    {
+      "stage": "post",
+      "question": "When using a complex FFT to multiply integer polynomials, why do we round the inverse FFT output?",
+      "options": [
+        "Floating-point introduces error, so we round to nearest int",
+        "The inverse outputs modulo N, so we undo that reduction",
+        "The outputs are imaginary, so rounding extracts the real",
+        "Rounding enforces ω is a root for the transform length"
+      ],
+      "correct": 0,
+      "explanation": "Even when the true coefficients are integers, the FFT computes with floats, so the inverse results land near integers and need rounding."
+    },
+    {
+      "stage": "post",
+      "question": "Why do cryptographic implementations often prefer an NTT over a complex FFT for polynomial multiplication?",
+      "options": [
+        "The NTT is exact mod p and avoids float rounding failures",
+        "The NTT works for any modulus with no parameter checks",
+        "The NTT is always faster for every length and platform",
+        "The NTT hides coefficients as complex phases for secrecy"
+      ],
+      "correct": 0,
+      "explanation": "The NTT operates in a finite field or ring where arithmetic is exact; complex FFT uses floats and can silently round incorrectly under adversarial magnitudes."
+    }
+  ]
 }

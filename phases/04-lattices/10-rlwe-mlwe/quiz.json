@@ -1,4 +1,101 @@
 {
   "title": "Ring-LWE & Module-LWE",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the key structural change when moving from plain LWE to Ring-LWE (RLWE)?",
+      "options": [
+        "Replace vectors with polynomials in a ring like Z_q[x]/(x^n+1)",
+        "Replace modular arithmetic with real-number arithmetic to remove wrap-around",
+        "Replace the error term with an exact zero vector to simplify decryption",
+        "Replace matrix multiplication with discrete logarithms for hardness"
+      ],
+      "correct": 0,
+      "explanation": "RLWE keeps the same noisy-linear idea but changes the ambient algebra: ring elements (polynomials) replace vectors."
+    },
+    {
+      "stage": "pre",
+      "question": "In the ring R_q = Z_q[x]/(x^n+1), what does reducing modulo (x^n+1) imply?",
+      "options": [
+        "You can replace x^n with -1 during reduction",
+        "You can replace x^n with +1 during reduction",
+        "All polynomials become degree exactly n rather than < n",
+        "Coefficients stop being reduced modulo q"
+      ],
+      "correct": 0,
+      "explanation": "The relation x^n ≡ -1 is exactly what modulo (x^n+1) enforces, enabling wrap-around with a sign flip."
+    },
+    {
+      "stage": "post",
+      "question": "In a toy RLWE public key, what is the typical form of b?",
+      "options": [
+        "b = a*s + e in R_q, where s and e are small",
+        "b = a/s in R_q, where division removes the noise term",
+        "b = s + e in Z_q^n with no dependence on a",
+        "b = A*s exactly (no error) to allow easy key recovery"
+      ],
+      "correct": 0,
+      "explanation": "Just like LWE, RLWE publishes a uniform public element a and a noisy product a*s plus small error."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy ring-based bit encryption, why add μ·(q/2) (coefficient-wise) to v (mod q)?",
+      "options": [
+        "To encode the bit using two well-separated targets that survive small noise",
+        "To force the ciphertext polynomial v to be identical for μ=0 and μ=1",
+        "To guarantee the secret polynomial s becomes uniformly random",
+        "To ensure polynomial multiplication becomes commutative (it already is)"
+      ],
+      "correct": 0,
+      "explanation": "Placing 0 and q/2 far apart makes thresholding robust to small error terms in a toy construction."
+    },
+    {
+      "stage": "post",
+      "question": "What is Module-LWE (MLWE) in this lesson’s notation?",
+      "options": [
+        "An inner product b = <a, s> + e where a and s are length-k vectors of ring elements",
+        "A scheme where q must be a prime and n must be odd for correctness",
+        "A construction where the error term e is removed to speed up encryption",
+        "A method to turn RLWE into RSA by changing the modulus from q to N"
+      ],
+      "correct": 0,
+      "explanation": "MLWE uses small vectors of polynomials (module rank k) so you can tune structure and efficiency."
+    },
+    {
+      "stage": "post",
+      "question": "Attack intuition (toy only): why does brute forcing a ternary RLWE secret become infeasible as n grows?",
+      "options": [
+        "Because the search space size grows as 3^n",
+        "Because modular arithmetic stops working when n is large",
+        "Because the polynomial ring stops being closed under addition",
+        "Because the ciphertext stops containing u and v for large n"
+      ],
+      "correct": 0,
+      "explanation": "Even with a tiny alphabet {-1,0,1}, the number of candidate secrets grows exponentially in the number of coefficients."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy RLWE/MLWE decryption, what is x = v - u*s (or v - <u, s>) meant to be close to?",
+      "options": [
+        "Close to μ·(q/2) plus small noise",
+        "Close to a uniformly random polynomial in R_q",
+        "Close to the public polynomial a, regardless of μ",
+        "Close to the zero polynomial for both μ=0 and μ=1"
+      ],
+      "correct": 0,
+      "explanation": "Subtracting the secret-dependent term cancels the structured product, leaving the message encoding plus comparatively small noise."
+    },
+    {
+      "stage": "post",
+      "question": "Why do practical schemes often prefer MLWE over “fully structured” RLWE?",
+      "options": [
+        "It offers a tunable tradeoff: more structure than LWE but less than RLWE, while keeping efficiency",
+        "It removes the need for any error term e, making decryption exact",
+        "It makes key sizes grow exponentially, which is good for security",
+        "It ensures decryption is constant-time without any careful implementation"
+      ],
+      "correct": 0,
+      "explanation": "MLWE keeps efficient polynomial arithmetic but reduces structure compared to RLWE; the module rank k is a knob designers can turn."
+    }
+  ]
 }

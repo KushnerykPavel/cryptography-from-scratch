@@ -1,4 +1,101 @@
 {
   "title": "BKZ \u2014 Block Korkine-Zolotarev",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does BKZ's block size \u03b2 primarily control?",
+      "options": [
+        "The dimension of the local SVP subproblem (quality vs runtime tradeoff)",
+        "The number of basis vectors in the lattice (the lattice dimension n)",
+        "The modulus used in the lattice definition",
+        "The number of tours BKZ will always run"
+      ],
+      "correct": 0,
+      "explanation": "BKZ slides a \u03b2-sized window and runs an SVP-like subroutine inside that block; larger \u03b2 is stronger but exponentially slower."
+    },
+    {
+      "stage": "pre",
+      "question": "Which statement best describes what it means for a basis update to be lattice-preserving?",
+      "options": [
+        "It is a unimodular basis change: swaps, sign flips, and adding integer multiples of columns",
+        "It makes the first basis vector shorter than before",
+        "It makes the determinant smaller in absolute value",
+        "It keeps Gram\u2013Schmidt vectors exactly unchanged"
+      ],
+      "correct": 0,
+      "explanation": "Lattice-preserving updates are unimodular integer operations; they change the basis but not the lattice."
+    },
+    {
+      "stage": "post",
+      "question": "Conceptually, BKZ can be seen as LLL plus what extra ingredient?",
+      "options": [
+        "An SVP oracle inside \u03b2-dimensional blocks",
+        "A hash function to randomize basis vectors",
+        "A primality test for determinant checks",
+        "A discrete Gaussian sampler for coefficient rounding"
+      ],
+      "correct": 0,
+      "explanation": "BKZ repeatedly calls a short-vector subroutine (enumeration/SVP oracle) on local blocks and inserts what it finds."
+    },
+    {
+      "stage": "post",
+      "question": "If you accidentally insert a short vector using a non-unimodular transformation, what is the main problem?",
+      "options": [
+        "You may change the lattice (the reduction becomes invalid)",
+        "You will always make the basis longer",
+        "You will always make LLL fail to terminate",
+        "You will always increase |det(B)|"
+      ],
+      "correct": 0,
+      "explanation": "BKZ must preserve the lattice. Non-unimodular updates can silently change the lattice you're 'reducing'."
+    },
+    {
+      "stage": "post",
+      "question": "A quick sanity check after running LLL or BKZ on an integer basis is:",
+      "options": [
+        "Verify that |det(B)| is unchanged",
+        "Verify that det(B) becomes 1",
+        "Verify that all basis vectors have pairwise dot product 0",
+        "Verify that all coefficients \u03bc are integers"
+      ],
+      "correct": 0,
+      "explanation": "Unimodular basis changes preserve the lattice volume, so the determinant magnitude should be preserved."
+    },
+    {
+      "stage": "post",
+      "question": "In an attack setting (toy parameters), what does increasing BKZ block size \u03b2 typically buy the attacker?",
+      "options": [
+        "Better chance to find much shorter vectors, at higher runtime cost",
+        "Guaranteed recovery of the exact shortest vector in polynomial time",
+        "Faster runtime and stronger reduction at the same time",
+        "Immunity to basis quality: output is identical for all inputs"
+      ],
+      "correct": 0,
+      "explanation": "Larger \u03b2 means harder local SVP work; it's often stronger but gets expensive quickly."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson\u2019s simplified BKZ insertion, why do we constrain the SVP coefficient vector so its last coefficient is +1?",
+      "options": [
+        "So the short vector can be created using only column additions and swaps (unimodular operations)",
+        "So the shortest vector is guaranteed to be found",
+        "So the determinant becomes smaller and reduction is stronger",
+        "So Gram\u2013Schmidt can be computed with integers only"
+      ],
+      "correct": 0,
+      "explanation": "Fixing the last coefficient lets us realize the found combination as a legal unimodular update without implementing full unimodular completion."
+    },
+    {
+      "stage": "post",
+      "question": "Where does the exponential cost in practical BKZ implementations primarily come from?",
+      "options": [
+        "The SVP enumeration inside \u03b2-dimensional blocks",
+        "Computing the determinant of an integer matrix",
+        "Swapping adjacent basis vectors",
+        "Printing the reduced basis to stdout"
+      ],
+      "correct": 0,
+      "explanation": "The block SVP enumeration is the expensive part; its cost grows rapidly with the block size \u03b2."
+    }
+  ]
 }

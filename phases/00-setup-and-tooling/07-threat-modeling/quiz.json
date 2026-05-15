@@ -1,4 +1,100 @@
 {
-  "title": "Threat Modeling Basics",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which definition best matches a threat model?",
+      "options": [
+        "A list of every vulnerability that could exist in any system",
+        "A concrete attacker model + assets + security goals + trust boundaries + explicit assumptions",
+        "A proof that a cryptographic primitive is secure under a reduction",
+        "A checklist of which algorithms (AES, RSA, SHA) the system uses"
+      ],
+      "correct": 1,
+      "explanation": "A threat model names what you protect, from whom, and what guarantees you need, including assumptions and boundaries."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a trust boundary?",
+      "options": [
+        "Any line of code that handles secrets",
+        "Any place control or assumptions change hands (e.g., client ↔ server, app ↔ OS, process ↔ network)",
+        "A boundary only on the network perimeter (firewall/VPC edge)",
+        "A place where encryption is used"
+      ],
+      "correct": 1,
+      "explanation": "Trust boundaries are about changes in control/assumptions, not just networks and not just crypto usage."
+    },
+    {
+      "stage": "post",
+      "question": "If your attacker includes an active man-in-the-middle (MITM), what must you add beyond “encrypt the data”?",
+      "options": [
+        "Only a longer key size",
+        "Only base64 encoding to avoid parsing issues",
+        "Integrity/authentication (e.g., AEAD or signatures) so tampering/replay is detectable",
+        "A faster cipher so the attacker can’t keep up"
+      ],
+      "correct": 2,
+      "explanation": "Active attackers can modify and replay messages; encryption alone does not prevent or detect tampering."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement is most appropriate to put in an “Out of Scope” section?",
+      "options": [
+        "We do not defend against compromised endpoints; if the device is malware, keys can be stolen",
+        "We do not defend against passive eavesdroppers; encryption is too hard",
+        "We do not defend against MITM; integrity is not needed",
+        "We do not defend against randomness failures; we’ll use any RNG"
+      ],
+      "correct": 0,
+      "explanation": "Out-of-scope items should be explicit, realistic, and tied to a clear assumption you’re willing to accept."
+    },
+    {
+      "stage": "post",
+      "question": "Which set best describes key management (as used in threat models)?",
+      "options": [
+        "Pick an algorithm, then hardcode one key forever",
+        "Generation, storage, rotation, revocation, recovery (and separation by purpose)",
+        "Only storage (where the key file lives)",
+        "Only rotation (how often to change keys)"
+      ],
+      "correct": 1,
+      "explanation": "Key management is lifecycle + roles: how keys are created, protected, changed, revoked, and recovered."
+    },
+    {
+      "stage": "post",
+      "question": "What is an oracle (in a crypto/system security sense)?",
+      "options": [
+        "A safe place to store secrets, like an HSM",
+        "A difference in behavior (errors/timing/messages) that leaks secret-dependent information to an attacker",
+        "A proof technique used to show reductions",
+        "A network perimeter device that blocks traffic"
+      ],
+      "correct": 1,
+      "explanation": "Oracles leak information through observable differences, enabling attacks like padding oracles and signature forgeries."
+    },
+    {
+      "stage": "post",
+      "question": "Attack the weak threat model: what’s the biggest problem with “We use AES, so we’re secure”?",
+      "options": [
+        "AES is outdated and broken",
+        "It says nothing about attacker capabilities, key management, integrity/authentication, or where plaintext/keys exist",
+        "It focuses too much on system security and not enough on cryptographic proofs",
+        "It assumes an attacker can only read logs"
+      ],
+      "correct": 1,
+      "explanation": "Primitive choice is only one layer; security depends on threat model, protocol, implementation, and operational controls."
+    },
+    {
+      "stage": "post",
+      "question": "Which pairing correctly separates layers of security?",
+      "options": [
+        "Primitive security = keys aren’t logged; system security = AES is IND-CPA",
+        "Primitive security = reduction-based notion (e.g., IND-CPA/CCA); implementation security = constant-time & safe error handling; system security = endpoint and ops controls",
+        "Primitive security = TLS is used; implementation security = user training; system security = base64 correctness",
+        "Primitive security = encrypting; implementation security = encrypting again; system security = encrypting a third time"
+      ],
+      "correct": 1,
+      "explanation": "Threat models force you to reason across primitive, implementation, and system layers explicitly."
+    }
+  ]
 }

@@ -1,4 +1,101 @@
 {
   "title": "NIST P-256 \u2014 Pitfalls and Backdoors",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In most libraries and standards, which names refer to the same curve as NIST P-256?",
+      "options": [
+        "P-256, secp256r1, and prime256v1",
+        "P-256 and secp256k1",
+        "P-256 and Curve25519",
+        "P-256 and Ed25519"
+      ],
+      "correct": 0,
+      "explanation": "NIST P-256 is also commonly called secp256r1 and prime256v1 in different ecosystems."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the defining short-Weierstrass curve equation form for P-256 over its prime field?",
+      "options": [
+        "y\u00b2 \u2261 x\u00b3 \u2212 3x + b (mod p)",
+        "y\u00b2 \u2261 x\u00b3 + 7 (mod p)",
+        "B\u00b7y\u00b2 \u2261 x\u00b3 + A\u00b7x\u00b2 + x (mod p)",
+        "y\u00b2 \u2261 x\u00b3 + ax\u00b2 + b (mod 2)"
+      ],
+      "correct": 0,
+      "explanation": "P-256 uses a = \u22123 (mod p) in short-Weierstrass form: y\u00b2 = x\u00b3 + a\u00b7x + b."
+    },
+    {
+      "stage": "post",
+      "question": "What does a \u201crigid\u201d curve generation procedure aim to minimize?",
+      "options": [
+        "The discretionary freedom to choose constants, reducing room for hidden trapdoor selection",
+        "The need for point validation during parsing",
+        "The existence of modular square roots in the field",
+        "The size of the curve order n to make operations faster"
+      ],
+      "correct": 0,
+      "explanation": "Rigidity is about reducing degrees of freedom in parameter choice so constants look like \u201cnothing up my sleeve\u201d outputs."
+    },
+    {
+      "stage": "post",
+      "question": "In a compressed SEC1 P-256 public key, what information does the first byte (0x02 or 0x03) encode?",
+      "options": [
+        "Whether the y-coordinate is even or odd",
+        "Whether the x-coordinate is even or odd",
+        "Whether the point has prime order",
+        "Whether the scalar was clamped"
+      ],
+      "correct": 0,
+      "explanation": "Compressed encodings keep x and one bit of y parity to choose between y and \u2212y (mod p)."
+    },
+    {
+      "stage": "post",
+      "question": "For primes p \u2261 3 (mod 4), what is a standard way to compute sqrt(a) (mod p) when it exists?",
+      "options": [
+        "Compute a^((p+1)/4) (mod p) and verify the result squares to a",
+        "Compute a^(p\u22121) (mod p) and use it directly as the root",
+        "Compute a^((p\u22121)/2) (mod p) and treat it as the root",
+        "Square a repeatedly until it becomes a"
+      ],
+      "correct": 0,
+      "explanation": "When p \u2261 3 (mod 4), exponentiation to (p+1)/4 yields a square root for quadratic residues, and you still verify."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: in ECDH, what is the core check that prevents invalid-curve / invalid-point attacks?",
+      "options": [
+        "Verify the peer point is correctly encoded and lies on the intended curve before any secret scalar multiplication",
+        "Verify the peer x-coordinate is less than the group order n",
+        "Verify the peer key uses compressed encoding (not uncompressed)",
+        "Verify the peer y-coordinate is odd"
+      ],
+      "correct": 0,
+      "explanation": "The essential defense is validating the input point: encoding rules and on-curve checks must happen before multiplying by a secret."
+    },
+    {
+      "stage": "post",
+      "question": "When parsing an uncompressed public key (04 || x || y), why should an implementation reject x or y values \u2265 p?",
+      "options": [
+        "To enforce canonical field element encoding and avoid ambiguous representations",
+        "Because x and y must always be less than n (the group order)",
+        "Because x and y are defined to be little-endian values",
+        "Because P-256 forbids even x-coordinates"
+      ],
+      "correct": 0,
+      "explanation": "Field elements are taken modulo p, but encodings should be canonical: coordinates must be in the range 0..p\u22121."
+    },
+    {
+      "stage": "post",
+      "question": "What is the standard validity range for a P-256 private key scalar k, assuming the group order is n?",
+      "options": [
+        "1 \u2264 k < n",
+        "0 \u2264 k \u2264 n",
+        "1 \u2264 k \u2264 p",
+        "0 \u2264 k < p"
+      ],
+      "correct": 0,
+      "explanation": "Private scalars are reduced modulo n, but 0 is rejected; the conventional range is 1..n\u22121."
+    }
+  ]
 }

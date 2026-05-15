@@ -1,1 +1,93 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal lattice geometry examples (2D), cross-checked by direct enumeration and determinant arithmetic.",
+  "vectors": [
+    {
+      "op": "det_2d",
+      "basis": [[2, 0], [1, 1]],
+      "expected": 2
+    },
+    {
+      "op": "det_2d",
+      "basis": [[3, 1], [2, 5]],
+      "expected": 13
+    },
+    {
+      "op": "det_mat2",
+      "U": [[1, 1], [0, 1]],
+      "expected": 1
+    },
+    {
+      "op": "det_mat2",
+      "U": [[0, 1], [1, 0]],
+      "expected": -1
+    },
+    {
+      "op": "change_basis_unimodular_2d",
+      "basis": [[2, 0], [1, 1]],
+      "U": [[1, 1], [0, 1]],
+      "expected": [[2, 0], [3, 1]]
+    },
+    {
+      "op": "change_basis_unimodular_2d",
+      "basis": [[2, 0], [1, 1]],
+      "U": [[2, 0], [0, 1]],
+      "expected_error": "U must be unimodular (det = ±1)"
+    },
+    {
+      "op": "lattice_points_in_box_2d",
+      "basis": [[2, 0], [1, 1]],
+      "coeff_bound": 5,
+      "x_min": -4,
+      "x_max": 4,
+      "y_min": -2,
+      "y_max": 2,
+      "expected": [
+        [-4, -2],
+        [-4, 0],
+        [-4, 2],
+        [-3, -1],
+        [-3, 1],
+        [-2, -2],
+        [-2, 0],
+        [-2, 2],
+        [-1, -1],
+        [-1, 1],
+        [0, -2],
+        [0, 0],
+        [0, 2],
+        [1, -1],
+        [1, 1],
+        [2, -2],
+        [2, 0],
+        [2, 2],
+        [3, -1],
+        [3, 1],
+        [4, -2],
+        [4, 0],
+        [4, 2]
+      ]
+    },
+    {
+      "op": "lattice_points_in_box_2d",
+      "basis": [[0, 0], [1, 1]],
+      "coeff_bound": 1,
+      "x_min": -1,
+      "x_max": 1,
+      "y_min": -1,
+      "y_max": 1,
+      "expected_error": "basis must be linearly independent (det != 0)"
+    },
+    {
+      "op": "shortest_vector_bruteforce_2d",
+      "basis": [[2, 0], [1, 1]],
+      "coeff_bound": 8,
+      "expected_norm2": 2
+    },
+    {
+      "op": "shortest_vector_bruteforce_2d",
+      "basis": [[2, 0], [1, 1]],
+      "coeff_bound": 0,
+      "expected_error": "coeff_bound must be positive"
+    }
+  ]
+}

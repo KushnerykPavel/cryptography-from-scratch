@@ -1,1 +1,36 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal vectors validating canonical manifest encoding, deterministic tar.gz packaging, and Ed25519 signatures over the manifest tree hash.",
+  "vectors": [
+    {
+      "op": "manifest_hash",
+      "files": [
+        {"path": "b.txt", "data_ascii": "world"},
+        {"path": "a.txt", "data_ascii": "hello"},
+        {"path": "dir/c.bin", "data_hex": "000102"}
+      ],
+      "expected_tree_hash": "cf402dc7af9b53b9fd355b0a9b6d23e519700cd3701f599328bc8eb09ebad266",
+      "expected_manifest_sha256": "0a5569dd6ad5008ae98141cfd256fff4cf0692084ea817837000436a08dc40ab"
+    },
+    {
+      "op": "artifact_sha256",
+      "files": [
+        {"path": "b.txt", "data_ascii": "world"},
+        {"path": "a.txt", "data_ascii": "hello"},
+        {"path": "dir/c.bin", "data_hex": "000102"}
+      ],
+      "expected_sha256": "f2d557249e601c63201615fc2ad9f76dc3cc6b518740d17104a168d941176962"
+    },
+    {
+      "op": "ed25519_signature",
+      "seed_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "tree_hash_hex": "cf402dc7af9b53b9fd355b0a9b6d23e519700cd3701f599328bc8eb09ebad266",
+      "expected_sig_hex": "5aba6d4e41bd493fc25f4561b15bf27cf94ee445ba292f8e3ad348494024915e0b470c388fa8abfbb79edca2f8cb7da9d02a34b29d426757636e1b49db1b2f0c"
+    },
+    {
+      "op": "ed25519_verify_fail",
+      "seed_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "tree_hash_hex": "cf402dc7af9b53b9fd355b0a9b6d23e519700cd3701f599328bc8eb09ebad266",
+      "sig_hex": "5aba6d4e41bd493fc25f4561b15bf27cf94ee445ba292f8e3ad348494024915e0b470c388fa8abfbb79edca2f8cb7da9d02a34b29d426757636e1b49db1b2f0d"
+    }
+  ]
+}

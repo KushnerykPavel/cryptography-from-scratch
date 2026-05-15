@@ -1,1 +1,173 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal examples for irreducibility in F_p[x], checked against the Rabin irreducibility criterion and direct polynomial factor witnesses over small finite fields.",
+  "vectors": [
+    {
+      "op": "prime_factors",
+      "n": 12,
+      "expected": [2, 3]
+    },
+    {
+      "op": "monic_polynomials",
+      "degree": 2,
+      "p": 2,
+      "expected": [[0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]]
+    },
+    {
+      "op": "roots",
+      "poly": [1, 0, 1],
+      "p": 5,
+      "expected": [2, 3]
+    },
+    {
+      "op": "roots",
+      "poly": [2, 0, 1],
+      "p": 5,
+      "expected": []
+    },
+    {
+      "op": "has_root",
+      "poly": [4, 0, 1],
+      "p": 5,
+      "expected": true
+    },
+    {
+      "op": "is_irreducible",
+      "poly": [2, 0, 1],
+      "p": 5,
+      "expected": true
+    },
+    {
+      "op": "is_irreducible",
+      "poly": [1, 0, 1],
+      "p": 5,
+      "expected": false
+    },
+    {
+      "op": "is_irreducible",
+      "poly": [1, 1, 0, 1],
+      "p": 2,
+      "expected": true
+    },
+    {
+      "op": "find_irreducible",
+      "degree": 2,
+      "p": 5,
+      "expected": [1, 1, 1]
+    },
+    {
+      "op": "find_irreducible",
+      "degree": 3,
+      "p": 2,
+      "expected": [1, 0, 1, 1]
+    },
+    {
+      "op": "factor_by_trial",
+      "poly": [1, 0, 0, 0, 1],
+      "p": 5,
+      "expected": [[2, 0, 1], [3, 0, 1]]
+    },
+    {
+      "op": "reducible_witness",
+      "poly": [4, 0, 1],
+      "p": 5,
+      "expected": [[1, 1], [4, 1]]
+    },
+    {
+      "op": "poly_pow_mod",
+      "base": [0, 1],
+      "exponent": 25,
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [0, 1]
+    },
+    {
+      "op": "field_report",
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": {
+        "p": 5,
+        "modulus": [2, 0, 1],
+        "modulus_terms": "x^2 + 2",
+        "degree": 2,
+        "order": 25,
+        "irreducible": true,
+        "roots": [],
+        "reducible_witness": null
+      }
+    },
+    {
+      "op": "field_report",
+      "modulus": [4, 0, 1],
+      "p": 5,
+      "expected": {
+        "p": 5,
+        "modulus": [4, 0, 1],
+        "modulus_terms": "x^2 + 4",
+        "degree": 2,
+        "order": 25,
+        "irreducible": false,
+        "roots": [1, 4],
+        "reducible_witness": [[1, 1], [4, 1]]
+      }
+    },
+    {
+      "op": "extension_expression",
+      "expression": "add",
+      "a": [3, 4],
+      "b": [2, 1],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [0]
+    },
+    {
+      "op": "extension_expression",
+      "expression": "mul",
+      "a": [3, 4],
+      "b": [2, 1],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [3, 1]
+    },
+    {
+      "op": "extension_expression",
+      "expression": "inverse",
+      "a": [3, 4],
+      "b": [2, 1],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [2, 4]
+    },
+    {
+      "op": "extension_expression",
+      "expression": "div",
+      "a": [3, 4],
+      "b": [2, 1],
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [4]
+    },
+    {
+      "op": "extension_expression",
+      "expression": "pow",
+      "a": [3, 4],
+      "b": [2, 1],
+      "exponent": 3,
+      "modulus": [2, 0, 1],
+      "p": 5,
+      "expected": [1]
+    },
+    {
+      "op": "construct_extension",
+      "value": [1],
+      "modulus": [4, 0, 1],
+      "p": 5,
+      "expected_error": "modulus polynomial must be irreducible"
+    },
+    {
+      "op": "find_irreducible",
+      "degree": 0,
+      "p": 5,
+      "expected_error": "degree must be positive"
+    }
+  ]
+}

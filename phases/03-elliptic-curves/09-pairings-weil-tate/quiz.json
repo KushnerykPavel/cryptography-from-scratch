@@ -1,4 +1,101 @@
 {
   "title": "Pairings \u2014 Weil & Tate from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which statement best captures bilinearity for a pairing e: G1 \u00d7 G2 \u2192 GT?",
+      "options": [
+        "e(aP, bQ) = e(P, Q)^(ab) for scalars a, b and points P, Q",
+        "e(P + Q, R) = e(P, R) + e(Q, R) in the target group GT",
+        "e(P, Q) = e(Q, P) for all points P, Q (symmetry is required)",
+        "e(P, Q) is a hash of (P, Q) that looks random but is reproducible"
+      ],
+      "correct": 0,
+      "explanation": "Bilinearity means linear in each argument, which gives e(aP, bQ) = e(P, Q)^(ab) in the multiplicative target group."
+    },
+    {
+      "stage": "pre",
+      "question": "In a reduced Tate pairing, what is the main purpose of the final exponentiation step?",
+      "options": [
+        "Force the output into the subgroup of r-th roots of unity so the pairing is well-defined",
+        "Convert an elliptic curve point into a compressed SEC1 public key encoding",
+        "Make scalar multiplication constant-time by removing secret-dependent branches",
+        "Guarantee that every input point is on the curve without doing validation"
+      ],
+      "correct": 0,
+      "explanation": "The final exponentiation maps a Miller function value into \u03bc_r \u2282 F_{p^k}^*, removing ambiguity from multiplying by r-th powers."
+    },
+    {
+      "stage": "post",
+      "question": "What does it mean for a point P to be in the r-torsion group E[r]?",
+      "options": [
+        "r\u00b7P = \ud835\udcd0 (the point at infinity)",
+        "P has x-coordinate less than r",
+        "P is defined over the base field F_p (not an extension field)",
+        "P generates the entire elliptic curve group E(F_p)"
+      ],
+      "correct": 0,
+      "explanation": "E[r] is the set of points killed by multiplication by r, i.e., points with r\u00b7P = \ud835\udcd0."
+    },
+    {
+      "stage": "post",
+      "question": "What kind of objects does the Miller loop repeatedly evaluate at a point Q?",
+      "options": [
+        "Line functions from the elliptic-curve group law (tangents/secants and related denominators)",
+        "Discrete logarithms of Q with respect to a generator of G2",
+        "Hashes of intermediate points to randomize the computation",
+        "Square roots in F_p to lift x-coordinates back to points"
+      ],
+      "correct": 0,
+      "explanation": "Miller\u2019s algorithm multiplies together evaluations of rational functions built from the same lines used in point addition and doubling."
+    },
+    {
+      "stage": "post",
+      "question": "Why do pairing constructions typically work over an extension field F_{p^k} rather than just F_p?",
+      "options": [
+        "Because the r-th roots of unity \u03bc_r and enough r-torsion points may only exist over F_{p^k}",
+        "Because elliptic curves cannot be defined over prime fields",
+        "Because point addition is undefined over F_p but works over F_{p^k}",
+        "Because extension fields automatically make operations constant-time"
+      ],
+      "correct": 0,
+      "explanation": "The target group GT is a subgroup of F_{p^k}^*, and the full E[r] structure often only appears over a suitable extension field."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what is the core idea behind the MOV reduction on weak parameters?",
+      "options": [
+        "Use a pairing to map an elliptic-curve discrete log instance into a finite-field discrete log instance",
+        "Use a pairing to turn ECDSA signatures into plaintext messages",
+        "Use a pairing to compute square roots mod p faster than exponentiation",
+        "Use a pairing to bypass point-on-curve checks during key parsing"
+      ],
+      "correct": 0,
+      "explanation": "When the embedding degree is small, pairings can reduce ECDLP in an r-torsion subgroup to DLP in a subgroup of F_{p^k}^*."
+    },
+    {
+      "stage": "post",
+      "question": "Which identity reflects the alternating property of the Weil pairing?",
+      "options": [
+        "e(P, P) = 1 for all P in E[r]",
+        "e(P, Q) = e(Q, P) for all P, Q in E[r]",
+        "e(P, Q) = 0 whenever P and Q are nonzero points",
+        "e(P, Q) always equals 1 whenever P and Q are in the same subgroup"
+      ],
+      "correct": 0,
+      "explanation": "An alternating pairing satisfies e(P, P) = 1, which is one reason you need two \u201cindependent\u201d r-torsion points for nontrivial values."
+    },
+    {
+      "stage": "post",
+      "question": "For a reduced Tate pairing on F_{p^k}, which exponent is applied after the Miller function evaluation?",
+      "options": [
+        "(p^k \u2212 1) / r",
+        "(p^k + 1) / r",
+        "r / (p^k \u2212 1)",
+        "p^k \u2212 r"
+      ],
+      "correct": 0,
+      "explanation": "The reduced Tate pairing raises the Miller function output to (p^k \u2212 1)/r to land in \u03bc_r."
+    }
+  ]
 }

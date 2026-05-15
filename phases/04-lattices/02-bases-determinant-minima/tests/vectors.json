@@ -1,1 +1,66 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal lattice geometry examples (determinant invariance, unimodular changes, and toy successive minima checks in 2D).",
+  "vectors": [
+    {
+      "op": "det_int_square",
+      "A": [[2, 1], [0, 1]],
+      "expected": 2
+    },
+    {
+      "op": "det_int_square",
+      "A": [[1, 2, 3], [4, 5, 6], [7, 8, 10]],
+      "expected": -3
+    },
+    {
+      "op": "lattice_determinant",
+      "basis": [[2, 0], [1, 1]],
+      "expected": 2
+    },
+    {
+      "op": "is_unimodular",
+      "U": [[1, 1], [0, 1]],
+      "expected": true
+    },
+    {
+      "op": "is_unimodular",
+      "U": [[2, 0], [0, 1]],
+      "expected": false
+    },
+    {
+      "op": "change_basis_unimodular",
+      "basis": [[2, 0], [1, 1]],
+      "U": [[1, 1], [0, 1]],
+      "expected": [[2, 0], [3, 1]]
+    },
+    {
+      "op": "change_basis_unimodular",
+      "basis": [[2, 0], [1, 1]],
+      "U": [[2, 0], [0, 1]],
+      "expected_error": "U must be unimodular (det = ±1)"
+    },
+    {
+      "op": "successive_minima_sqnorm_bruteforce_2d",
+      "basis": [[2, 0], [1, 1]],
+      "coeff_bound": 8,
+      "expected": [2, 2]
+    },
+    {
+      "op": "successive_minima_sqnorm_bruteforce_2d",
+      "basis": [[1, 0], [0, 100]],
+      "coeff_bound": 120,
+      "expected": [1, 10000]
+    },
+    {
+      "op": "successive_minima_sqnorm_bruteforce_2d",
+      "basis": [[10, 0], [0, 10]],
+      "coeff_bound": 20,
+      "expected": [100, 100]
+    },
+    {
+      "op": "successive_minima_sqnorm_bruteforce_2d",
+      "basis": [[2, 0], [1, 1]],
+      "coeff_bound": 0,
+      "expected_error": "coeff_bound must be positive"
+    }
+  ]
+}

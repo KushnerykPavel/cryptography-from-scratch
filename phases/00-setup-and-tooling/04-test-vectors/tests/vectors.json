@@ -1,1 +1,43 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "NIST FIPS 180-4 (Secure Hash Standard) — SHA-256 examples + project-internal negative tests for vector hygiene",
+  "vectors": [
+    {
+      "op": "sha256",
+      "msg_ascii": "",
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "op": "sha256",
+      "msg_ascii": "abc",
+      "expected": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    {
+      "op": "sha256",
+      "msg_ascii": "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+      "expected": "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1"
+    },
+    {
+      "op": "sha256",
+      "msg_hex": "00",
+      "expected": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "op": "sha256",
+      "msg_hex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected": "af9613760f72635fbdb44a5a0a63c39f12af30f950a6ee5c971be188e89c4051"
+    },
+    {"op": "hex_decode", "hex": "", "expected": ""},
+    {"op": "hex_decode", "hex": "00", "expected": "00"},
+    {"op": "hex_decode", "hex": "666F6F", "expected": "666f6f"},
+    {"op": "sha256", "expected_error": "vector must include msg_ascii or msg_hex"},
+    {
+      "op": "sha256",
+      "msg_ascii": "x",
+      "msg_hex": "78",
+      "expected_error": "vector must not include both msg_ascii and msg_hex"
+    },
+    {"op": "sha256", "msg_hex": "0", "expected_error": "hex string must have even length"},
+    {"op": "hex_decode", "hex": 7, "expected_error": "hex must be a string"},
+    {"op": "nope", "expected_error": "unknown op: nope"}
+  ]
+}

@@ -1,4 +1,101 @@
 {
   "title": "NTRU Lattices",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In the ring Z_q[x]/(x^n - 1), what does multiplying a polynomial by x do to its coefficient vector (viewed as length n)?",
+      "options": [
+        "It performs a cyclic shift of coefficients (wrap-around).",
+        "It multiplies every coefficient by x.",
+        "It reverses the coefficient order.",
+        "It increases the vector length by one with a leading zero."
+      ],
+      "correct": 0,
+      "explanation": "Because x^n ≡ 1, the highest-degree term wraps around, so multiplying by x rotates coefficients."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the congruence v ≡ u*h (mod q) mean for coefficient vectors u, v, and h?",
+      "options": [
+        "Each coefficient of v - u*h is divisible by q.",
+        "u and v are identical as integer vectors.",
+        "u*h has a multiplicative inverse in the ring.",
+        "v has smaller coefficients than u and h."
+      ],
+      "correct": 0,
+      "explanation": "Congruence modulo q is coefficient-wise: v - u*h reduces to 0 mod q, i.e., every coefficient is a multiple of q."
+    },
+    {
+      "stage": "post",
+      "question": "Why can “multiply by h” be represented as an n×n circulant matrix Rot(h)?",
+      "options": [
+        "Because multiplication by h is a linear map on coefficient vectors, and cyclic shifts encode x^i*h.",
+        "Because any polynomial is uniquely determined by its determinant.",
+        "Because Rot(h) is always diagonal over the integers.",
+        "Because h is always a power of x in Z_q[x]/(x^n - 1)."
+      ],
+      "correct": 0,
+      "explanation": "Fixing h makes u ↦ u*h linear in u; a basis of shifts gives a circulant matrix representing that linear operator."
+    },
+    {
+      "stage": "post",
+      "question": "For the NTRU lattice basis B = [[I, Rot(h)], [0, qI]] (rows), which statement holds for every lattice vector (u, v) in the lattice?",
+      "options": [
+        "There exists an integer vector t such that v = u*h + q*t.",
+        "There exists an integer vector t such that u = v*h + q*t.",
+        "v must equal u exactly over the integers.",
+        "u and v must both be multiples of q."
+      ],
+      "correct": 0,
+      "explanation": "By construction the lattice encodes the constraint v ≡ u*h (mod q), which is equivalent to v = u*h + q*t for some integer t."
+    },
+    {
+      "stage": "post",
+      "question": "Why can LLL recover a secret relation (f, g) from the public NTRU lattice in toy parameter settings?",
+      "options": [
+        "Because the secret vector is unusually short and the lattice dimension is small enough that LLL often finds a short vector.",
+        "Because LLL solves exact SVP in all dimensions efficiently.",
+        "Because the modulus q makes the lattice determinant equal to 1.",
+        "Because the public key h directly contains f and g as substrings."
+      ],
+      "correct": 0,
+      "explanation": "In small dimensions, LLL can find a noticeably short vector; if (f, g) is much shorter than typical vectors, it tends to appear."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the NTRU lattice typically contain rotations (cyclic shifts) of a short secret vector (f, g) as other short vectors?",
+      "options": [
+        "Because multiplying by x permutes coefficients, preserving norm, and the lattice constraint is compatible with cyclic structure.",
+        "Because qI forces every vector to be a rotation of every other vector.",
+        "Because LLL always outputs all possible rotations of its first vector.",
+        "Because rotations are the only unimodular transformations allowed."
+      ],
+      "correct": 0,
+      "explanation": "Cyclic shifts correspond to multiplying by powers of x in the ring; that operation preserves coefficient size patterns and produces other valid short relations."
+    },
+    {
+      "stage": "post",
+      "question": "Suppose you find (f', g') with small coefficients such that f'*h ≡ g' (mod q). Why is this often considered a break of the NTRU instance?",
+      "options": [
+        "Because it provides an alternative short relation that can serve as an equivalent trapdoor in the same public lattice.",
+        "Because it proves that q is prime.",
+        "Because it implies the lattice has determinant 0.",
+        "Because it guarantees that decryption will succeed for all messages without error."
+      ],
+      "correct": 0,
+      "explanation": "Recovering any short relation consistent with the public key is enough to reconstruct the “hidden structure” the scheme relies on."
+    },
+    {
+      "stage": "post",
+      "question": "In the public basis [[I, Rot(h)], [0, qI]], why does choosing q large relative to typical secret coefficients matter for toy demonstrations?",
+      "options": [
+        "It makes trivial lattice vectors coming from the qI block have much larger norm than the intended short secret vector.",
+        "It guarantees that Rot(h) becomes the identity matrix.",
+        "It ensures LLL returns the exact secret in the first step without iteration.",
+        "It removes the need to check relations modulo q."
+      ],
+      "correct": 0,
+      "explanation": "If q is not much larger, vectors like (0, q·e_i) can compete in length; a larger q makes the secret stand out as short."
+    }
+  ]
 }

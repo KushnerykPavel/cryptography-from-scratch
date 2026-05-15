@@ -1,4 +1,101 @@
 {
   "title": "Bytes, Hex, Base64 \u2014 Encoding Hygiene",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is base64 in cryptographic software?",
+      "options": [
+        "An encoding that represents bytes using printable ASCII characters",
+        "A hashing scheme that makes bytes irreversible but comparable",
+        "An encryption method that hides bytes without a secret key",
+        "A compression format that makes byte strings smaller on the wire"
+      ],
+      "correct": 0,
+      "explanation": "Base64 is an encoding: a reversible representation of bytes using ASCII characters. It provides no secrecy."
+    },
+    {
+      "stage": "pre",
+      "question": "In Python, what does `\"hi\".encode(\"utf-8\")` return?",
+      "options": [
+        "A `str` containing the UTF-8 text representation",
+        "A `bytes` value containing the UTF-8 encoded bytes",
+        "An `int` containing the Unicode code point for the string",
+        "A `list[int]` containing one integer per character"
+      ],
+      "correct": 1,
+      "explanation": "`str.encode(...)` converts Unicode text into bytes in the chosen encoding (typically UTF-8)."
+    },
+    {
+      "stage": "post",
+      "question": "How many hex characters are needed to represent `n` bytes?",
+      "options": [
+        "`n` hex characters, treating one byte as one hex digit",
+        "`2n` hex characters, since each byte splits into two hex digits",
+        "`4n` hex characters, since each byte maps to four hex digits",
+        "`n/2` hex characters, since each hex digit holds two bytes"
+      ],
+      "correct": 1,
+      "explanation": "A byte is 8 bits and each hex digit is 4 bits, so each byte needs exactly 2 hex characters."
+    },
+    {
+      "stage": "post",
+      "question": "Which base64 length formula is correct for an input of `n` bytes (standard base64 with `=` padding)?",
+      "options": [
+        "`4 * ceil(n / 3)`, since 3 bytes map to 4 base64 characters",
+        "`3 * ceil(n / 4)`, since 4 bytes map to 3 base64 characters",
+        "`2 * n`, since base64 always doubles the length of the data",
+        "`n + 2`, since base64 always adds two padding characters"
+      ],
+      "correct": 0,
+      "explanation": "Base64 encodes 24-bit blocks into 4 characters, so the output length is `4 * ceil(n/3)` including padding."
+    },
+    {
+      "stage": "post",
+      "question": "In strict base64 decoding, where is `=` padding allowed to appear?",
+      "options": [
+        "Anywhere, as long as the total length is a multiple of 4",
+        "Only in the final 4-character block, and only at the end",
+        "Only at the beginning, to indicate the number of missing bytes",
+        "Only between blocks, to separate groups of encoded bytes"
+      ],
+      "correct": 1,
+      "explanation": "In canonical base64, `=` can appear only in the last quartet, and only as trailing padding (`=` or `==`)."
+    },
+    {
+      "stage": "post",
+      "question": "You store a signature as base64 text. What is the safest verification strategy?",
+      "options": [
+        "Verify the raw base64 string directly to avoid binary handling",
+        "Decode the base64 to bytes first, then verify the byte signature",
+        "Lowercase the base64 string, then verify it as a normalized form",
+        "Strip `=` padding, then verify the shortened base64 representation"
+      ],
+      "correct": 1,
+      "explanation": "The cryptographic value is bytes. Decode at the boundary and verify the bytes to avoid ambiguity and canonicalization bugs."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key difference between base64 and base64url encodings?",
+      "options": [
+        "base64url replaces `+`/`/` with `-`/`_` and often omits trailing `=` padding",
+        "base64url uses a URL-safe alphabet so the text can be embedded in URLs without escaping",
+        "base64url differs in alphabet and padding; the decoded bytes stay the same",
+        "base64url is base64 adapted for URLs, while standard base64 is general-purpose"
+      ],
+      "correct": 0,
+      "explanation": "base64url swaps `+` and `/` for URL-safe characters (`-` and `_`) and many protocols drop `=` padding."
+    },
+    {
+      "stage": "post",
+      "question": "An API compares secrets by comparing two hex strings with normal `==`. What is the best fix?",
+      "options": [
+        "Decode hex to bytes and compare with `hmac.compare_digest`",
+        "Keep hex strings but compare them after calling `.lower()`",
+        "Keep hex strings but compare them after stripping whitespace",
+        "Decode hex to bytes and compare with a normal `==` operator"
+      ],
+      "correct": 0,
+      "explanation": "Decode to bytes first, then use a constant-time comparison (`hmac.compare_digest`) for secret material to avoid timing leaks and ambiguity."
+    }
+  ]
 }

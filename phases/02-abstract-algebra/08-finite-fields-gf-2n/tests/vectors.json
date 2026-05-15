@@ -1,1 +1,168 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal binary-polynomial examples plus AES GF(2^8) examples from FIPS 197, Sections 4.2.1 and 5.1.3. The AES field uses x^8 + x^4 + x^3 + x + 1, encoded as 0x11b.",
+  "vectors": [
+    {
+      "op": "poly_degree",
+      "poly": 283,
+      "expected": 8
+    },
+    {
+      "op": "poly_to_terms",
+      "poly": 283,
+      "expected": "x^8 + x^4 + x^3 + x + 1"
+    },
+    {
+      "op": "poly_add",
+      "a": 11,
+      "b": 13,
+      "expected": 6
+    },
+    {
+      "op": "poly_mul",
+      "a": 11,
+      "b": 6,
+      "expected": 58
+    },
+    {
+      "op": "poly_divmod",
+      "dividend": 58,
+      "divisor": 11,
+      "expected": [6, 0]
+    },
+    {
+      "op": "poly_mod",
+      "poly": 29,
+      "modulus": 11,
+      "expected": 0
+    },
+    {
+      "op": "poly_gcd",
+      "a": 283,
+      "b": 83,
+      "expected": 1
+    },
+    {
+      "op": "is_irreducible",
+      "modulus": 11,
+      "expected": true
+    },
+    {
+      "op": "is_irreducible",
+      "modulus": 15,
+      "expected": false
+    },
+    {
+      "op": "gf2n_add",
+      "a": 87,
+      "b": 131,
+      "modulus": 283,
+      "expected": 212
+    },
+    {
+      "op": "gf2n_mul",
+      "a": 87,
+      "b": 131,
+      "modulus": 283,
+      "expected": 193
+    },
+    {
+      "op": "gf2n_mul",
+      "a": 87,
+      "b": 19,
+      "modulus": 283,
+      "expected": 254
+    },
+    {
+      "op": "gf2n_pow",
+      "a": 3,
+      "exponent": 7,
+      "modulus": 11,
+      "expected": 1
+    },
+    {
+      "op": "gf2n_inverse",
+      "a": 83,
+      "modulus": 283,
+      "expected": 202
+    },
+    {
+      "op": "gf2n_inverse",
+      "a": 3,
+      "modulus": 11,
+      "expected": 6
+    },
+    {
+      "op": "gf2n_div",
+      "a": 5,
+      "b": 3,
+      "modulus": 11,
+      "expected": 3
+    },
+    {
+      "op": "gf2n_multiplicative_order",
+      "a": 3,
+      "modulus": 11,
+      "expected": 7
+    },
+    {
+      "op": "gf2n_is_generator",
+      "a": 3,
+      "modulus": 11,
+      "expected": true
+    },
+    {
+      "op": "gf2n_expression",
+      "a": 3,
+      "b": 5,
+      "c": 6,
+      "modulus": 11,
+      "expected": 2
+    },
+    {
+      "op": "gf2n_field_report",
+      "modulus": 11,
+      "expected": {
+        "modulus": 11,
+        "modulus_terms": "x^3 + x + 1",
+        "degree": 3,
+        "order": 8,
+        "characteristic": 2,
+        "irreducible": true,
+        "elements": [0, 1, 2, 3, 4, 5, 6, 7]
+      }
+    },
+    {
+      "op": "aes_xtime",
+      "byte": 87,
+      "expected": 174
+    },
+    {
+      "op": "aes_xtime",
+      "byte": 174,
+      "expected": 71
+    },
+    {
+      "op": "aes_mul",
+      "a": 87,
+      "b": 131,
+      "expected": 193
+    },
+    {
+      "op": "aes_mix_single_column",
+      "column": [219, 19, 83, 69],
+      "expected": [142, 77, 161, 188]
+    },
+    {
+      "op": "gf2n_inverse",
+      "a": 0,
+      "modulus": 283,
+      "expected_error": "zero has no multiplicative inverse"
+    },
+    {
+      "op": "gf2n_inverse",
+      "a": 3,
+      "modulus": 15,
+      "expected_error": "element is not invertible with this modulus"
+    }
+  ]
+}

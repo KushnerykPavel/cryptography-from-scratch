@@ -1,4 +1,101 @@
 {
   "title": "Lattice Lab \u2014 Break a Toy RSA with Coppersmith",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "How comfortable are you with polynomial congruences like f(x) \u2261 0 (mod N)?",
+      "options": [
+        "I can read them and do basic manipulations",
+        "I can follow them with reminders",
+        "I have seen them but get lost quickly",
+        "I have not worked with them before"
+      ],
+      "correct": 0,
+      "explanation": "This is a pacing question; it is not graded."
+    },
+    {
+      "stage": "pre",
+      "question": "How comfortable are you with what LLL does at a high level?",
+      "options": [
+        "I know it finds short vectors in a lattice basis",
+        "I know the swap/size-reduce loop but not the guarantees",
+        "I have heard of it but not used it",
+        "I have not seen it before"
+      ],
+      "correct": 0,
+      "explanation": "This is a pacing question; it is not graded."
+    },
+    {
+      "stage": "post",
+      "question": "In the stereotyped-message RSA setting m = A + x with |x| < X and c \u2261 m^e (mod N), which polynomial congruence defines the target x?",
+      "options": [
+        "f(x) = (A + x)^e - c \u2261 0 (mod N)",
+        "f(x) = (A + x) - c^e \u2261 0 (mod N)",
+        "f(x) = A^e + x - c \u2261 0 (mod N)",
+        "f(x) = (A + x)^e - N \u2261 0 (mod c)"
+      ],
+      "correct": 0,
+      "explanation": "You turn decryption into finding a small integer root of f(x) modulo N."
+    },
+    {
+      "stage": "post",
+      "question": "Why do many implementations scale by the root bound X (e.g., substitute x \u2192 xX before collecting coefficients)?",
+      "options": [
+        "To align the lattice norm with the bound |x| < X so short vectors correspond to polynomials small on that range",
+        "To make the polynomial monic even when its leading coefficient is not 1",
+        "To guarantee the polynomial factors into linear terms over the integers",
+        "To remove the modulus N from the problem entirely"
+      ],
+      "correct": 0,
+      "explanation": "The X-scaling is what makes the Euclidean norm constraint meaningful for a bounded root."
+    },
+    {
+      "stage": "post",
+      "question": "After you LLL-reduce the constructed lattice, what does a short lattice vector represent in this workflow?",
+      "options": [
+        "A small-coefficient integer combination of the shifted polynomials, i.e., a new polynomial h(x) that likely vanishes at the target root",
+        "A factorization of N into p and q",
+        "A modular inverse of e modulo \u03c6(N)",
+        "A proof that the ciphertext is incorrectly formed"
+      ],
+      "correct": 0,
+      "explanation": "Interpreting the vector as coefficients gives you a polynomial candidate h(x) to root over the integers."
+    },
+    {
+      "stage": "post",
+      "question": "What is the core bridge that turns a modular condition into an integer root in the Howgrave\u2013Graham style argument?",
+      "options": [
+        "If N^m divides h(x0) and |h(x0)| < N^m, then h(x0) = 0 as an integer",
+        "If e is small, then RSA ciphertexts are always invertible without a private key",
+        "If the polynomial is monic, then every root modulo N is automatically a root over the integers",
+        "If x0 is small, then gcd(x0, N) reveals the factorization of N"
+      ],
+      "correct": 0,
+      "explanation": "Divisibility plus a size bound forces the only multiple to be zero."
+    },
+    {
+      "stage": "post",
+      "question": "Which design choice most directly prevents the stereotyped-message attack demonstrated in this lesson?",
+      "options": [
+        "Randomized, provably secure padding for RSA encryption (e.g., OAEP)",
+        "Using a larger public exponent e while keeping textbook encoding",
+        "Keeping the plaintext prefix A secret but using the same deterministic encoding",
+        "Reducing the ciphertext modulo a different composite than N"
+      ],
+      "correct": 0,
+      "explanation": "Padding removes the algebraic structure m = A + x that makes a small-root equation available to the attacker."
+    },
+    {
+      "stage": "post",
+      "question": "For a monic univariate polynomial f of degree d and parameters m, t, what is the lattice dimension n in the standard Howgrave\u2013Graham univariate construction used here?",
+      "options": [
+        "n = d*m + t",
+        "n = d + m + t",
+        "n = d^m + t",
+        "n = (d + t) / m"
+      ],
+      "correct": 0,
+      "explanation": "The construction uses m*d shifted polynomials plus t extra shifts of f^m."
+    }
+  ]
 }

@@ -1,4 +1,101 @@
 {
   "title": "Big Integers in Every Language",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "When crypto specs say an integer is encoded as big-endian bytes, what does that mean?",
+      "options": [
+        "The most significant byte comes first in the byte string",
+        "The least significant byte comes first in the byte string",
+        "Bytes are always reversed before hashing and signing",
+        "Endianness does not apply to integer encodings"
+      ],
+      "correct": 0,
+      "explanation": "Big-endian means most significant byte first. Many specs assume this ordering for integers on the wire."
+    },
+    {
+      "stage": "pre",
+      "question": "The integer 9 can be encoded as bytes in multiple ways. Which pair decodes to the same integer under OS2IP?",
+      "options": [
+        "09 and 0009",
+        "09 and 0900",
+        "09 and ff",
+        "0009 and 0900"
+      ],
+      "correct": 0,
+      "explanation": "OS2IP interprets bytes as a base-256 big-endian number. Leading zeros do not change the decoded integer."
+    },
+    {
+      "stage": "post",
+      "question": "In RFC 8017, when must I2OSP raise an error?",
+      "options": [
+        "When the integer does not fit in the requested output length",
+        "When the byte string has leading zeros after encoding",
+        "When the integer is prime and the length is even",
+        "When the integer is smaller than 256 and the length is 1"
+      ],
+      "correct": 0,
+      "explanation": "I2OSP is a fixed-length encoding. If x >= 256^xLen, it cannot fit and must be rejected."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key difference between OS2IP and a fixed-length integer parsing rule?",
+      "options": [
+        "OS2IP accepts multiple encodings of the same integer via leading zeros",
+        "OS2IP only works for signed integers in two's complement",
+        "OS2IP always requires a length parameter and rejects missing length",
+        "OS2IP outputs a byte string instead of an integer"
+      ],
+      "correct": 0,
+      "explanation": "OS2IP maps any byte string to an integer, and leading zeros do not change the value. Fixed-length rules add canonicalization constraints."
+    },
+    {
+      "stage": "post",
+      "question": "A big integer stored as 32-bit limbs in little-endian order means which formula is correct?",
+      "options": [
+        "x = limb[0] + limb[1]*2^32 + limb[2]*2^64 + ...",
+        "x = limb[0]*2^32 + limb[1]*2^64 + limb[2]*2^96 + ...",
+        "x = limb[0]*256 + limb[1]*256^2 + limb[2]*256^3 + ...",
+        "x = limb[0] XOR limb[1] XOR limb[2] XOR ..."
+      ],
+      "correct": 0,
+      "explanation": "Little-endian limbs place the least significant limb at index 0, so each next limb is multiplied by a higher power of 2^32."
+    },
+    {
+      "stage": "post",
+      "question": "In limb-by-limb addition, what does the carry represent?",
+      "options": [
+        "The overflow beyond the current limb's base, propagated to the next limb",
+        "A random value added to avoid timing side channels",
+        "A sign bit indicating whether the result is negative",
+        "A checksum that ensures the limbs were transmitted correctly"
+      ],
+      "correct": 0,
+      "explanation": "When adding two limbs plus an incoming carry, the sum may exceed the limb base. The excess becomes the carry into the next limb."
+    },
+    {
+      "stage": "post",
+      "question": "Why is accepting non-canonical integer encodings (e.g., allowing arbitrary leading zeros) risky in protocols?",
+      "options": [
+        "It can introduce malleability where the same value has multiple byte encodings",
+        "It forces OS2IP to output negative integers for some inputs",
+        "It makes integers impossible to represent in hex strings",
+        "It guarantees there are no parsing differences across implementations"
+      ],
+      "correct": 0,
+      "explanation": "If multiple encodings represent the same value, transcripts and signatures can become malleable or parse differently across implementations."
+    },
+    {
+      "stage": "post",
+      "question": "In Python, which pair is the closest audited equivalent of OS2IP and I2OSP for unsigned integers?",
+      "options": [
+        "int.from_bytes(data, 'big', signed=False) and x.to_bytes(len, 'big', signed=False)",
+        "int(data) and bytes(x)",
+        "eval(hex_str) and format(x, 'x')",
+        "ord(data) and chr(x)"
+      ],
+      "correct": 0,
+      "explanation": "Python's built-ins handle parsing and fixed-length encoding with explicit endianness and signedness controls."
+    }
+  ]
 }

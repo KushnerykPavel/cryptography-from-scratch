@@ -1,1 +1,53 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "RFC 4648 (Base-N Encodings), Section 10 test vectors + a small project-internal binary sample",
+  "vectors": [
+    {"op": "hex_encode", "data_ascii": "", "uppercase": false, "expected": ""},
+    {"op": "hex_encode", "data_ascii": "f", "uppercase": false, "expected": "66"},
+    {"op": "hex_encode", "data_ascii": "fo", "uppercase": false, "expected": "666f"},
+    {"op": "hex_encode", "data_ascii": "foo", "uppercase": false, "expected": "666f6f"},
+    {"op": "hex_encode", "data_ascii": "foob", "uppercase": false, "expected": "666f6f62"},
+    {"op": "hex_encode", "data_ascii": "fooba", "uppercase": false, "expected": "666f6f6261"},
+    {"op": "hex_encode", "data_ascii": "foobar", "uppercase": false, "expected": "666f6f626172"},
+    {"op": "hex_encode", "data_ascii": "foobar", "uppercase": true, "expected": "666F6F626172"},
+    {"op": "hex_decode", "hex": "", "expected_hex": ""},
+    {"op": "hex_decode", "hex": "66", "expected_ascii": "f"},
+    {"op": "hex_decode", "hex": "666f", "expected_ascii": "fo"},
+    {"op": "hex_decode", "hex": "666f6f", "expected_ascii": "foo"},
+    {"op": "hex_decode", "hex": "666f6f62", "expected_ascii": "foob"},
+    {"op": "hex_decode", "hex": "666f6f6261", "expected_ascii": "fooba"},
+    {"op": "hex_decode", "hex": "666f6f626172", "expected_ascii": "foobar"},
+    {"op": "hex_decode", "hex": "666F6F626172", "expected_ascii": "foobar"},
+    {
+      "op": "hex_encode",
+      "data_hex": "000102feff",
+      "uppercase": false,
+      "expected": "000102feff"
+    },
+    {"op": "hex_decode", "hex": "000102feff", "expected_hex": "000102feff"},
+    {"op": "b64_encode", "data_ascii": "", "expected": ""},
+    {"op": "b64_encode", "data_ascii": "f", "expected": "Zg=="},
+    {"op": "b64_encode", "data_ascii": "fo", "expected": "Zm8="},
+    {"op": "b64_encode", "data_ascii": "foo", "expected": "Zm9v"},
+    {"op": "b64_encode", "data_ascii": "foob", "expected": "Zm9vYg=="},
+    {"op": "b64_encode", "data_ascii": "fooba", "expected": "Zm9vYmE="},
+    {"op": "b64_encode", "data_ascii": "foobar", "expected": "Zm9vYmFy"},
+    {"op": "b64_decode", "b64": "", "expected_hex": ""},
+    {"op": "b64_decode", "b64": "Zg==", "expected_ascii": "f"},
+    {"op": "b64_decode", "b64": "Zm8=", "expected_ascii": "fo"},
+    {"op": "b64_decode", "b64": "Zm9v", "expected_ascii": "foo"},
+    {"op": "b64_decode", "b64": "Zm9vYg==", "expected_ascii": "foob"},
+    {"op": "b64_decode", "b64": "Zm9vYmE=", "expected_ascii": "fooba"},
+    {"op": "b64_decode", "b64": "Zm9vYmFy", "expected_ascii": "foobar"},
+    {
+      "op": "b64_encode",
+      "data_ascii": "any carnal pleasure.",
+      "expected": "YW55IGNhcm5hbCBwbGVhc3VyZS4="
+    },
+    {
+      "op": "b64_encode",
+      "data_hex": "000102feff",
+      "expected": "AAEC/v8="
+    },
+    {"op": "b64_decode", "b64": "AAEC/v8=", "expected_hex": "000102feff"}
+  ]
+}

@@ -1,4 +1,100 @@
 {
-  "title": "Scalar Multiplication \u2014 Double-and-Add, NAF, wNAF",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does scalar multiplication k·P mean on an elliptic curve group?",
+      "options": [
+        "Add the point P to itself k times using the group law",
+        "Multiply the coordinates (x, y) of P by k in the integers",
+        "Raise the x-coordinate of P to the power k modulo p",
+        "Compute a new curve parameter set by scaling a and b by k"
+      ],
+      "correct": 0,
+      "explanation": "Scalar multiplication is repeated group addition. Coordinate-wise integer multiplication is not the group operation."
+    },
+    {
+      "stage": "pre",
+      "question": "In the standard double-and-add algorithm (left-to-right), what happens for each processed scalar bit?",
+      "options": [
+        "Always double the accumulator, and conditionally add P when the bit is 1",
+        "Always add P, and conditionally double only when the bit is 1",
+        "Always invert in the field, and conditionally negate when the bit is 0",
+        "Always multiply x by 2, and conditionally divide y by 2 in F_p"
+      ],
+      "correct": 0,
+      "explanation": "Double-and-add performs one doubling per bit and an extra addition only for 1 bits."
+    },
+    {
+      "stage": "post",
+      "question": "What key property of the non-adjacent form (NAF) helps reduce point additions compared to plain binary?",
+      "options": [
+        "NAF has no adjacent nonzero digits, making the representation sparser",
+        "NAF forces every digit to be 1, so additions can be merged together",
+        "NAF guarantees the scalar has exactly half as many bits as binary",
+        "NAF replaces doubling with squaring, which is faster in every field"
+      ],
+      "correct": 0,
+      "explanation": "NAF recoding avoids consecutive nonzero digits, which lowers the expected number of additions."
+    },
+    {
+      "stage": "post",
+      "question": "Which digit set is used by classic NAF recoding?",
+      "options": [
+        "Digits are chosen from {−1, 0, +1}",
+        "Digits are chosen from {0, 1, 2, 3}",
+        "Digits are chosen from {−2, −1, +1, +2}",
+        "Digits are chosen from {0, 1} only"
+      ],
+      "correct": 0,
+      "explanation": "Classic NAF uses signed digits −1, 0, +1, allowing subtraction via adding −P."
+    },
+    {
+      "stage": "post",
+      "question": "For wNAF with window size w, what values are typically precomputed for a point P?",
+      "options": [
+        "Odd multiples P, 3P, 5P, ..., (2^{w-1}−1)P",
+        "All multiples P, 2P, 3P, ..., (2^w−1)P",
+        "Only powers of two P, 2P, 4P, ..., 2^{w-1}P",
+        "Only even multiples 2P, 4P, 6P, ..., (2^w−2)P"
+      ],
+      "correct": 0,
+      "explanation": "wNAF digits are odd and bounded, so a small table of odd multiples supports fast lookups."
+    },
+    {
+      "stage": "post",
+      "question": "What does simple power analysis (SPA) exploit in a naive double-and-add implementation?",
+      "options": [
+        "A detectable difference between “double-only” and “double+add” steps reveals scalar bits",
+        "A proof that scalar multiplication is impossible without factoring the field modulus",
+        "A weakness where doubling fails unless the point is a generator of the full curve",
+        "A method to compute discrete logs by solving one modular equation from an observed trace"
+      ],
+      "correct": 0,
+      "explanation": "If an attacker can tell whether an addition occurred for a bit, the scalar’s bit pattern leaks."
+    },
+    {
+      "stage": "post",
+      "question": "Why do real implementations often avoid affine formulas inside scalar multiplication loops?",
+      "options": [
+        "Affine formulas require field inversions, so projective coordinates reduce expensive inversions",
+        "Affine formulas cannot represent the identity element, so they are mathematically invalid",
+        "Affine formulas always leak the scalar, while projective formulas are always constant-time",
+        "Affine formulas only work for curves with a = 0, so they fail on most named curves"
+      ],
+      "correct": 0,
+      "explanation": "Affine point addition/doubling typically needs an inversion per operation; projective systems trade inversions for cheaper multiplications."
+    },
+    {
+      "stage": "post",
+      "question": "How should a correct scalar multiplication routine handle a negative scalar k < 0?",
+      "options": [
+        "Replace k by −k and replace P by −P, then multiply as usual",
+        "Replace k by −k and then negate only the x-coordinate of the output",
+        "Reduce k modulo the field prime p and compute the result with that value",
+        "Return the identity element because negative scalars are not defined"
+      ],
+      "correct": 0,
+      "explanation": "In an abelian group, (−k)·(−P) equals k·P. Negating only one coordinate is not a valid point negation."
+    }
+  ]
 }

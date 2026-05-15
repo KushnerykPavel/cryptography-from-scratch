@@ -1,4 +1,101 @@
 {
   "title": "Weierstrass Form & Point Addition",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In an elliptic-curve group, what acts as the identity element for point addition?",
+      "options": [
+        "The point at infinity (often written 𝒪)",
+        "The point (0, 0) on the curve",
+        "Any point with x = 0",
+        "The point with the smallest x-coordinate"
+      ],
+      "correct": 0,
+      "explanation": "Elliptic-curve groups include a special identity element called the point at infinity 𝒪. Adding 𝒪 leaves any point unchanged."
+    },
+    {
+      "stage": "pre",
+      "question": "For distinct affine points P=(x1,y1) and Q=(x2,y2) on a short Weierstrass curve over F_p, what is the slope λ used in addition formulas?",
+      "options": [
+        "λ = (y2 − y1) / (x2 − x1) (mod p)",
+        "λ = (x2 − x1) / (y2 − y1) (mod p)",
+        "λ = (3x1^2 + a) / (2y1) (mod p)",
+        "λ = x1·x2 + y1·y2 (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "When P ≠ Q, the group law uses the chord slope λ = (y2 − y1)/(x2 − x1) modulo p (i.e., multiply by the modular inverse of x2 − x1)."
+    },
+    {
+      "stage": "post",
+      "question": "What should point_add return when x1 = x2 and y1 ≡ −y2 (mod p)?",
+      "options": [
+        "The point at infinity 𝒪 (the identity)",
+        "A ValueError because the points are invalid",
+        "The point (x1, 0) regardless of y1",
+        "The midpoint of P and Q in F_p"
+      ],
+      "correct": 0,
+      "explanation": "If Q = −P, the line through P and Q is vertical. In the group law this case returns the identity 𝒪 (represented as infinity)."
+    },
+    {
+      "stage": "post",
+      "question": "For point doubling (P = Q), which slope formula is used on a short Weierstrass curve y^2 = x^3 + a·x + b over F_p (p > 3)?",
+      "options": [
+        "λ = (3x1^2 + a) / (2y1) (mod p)",
+        "λ = (y1^2 + b) / (x1^2 + a) (mod p)",
+        "λ = (y1 − y2) / (x1 − x2) (mod p) with y2 = y1",
+        "λ = (x1 + y1) / (x1 − y1) (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "Doubling uses the tangent line at P. Over short Weierstrass curves, the tangent slope is λ = (3x1^2 + a)/(2y1) modulo p."
+    },
+    {
+      "stage": "post",
+      "question": "Why does a short Weierstrass curve require a non-zero discriminant condition like 4a^3 + 27b^2 ≠ 0 (mod p)?",
+      "options": [
+        "To ensure the curve is non-singular, so the group law behaves correctly",
+        "To ensure every x has exactly one y solution",
+        "To ensure scalar multiplication is constant-time automatically",
+        "To ensure p is prime"
+      ],
+      "correct": 0,
+      "explanation": "If the curve is singular, it has cusps/self-intersections and does not form the intended elliptic-curve group. The discriminant condition rules those cases out."
+    },
+    {
+      "stage": "post",
+      "question": "In the affine addition formulas over F_p, what does “division” mean?",
+      "options": [
+        "Multiply by a modular inverse in F_p, if it exists",
+        "Use floating-point division then round to the nearest integer",
+        "Shift right by one bit when p is odd",
+        "Subtract the denominator until the numerator is small"
+      ],
+      "correct": 0,
+      "explanation": "Over F_p, division is multiplication by an inverse: a/b means a·b^{-1} modulo p, and b^{-1} exists only when b ≠ 0 mod p."
+    },
+    {
+      "stage": "post",
+      "question": "In an ECDH-style protocol, what is the core risk if you multiply an untrusted small-order point Q by your secret scalar k and expose the result?",
+      "options": [
+        "It can leak k modulo the small order r of Q (a small-subgroup / invalid-curve pattern)",
+        "It forces k to be even, making brute force easier",
+        "It makes modular inverses stop existing for the correct curve",
+        "It lets the attacker compute k exactly in one query for any curve"
+      ],
+      "correct": 0,
+      "explanation": "If Q has order r, then k·Q only takes r possible values. Observing the output can reveal k mod r, which can be combined across queries to recover more information."
+    },
+    {
+      "stage": "post",
+      "question": "Which combination best prevents invalid-point pitfalls in real-world ECC protocols?",
+      "options": [
+        "Validate the point is on the intended curve, and enforce correct subgroup membership where relevant",
+        "Only validate that x and y are within [0, p-1]",
+        "Skip validation because the formulas will fail safely when the point is invalid",
+        "Validate the point, but only after doing scalar multiplication"
+      ],
+      "correct": 0,
+      "explanation": "Safe ECC implementations validate untrusted points and, depending on the curve/protocol, also ensure they lie in the correct prime-order subgroup (or use cofactor clearing)."
+    }
+  ]
 }

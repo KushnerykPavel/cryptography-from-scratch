@@ -1,4 +1,101 @@
 {
-  "title": "Bases, Determinant, Successive Minima",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a full-rank lattice L(B) in R^n, what does det(L) = |det(B)| represent?",
+      "options": [
+        "The volume of the fundamental parallelepiped (covolume)",
+        "The length of a shortest non-zero lattice vector (λ1)",
+        "The count of lattice points inside one fundamental cell",
+        "The average squared length of the basis vectors in B"
+      ],
+      "correct": 0,
+      "explanation": "For full rank, |det(B)| is the volume of the fundamental parallelepiped, and it is a lattice invariant (covolume)."
+    },
+    {
+      "stage": "pre",
+      "question": "Which property defines a unimodular integer matrix U?",
+      "options": [
+        "It has integer entries and determinant equal to ±1",
+        "It has integer entries and determinant equal to 0",
+        "It has real entries and determinant equal to 1",
+        "It has orthonormal columns and determinant equal to 1"
+      ],
+      "correct": 0,
+      "explanation": "Unimodular means det(U)=±1 with integer entries, so U maps Z^n bijectively to itself."
+    },
+    {
+      "stage": "post",
+      "question": "If U is unimodular, which statement is always true about L(B) and L(BU)?",
+      "options": [
+        "They generate the same lattice set: L(B) = L(BU)",
+        "They always have identical basis vector lengths and angles",
+        "They always have identical Gram–Schmidt coefficients for B",
+        "They always have the same column vectors in the same order"
+      ],
+      "correct": 0,
+      "explanation": "Unimodular changes are just a change of integer coordinates, so the set {Bz : z∈Z^n} stays the same."
+    },
+    {
+      "stage": "post",
+      "question": "Which identity correctly relates det(BU), det(B), and det(U) for square matrices?",
+      "options": [
+        "|det(BU)| = |det(B)|·|det(U)|",
+        "|det(BU)| = |det(B)| + |det(U)|",
+        "|det(BU)| = |det(B)| / |det(U)|",
+        "|det(BU)| = |det(U)| - |det(B)|"
+      ],
+      "correct": 0,
+      "explanation": "Determinants multiply: det(BU)=det(B)det(U). Taking absolute values gives the covolume relation."
+    },
+    {
+      "stage": "post",
+      "question": "What does the second successive minimum λ2(L) mean (Euclidean norm)?",
+      "options": [
+        "Smallest radius containing two independent lattice vectors",
+        "Smallest radius containing two distinct lattice points",
+        "Smallest radius containing the full fundamental parallelepiped",
+        "Smallest radius containing two vectors from one chosen basis"
+      ],
+      "correct": 0,
+      "explanation": "λ2 is the smallest radius r such that the lattice contains two linearly independent vectors of norm ≤ r."
+    },
+    {
+      "stage": "post",
+      "question": "Why can brute-forcing z in a window [-k,k]^n miss the true λ1 if k is too small?",
+      "options": [
+        "Short vector may require coefficients outside the window [-k,k]^n",
+        "Determinant changes under unimodular basis changes of B",
+        "The Euclidean norm depends on the order you list basis vectors",
+        "All lattices have infinitely many distinct shortest vectors"
+      ],
+      "correct": 0,
+      "explanation": "A short lattice vector might be a combination with large coefficients in a skewed basis, so a small window can miss it."
+    },
+    {
+      "stage": "post",
+      "question": "Two 2D lattices have bases diag(1,100) and diag(10,10). Which statement is correct?",
+      "options": [
+        "Both determinants are 100, but λ1 differs: 1 vs 10",
+        "Both determinants are 100, and λ1 is 10 for both lattices",
+        "Determinants differ, but λ1 is 10 for both lattices",
+        "Determinants differ, and λ1 is 1 for both lattices"
+      ],
+      "correct": 0,
+      "explanation": "Both lattices have the same covolume (100), but the shortest vector length depends on the geometry, not just the volume."
+    },
+    {
+      "stage": "post",
+      "question": "For the 2D basis b1=(2,0), b2=(1,1) (as columns), what is det(L)?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correct": 1,
+      "explanation": "With columns b1,b2, the matrix is [[2,1],[0,1]] and its determinant is 2."
+    }
+  ]
 }
+

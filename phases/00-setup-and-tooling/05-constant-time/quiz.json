@@ -1,4 +1,100 @@
 {
-  "title": "Constant-Time Thinking & Side-Channel Hygiene",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In crypto code, why is comparing secrets with a naive equality check risky?",
+      "options": [
+        "Because equality checks can leak information through timing differences (early exit on mismatch)",
+        "Because equality checks change the value being compared due to encoding conversions",
+        "Because equality checks are non-deterministic and may return different results each run",
+        "Because equality checks can be reversed to recover the secret without any oracle"
+      ],
+      "correct": 0,
+      "explanation": "Many naive comparisons stop at the first mismatch, so runtime can correlate with how many prefix bytes were correct."
+    },
+    {
+      "stage": "pre",
+      "question": "Which of these is the best default in Python when comparing a server-computed MAC/tag to attacker-provided bytes?",
+      "options": [
+        "`hmac.compare_digest(expected, provided)`",
+        "`expected == provided`",
+        "`expected.hex() == provided.hex()`",
+        "`expected.startswith(provided)`"
+      ],
+      "correct": 0,
+      "explanation": "`hmac.compare_digest` is designed to avoid content-based short-circuiting and is the right default for tag comparisons."
+    },
+    {
+      "stage": "post",
+      "question": "What does “constant-time” mean in the context of defending against timing side channels?",
+      "options": [
+        "The runtime does not depend on secret data (though it may depend on public lengths/parameters)",
+        "The runtime is exactly the same number of CPU cycles for all possible inputs and lengths",
+        "The code never uses loops, so it cannot leak timing information",
+        "The algorithm has O(1) time complexity for all input sizes"
+      ],
+      "correct": 0,
+      "explanation": "Security constant-time means “no secret-dependent timing”, not “O(1) complexity” and not “identical for all lengths”."
+    },
+    {
+      "stage": "post",
+      "question": "Which code pattern is most directly vulnerable to a prefix timing leak?",
+      "options": [
+        "Loop over bytes and `return False` immediately on the first mismatch",
+        "Compute `diff |= a[i] ^ b[i]` for all bytes and decide equality at the end",
+        "Decode base64 strictly (reject whitespace and non-canonical padding)",
+        "Hash the message and compare the resulting digest lengths"
+      ],
+      "correct": 0,
+      "explanation": "Early return on mismatch makes runtime correlate with the mismatch position, leaking how many prefix bytes were correct."
+    },
+    {
+      "stage": "post",
+      "question": "Why is comparing presentation strings (hex/base64) often worse than comparing bytes for secret checks?",
+      "options": [
+        "Multiple encodings can represent the same bytes (non-canonical forms), and string compares can introduce extra leaks",
+        "Hex and base64 are encrypted, so comparing them is equivalent to decrypting secrets",
+        "String comparison always runs in constant time in Python, so it hides bugs",
+        "Bytes cannot be compared in Python, only strings can"
+      ],
+      "correct": 0,
+      "explanation": "Decode strictly to bytes at the boundary, enforce canonical forms, then compare bytes with a timing-resistant routine."
+    },
+    {
+      "stage": "post",
+      "question": "A constant-time-style compare still does an explicit length check. When is it generally acceptable for the length check to be “fast”?",
+      "options": [
+        "When the compared values have a protocol-fixed, public length (e.g., a 32-byte tag)",
+        "Never — any length check is always a catastrophic secret leak",
+        "Only when comparing user-visible strings like usernames",
+        "Only when the compared values are both empty"
+      ],
+      "correct": 0,
+      "explanation": "If length is public and fixed by the protocol, a fast reject on length mismatch is usually fine; the main risk is leaking content."
+    },
+    {
+      "stage": "post",
+      "question": "In a classic timing attack against MAC verification with early-exit comparison, what does the attacker learn from response time?",
+      "options": [
+        "How many leading bytes of the provided tag matched the expected tag",
+        "The secret key used to compute the MAC in a single request",
+        "The full expected tag instantly without brute force",
+        "A collision in the underlying hash function"
+      ],
+      "correct": 0,
+      "explanation": "Early-exit comparisons leak where the first mismatch occurs, which is enough to brute-force the next byte iteratively."
+    },
+    {
+      "stage": "post",
+      "question": "What is the safest practical advice for production cryptographic comparisons in this course?",
+      "options": [
+        "Use audited library primitives (e.g., `hmac.compare_digest`) rather than rolling your own constant-time compare in Python",
+        "Implement your own compare with XOR/OR loops and assume it is constant-time everywhere",
+        "Use `time.sleep()` to “pad” the runtime until it looks constant",
+        "Convert everything to integers and compare integer values with `==`"
+      ],
+      "correct": 0,
+      "explanation": "Constant-time properties are subtle. In production, prefer audited, widely used constant-time primitives provided by standard libraries."
+    }
+  ]
 }

@@ -1,4 +1,101 @@
 {
   "title": "Picking a Crypto Library \u2014 When and Why",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does AEAD give you that “just encrypt with AES” does not?",
+      "options": [
+        "Confidentiality + integrity/authenticity in one primitive",
+        "Faster encryption by removing the need for a key",
+        "A guarantee that the code is constant-time in all languages",
+        "The ability to recover the plaintext without knowing the nonce"
+      ],
+      "correct": 0,
+      "explanation": "AEAD modes (e.g., AES-GCM, ChaCha20-Poly1305) provide authenticated encryption: they protect both confidentiality and integrity."
+    },
+    {
+      "stage": "pre",
+      "question": "In Python, what is the best default when comparing a server-computed tag (MAC) to attacker-provided bytes?",
+      "options": [
+        "`hmac.compare_digest(expected, provided)`",
+        "`expected == provided`",
+        "`expected.hex() == provided.hex()`",
+        "`expected.startswith(provided)`"
+      ],
+      "correct": 0,
+      "explanation": "`compare_digest` is designed to avoid content-based short-circuiting and is the right default for verifying tags."
+    },
+    {
+      "stage": "post",
+      "question": "Which library/API characteristic most strongly suggests a misuse-resistant approach to encryption?",
+      "options": [
+        "It provides high-level AEAD APIs (encrypt+authenticate) as the primary “happy path”",
+        "It exposes many cipher modes and lets the user pick from a long list",
+        "It focuses on being minimal and avoids documentation to reduce mistakes",
+        "It supports encryption but does not mention integrity or authentication"
+      ],
+      "correct": 0,
+      "explanation": "Misuse-resistant libraries tend to make the safe construction (AEAD) the default path, instead of pushing users into mode/padding choices."
+    },
+    {
+      "stage": "post",
+      "question": "Why is “the library was audited” not a complete argument by itself?",
+      "options": [
+        "Audits have a limited scope and time window; you still need maintenance, adoption, and safe APIs",
+        "Audits guarantee the library will never have bugs again",
+        "Audits are only useful for proprietary libraries, not open source",
+        "Audits make performance irrelevant because security is solved"
+      ],
+      "correct": 0,
+      "explanation": "An audit is evidence, not a permanent guarantee. You still need active maintenance, secure defaults, and a safe API surface."
+    },
+    {
+      "stage": "post",
+      "question": "For this course, what is the best default choice for SHA-256 and HMAC-SHA-256 in Python?",
+      "options": [
+        "Use stdlib `hashlib` for hashes and stdlib `hmac` for HMAC",
+        "Use a third-party crypto library for all hashing and MAC operations",
+        "Implement SHA-256 and HMAC yourself in production code for control",
+        "Use base64 strings for inputs so you avoid dealing with bytes"
+      ],
+      "correct": 0,
+      "explanation": "The stdlib provides stable, widely deployed implementations for common hashes and HMAC. Third-party libraries are still needed for things like AEAD."
+    },
+    {
+      "stage": "post",
+      "question": "Which practice best reduces supply-chain risk when using crypto dependencies?",
+      "options": [
+        "Pin versions, keep dependencies minimal, and review changes when upgrading",
+        "Always upgrade to the newest version immediately without reading release notes",
+        "Prefer the library with the most GitHub stars, regardless of releases",
+        "Copy-paste a single file from a repository to avoid package managers"
+      ],
+      "correct": 0,
+      "explanation": "Supply-chain hygiene is about controlling what you install and when. Pin versions, upgrade deliberately, and keep the dependency set small."
+    },
+    {
+      "stage": "post",
+      "question": "If you need AEAD encryption in a production Python service, which is the safest direction?",
+      "options": [
+        "Prefer a high-level AEAD API (e.g., `cryptography`'s `AESGCM` / `ChaCha20Poly1305`)",
+        "Prefer raw AES mode selection so you can choose ECB for simplicity",
+        "Prefer encrypt-then-encode without authentication because it “looks random”",
+        "Prefer designing a custom mode so your ciphertexts are unique to your app"
+      ],
+      "correct": 0,
+      "explanation": "High-level AEAD APIs reduce foot-guns by bundling encryption + authentication correctly and avoiding manual mode/padding decisions."
+    },
+    {
+      "stage": "post",
+      "question": "What is the core risk of a library that primarily exposes low-level primitives (raw RSA, manual padding, many AES modes) as its main entry points?",
+      "options": [
+        "It makes it easy to build something that works on happy paths but is insecure under adversarial input",
+        "It makes cryptography impossible because low-level primitives never work",
+        "It guarantees constant-time behavior by avoiding high-level helpers",
+        "It prevents interoperability because low-level primitives are non-standard"
+      ],
+      "correct": 0,
+      "explanation": "Low-level APIs can be correct but are easy to misuse. Misuse-resistant APIs aim to make the safe construction the easiest path."
+    }
+  ]
 }

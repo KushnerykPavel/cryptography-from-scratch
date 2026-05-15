@@ -1,4 +1,100 @@
 {
-  "title": "Dev Environment \u2014 Python, Rust, Node, SageMath",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which check most reliably confirms you're running inside the course virtual environment?",
+      "options": [
+        "In Python, sys.prefix differs from sys.base_prefix",
+        "The command `python -V` prints a recent version number",
+        "A `.venv/` folder exists in the repository root",
+        "The command `pip freeze` shows many installed packages"
+      ],
+      "correct": 0,
+      "explanation": "sys.prefix != sys.base_prefix indicates an active virtual environment. Version numbers and folders can exist without being the interpreter you're actually using."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is `sudo pip install ...` a red flag for this course?",
+      "options": [
+        "It installs into system Python and breaks environment isolation",
+        "It disables wheels and forces source builds for every package",
+        "It prevents Python from importing packages with native code",
+        "It makes `requirements.txt` unreadable to pip by default"
+      ],
+      "correct": 0,
+      "explanation": "Using sudo typically installs into the system interpreter, which defeats per-repo isolation and makes results hard to reproduce across machines."
+    },
+    {
+      "stage": "post",
+      "question": "In the environment stack for this course, which layer is the lowest dependency everything else builds on?",
+      "options": [
+        "Crypto and protocol libraries like PyCryptodome and PyNaCl",
+        "Math tooling like gmpy2, sympy, galois, and fpylll",
+        "Language runtime and environment like Python plus a venv",
+        "System foundation like git, compilers, and OpenSSL"
+      ],
+      "correct": 3,
+      "explanation": "System tools and build dependencies sit at the bottom. If the foundation is broken, higher layers fail in confusing ways."
+    },
+    {
+      "stage": "post",
+      "question": "You see an import error for a compiled dependency (e.g., gmpy2 or fpylll). Which layer is most likely broken?",
+      "options": [
+        "The system foundation lacks a working compiler toolchain",
+        "The course docs are wrong about cryptographic concepts",
+        "The Python syntax in your lesson code is invalid for 3.x",
+        "The test vectors in the repo are outdated and unreliable"
+      ],
+      "correct": 0,
+      "explanation": "Packages with native code often need a compiler toolchain and headers. Fixing the system layer usually resolves the downstream import errors."
+    },
+    {
+      "stage": "post",
+      "question": "A lesson stops matching known test vectors after an update. What is the best first move?",
+      "options": [
+        "Re-run the env check and confirm you're in the right `.venv`",
+        "Assume the vectors are wrong and regenerate them locally",
+        "Rewrite the implementation to match the new output format",
+        "Ignore the mismatch if outputs look plausible on random tests"
+      ],
+      "correct": 0,
+      "explanation": "Vector mismatches are usually caused by interpreter or dependency drift. Verify the environment before changing code or questioning the vectors."
+    },
+    {
+      "stage": "post",
+      "question": "Which tool is best described as an independent math oracle for cross-checking algebra in later phases?",
+      "options": [
+        "SageMath, as a separate system for symbolic and algebra work",
+        "pnpm, as a package manager for JavaScript dependencies",
+        "rustup, as an installer for the Rust toolchain and targets",
+        "OpenSSL, as a provider of TLS and certificate primitives"
+      ],
+      "correct": 0,
+      "explanation": "SageMath is useful as an external reference implementation for algebraic computations when you want an independent cross-check."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main purpose of the lesson verification script in this repository?",
+      "options": [
+        "Report Python, key imports, and optional tool availability",
+        "Generate secret keys and store them in a local key vault",
+        "Benchmark cryptographic primitives for production readiness",
+        "Replace the need for test vectors by using random testing"
+      ],
+      "correct": 0,
+      "explanation": "The script is a fast, repeatable way to confirm the environment is sane: interpreter, venv status, imports, and common system tools."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best matches the safety stance of this course's from-scratch crypto code?",
+      "options": [
+        "It is educational and not constant-time, so not for production",
+        "It is production-safe if it passes tests and uses large key sizes",
+        "It is safe if you run it only on air-gapped machines",
+        "It is safe because Python prevents timing side channels by design"
+      ],
+      "correct": 0,
+      "explanation": "From-scratch implementations here are for learning. They are not designed to be constant-time or hardened against real-world attack surfaces."
+    }
+  ]
 }

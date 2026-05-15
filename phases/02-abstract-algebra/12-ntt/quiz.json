@@ -1,4 +1,101 @@
 {
   "title": "NTT \u2014 Number Theoretic Transform",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "When does F_p contain a primitive n-th root of unity (so an n-point NTT can exist)?",
+      "options": [
+        "When n divides p-1",
+        "When p divides n",
+        "When n is prime",
+        "When p equals n plus one"
+      ],
+      "correct": 0,
+      "explanation": "F_p* is cyclic of order p-1. A subgroup (and generator) of order n exists exactly when n divides p-1."
+    },
+    {
+      "stage": "pre",
+      "question": "What makes an n-th root of unity ω \"primitive\"?",
+      "options": [
+        "Its multiplicative order is exactly n",
+        "It is the smallest residue with ω^n = 1",
+        "It satisfies ω^n = 0 in F_p",
+        "It is always equal to a primitive root modulo p"
+      ],
+      "correct": 0,
+      "explanation": "Primitive means ω generates the full cyclic subgroup of size n, so its multiplicative order must be n, not a proper divisor."
+    },
+    {
+      "stage": "post",
+      "question": "In an iterative Cooley\u2013Tukey NTT stage of size len, what is the correct per-stage twiddle base wlen?",
+      "options": [
+        "wlen = \u03c9^(n/len) mod p",
+        "wlen = \u03c9^(len/n) mod p",
+        "wlen = \u03c9^len mod p",
+        "wlen = \u03c9^(n*len) mod p"
+      ],
+      "correct": 0,
+      "explanation": "At stage len, butterflies need powers stepping by n/len so the stage uses the (len)-th principal root derived from the n-th root \u03c9."
+    },
+    {
+      "stage": "post",
+      "question": "Which two changes are required to turn a forward NTT into its inverse?",
+      "options": [
+        "Use \u03c9^{-1} instead of \u03c9, then multiply every output by n^{-1}",
+        "Reverse the input list, then subtract every butterfly output",
+        "Use \u03c9 instead of \u03c9^{-1}, then add n to every output",
+        "Run the same code twice, then divide by p"
+      ],
+      "correct": 0,
+      "explanation": "The inverse uses the inverse root of unity and a final scaling by 1/n in the field, because the DFT matrix inverse is (1/n) times the conjugate/inverse-root matrix."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it not enough for \u03c9 to satisfy \u03c9^n = 1 for an n-point NTT?",
+      "options": [
+        "If \u03c9 is not primitive, the transform matrix loses rank and becomes non-invertible",
+        "Non-primitive \u03c9 makes modular addition undefined",
+        "Non-primitive \u03c9 forces p to be even",
+        "If \u03c9 is not primitive, all outputs become zero"
+      ],
+      "correct": 0,
+      "explanation": "If \u03c9 has order dividing n but smaller than n, powers repeat too early. That creates collisions and the NTT cannot be inverted."
+    },
+    {
+      "stage": "post",
+      "question": "An implementation uses \u03c9 of order n/2 for an n-point transform. What concrete failure should you expect?",
+      "options": [
+        "Two different inputs can produce the same transformed output (a collision)",
+        "All inputs map to distinct outputs but the inverse is slower",
+        "The transform still inverts correctly but outputs are permuted",
+        "Only the last coefficient is wrong because of wrap-around"
+      ],
+      "correct": 0,
+      "explanation": "Order n/2 means the twiddle factors repeat with period n/2, so the transform cannot distinguish certain input patterns and is not one-to-one."
+    },
+    {
+      "stage": "post",
+      "question": "What ring does a standard NTT-based convolution naturally implement?",
+      "options": [
+        "F_p[x]/(x^n - 1) (cyclic convolution)",
+        "F_p[x]/(x^n + 1) (negacyclic convolution) without any extra steps",
+        "F_p[x]/(x^n) (truncated convolution)",
+        "F_p[x]/(\u03a6_n(x)) for any n, with no parameter constraints"
+      ],
+      "correct": 0,
+      "explanation": "Using an n-th root of unity diagonalizes cyclic shifts, which corresponds to multiplication modulo x^n - 1."
+    },
+    {
+      "stage": "post",
+      "question": "To use an NTT for negacyclic multiplication in F_p[x]/(x^n + 1) with n a power of two, what extra root condition is typically required?",
+      "options": [
+        "A primitive 2n-th root \u03c8 in F_p (so 2n divides p-1)",
+        "A primitive n-th root \u03c9 in F_p (so n divides p+1)",
+        "A prime n so the transform length is prime",
+        "A composite modulus p so x^n + 1 factors"
+      ],
+      "correct": 0,
+      "explanation": "Negacyclic convolution can be reduced to a cyclic NTT by twisting with a primitive 2n-th root \u03c8 where \u03c9 = \u03c8^2. Existence requires 2n | (p-1)."
+    }
+  ]
 }

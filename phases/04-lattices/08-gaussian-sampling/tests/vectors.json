@@ -1,1 +1,78 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Micciancio & Regev (2009), 'Lattice-based Cryptography' and Peikert (2016), 'A Decade of Lattice Cryptography' motivate discrete Gaussians over Z for LWE noise and trapdoor sampling. These vectors are project-internal deterministic samples produced by a CDF-table sampler driven by a SHA-256 counter-mode RNG (educational, not constant-time).",
+  "vectors": [
+    {
+      "op": "build",
+      "sigma": "1.0",
+      "center": "0",
+      "tail": 10,
+      "expected": {
+        "support": [-10, 10],
+        "support_len": 21,
+        "cdf_last": 18446744073709551616
+      }
+    },
+    {
+      "op": "sample",
+      "seed_hex": "00",
+      "sigma": "1.0",
+      "center": "0",
+      "tail": 10,
+      "count": 24,
+      "expected": [-1, 1, -1, 0, -1, -1, 1, -2, 1, 0, 0, 2, 3, 1, 2, -1, 0, -1, 0, 1, 1, 0, 0, -1]
+    },
+    {
+      "op": "sample",
+      "seed_hex": "deadbeef",
+      "sigma": "2.0",
+      "center": "0",
+      "tail": 16,
+      "count": 24,
+      "expected": [-1, 2, 0, 0, -3, 1, 2, -2, 2, -1, 0, 3, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1, -3, -5]
+    },
+    {
+      "op": "sample_vec",
+      "seed_hex": "012345",
+      "sigma": "1.75",
+      "center": "0",
+      "tail": 14,
+      "dim": 12,
+      "expected": [0, -1, 4, 1, -1, 2, 2, 0, 1, 1, 1, 3]
+    },
+    {
+      "op": "build",
+      "sigma": "0",
+      "tail": 10,
+      "expected_error": "sigma must be positive"
+    },
+    {
+      "op": "build",
+      "sigma": "1.0",
+      "tail": 0,
+      "expected_error": "tail must be positive"
+    },
+    {
+      "op": "build",
+      "sigma": "1.0",
+      "tail": 10,
+      "precision": 20,
+      "expected_error": "precision must be at least 50"
+    },
+    {
+      "op": "sample_vec",
+      "seed_hex": "01",
+      "sigma": "1.0",
+      "tail": 10,
+      "dim": 0,
+      "expected_error": "dim must be positive"
+    },
+    {
+      "op": "sample",
+      "seed_hex": "",
+      "sigma": "1.0",
+      "tail": 10,
+      "count": 1,
+      "expected_error": "seed must be non-empty"
+    }
+  ]
+}

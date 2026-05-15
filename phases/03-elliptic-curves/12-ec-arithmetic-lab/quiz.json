@@ -1,4 +1,102 @@
 {
   "title": "Curve Lab \u2014 Build an EC Arithmetic Library",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In short-Weierstrass EC arithmetic code, what is the “point at infinity” (𝒪) used for?",
+      "options": [
+        "It is the identity element of the elliptic-curve group",
+        "It is a special generator point chosen to maximize security",
+        "It is the unique point where y = 0 on every curve",
+        "It is the point you get by taking modular inverses of x and y"
+      ],
+      "correct": 0,
+      "explanation": "𝒪 is the group identity: P + 𝒪 = P and P + (−P) = 𝒪. Implementations usually represent it with a sentinel (e.g., None or Z=0)."
+    },
+    {
+      "stage": "pre",
+      "question": "In SEC1 compressed point encoding, what information does the first byte (0x02 or 0x03) carry?",
+      "options": [
+        "The parity (least-significant bit) of y so y can be recovered from x",
+        "The full y-coordinate XORed with x to save space",
+        "The curve id so the parser can select p, a, and b",
+        "A checksum proving the point lies on the curve"
+      ],
+      "correct": 0,
+      "explanation": "Compressed encodings store x and one bit of y (parity). Decompression computes y via a modular square root and then selects the root matching the parity bit."
+    },
+
+    {
+      "stage": "post",
+      "question": "Why does a short-Weierstrass implementation check that 4a^3 + 27b^2 ≠ 0 (mod p)?",
+      "options": [
+        "It ensures the curve is non-singular, so the group law behaves correctly",
+        "It ensures the curve has exactly p points, so the group order is prime",
+        "It ensures x has a square root for every value in F_p",
+        "It ensures point addition never needs a modular inverse"
+      ],
+      "correct": 0,
+      "explanation": "A zero discriminant means the curve is singular (has a cusp/self-intersection), and the usual EC group law formulas stop defining a proper group."
+    },
+    {
+      "stage": "post",
+      "question": "When decoding a compressed point, why can decompression fail even if x is a valid field element?",
+      "options": [
+        "Because x may produce a non-residue RHS, so no y exists with y^2 = RHS (mod p)",
+        "Because the parity bit always flips y into a different curve",
+        "Because modular inverses do not exist in prime fields for odd p",
+        "Because compressed encodings require the curve order n to be prime"
+      ],
+      "correct": 0,
+      "explanation": "Given x, you compute RHS = x^3 + ax + b. If RHS is not a quadratic residue mod p, there is no y satisfying the curve equation, so decoding must reject."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main performance reason to use Jacobian (projective) coordinates for scalar multiplication?",
+      "options": [
+        "They avoid modular inversions inside the add/double loop, postponing inversion to the end",
+        "They make the curve automatically non-singular even if the discriminant is zero",
+        "They guarantee constant-time execution in any programming language runtime",
+        "They remove the need to validate points during decoding"
+      ],
+      "correct": 0,
+      "explanation": "Affine addition needs an inverse for the slope. Jacobian formulas replace inversions with multiplications and only invert once when converting back to affine."
+    },
+    {
+      "stage": "post",
+      "question": "Why is “is the point on the curve?” sometimes not enough as a public-key validation rule?",
+      "options": [
+        "Some curves have cofactors > 1, so an on-curve point can lie in a small subgroup unless you check membership or clear the cofactor",
+        "On-curve checks are always wrong because points never satisfy the curve equation in F_p",
+        "On-curve checks are slower than scalar multiplication, so you should skip them",
+        "If the curve is non-singular, then every on-curve point automatically has prime order"
+      ],
+      "correct": 0,
+      "explanation": "On-curve only proves the point satisfies the equation, not that it is in the intended subgroup. For cofactor>1 groups you need subgroup checks (n·P=𝒪) or cofactor clearing."
+    },
+    {
+      "stage": "post",
+      "question": "Which textbook attack becomes easier if a protocol multiplies an untrusted point by a secret scalar without validation?",
+      "options": [
+        "Invalid-curve / small-subgroup style attacks that can leak information about the secret scalar",
+        "Meet-in-the-middle attacks on modular inversion that recover p directly",
+        "Chosen-prefix attacks that forge SEC1 encodings without knowing x or y",
+        "Collision attacks on the discriminant that force 4a^3 + 27b^2 to be zero"
+      ],
+      "correct": 0,
+      "explanation": "If you accept attacker-chosen points (including points on other curves or small subgroups), scalar multiplication with a secret can leak bits or reduce secrets modulo small factors."
+    },
+    {
+      "stage": "post",
+      "question": "What does the Montgomery ladder change compared to plain double-and-add (at the algorithm structure level)?",
+      "options": [
+        "It performs one add and one double per scalar bit, aiming for a fixed operation pattern",
+        "It replaces all multiplications with additions, making field inversions unnecessary",
+        "It removes the need for point addition by using only x-coordinates on any curve",
+        "It guarantees the result is always in the prime-order subgroup even if the input is not"
+      ],
+      "correct": 0,
+      "explanation": "The ladder structure does the same two high-level operations per bit (add+double), with selection logic based on the bit. This supports constant-time designs in low-level implementations."
+    }
+  ]
 }

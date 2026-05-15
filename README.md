@@ -2,13 +2,13 @@
 
 > *From modular arithmetic to post-quantum and zero-knowledge. Build every primitive yourself, then ship reusable tools.*
 
-![status](https://img.shields.io/badge/status-v0.2.0--phase--1--complete-yellow) ![license](https://img.shields.io/badge/license-MIT-blue) ![phases](https://img.shields.io/badge/phases-21-green) ![lessons](https://img.shields.io/badge/lessons-241-green) ![hours](https://img.shields.io/badge/hours-~300-green) ![phase-1](https://img.shields.io/badge/phase--1-complete-brightgreen) ![phase-2](https://img.shields.io/badge/phase--2-5%2F14-yellow)
+![status](https://img.shields.io/badge/status-v0.2.0--phase--1--complete-yellow) ![license](https://img.shields.io/badge/license-MIT-blue) ![phases](https://img.shields.io/badge/phases-21-green) ![lessons](https://img.shields.io/badge/lessons-241-green) ![hours](https://img.shields.io/badge/hours-~300-green) ![phase-1](https://img.shields.io/badge/phase--1-complete-brightgreen) ![phase-2](https://img.shields.io/badge/phase--2-9%2F14-yellow)
 
 **241 lessons. 21 phases. ~300 hours.**
 
 You don't just read about RSA, Kyber, or Groth16. You implement them. From scratch. Then you compare against real libraries (arkworks, liboqs, RustCrypto, libsodium) and ship usable artifacts: prompts, skills, MCP servers, and CLI tools.
 
-> ⚠️ **v0.2.0 — Phase 1 complete, Phase 2 in progress.** All 21 phases and 241 lesson dirs are scaffolded. **Phase 1 (Number Theory)** is fully fleshed out (18/18 lessons). **Phase 2 (Abstract Algebra)** is in progress — lessons 01 groups, 02 cyclic groups, 03 subgroups/cosets/Lagrange, 04 homomorphisms, and 05 rings/ideals/quotients are complete with runnable code, test vectors, quizzes, and shipped skills in `outputs/`. Phase 0 and Phases 3–20 are placeholders awaiting content. Contributions welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+> ⚠️ **v0.2.0 — Phase 1 complete, Phase 2 in progress.** All 21 phases and 241 lesson dirs are scaffolded. **Phase 1 (Number Theory)** is fully fleshed out (18/18 lessons). **Phase 2 (Abstract Algebra)** — 9/14 lessons complete: 01 groups, 02 cyclic, 03 subgroups/cosets/Lagrange, 04 homomorphisms, 05 rings/ideals, 06 fields & extensions, 08 GF(2^n), 09 polynomial rings, 10 irreducible polynomials. Remaining: 07 GF(p), 11 roots of unity, 12 NTT, 13 FFT, 14 lab. Phase 0 and Phases 3–20 are placeholders awaiting content. Contributions welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 > ⚠️ **Educational use only.** Code is written for clarity, not for production. Real cryptography requires constant-time implementations, audited libraries, and threat modeling beyond the scope of any course. Never deploy from-scratch primitives without expert review.
 

@@ -1,4 +1,101 @@
 {
-  "title": "Test Vectors \u2014 RFC / NIST CAVP Workflow",
-  "questions": []
+  "title": "Test Vectors — RFC / NIST CAVP Workflow",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a cryptographic test vector?",
+      "options": [
+        "A published input/output pair that fixes behavior byte-for-byte",
+        "A random sample used only to estimate performance and throughput",
+        "A secret key that must be kept private to preserve security guarantees",
+        "A graph of algorithm complexity as input size increases in theory"
+      ],
+      "correct": 0,
+      "explanation": "Test vectors are deterministic examples (often from RFC/NIST sources) that define exact expected behavior for interoperability."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is it risky to have only happy-path vectors for a parser or decoder?",
+      "options": [
+        "A wrong parser may still pass while accepting malformed or ambiguous inputs",
+        "The implementation will always run slower and use more memory",
+        "The code becomes constant-time by accident and hides timing bugs",
+        "The vectors will stop matching whenever the compiler updates"
+      ],
+      "correct": 0,
+      "explanation": "Many real crypto bugs are about what you accept. Without negative vectors, incorrect acceptance can go unnoticed."
+    },
+    {
+      "stage": "post",
+      "question": "In this repo, what are the two required top-level keys in `tests/vectors.json`?",
+      "options": [
+        "`source` and `vectors`",
+        "`title` and `examples`",
+        "`inputs` and `outputs`",
+        "`seed` and `cases`"
+      ],
+      "correct": 0,
+      "explanation": "Every vectors file includes a citation string in `source` and a list of vector objects in `vectors`."
+    },
+    {
+      "stage": "post",
+      "question": "For a single vector entry, which rule best matches the harness pattern used in this repo?",
+      "options": [
+        "It includes an `op` plus exactly one of `expected` or `expected_error`",
+        "It includes an `op` and must include both `expected` and `expected_error`",
+        "It includes no `op` and relies on test order to choose behavior at runtime",
+        "It includes only `expected` and generates random inputs inside the test code"
+      ],
+      "correct": 0,
+      "explanation": "Vectors are dispatched by `op`, and each one asserts either a successful result or a required rejection."
+    },
+    {
+      "stage": "post",
+      "question": "Why does this repo prefer `msg_hex` fields for byte strings in vectors?",
+      "options": [
+        "Hex removes ambiguity about bytes, encodings, and hidden Unicode changes",
+        "Hex is always shorter than ASCII and reduces file size significantly",
+        "Hex guarantees the code is constant-time even for parsing routines",
+        "Hex prevents collisions for hashes by changing the digest function"
+      ],
+      "correct": 0,
+      "explanation": "Using hex makes the exact bytes explicit and avoids accidental text/Unicode transformations at the boundary."
+    },
+    {
+      "stage": "post",
+      "question": "What does a negative test vector assert?",
+      "options": [
+        "The implementation must reject a specific malformed input",
+        "The implementation must produce a different output on each run",
+        "The implementation must always use a random nonce internally",
+        "The implementation must be faster than a reference library"
+      ],
+      "correct": 0,
+      "explanation": "Negative vectors encode “MUST reject” rules: malformed inputs should fail in a predictable way."
+    },
+    {
+      "stage": "post",
+      "question": "Which mistake can make vectors appear to pass while hashing the wrong thing?",
+      "options": [
+        "Hashing the characters of a hex string instead of decoding hex to bytes first",
+        "Computing the digest in lowercase instead of uppercase hex formatting",
+        "Using a list of vectors instead of a dictionary of named vectors",
+        "Printing the digest to the console before comparing it to expected"
+      ],
+      "correct": 0,
+      "explanation": "If vectors store bytes as hex, your code must decode the hex to bytes before hashing or signing; otherwise you test a different message."
+    },
+    {
+      "stage": "post",
+      "question": "Which broken implementation is most likely to slip through if vectors lack hostile edge cases?",
+      "options": [
+        "A decoder that accepts non-canonical encodings and never rejects malformed inputs",
+        "A decoder that uses the same error type for all failures and exits early",
+        "A decoder that allocates memory proportional to the input length and returns",
+        "A decoder that prints debug output for each parsed block and continues"
+      ],
+      "correct": 0,
+      "explanation": "Edge cases and negative vectors are what catch incorrect acceptance behavior, which is a common source of crypto vulnerabilities."
+    }
+  ]
 }

@@ -1,4 +1,101 @@
 {
   "title": "Hashing to Curves \u2014 RFC 9380",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main purpose of a domain separation tag (DST) in hash-to-curve constructions?",
+      "options": [
+        "To make the output point smaller to transmit",
+        "To ensure different protocols/purposes do not accidentally hash to the same curve points",
+        "To speed up scalar multiplication by caching",
+        "To avoid modular reduction when hashing to the field"
+      ],
+      "correct": 1,
+      "explanation": "DST binds the hash-to-curve output to a specific context so different protocols (or different purposes within a protocol) do not collide on the same points."
+    },
+    {
+      "stage": "pre",
+      "question": "In RFC 9380, what is the key difference between encode_to_curve (NU suites) and hash_to_curve (RO suites)?",
+      "options": [
+        "NU suites use XOFs while RO suites use hashes",
+        "NU suites output points not on the curve, RO suites output points on the curve",
+        "NU suites map one field element to the curve, RO suites map two field elements and add the results",
+        "NU suites require cofactor clearing, RO suites never do"
+      ],
+      "correct": 2,
+      "explanation": "RO suites derive two field elements u[0], u[1], map both, add, and then clear the cofactor; NU suites use one u[0] and map once (still with cofactor clearing step)."
+    },
+    {
+      "stage": "post",
+      "question": "Which pipeline best matches RFC 9380 for a hash_to_curve (RO) suite?",
+      "options": [
+        "P = lift_x(H(msg) mod p)",
+        "u = expand_message(msg); P = map_to_curve(u)",
+        "u0,u1 = hash_to_field(msg, DST); Q0 = map_to_curve(u0); Q1 = map_to_curve(u1); P = clear_cofactor(Q0 + Q1)",
+        "P = random_point(); P = clear_cofactor(P)"
+      ],
+      "correct": 2,
+      "explanation": "RO suites use hash_to_field to get two field elements, map both, add, and then clear the cofactor to land in the prime-order subgroup."
+    },
+    {
+      "stage": "post",
+      "question": "Why does a typical RO suite derive two field elements (u[0], u[1]) instead of one?",
+      "options": [
+        "To make the output point compress better",
+        "To get a distribution closer to a random oracle on the target group",
+        "To avoid needing square roots in the mapping",
+        "To avoid any dependency on the DST"
+      ],
+      "correct": 1,
+      "explanation": "Using two independent field elements and adding mapped points is part of the construction that achieves random-oracle-like behavior for hash_to_curve."
+    },
+    {
+      "stage": "post",
+      "question": "Why is cofactor clearing included in the RFC 9380 pipeline, even if P-256 has cofactor 1?",
+      "options": [
+        "Because cofactor clearing changes the curve equation",
+        "Because RO suites require cofactor clearing but NU suites do not",
+        "Because many curves have cofactor > 1 and require subgroup projection; keeping the step prevents omissions when switching curves",
+        "Because it hides the DST from attackers"
+      ],
+      "correct": 2,
+      "explanation": "On curves with cofactor > 1, cofactor clearing is essential to land in the prime-order subgroup. For P-256 it is the identity, but the step is still part of the standard pipeline."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-themed: what can go wrong if two different protocols use the same hash-to-curve function with an empty or shared DST?",
+      "options": [
+        "The curve becomes singular for some messages",
+        "The same message can hash to the same point across protocols, enabling cross-protocol confusion/replay when message formats overlap",
+        "The mapping stops producing points on the curve",
+        "The output points become the point at infinity for all messages"
+      ],
+      "correct": 1,
+      "explanation": "Without protocol-specific DST, different contexts can collide on the same curve points, making it easier to replay or confuse proofs/signatures across protocols."
+    },
+    {
+      "stage": "post",
+      "question": "The Simplified SWU map in RFC 9380 (Section 6.6.2) requires A != 0 and B != 0. What is the practical consequence for curves like secp256k1 (A = 0)?",
+      "options": [
+        "You can still use the same map directly; only Z changes",
+        "You must use a mapping that includes an isogeny step to an isogenous curve with A' != 0 and B' != 0, then map back",
+        "Hash-to-curve is impossible on secp256k1",
+        "You must replace hash_to_field with rejection sampling"
+      ],
+      "correct": 1,
+      "explanation": "For AB == 0 curves, RFC 9380 uses SSWU on an isogenous curve E' with A',B' != 0 and then applies an isogeny map back to the target curve."
+    },
+    {
+      "stage": "post",
+      "question": "What is the role of sqrt_ratio in the Simplified SWU mapping?",
+      "options": [
+        "It computes the discrete log of a point",
+        "It returns either sqrt(u/v) when u/v is a square, or sqrt(Z * (u/v)) otherwise, avoiding retry loops",
+        "It compresses points by choosing a canonical x-coordinate",
+        "It hashes a message directly into a curve point without field arithmetic"
+      ],
+      "correct": 1,
+      "explanation": "sqrt_ratio is designed to produce a usable square root without rejection sampling: if u/v is not a quadratic residue, multiplying by Z (a fixed non-residue) makes it one."
+    }
+  ]
 }

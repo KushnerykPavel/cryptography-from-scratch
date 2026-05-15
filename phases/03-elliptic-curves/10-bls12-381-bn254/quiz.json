@@ -1,4 +1,101 @@
 {
   "title": "BLS12-381 & BN254 \u2014 Pairing-Friendly Curves",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which statement best captures bilinearity for a pairing e: G1 \u00d7 G2 \u2192 GT?",
+      "options": [
+        "e(aP, bQ) = e(P, Q)^(ab) for scalars a, b and points P, Q",
+        "e(aP, bQ) = a\u00b7e(P, Q) + b\u00b7e(P, Q) in the target group GT",
+        "e(P, Q) = e(Q, P) for all points P, Q (pairings must be symmetric)",
+        "e(P, Q) outputs a curve point that you can add using the EC group law"
+      ],
+      "correct": 0,
+      "explanation": "Bilinearity means the pairing turns scalar multiplication in G1/G2 into exponentiation in GT: e(aP, bQ) = e(P, Q)^(ab)."
+    },
+    {
+      "stage": "pre",
+      "question": "When validating a BLS12-381 point received from the network, which approach is insufficient on its own?",
+      "options": [
+        "Only check that the point is on the curve; on-curve does not imply correct subgroup",
+        "Check the point is on the curve and in the prime-order subgroup (or clear cofactor)",
+        "Reject the identity point when the protocol requires a nonzero key or signature",
+        "Use a standards-based hash-to-curve method for messages instead of ad-hoc mapping"
+      ],
+      "correct": 0,
+      "explanation": "On-curve checks are necessary but not sufficient on curves with nontrivial cofactors; you must ensure prime-order subgroup membership (or clear cofactor)."
+    },
+    {
+      "stage": "post",
+      "question": "What does the embedding degree k tell you for a pairing-friendly curve?",
+      "options": [
+        "The extension degree k where GT lives inside F_{p^k}^* for pairing outputs",
+        "The number of bits in the base field modulus p that defines the curve equation",
+        "The cofactor size for G1 that determines how many points are off the subgroup",
+        "The window size used in wNAF scalar multiplication to speed up point multiplication"
+      ],
+      "correct": 0,
+      "explanation": "k is the smallest extension degree where the r-torsion and r-th roots of unity exist, so the pairing can map into a subgroup of F_{p^k}^*."
+    },
+    {
+      "stage": "post",
+      "question": "Why is BN254 commonly used in Ethereum zkSNARK verifiers?",
+      "options": [
+        "Ethereum provides BN254 precompiles for EC ops and pairing checks (EIP-196/197)",
+        "BN254 guarantees ~256-bit security in GT, so it is always stronger than BLS12-381",
+        "BN254 is the only curve family that supports pairings with embedding degree 12",
+        "BN254 eliminates the need for subgroup checks because all points are prime order"
+      ],
+      "correct": 0,
+      "explanation": "BN254 is popular on Ethereum because precompiles make the pairing and related EC operations efficient on-chain; the choice is largely ecosystem-driven."
+    },
+    {
+      "stage": "post",
+      "question": "In many libraries, pairing(P, Q) expects P in G2 and Q in G1. What can go wrong if you swap them?",
+      "options": [
+        "You can get type/curve mismatches or silently compute a meaningless value for the protocol",
+        "Nothing; pairings are always symmetric so the result is guaranteed to be identical",
+        "It always returns the identity element in GT, so verification still passes safely",
+        "The library will hash the inputs into the right groups automatically and continue"
+      ],
+      "correct": 0,
+      "explanation": "Pairing APIs typically assume specific groups for each argument. Swapping them can throw errors or produce values that do not match the protocol equation."
+    },
+    {
+      "stage": "post",
+      "question": "What is cofactor clearing used for in BLS12-381 hash-to-curve?",
+      "options": [
+        "To map an on-curve point into the prime-order subgroup required by the protocol",
+        "To compress the point into fewer bytes for network transport and storage",
+        "To speed up pairing computation by reducing the embedding degree from 12 to 2",
+        "To derive the curve order r from the field modulus p without external parameters"
+      ],
+      "correct": 0,
+      "explanation": "Hash-to-curve first maps to the curve, then clears the cofactor (or equivalent) so the output is guaranteed to be in the correct prime-order subgroup."
+    },
+    {
+      "stage": "post",
+      "question": "Which failure mode can happen if a verifier accepts a BLS public key that is not in the prime-order subgroup?",
+      "options": [
+        "The pairing check can collapse to 1 = 1 for degenerate keys, enabling trivial forgeries",
+        "The discrete log problem becomes polynomial time in the base field, breaking all curves",
+        "Signatures become longer but remain unforgeable because GT still has order r by design",
+        "Only performance degrades; subgroup checks are a speed optimization, not a security rule"
+      ],
+      "correct": 0,
+      "explanation": "If keys can live in small/cofactor subgroups, pairing equations can become degenerate and accept forged signatures (e.g., identity signatures) unless subgroup rules are enforced."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best describes the security tradeoff between BN254 and BLS12-381 in modern practice?",
+      "options": [
+        "BN254 is fast and common in Ethereum tooling, but GT security is below a 128-bit target",
+        "BN254 is always strictly stronger because its r is ~254 bits while BLS12-381 is larger",
+        "BLS12-381 is weaker because the larger p makes discrete log in GT easier via NFS attacks",
+        "There is no meaningful difference; any curve with k=12 automatically has equal security"
+      ],
+      "correct": 0,
+      "explanation": "Both curves have similar r sizes, but pairing-target security differs; BN254 is typically treated as ~100-bit in GT, while BLS12-381 targets ~128-bit."
+    }
+  ]
 }

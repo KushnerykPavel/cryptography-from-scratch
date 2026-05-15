@@ -1,4 +1,100 @@
 {
-  "title": "Reproducible Builds & Signed Releases",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does a “reproducible build” mean in the strictest sense?",
+      "options": [
+        "Given the same inputs, independent builds produce identical bytes (the same artifact hash)",
+        "The build completes without errors on at least one machine",
+        "The code compiles quickly and uses few dependencies",
+        "The artifact is signed, so it must be safe to run"
+      ],
+      "correct": 0,
+      "explanation": "Reproducibility is about determinism: the same inputs yield the same output bytes, so hashes are comparable."
+    },
+    {
+      "stage": "pre",
+      "question": "What does a signed release primarily give you (assuming you already trust the public key)?",
+      "options": [
+        "Authenticity and integrity of a specific digest/statement about the release",
+        "A guarantee that the build is free of vulnerabilities",
+        "A guarantee that dependencies are automatically pinned",
+        "A guarantee that the artifact is encrypted end-to-end"
+      ],
+      "correct": 0,
+      "explanation": "Signatures let you verify that a specific hash/manifest came from the expected signing identity and was not modified."
+    },
+    {
+      "stage": "post",
+      "question": "Which of these is a common cause of non-reproducible archives even when file contents are identical?",
+      "options": [
+        "Timestamps and metadata embedded into archive entries or compression headers",
+        "Using SHA-256 instead of SHA-1 for hashing",
+        "Using hex encoding for hashes instead of base64",
+        "Using JSON instead of YAML for the manifest"
+      ],
+      "correct": 0,
+      "explanation": "Archive formats often store mtimes, uid/gid, and file order; if you don’t fix them, identical inputs can produce different bytes."
+    },
+    {
+      "stage": "post",
+      "question": "Why is a build manifest useful even if you also publish an artifact hash?",
+      "options": [
+        "It makes the build contents explicit by listing each file and its hash, so you can detect missing/extra files",
+        "It replaces the need for any cryptographic hash function",
+        "It guarantees the artifact is encrypted at rest",
+        "It ensures all dependencies are automatically verified by pip"
+      ],
+      "correct": 0,
+      "explanation": "A manifest turns “this is the hash” into “these are the exact files and bytes that make up the release”."
+    },
+    {
+      "stage": "post",
+      "question": "What is the most important boundary to cover with a signature in a basic release verification flow?",
+      "options": [
+        "A digest derived from the exact build contents (e.g., the manifest tree hash)",
+        "Only the version string (e.g., “v1.2.3”) so users know what they downloaded",
+        "Only the release filename so mirrors can rename it safely",
+        "Only the README so users can trust the documentation"
+      ],
+      "correct": 0,
+      "explanation": "Signing a content-derived digest binds the signature to the actual bytes that matter, not just labels."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: a mirror is compromised and replaces the release tarball. What stops this in a signed-release flow?",
+      "options": [
+        "Users verify the signature using a pinned/trusted public key and reject artifacts whose digest doesn’t match the signed statement",
+        "Users install from the mirror faster so the attacker has less time",
+        "Users only download over HTTPS, which makes tampering impossible",
+        "Users compress the tarball again locally to “normalize” it"
+      ],
+      "correct": 0,
+      "explanation": "A compromised mirror can serve anything; signatures work because the attacker can’t forge the signer’s key."
+    },
+    {
+      "stage": "post",
+      "question": "Which public-key distribution method is the most fragile if it’s your only trust anchor?",
+      "options": [
+        "Downloading the public key from the same unsigned, unverified channel as the artifact",
+        "Pinning the public key in multiple independent locations (repo + website + transparency log)",
+        "Out-of-band key fingerprint verification (e.g., in-person or via a trusted directory)",
+        "Using a transparency log so key changes are publicly visible"
+      ],
+      "correct": 0,
+      "explanation": "If the attacker can swap both the artifact and the key in the same channel, verification becomes meaningless."
+    },
+    {
+      "stage": "post",
+      "question": "When verifying a release against a manifest, what should the verifier reject?",
+      "options": [
+        "Artifacts that contain extra files not listed in the manifest (or omit files that are listed)",
+        "Artifacts that use a different filename than expected",
+        "Artifacts that are larger than 10MB",
+        "Artifacts whose README contains a different title"
+      ],
+      "correct": 0,
+      "explanation": "A manifest is only meaningful if it fully describes the artifact contents; extra or missing files are a red flag."
+    }
+  ]
 }

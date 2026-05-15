@@ -1,1 +1,29 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "RFC 8017 (PKCS #1 v2.2), Section 4 (I2OSP/OS2IP) + small project-internal limb examples",
+  "vectors": [
+    {"op": "os2ip", "x_hex": "", "expected": 0},
+    {"op": "os2ip", "x_hex": "00", "expected": 0},
+    {"op": "os2ip", "x_hex": "0009", "expected": 9},
+    {"op": "i2osp", "x": 0, "x_len": 1, "expected": "00"},
+    {"op": "i2osp", "x": 9, "x_len": 1, "expected": "09"},
+    {"op": "i2osp", "x": 9, "x_len": 2, "expected": "0009"},
+    {"op": "i2osp", "x": 256, "x_len": 2, "expected": "0100"},
+    {"op": "i2osp", "x": 65535, "x_len": 2, "expected": "ffff"},
+    {"op": "i2osp", "x": 256, "x_len": 1, "expected_error": "integer too large"},
+    {"op": "i2osp", "x": -1, "x_len": 1, "expected_error": "x must be nonnegative"},
+    {"op": "uint_to_bytes_be", "x": 0, "expected": "00"},
+    {"op": "uint_to_bytes_be", "x": 1, "expected": "01"},
+    {"op": "uint_to_bytes_be", "x": 255, "expected": "ff"},
+    {"op": "uint_to_bytes_be", "x": 256, "expected": "0100"},
+    {"op": "uint_to_bytes_be", "x": 256, "length": 4, "expected": "00000100"},
+    {"op": "uint_to_bytes_be", "x": 256, "length": 1, "expected_error": "integer too large"},
+    {"op": "split_uint_le_limbs", "x": 0, "limb_bits": 32, "expected": [0]},
+    {"op": "split_uint_le_limbs", "x": 1, "limb_bits": 32, "expected": [1]},
+    {"op": "split_uint_le_limbs", "x": 4294967296, "limb_bits": 32, "expected": [0, 1]},
+    {"op": "combine_uint_le_limbs", "limbs": [0], "limb_bits": 32, "expected": 0},
+    {"op": "combine_uint_le_limbs", "limbs": [0, 1], "limb_bits": 32, "expected": 4294967296},
+    {"op": "add_le_limbs", "a": [1], "b": [2], "limb_bits": 32, "expected": [3]},
+    {"op": "add_le_limbs", "a": [4294967295], "b": [1], "limb_bits": 32, "expected": [0, 1]},
+    {"op": "add_le_limbs", "a": [0, 1], "b": [0, 1], "limb_bits": 32, "expected": [0, 2]}
+  ]
+}

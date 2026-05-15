@@ -1,1 +1,47 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Lenstra, Lenstra, Lovász (1982). 'Factoring polynomials with rational coefficients' (introduces LLL). Test cases are project-internal integer bases chosen to exercise size-reduction and Lovász swaps with exact rational arithmetic.",
+  "vectors": [
+    {
+      "op": "lll_reduce",
+      "basis": [[1, 5], [6, 21]],
+      "expected": [[2, 1], [-1, 4]]
+    },
+    {
+      "op": "lll_reduce",
+      "basis": [[1, 1, 1], [-1, 0, 2], [3, 5, 6]],
+      "expected": [[0, 1, 0], [1, 0, 1], [-2, 0, 1]]
+    },
+    {
+      "op": "is_lll_reduced",
+      "basis": [[1, 5], [6, 21]],
+      "expected": false
+    },
+    {
+      "op": "is_lll_reduced",
+      "basis": [[2, 1], [-1, 4]],
+      "expected": true
+    },
+    {
+      "op": "lll_reduce",
+      "basis": [[1, 0], [0, 1]],
+      "delta": [1, 4],
+      "expected_error": "delta must satisfy 1/4 < delta < 1"
+    },
+    {
+      "op": "lll_reduce",
+      "basis": [[1, 0], [0, 1]],
+      "max_iters": 0,
+      "expected_error": "max_iters must be positive"
+    },
+    {
+      "op": "lll_reduce",
+      "basis": [[1, 1], [2, 2]],
+      "expected_error": "basis must be full rank (det != 0)"
+    },
+    {
+      "op": "lll_reduce",
+      "basis": [[1, 0, 0], [0, 1, 0]],
+      "expected_error": "basis must be full rank in R^n (n vectors of length n)"
+    }
+  ]
+}

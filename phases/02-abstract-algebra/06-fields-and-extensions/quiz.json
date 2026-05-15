@@ -1,4 +1,101 @@
 {
   "title": "Fields and Field Extensions",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which extra property turns a commutative ring with identity into a field?",
+      "options": [
+        "Every nonzero element has a multiplicative inverse",
+        "Every element has a distinct additive generator",
+        "The addition law becomes intentionally noncommutative",
+        "The modulus notation is replaced by polynomial syntax"
+      ],
+      "correct": 0,
+      "explanation": "A field is a commutative ring with 0 != 1 where every nonzero element is invertible. Additive structure alone is not enough."
+    },
+    {
+      "stage": "pre",
+      "question": "What construction usually creates a finite extension field from a base field F?",
+      "options": [
+        "F[x]/(f(x)) using an irreducible polynomial f",
+        "F[x]/(f(x)) using any polynomial with degree one",
+        "F[x] with no quotient and ordinary multiplication",
+        "F[x]/(0) with coefficients copied from integers"
+      ],
+      "correct": 0,
+      "explanation": "A finite algebraic extension can be built as F[x]/(f(x)) when f is irreducible. Reducible choices produce quotient rings with zero divisors."
+    },
+    {
+      "stage": "post",
+      "question": "Why is Z/pZ a field when p is prime?",
+      "options": [
+        "Each nonzero residue is coprime to p and invertible",
+        "Each residue becomes a generator of the additive group",
+        "The product of two residues is never reduced modulo p",
+        "The multiplication table stops needing an identity"
+      ],
+      "correct": 0,
+      "explanation": "When p is prime, every nonzero residue has gcd(a, p) = 1, so Extended Euclid gives an inverse modulo p."
+    },
+    {
+      "stage": "post",
+      "question": "What goes wrong when a quotient F[x]/(f) uses reducible f?",
+      "options": [
+        "Nonzero cosets can multiply to the zero coset",
+        "Addition loses closure for all coefficient pairs",
+        "The quotient contains no polynomial representatives",
+        "The base field characteristic changes after reduction"
+      ],
+      "correct": 0,
+      "explanation": "If f factors, the quotient has nonzero zero divisors. It is still a quotient ring, but not a field."
+    },
+    {
+      "stage": "post",
+      "question": "In F_p[u]/(u^2 - beta), what does beta being a quadratic non-residue imply for odd prime p?",
+      "options": [
+        "The polynomial u^2 - beta has no root in F_p",
+        "The symbol u is equal to a fixed residue in F_p",
+        "The quotient has exactly p elements in total",
+        "The norm of every element is forced to equal one"
+      ],
+      "correct": 0,
+      "explanation": "For a quadratic polynomial over a field, having no root means irreducible. That makes the quadratic quotient a field."
+    },
+    {
+      "stage": "post",
+      "question": "How are elements represented in the lesson's quadratic extension code?",
+      "options": [
+        "As pairs (a, b) meaning a + b times u",
+        "As decimal strings joined by a separator",
+        "As matrices whose entries store powers of p",
+        "As integers reduced only after serialization"
+      ],
+      "correct": 0,
+      "explanation": "The code represents a + bu as the pair (a, b). Addition is component-wise and multiplication applies the rule u^2 = beta."
+    },
+    {
+      "stage": "post",
+      "question": "What role does the norm play in quadratic extension inversion?",
+      "options": [
+        "It gives the base-field denominator after conjugation",
+        "It chooses the display order for extension elements",
+        "It replaces addition with a new binary operation",
+        "It turns every reducible quotient into a field"
+      ],
+      "correct": 0,
+      "explanation": "For x = a + bu, x times its conjugate is a^2 - beta b^2 in the base field. Inversion divides the conjugate by that norm."
+    },
+    {
+      "stage": "post",
+      "question": "Why do pairing libraries often build field towers such as F_p^2, F_p^6, and F_p^12?",
+      "options": [
+        "Tower fields make extension arithmetic structured and fast",
+        "Tower fields remove the need for base-field parameters",
+        "Tower fields make every polynomial modulus acceptable",
+        "Tower fields change finite fields into real vector spaces"
+      ],
+      "correct": 0,
+      "explanation": "Tower representations preserve the extension structure and let implementations optimize arithmetic layer by layer."
+    }
+  ]
 }

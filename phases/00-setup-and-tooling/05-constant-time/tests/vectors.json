@@ -1,1 +1,26 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal behavioral vectors for (a) leaky prefix comparisons and (b) constant-time-style equality",
+  "vectors": [
+    {"op": "leaky_prefix_match_len", "expected_hex": "", "provided_hex": "", "prefix_len": 0},
+    {"op": "leaky_prefix_match_len", "expected_hex": "00", "provided_hex": "00", "prefix_len": 1},
+    {"op": "leaky_prefix_match_len", "expected_hex": "00", "provided_hex": "01", "prefix_len": 0},
+    {"op": "leaky_prefix_match_len", "expected_hex": "0001", "provided_hex": "0002", "prefix_len": 1},
+    {"op": "leaky_prefix_match_len", "expected_hex": "0001", "provided_hex": "00", "prefix_len": 1},
+    {"op": "leaky_prefix_match_len", "expected_hex": "00", "provided_hex": "0001", "prefix_len": 1},
+
+    {"op": "leaky_equals", "expected_hex": "", "provided_hex": "", "expected": true},
+    {"op": "leaky_equals", "expected_hex": "00", "provided_hex": "00", "expected": true},
+    {"op": "leaky_equals", "expected_hex": "00", "provided_hex": "01", "expected": false},
+    {"op": "leaky_equals", "expected_hex": "00", "provided_hex": "0000", "expected": false},
+
+    {"op": "ct_eq_bytes", "a_hex": "", "b_hex": "", "expected": true},
+    {"op": "ct_eq_bytes", "a_hex": "00", "b_hex": "00", "expected": true},
+    {"op": "ct_eq_bytes", "a_hex": "00", "b_hex": "01", "expected": false},
+    {"op": "ct_eq_bytes", "a_hex": "00", "b_hex": "0000", "expected": false},
+    {"op": "ct_eq_bytes", "a_hex": "0001", "b_hex": "0001", "expected": true},
+    {"op": "ct_eq_bytes", "a_hex": "0001", "b_hex": "0002", "expected": false},
+
+    {"op": "compare_digest", "a_hex": "0001", "b_hex": "0001", "expected": true},
+    {"op": "compare_digest", "a_hex": "0001", "b_hex": "0002", "expected": false}
+  ]
+}

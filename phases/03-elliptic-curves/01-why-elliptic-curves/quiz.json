@@ -1,4 +1,102 @@
 {
-  "title": "Why Elliptic Curves \u2014 Group Law in Pictures",
-  "questions": []
+  "title": "Why Elliptic Curves — Group Law in Pictures",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In the usual elliptic-curve picture over the real numbers, what does negating a point P = (x, y) do?",
+      "options": [
+        "It reflects P across the x-axis, giving (x, −y)",
+        "It reflects P across the y-axis, giving (−x, y)",
+        "It swaps coordinates, giving (y, x)",
+        "It sends P to the point at infinity for any (x, y)"
+      ],
+      "correct": 0,
+      "explanation": "For short Weierstrass curves (char ≠ 2), the inverse of (x, y) is (x, −y). Geometrically it’s a reflection across the x-axis."
+    },
+    {
+      "stage": "pre",
+      "question": "Which statement best describes scalar multiplication k·G on an elliptic curve?",
+      "options": [
+        "Multiply x and y by k: (k·x, k·y)",
+        "Add the point G to itself k times using the curve’s group operation",
+        "Raise coordinates to the k-th power: (x^k, y^k)",
+        "Hash the point G together with k to get a new point"
+      ],
+      "correct": 1,
+      "explanation": "Scalar multiplication is repeated point addition: k·G = G + G + … + G (k times), implemented efficiently by double-and-add variants."
+    },
+    {
+      "stage": "post",
+      "question": "What is the identity element for elliptic-curve point addition?",
+      "options": [
+        "The point (0, 0) on the curve",
+        "The point at infinity, often written 𝒪",
+        "The point (1, 1) on the curve",
+        "Any point with y = 0"
+      ],
+      "correct": 1,
+      "explanation": "Elliptic-curve groups include a special identity element called the point at infinity (𝒪). Adding 𝒪 leaves a point unchanged."
+    },
+    {
+      "stage": "post",
+      "question": "In the chord-and-tangent picture, why does P + (−P) equal the identity 𝒪?",
+      "options": [
+        "Because a vertical line through x = x(P) intersects the curve at P and −P, and the third intersection is defined to be 𝒪",
+        "Because P and −P have different x-coordinates that cancel out",
+        "Because the curve equation forces y(P) to be zero when adding inverses",
+        "Because (−P) is defined as 𝒪 for every point P"
+      ],
+      "correct": 0,
+      "explanation": "A vertical line hits the curve at P and −P, and the group-law construction makes their sum the identity point at infinity."
+    },
+    {
+      "stage": "post",
+      "question": "Why can we use the chord-and-tangent intuition even though cryptographic curves live over finite fields F_p?",
+      "options": [
+        "Because crypto curves are secretly real-number curves stored with rounding",
+        "Because the same algebraic formulas derived from the picture define a valid group law over F_p",
+        "Because finite fields have an ordering, so you can draw the curve the same way",
+        "Because finite-field curves have no special cases like point doubling"
+      ],
+      "correct": 1,
+      "explanation": "Crypto uses finite fields, but the group operation is defined by algebraic formulas (with modular inverses) that are the finite-field counterpart of the geometric construction."
+    },
+    {
+      "stage": "post",
+      "question": "What is the core one-way-ish operation behind ECC public keys?",
+      "options": [
+        "Given k and G, compute P = k·G quickly; given G and P, recovering k is believed hard (ECDLP)",
+        "Given x and y, compute x + y quickly; given x + y, recovering x and y is believed hard",
+        "Given two primes p and q, compute n = p·q quickly; given n, factoring is believed hard",
+        "Given a hash h, compute a message m quickly; given m, finding h is believed hard"
+      ],
+      "correct": 0,
+      "explanation": "ECC revolves around scalar multiplication. It’s easy to compute P = k·G, but hard (for real curves) to recover k from (G, P): the elliptic-curve discrete log problem."
+    },
+    {
+      "stage": "post",
+      "question": "Why must an implementation validate an untrusted elliptic-curve point received from the network?",
+      "options": [
+        "To ensure it is on the correct curve (and usually in the correct subgroup), preventing invalid-curve and small-subgroup attacks",
+        "To ensure its x-coordinate is larger than its y-coordinate",
+        "To ensure it was generated from a small private key",
+        "To ensure it has y = 0 so inverses are easy to compute"
+      ],
+      "correct": 0,
+      "explanation": "Accepting arbitrary points can break security. You typically check the point is on the intended curve and, when relevant, that it lies in the correct prime-order subgroup."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best matches the usual motivation for elliptic curves in practice?",
+      "options": [
+        "ECC gives comparable classical security with smaller key sizes than RSA for many security levels",
+        "ECC is secure because the curve equation is impossible to evaluate without floating-point math",
+        "ECC avoids all side-channel risks automatically because points are two-dimensional",
+        "ECC makes signatures unforgeable even if the nonce is reused"
+      ],
+      "correct": 0,
+      "explanation": "ECC is attractive because it achieves strong classical security with compact keys and signatures, but it still requires careful constant-time and input-validation engineering."
+    }
+  ]
 }
+

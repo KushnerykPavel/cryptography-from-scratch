@@ -1,1 +1,50 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal FFT polynomial multiplication vectors. Expected products are cross-checked against naive O(n^2) polynomial multiplication over the integers. This lesson uses complex FFT with rounding, so vectors are chosen to be small and numerically stable.",
+  "vectors": [
+    {
+      "op": "next_power_of_two",
+      "n": 1,
+      "expected": 1
+    },
+    {
+      "op": "next_power_of_two",
+      "n": 6,
+      "expected": 8
+    },
+    {
+      "op": "next_power_of_two",
+      "n": 0,
+      "expected_error": "n must be positive"
+    },
+    {
+      "op": "poly_mul_fft",
+      "a": [1, 2, 3],
+      "b": [4, 5],
+      "expected": [4, 13, 22, 15]
+    },
+    {
+      "op": "poly_mul_fft",
+      "a": [-1, 2],
+      "b": [3, -4, 5],
+      "expected": [-3, 10, -13, 10]
+    },
+    {
+      "op": "poly_mul_fft",
+      "a": [0, 0, 1],
+      "b": [0, 0, 0, 2],
+      "expected": [0, 0, 0, 0, 0, 2]
+    },
+    {
+      "op": "poly_mul_fft",
+      "a": [2, -1, 0, 3],
+      "b": [-3, 4],
+      "expected": [-6, 11, -4, -9, 12]
+    },
+    {
+      "op": "poly_mul_fft",
+      "a": [],
+      "b": [1],
+      "expected_error": "inputs must be non-empty"
+    }
+  ]
+}

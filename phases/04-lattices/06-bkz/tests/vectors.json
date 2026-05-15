@@ -1,1 +1,63 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Schnorr (1987) introduced block reduction (BKZ). These tests are project-internal, deterministic toy instances designed for an educational BKZ-like reducer that uses LLL (exact Fraction arithmetic) plus brute-force SVP inside tiny blocks with a constrained insertion rule.",
+  "vectors": [
+    {
+      "op": "det_abs",
+      "basis": [[1, 1, 1, 1], [0, 1, 2, 3], [1, 0, 2, 1], [4, 1, 0, 2]],
+      "expected": 15
+    },
+    {
+      "op": "bkz_reduce",
+      "basis": [[1, 1, 1, 1], [0, 1, 2, 3], [1, 0, 2, 1], [4, 1, 0, 2]],
+      "beta": 3,
+      "tours": 2,
+      "coeff_bound": 5,
+      "expected": [[0, -1, 1, 0], [1, 1, 1, 1], [-1, 1, 0, 2], [1, -1, -1, 2]]
+    },
+    {
+      "op": "bkz_reduce",
+      "basis": [[1, 5], [6, 21]],
+      "beta": 2,
+      "tours": 2,
+      "coeff_bound": 10,
+      "expected": [[2, 1], [-1, 4]]
+    },
+    {
+      "op": "bkz_reduce",
+      "basis": [[1, 0], [0, 1]],
+      "beta": 1,
+      "expected_error": "beta must satisfy 2 <= beta <= n"
+    },
+    {
+      "op": "bkz_reduce",
+      "basis": [[1, 0], [0, 1]],
+      "beta": 2,
+      "tours": 0,
+      "expected_error": "tours must be positive"
+    },
+    {
+      "op": "bkz_reduce",
+      "basis": [[1, 0], [0, 1]],
+      "beta": 2,
+      "coeff_bound": 0,
+      "expected_error": "coeff_bound must be positive"
+    },
+    {
+      "op": "svp_bruteforce_fixed_last",
+      "block_basis": [[2, 0], [1, 1]],
+      "coeff_bound": 8,
+      "expected": {
+        "coeffs": [-1, 1],
+        "vector": [-1, 1],
+        "norm2": 2
+      }
+    },
+    {
+      "op": "svp_bruteforce_fixed_last",
+      "block_basis": [[2, 0], [1, 1]],
+      "coeff_bound": 8,
+      "last": 0,
+      "expected_error": "last must be ±1"
+    }
+  ]
+}

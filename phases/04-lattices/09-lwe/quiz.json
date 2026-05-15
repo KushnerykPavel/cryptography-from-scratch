@@ -1,4 +1,101 @@
 {
   "title": "LWE \u2014 Learning With Errors",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In an LWE sample b = A\u00b7s + e (mod q), what is the purpose of the error term e?",
+      "options": [
+        "It hides the exact linear relation so recovering s becomes hard",
+        "It ensures A is always invertible over Z_q by construction",
+        "It lets you compute s by taking b mod e for each coordinate",
+        "It turns modular arithmetic into real-valued arithmetic"
+      ],
+      "correct": 0,
+      "explanation": "Without error, the system is just linear equations; adding small error is what creates hardness while keeping structure."
+    },
+    {
+      "stage": "pre",
+      "question": "If the error term e were exactly zero and you had enough equations, what is the most direct way to recover s?",
+      "options": [
+        "Solve the linear system for s over Z_q using linear algebra",
+        "Run a discrete logarithm algorithm on the entries of A",
+        "Use a hash preimage attack on b to recover s directly",
+        "Use a timing side-channel attack on the decryption routine"
+      ],
+      "correct": 0,
+      "explanation": "With e = 0, b = A\u00b7s (mod q) is a standard linear system that can be solved (when it has full rank / enough rows)."
+    },
+    {
+      "stage": "post",
+      "question": "For parameters n (secret dimension) and m (number of equations), what are the shapes of A and b in LWE?",
+      "options": [
+        "A is m\u00d7n and b is length m, both modulo q",
+        "A is n\u00d7m and b is length n, both modulo q",
+        "A is n\u00d7n and b is length n, both over the reals",
+        "A is m\u00d7m and b is length m, both over the integers"
+      ],
+      "correct": 0,
+      "explanation": "LWE publishes m noisy equations in n unknowns: A has m rows and n columns, and b has one entry per equation."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy Regev-style encryption in this lesson, why add \u03bc\u00b7(q/2) to v (mod q)?",
+      "options": [
+        "To encode the bit as a value far from 0 so it survives small noise",
+        "To make the ciphertext always have the same v for any message bit",
+        "To guarantee the secret s becomes uniformly random mod q",
+        "To ensure the matrix A has orthogonal columns over Z_q"
+      ],
+      "correct": 0,
+      "explanation": "Placing 0 and q/2 as separated targets lets decryption decide which one x is closer to even after adding small noise."
+    },
+    {
+      "stage": "post",
+      "question": "During decryption we compute x = v - u^T\u00b7s (mod q). In the ideal (small-noise) case, x should be near what?",
+      "options": [
+        "Near 0 when \u03bc=0, and near q/2 when \u03bc=1 ideally",
+        "Near a uniformly random value in {0,1,...,q-1} always",
+        "Near the determinant of A when \u03bc=0 or \u03bc=1 always",
+        "Near the length of the secret vector s for any \u03bc"
+      ],
+      "correct": 0,
+      "explanation": "Subtracting u^T\u00b7s cancels the A\u00b7s structure, leaving the message offset plus a relatively small noise term."
+    },
+    {
+      "stage": "post",
+      "question": "Attack intuition: why does brute forcing a ternary secret s \u2208 {-1,0,1}^n stop working as n grows?",
+      "options": [
+        "Because the search space size grows as 3^n and explodes quickly",
+        "Because Gaussian sampling becomes undefined when n is large",
+        "Because modular addition stops being associative when n is large",
+        "Because the ciphertext no longer contains u and v when n is large"
+      ],
+      "correct": 0,
+      "explanation": "Even with a tiny alphabet, the number of candidates grows exponentially in n, making exhaustive search infeasible."
+    },
+    {
+      "stage": "post",
+      "question": "What does a center-lift function do in an LWE implementation?",
+      "options": [
+        "Map a residue mod q into a small signed representative like [-q/2, q/2]",
+        "Convert a real Gaussian into an exact integer distribution over Z",
+        "Turn a matrix multiplication into a vector addition modulo q",
+        "Make the public matrix A uniformly random without an RNG every time"
+      ],
+      "correct": 0,
+      "explanation": "Center-lifting helps interpret residues as small signed errors, which is useful for debugging and toy attacks."
+    },
+    {
+      "stage": "post",
+      "question": "What is a common failure mode if q is too small compared to the total noise in encryption and key generation?",
+      "options": [
+        "Decryption fails because values wrap around the decision boundary mod q",
+        "Key generation fails because SHA-256 outputs fewer than q bits",
+        "Encryption fails because A stops being a matrix when q is small",
+        "Decryption succeeds for any noise level as long as q is prime"
+      ],
+      "correct": 0,
+      "explanation": "If noise is large relative to q, modular wrap-around can move x closer to the wrong target (0 vs q/2)."
+    }
+  ]
 }

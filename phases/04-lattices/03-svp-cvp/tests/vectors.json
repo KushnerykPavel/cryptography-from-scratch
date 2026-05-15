@@ -1,1 +1,68 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal SVP/CVP toy examples (tiny dimensions), designed to make definitions and brute-force scaling concrete.",
+  "vectors": [
+    {
+      "op": "candidate_count",
+      "coeff_bound": 6,
+      "n": 2,
+      "expected": 169
+    },
+    {
+      "op": "candidate_count",
+      "coeff_bound": 3,
+      "n": 8,
+      "expected": 5764801
+    },
+    {
+      "op": "lattice_vector",
+      "basis": [[2, 0], [1, 1]],
+      "z": [-1, 2],
+      "expected": [0, 2]
+    },
+    {
+      "op": "svp_bruteforce",
+      "basis": [[2, 0], [1, 1]],
+      "coeff_bound": 8,
+      "expected": {
+        "coeffs": [-1, 1],
+        "vector": [-1, 1],
+        "norm2": 2
+      }
+    },
+    {
+      "op": "svp_bruteforce",
+      "basis": [[2, 0], [1, 1]],
+      "coeff_bound": 0,
+      "expected_error": "coeff_bound must be positive"
+    },
+    {
+      "op": "cvp_bruteforce",
+      "basis": [[2, 0], [1, 1]],
+      "target": [3, 0],
+      "coeff_bound": 6,
+      "expected": {
+        "coeffs": [1, 0],
+        "vector": [2, 0],
+        "dist2": 1
+      }
+    },
+    {
+      "op": "cvp_bruteforce",
+      "basis": [[1, 0], [0, 1]],
+      "target": [2, 3],
+      "coeff_bound": 5,
+      "expected": {
+        "coeffs": [2, 3],
+        "vector": [2, 3],
+        "dist2": 0
+      }
+    },
+    {
+      "op": "cvp_bruteforce",
+      "basis": [[1, 0], [0, 1]],
+      "target": [1, 2, 3],
+      "coeff_bound": 1,
+      "expected_error": "target dimension mismatch"
+    }
+  ]
+}

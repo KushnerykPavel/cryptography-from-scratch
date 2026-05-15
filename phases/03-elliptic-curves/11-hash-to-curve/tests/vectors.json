@@ -1,1 +1,171 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "RFC 9380 (Hashing to Elliptic Curves), Section 8.2 (P-256 suite parameters) and Appendix J.1 (Suite Test Vectors). Vectors below are copied from Appendix J.1.1 (P256_XMD:SHA-256_SSWU_RO_) and J.1.2 (P256_XMD:SHA-256_SSWU_NU_).",
+  "vectors": [
+    {
+      "op": "p256_ro",
+      "dst": "QUUX-V01-CS02-with-P256_XMD:SHA-256_SSWU_RO_",
+      "msg": "",
+      "u_hex": [
+        "ad5342c66a6dd0ff080df1da0ea1c04b96e0330dd89406465eeba11582515009",
+        "8c0f1d43204bd6f6ea70ae8013070a1518b43873bcd850aafa0a9e220e2eea5a"
+      ],
+      "q0_hex": {
+        "x": "ab640a12220d3ff283510ff3f4b1953d09fad35795140b1c5d64f313967934d5",
+        "y": "dccb558863804a881d4fff3455716c836cef230e5209594ddd33d85c565b19b1"
+      },
+      "q1_hex": {
+        "x": "51cce63c50d972a6e51c61334f0f4875c9ac1cd2d3238412f84e31da7d980ef5",
+        "y": "b45d1a36d00ad90e5ec7840a60a4de411917fbe7c82c3949a6e699e5a1b66aac"
+      },
+      "p_hex": {
+        "x": "2c15230b26dbc6fc9a37051158c95b79656e17a1a920b11394ca91c44247d3e4",
+        "y": "8a7a74985cc5c776cdfe4b1f19884970453912e9d31528c060be9ab5c43e8415"
+      }
+    },
+    {
+      "op": "p256_ro",
+      "dst": "QUUX-V01-CS02-with-P256_XMD:SHA-256_SSWU_RO_",
+      "msg": "abc",
+      "u_hex": [
+        "afe47f2ea2b10465cc26ac403194dfb68b7f5ee865cda61e9f3e07a537220af1",
+        "379a27833b0bfe6f7bdca08e1e83c760bf9a338ab335542704edcd69ce9e46e0"
+      ],
+      "q0_hex": {
+        "x": "5219ad0ddef3cc49b714145e91b2f7de6ce0a7a7dc7406c7726c7e373c58cb48",
+        "y": "7950144e52d30acbec7b624c203b1996c99617d0b61c2442354301b191d93ecf"
+      },
+      "q1_hex": {
+        "x": "019b7cb4efcfeaf39f738fe638e31d375ad6837f58a852d032ff60c69ee3875f",
+        "y": "589a62d2b22357fed5449bc38065b760095ebe6aeac84b01156ee4252715446e"
+      },
+      "p_hex": {
+        "x": "0bb8b87485551aa43ed54f009230450b492fead5f1cc91658775dac4a3388a0f",
+        "y": "5c41b3d0731a27a7b14bc0bf0ccded2d8751f83493404c84a88e71ffd424212e"
+      }
+    },
+    {
+      "op": "p256_ro",
+      "dst": "QUUX-V01-CS02-with-P256_XMD:SHA-256_SSWU_RO_",
+      "msg": "abcdef0123456789",
+      "u_hex": [
+        "0fad9d125a9477d55cf9357105b0eb3a5c4259809bf87180aa01d651f53d312c",
+        "b68597377392cd3419d8fcc7d7660948c8403b19ea78bbca4b133c9d2196c0fb"
+      ],
+      "q0_hex": {
+        "x": "a17bdf2965eb88074bc01157e644ed409dac97cfcf0c61c998ed0fa45e79e4a2",
+        "y": "4f1bc80c70d411a3cc1d67aeae6e726f0f311639fee560c7f5a664554e3c9c2e"
+      },
+      "q1_hex": {
+        "x": "7da48bb67225c1a17d452c983798113f47e438e4202219dd0715f8419b274d66",
+        "y": "b765696b2913e36db3016c47edb99e24b1da30e761a8a3215dc0ec4d8f96e6f9"
+      },
+      "p_hex": {
+        "x": "65038ac8f2b1def042a5df0b33b1f4eca6bff7cb0f9c6c1526811864e544ed80",
+        "y": "cad44d40a656e7aff4002a8de287abc8ae0482b5ae825822bb870d6df9b56ca3"
+      }
+    },
+    {
+      "op": "p256_ro",
+      "dst": "QUUX-V01-CS02-with-P256_XMD:SHA-256_SSWU_RO_",
+      "msg_kind": "q128",
+      "u_hex": [
+        "3bbc30446f39a7befad080f4d5f32ed116b9534626993d2cc5033f6f8d805919",
+        "76bb02db019ca9d3c1e02f0c17f8baf617bbdae5c393a81d9ce11e3be1bf1d33"
+      ],
+      "q0_hex": {
+        "x": "c76aaa823aeadeb3f356909cb08f97eee46ecb157c1f56699b5efebddf0e6398",
+        "y": "776a6f45f528a0e8d289a4be12c4fab80762386ec644abf2bffb9b627e4352b1"
+      },
+      "q1_hex": {
+        "x": "418ac3d85a5ccc4ea8dec14f750a3a9ec8b85176c95a7022f391826794eb5a75",
+        "y": "fd6604f69e9d9d2b74b072d14ea13050db72c932815523305cb9e807cc900aff"
+      },
+      "p_hex": {
+        "x": "4be61ee205094282ba8a2042bcb48d88dfbb609301c49aa8b078533dc65a0b5d",
+        "y": "98f8df449a072c4721d241a3b1236d3caccba603f916ca680f4539d2bfb3c29e"
+      }
+    },
+    {
+      "op": "p256_ro",
+      "dst": "QUUX-V01-CS02-with-P256_XMD:SHA-256_SSWU_RO_",
+      "msg_kind": "a512",
+      "u_hex": [
+        "4ebc95a6e839b1ae3c63b847798e85cb3c12d3817ec6ebc10af6ee51adb29fec",
+        "4e21af88e22ea80156aff790750121035b3eefaa96b425a8716e0d20b4e269ee"
+      ],
+      "q0_hex": {
+        "x": "d88b989ee9d1295df413d4456c5c850b8b2fb0f5402cc5c4c7e815412e926db8",
+        "y": "bb4a1edeff506cf16def96afff41b16fc74f6dbd55c2210e5b8f011ba32f4f40"
+      },
+      "q1_hex": {
+        "x": "a281e34e628f3a4d2a53fa87ff973537d68ad4fbc28d3be5e8d9f6a2571c5a4b",
+        "y": "f6ed88a7aab56a488100e6f1174fa9810b47db13e86be999644922961206e184"
+      },
+      "p_hex": {
+        "x": "457ae2981f70ca85d8e24c308b14db22f3e3862c5ea0f652ca38b5e49cd64bc5",
+        "y": "ecb9f0eadc9aeed232dabc53235368c1394c78de05dd96893eefa62b0f4757dc"
+      }
+    },
+    {
+      "op": "p256_nu",
+      "dst": "QUUX-V01-CS02-with-P256_XMD:SHA-256_SSWU_NU_",
+      "msg": "",
+      "u_hex": [
+        "b22d487045f80e9edcb0ecc8d4bf77833e2bf1f3a54004d7df1d57f4802d311f"
+      ],
+      "p_hex": {
+        "x": "f871caad25ea3b59c16cf87c1894902f7e7b2c822c3d3f73596c5ace8ddd14d1",
+        "y": "87b9ae23335bee057b99bac1e68588b18b5691af476234b8971bc4f011ddc99b"
+      }
+    },
+    {
+      "op": "p256_nu",
+      "dst": "QUUX-V01-CS02-with-P256_XMD:SHA-256_SSWU_NU_",
+      "msg": "abc",
+      "u_hex": [
+        "c7f96eadac763e176629b09ed0c11992225b3a5ae99479760601cbd69c221e58"
+      ],
+      "p_hex": {
+        "x": "fc3f5d734e8dce41ddac49f47dd2b8a57257522a865c124ed02b92b5237befa4",
+        "y": "fe4d197ecf5a62645b9690599e1d80e82c500b22ac705a0b421fac7b47157866"
+      }
+    },
+    {
+      "op": "p256_nu",
+      "dst": "QUUX-V01-CS02-with-P256_XMD:SHA-256_SSWU_NU_",
+      "msg": "abcdef0123456789",
+      "u_hex": [
+        "314e8585fa92068b3ea2c3bab452d4257b38be1c097d58a21890456c2929614d"
+      ],
+      "p_hex": {
+        "x": "f164c6674a02207e414c257ce759d35eddc7f55be6d7f415e2cc177e5d8faa84",
+        "y": "3aa274881d30db70485368c0467e97da0e73c18c1d00f34775d012b6fcee7f97"
+      }
+    },
+    {
+      "op": "p256_nu",
+      "dst": "QUUX-V01-CS02-with-P256_XMD:SHA-256_SSWU_NU_",
+      "msg_kind": "q128",
+      "u_hex": [
+        "752d8eaa38cd785a799a31d63d99c2ae4261823b4a367b133b2c6627f48858ab"
+      ],
+      "p_hex": {
+        "x": "324532006312be4f162614076460315f7a54a6f85544da773dc659aca0311853",
+        "y": "8d8197374bcd52de2acfefc8a54fe2c8d8bebd2a39f16be9b710e4b1af6ef883"
+      }
+    },
+    {
+      "op": "p256_nu",
+      "dst": "QUUX-V01-CS02-with-P256_XMD:SHA-256_SSWU_NU_",
+      "msg_kind": "a512",
+      "u_hex": [
+        "0e1527840b9df2dfbef966678ff167140f2b27c4dccd884c25014dce0e41dfa3"
+      ],
+      "p_hex": {
+        "x": "5c4bad52f81f39c8e8de1260e9a06d72b8b00a0829a8ea004a610b0691bea5d9",
+        "y": "c801e7c0782af1f74f24fc385a8555da0582032a3ce038de637ccdcb16f7ef7b"
+      }
+    }
+  ]
+}
+

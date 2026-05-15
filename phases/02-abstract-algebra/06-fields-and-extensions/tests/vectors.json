@@ -1,1 +1,162 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal finite-field examples. Prime-field checks use the standard fact that Z/pZ is a field exactly when p is prime. Quadratic extension checks use F_p[u]/(u^2 - beta), where x^2 - beta is irreducible exactly when beta is a quadratic non-residue for odd prime p.",
+  "vectors": [
+    {
+      "op": "is_field",
+      "case": "z_mod",
+      "n": 5,
+      "expected": true
+    },
+    {
+      "op": "is_field",
+      "case": "z_mod",
+      "n": 6,
+      "expected": false
+    },
+    {
+      "op": "prime_field_report",
+      "case": "fp",
+      "p": 5,
+      "expected": {
+        "order": 5,
+        "is_commutative_ring": true,
+        "is_field": true,
+        "additive_identity": 0,
+        "multiplicative_identity": 1,
+        "zero_divisors": [],
+        "units": [1, 2, 3, 4]
+      }
+    },
+    {
+      "op": "fp2_is_field",
+      "case": "fp2",
+      "p": 5,
+      "beta": 2,
+      "expected": true
+    },
+    {
+      "op": "fp2_is_field",
+      "case": "fp2",
+      "p": 5,
+      "beta": 4,
+      "expected": false
+    },
+    {
+      "op": "fp2_add",
+      "case": "fp2",
+      "p": 5,
+      "x": [3, 4],
+      "y": [1, 2],
+      "expected": [4, 1]
+    },
+    {
+      "op": "fp2_mul",
+      "case": "fp2",
+      "p": 5,
+      "beta": 2,
+      "x": [3, 4],
+      "y": [1, 2],
+      "expected": [4, 0]
+    },
+    {
+      "op": "fp2_inv",
+      "case": "fp2",
+      "p": 5,
+      "beta": 2,
+      "x": [3, 4],
+      "expected": [4, 3]
+    },
+    {
+      "op": "fp2_mul",
+      "case": "fp2",
+      "p": 5,
+      "beta": 2,
+      "x": [3, 4],
+      "y": [4, 3],
+      "expected": [1, 0]
+    },
+    {
+      "op": "fp2_pow",
+      "case": "fp2",
+      "p": 5,
+      "beta": 2,
+      "x": [0, 1],
+      "exponent": 2,
+      "expected": [2, 0]
+    },
+    {
+      "op": "fp2_norm",
+      "case": "fp2",
+      "p": 5,
+      "beta": 2,
+      "x": [3, 4],
+      "expected": 2
+    },
+    {
+      "op": "fp2_trace",
+      "case": "fp2",
+      "p": 5,
+      "x": [3, 4],
+      "expected": 1
+    },
+    {
+      "op": "fp2_zero_divisor_pair",
+      "case": "fp2",
+      "p": 5,
+      "beta": 4,
+      "expected": [[1, 2], [1, 3]]
+    },
+    {
+      "op": "fp2_report",
+      "case": "fp2",
+      "p": 5,
+      "beta": 2,
+      "expected": {
+        "order": 25,
+        "is_commutative_ring": true,
+        "is_field": true,
+        "additive_identity": [0, 0],
+        "multiplicative_identity": [1, 0],
+        "zero_divisors": [],
+        "units": [
+          [0, 1],
+          [0, 2],
+          [0, 3],
+          [0, 4],
+          [1, 0],
+          [1, 1],
+          [1, 2],
+          [1, 3],
+          [1, 4],
+          [2, 0],
+          [2, 1],
+          [2, 2],
+          [2, 3],
+          [2, 4],
+          [3, 0],
+          [3, 1],
+          [3, 2],
+          [3, 3],
+          [3, 4],
+          [4, 0],
+          [4, 1],
+          [4, 2],
+          [4, 3],
+          [4, 4]
+        ],
+        "base_prime": 5,
+        "beta": 2,
+        "degree": 2,
+        "irreducible_x2_minus_beta": true
+      }
+    },
+    {
+      "op": "fp2_inv",
+      "case": "fp2",
+      "p": 5,
+      "beta": 4,
+      "x": [1, 2],
+      "expected_error": "element is a zero divisor, not a unit"
+    }
+  ]
+}

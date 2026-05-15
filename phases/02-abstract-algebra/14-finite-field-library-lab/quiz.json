@@ -1,4 +1,101 @@
 {
   "title": "Algebra Lab \u2014 Build a Finite Field Library",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which property turns Z/pZ into a field when p is prime?",
+      "options": [
+        "Every nonzero residue has a multiplicative inverse modulo p",
+        "Every residue has additive order exactly equal to p always",
+        "Every multiplication avoids wraparound, so it behaves like integers",
+        "Every element is a generator of the multiplicative group automatically"
+      ],
+      "correct": 0,
+      "explanation": "Prime p implies gcd(a, p) = 1 for every 1 ≤ a < p, so Extended Euclid yields an inverse for every nonzero residue."
+    },
+    {
+      "stage": "pre",
+      "question": "In GF(p^m) constructed as F_p[x]/(f(x)), what does irreducibility of f(x) ensure?",
+      "options": [
+        "The quotient has no zero divisors, so every nonzero element is invertible",
+        "The quotient has exactly p elements, so it matches the base field size",
+        "The quotient has characteristic m, so it matches the polynomial degree",
+        "The quotient has no roots in any field, so division is never needed"
+      ],
+      "correct": 0,
+      "explanation": "Irreducible f(x) makes the quotient a field (an integral domain of the right size), so all nonzero classes have inverses."
+    },
+    {
+      "stage": "post",
+      "question": "Why should your element type reject adding values from different finite fields?",
+      "options": [
+        "Because cancellation laws and inverses only make sense inside one field",
+        "Because it is always slower to add across fields than within one field",
+        "Because finite fields prohibit addition unless p is larger than 2^64",
+        "Because the result would overflow Python integers and lose precision"
+      ],
+      "correct": 0,
+      "explanation": "Field identities are scoped to one structure. Mixing parameters silently turns valid algebra into undefined behavior."
+    },
+    {
+      "stage": "post",
+      "question": "Why does an extension-field implementation reduce every product modulo f(x)?",
+      "options": [
+        "To keep representatives at degree < m and enforce the relation f(x) = 0",
+        "To make multiplication commutative, which otherwise fails for polynomials",
+        "To guarantee every element becomes a primitive generator of the field",
+        "To ensure all coefficients stay equal to 0 or 1 regardless of p value"
+      ],
+      "correct": 0,
+      "explanation": "Reduction modulo f(x) keeps a canonical representative and implements arithmetic in the quotient ring F_p[x]/(f)."
+    },
+    {
+      "stage": "post",
+      "question": "In AES-style GF(2^8) arithmetic, what is addition of two bytes?",
+      "options": [
+        "Bitwise XOR, because polynomial coefficients add modulo 2",
+        "Integer addition mod 256, because bytes are elements of Z/256Z",
+        "Bitwise AND, because coefficients multiply when adding polynomials",
+        "Bitwise OR, because coefficients are forced to remain in {0,1}"
+      ],
+      "correct": 0,
+      "explanation": "AES treats bytes as polynomials over F_2, and addition in F_2 is XOR, so polynomial addition is byte-wise XOR."
+    },
+    {
+      "stage": "post",
+      "question": "Which method is the right core tool to compute inverses in F_p[x]/(f(x)) from scratch?",
+      "options": [
+        "Extended Euclidean algorithm in F_p[x], run against f(x)",
+        "Trial division over integers, run against p until a factor is found",
+        "Floating-point Newton iteration, run until the reciprocal converges",
+        "Discrete logarithm, run by searching for the exponent that yields one"
+      ],
+      "correct": 0,
+      "explanation": "If gcd(a(x), f(x)) = 1, extended GCD returns x(x) with a(x)x(x) ≡ 1 (mod f). That x(x) is the inverse."
+    },
+    {
+      "stage": "post",
+      "question": "You accidentally construct F_p[x]/(f(x)) with reducible f(x). What is the failure mode?",
+      "options": [
+        "Some nonzero elements become non-invertible because zero divisors appear",
+        "All nonzero elements become generators, so inversion becomes ambiguous",
+        "The field characteristic changes, so addition no longer matches modulo p",
+        "Nothing breaks; reducibility only affects performance, not correctness"
+      ],
+      "correct": 0,
+      "explanation": "Reducible f(x) yields a ring with zero divisors. Nonzero elements can multiply to zero, so inverses stop existing."
+    },
+    {
+      "stage": "post",
+      "question": "Why should production crypto avoid using this course's from-scratch field code?",
+      "options": [
+        "It is not side-channel hardened and is not designed for constant-time safety",
+        "It uses modular arithmetic, which is forbidden in modern cryptographic code",
+        "It cannot represent extension fields at all, only prime fields GF(p)",
+        "It guarantees incorrect results whenever p is prime and m is greater than 1"
+      ],
+      "correct": 0,
+      "explanation": "Correct math is not enough. Production implementations need constant-time arithmetic, vetted parameters, and security review."
+    }
+  ]
 }

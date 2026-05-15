@@ -1,4 +1,100 @@
 {
-  "title": "What Is a Lattice \u2014 Geometry of Z^n",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Given a basis matrix B with columns b1,…,bn in R^m, what is the lattice L(B)?",
+      "options": [
+        "All real linear combinations of the basis vectors: {B x : x ∈ R^n}",
+        "All integer linear combinations of the basis vectors: {B z : z ∈ Z^n}",
+        "All vectors whose Euclidean norm is at most max(||b1||,…,||bn||)",
+        "All points inside the fundamental parallelepiped {B x : x ∈ [0,1)^n}"
+      ],
+      "correct": 1,
+      "explanation": "A lattice is the integer span of a basis: every point is Bz for some integer vector z."
+    },
+    {
+      "stage": "pre",
+      "question": "What makes a 2×2 integer matrix U unimodular?",
+      "options": [
+        "U has entries in {−1,0,1} only",
+        "det(U) = ±1, so U maps Z^2 to Z^2 bijectively",
+        "U is orthogonal, so UᵀU = I",
+        "U has determinant 0, so it collapses one dimension"
+      ],
+      "correct": 1,
+      "explanation": "Unimodular means integer matrix with determinant ±1; its inverse is also integer."
+    },
+    {
+      "stage": "post",
+      "question": "Let b1 = (2,0), b2 = (1,1). What lattice point do you get from coefficients (z1,z2) = (3,−2)?",
+      "options": [
+        "(4, −2)",
+        "(1, 3)",
+        "(8, 2)",
+        "(−4, 2)"
+      ],
+      "correct": 0,
+      "explanation": "Compute 3·b1 + (−2)·b2 = (6,0) + (−2,−2) = (4,−2)."
+    },
+    {
+      "stage": "post",
+      "question": "If U is unimodular, which statement is correct about the bases B and B' = B·U (column basis convention)?",
+      "options": [
+        "They generate different lattices because the basis vectors changed",
+        "They generate the same lattice: L(B') = L(B)",
+        "They generate the same lattice only when det(U) = +1 (not −1)",
+        "They generate the same lattice only if U is orthogonal"
+      ],
+      "correct": 1,
+      "explanation": "Unimodular U maps Z^n bijectively to Z^n, so {B(Uz)} = {Bz} as sets."
+    },
+    {
+      "stage": "post",
+      "question": "In full rank R^n, what is the volume of the fundamental parallelepiped P(B) = {B x : x ∈ [0,1)^n}?",
+      "options": [
+        "det(B), which can be negative and indicates orientation",
+        "|det(B)|, which is the lattice determinant det(L)",
+        "trace(B), since it adds up the basis directions",
+        "||b1||·…·||bn||, the product of basis vector lengths"
+      ],
+      "correct": 1,
+      "explanation": "The cell volume is |det(B)|. Orientation can flip the sign, so volume uses absolute value."
+    },
+    {
+      "stage": "post",
+      "question": "Suppose U is unimodular. Which identity always holds for determinants (square full-rank case)?",
+      "options": [
+        "det(BU) = det(B)·det(U), so |det(BU)| = |det(B)|",
+        "det(BU) = det(B) + det(U), so |det(BU)| can grow",
+        "det(BU) = det(B)/det(U), so |det(BU)| is smaller for large |det(U)|",
+        "det(BU) = det(U) only, since U dominates the basis"
+      ],
+      "correct": 0,
+      "explanation": "det(BU) = det(B)det(U). For unimodular U, det(U)=±1, so the absolute determinant is unchanged."
+    },
+    {
+      "stage": "post",
+      "question": "Which of the following is NOT a lattice invariant (i.e., can change when you change the basis of the same lattice)?",
+      "options": [
+        "The set of lattice points L(B)",
+        "The absolute determinant det(L) = |det(B)| (full rank)",
+        "The length of the first basis vector ||b1||",
+        "The set of norms of all lattice vectors {||v|| : v ∈ L(B)}"
+      ],
+      "correct": 2,
+      "explanation": "A lattice can have many very different bases; individual basis-vector lengths are not intrinsic to the point set."
+    },
+    {
+      "stage": "post",
+      "question": "Attack the wrong mental model: why is “publishing a basis with long vectors makes the lattice sparse and secure” false?",
+      "options": [
+        "Because you can apply a unimodular change of basis that makes basis vectors longer or shorter without changing the lattice point set",
+        "Because a lattice always contains all real linear combinations of its basis, so density is unchanged",
+        "Because determinant is always 1 for integer bases, so all lattices have the same density",
+        "Because any long-vector basis must be orthogonal, which makes SVP easy"
+      ],
+      "correct": 0,
+      "explanation": "Unimodular basis changes preserve the lattice. Making a basis “look long” does not remove short lattice vectors or change determinant."
+    }
+  ]
 }

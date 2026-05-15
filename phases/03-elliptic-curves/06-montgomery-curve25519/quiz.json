@@ -1,4 +1,101 @@
 {
-  "title": "Montgomery Curves \u2014 Curve25519 Construction",
-  "questions": []
+  "title": "Montgomery Curves — X25519 on Curve25519",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does X25519 take as inputs and produce as output?",
+      "options": [
+        "A 32-byte scalar and a 32-byte u-coordinate, producing a 32-byte u-coordinate",
+        "Two affine points (x, y) producing a third affine point (x, y)",
+        "A field prime p and curve parameter A producing a generator point",
+        "A hash digest and a nonce producing a signature"
+      ],
+      "correct": 0,
+      "explanation": "X25519 is defined as a scalar multiplication function on the u-coordinate with 32-byte inputs/outputs."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the purpose of X25519 scalar clamping?",
+      "options": [
+        "Force the private scalar into a safe shape (e.g., fixed top bits and a multiple of the cofactor)",
+        "Make the output u-coordinate unique by rejecting non-canonical inputs",
+        "Allow computing y-coordinates from x-coordinates without square roots",
+        "Speed up inversion by replacing it with table lookups"
+      ],
+      "correct": 0,
+      "explanation": "Clamping masks specific bits so the scalar has required properties used by the design and security analysis."
+    },
+    {
+      "stage": "post",
+      "question": "In the Montgomery ladder used by X25519, what does the pair of registers (X2:Z2) and (X3:Z3) typically represent during the loop?",
+      "options": [
+        "Two consecutive multiples of the input point, enabling differential addition",
+        "The x- and y-coordinates of the same point in affine form",
+        "Two random points unrelated to the input to hide leakage",
+        "A hash state and a message block being compressed"
+      ],
+      "correct": 0,
+      "explanation": "The ladder maintains a “consecutive multiples” invariant so each bit step can do one add and one double using x-only formulas."
+    },
+    {
+      "stage": "post",
+      "question": "Why does X25519 not need the y-coordinate during scalar multiplication?",
+      "options": [
+        "Montgomery curves admit x-only differential addition and doubling formulas in projective (X:Z) form",
+        "The y-coordinate is always zero on Curve25519",
+        "The y-coordinate cancels out because the curve has cofactor 1",
+        "The protocol replaces y with a hash of x"
+      ],
+      "correct": 0,
+      "explanation": "The Montgomery ladder can update x-coordinates using only x(P), x(Q), and x(P−Q), avoiding y."
+    },
+    {
+      "stage": "post",
+      "question": "How is an X25519 u-coordinate encoded on the wire?",
+      "options": [
+        "32 bytes little-endian representing an integer modulo p (with the top bit masked on decode)",
+        "32 bytes big-endian representing an integer modulo p (reject non-canonical values)",
+        "A pair of 32-byte big-endian integers (x, y)",
+        "A compressed Edwards encoding with a sign bit"
+      ],
+      "correct": 0,
+      "explanation": "RFC 7748 defines little-endian byte strings and requires masking the most significant bit when decoding X25519 inputs."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: why do many protocols recommend rejecting an all-zero X25519 shared secret?",
+      "options": [
+        "Because small-order inputs can force the output to all-zero, yielding a predictable shared secret if accepted",
+        "Because all-zero indicates the field prime p was chosen incorrectly",
+        "Because all-zero implies the private scalar was not clamped",
+        "Because all-zero proves the peer’s public key is on a different curve"
+      ],
+      "correct": 0,
+      "explanation": "An attacker can sometimes supply a low-order public input; the all-zero check makes that case fail closed."
+    },
+    {
+      "stage": "post",
+      "question": "What does a constant-time `cswap` aim to prevent in a ladder implementation?",
+      "options": [
+        "Branching or memory-access patterns that reveal scalar bits through side channels",
+        "Mathematical invalidity due to using the wrong curve parameter A",
+        "Collision attacks on the encoding of u-coordinates",
+        "Forgeries in signature schemes like Ed25519"
+      ],
+      "correct": 0,
+      "explanation": "If swaps depend on secret bits, a branchy swap can leak the scalar through timing/power/cache behavior."
+    },
+    {
+      "stage": "post",
+      "question": "Why is a pure-Python X25519 implementation still not production-safe, even if it follows the RFC formulas?",
+      "options": [
+        "The Python runtime and big integers are not constant-time, so secret-dependent timing/caching can leak information",
+        "Because RFC 7748 forbids implementing X25519 outside of C",
+        "Because Python cannot handle 255-bit integers correctly",
+        "Because Curve25519 requires floating-point arithmetic to be correct"
+      ],
+      "correct": 0,
+      "explanation": "Constant-time behavior depends on the entire stack; Python big-int operations and interpreter behavior vary with values."
+    }
+  ]
 }

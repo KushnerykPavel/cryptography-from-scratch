@@ -1,4 +1,100 @@
 {
-  "title": "Finite Fields GF(2^n) \u2014 Binary Polynomial Math",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "How should the bit pattern 0x57 be read in binary-field arithmetic?",
+      "options": [
+        "As polynomial x^6+x^4+x^2+x+1 over F_2",
+        "As integer 57 reduced after each step",
+        "As eight unrelated Boolean flags",
+        "As base-two digits with normal carries"
+      ],
+      "correct": 0,
+      "explanation": "Each bit is a coefficient in a polynomial over F_2. The set bits of 0x57 are at powers 6, 4, 2, 1, and 0."
+    },
+    {
+      "stage": "pre",
+      "question": "What operation represents addition in F_2 polynomial arithmetic?",
+      "options": [
+        "XOR because equal terms cancel together",
+        "OR because present terms remain present",
+        "AND because shared terms stay visible",
+        "Integer plus because carries are useful"
+      ],
+      "correct": 0,
+      "explanation": "In F_2, 1 + 1 = 0, so matching terms cancel. Bitwise XOR exactly matches that coefficient rule."
+    },
+    {
+      "stage": "post",
+      "question": "Why does GF(2^n) multiplication reduce by a polynomial modulus?",
+      "options": [
+        "It returns products to degree below n",
+        "It converts every byte into decimal form",
+        "It adds carries between neighboring bits",
+        "It changes the characteristic to n"
+      ],
+      "correct": 0,
+      "explanation": "Carryless multiplication can produce degree at least n. Reduction keeps the remainder, which represents the field element."
+    },
+    {
+      "stage": "post",
+      "question": "What must be true of the modulus polynomial for F_2[x]/(m) to be a field?",
+      "options": [
+        "It must be irreducible over F_2",
+        "It must contain every possible power",
+        "It must equal an odd decimal integer",
+        "It must have exactly n plus one terms"
+      ],
+      "correct": 0,
+      "explanation": "A quotient by an irreducible polynomial is a field. A reducible modulus creates zero divisors."
+    },
+    {
+      "stage": "post",
+      "question": "Which AES modulus polynomial is encoded by 0x11b?",
+      "options": [
+        "x^8+x^4+x^3+x+1",
+        "x^8+x^7+x^5+x+1",
+        "x^8+x^6+x^4+x^2+1",
+        "x^7+x^4+x^3+x+1"
+      ],
+      "correct": 0,
+      "explanation": "The set bits of 0x11b are at powers 8, 4, 3, 1, and 0. That is the field polynomial used by AES."
+    },
+    {
+      "stage": "post",
+      "question": "What does polynomial extended Euclid compute for a nonzero field element a?",
+      "options": [
+        "A polynomial x with a*x=1 mod m",
+        "A decimal quotient for normal division",
+        "A carry table for byte multiplication",
+        "A larger modulus with the same order"
+      ],
+      "correct": 0,
+      "explanation": "Extended Euclid finds x and y with a*x + m*y = 1. Modulo m, this means x is the inverse of a."
+    },
+    {
+      "stage": "post",
+      "question": "What failure appears when a reducible modulus is used as if it defined a field?",
+      "options": [
+        "Nonzero products can reduce to zero",
+        "XOR addition stops being available",
+        "Every element becomes its own inverse",
+        "The field order changes from 2^n to n"
+      ],
+      "correct": 0,
+      "explanation": "A reducible modulus factors, so its factors become nonzero zero divisors in the quotient. Division can fail for nonzero values."
+    },
+    {
+      "stage": "post",
+      "question": "What does AES xtime compute for one byte?",
+      "options": [
+        "Multiplication by x in the AES field",
+        "Ordinary left shift modulo decimal 256",
+        "Addition of x to every polynomial term",
+        "Integer doubling with normal carries kept"
+      ],
+      "correct": 0,
+      "explanation": "AES xtime multiplies by the polynomial x, represented as 0x02, then reduces modulo 0x11b."
+    }
+  ]
 }

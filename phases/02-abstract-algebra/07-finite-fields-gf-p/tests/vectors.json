@@ -1,1 +1,175 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal finite-field examples derived from standard arithmetic in F_p. Reference: Victor Shoup, A Computational Introduction to Number Theory and Algebra, Chapter 7; Handbook of Applied Cryptography, Chapter 2.",
+  "vectors": [
+    {
+      "op": "is_prime",
+      "n": 97,
+      "expected": true
+    },
+    {
+      "op": "is_prime",
+      "n": 91,
+      "expected": false
+    },
+    {
+      "op": "mod_inverse",
+      "a": 5,
+      "p": 17,
+      "expected": 7
+    },
+    {
+      "op": "mod_inverse",
+      "a": 0,
+      "p": 17,
+      "expected_error": "zero has no multiplicative inverse"
+    },
+    {
+      "op": "mod_inverse",
+      "a": 3,
+      "p": 15,
+      "expected_error": "p must be prime"
+    },
+    {
+      "op": "fp_add",
+      "a": 15,
+      "b": 9,
+      "p": 17,
+      "expected": 7
+    },
+    {
+      "op": "fp_sub",
+      "a": 3,
+      "b": 9,
+      "p": 17,
+      "expected": 11
+    },
+    {
+      "op": "fp_neg",
+      "a": 5,
+      "p": 17,
+      "expected": 12
+    },
+    {
+      "op": "fp_mul",
+      "a": 13,
+      "b": 8,
+      "p": 17,
+      "expected": 2
+    },
+    {
+      "op": "fp_div",
+      "a": 3,
+      "b": 5,
+      "p": 17,
+      "expected": 4
+    },
+    {
+      "op": "fp_pow",
+      "a": 5,
+      "exponent": -1,
+      "p": 17,
+      "expected": 7
+    },
+    {
+      "op": "field_expression",
+      "a": 29,
+      "b": 5,
+      "c": 4,
+      "p": 17,
+      "expected": 0
+    },
+    {
+      "op": "addition_table",
+      "p": 3,
+      "expected": [
+        [0, 1, 2],
+        [1, 2, 0],
+        [2, 0, 1]
+      ]
+    },
+    {
+      "op": "multiplication_table",
+      "p": 3,
+      "expected": [
+        [0, 0, 0],
+        [0, 1, 2],
+        [0, 2, 1]
+      ]
+    },
+    {
+      "op": "inverses",
+      "p": 7,
+      "expected": {
+        "1": 1,
+        "2": 4,
+        "3": 5,
+        "4": 2,
+        "5": 3,
+        "6": 6
+      }
+    },
+    {
+      "op": "multiplicative_order",
+      "a": 3,
+      "p": 17,
+      "expected": 16
+    },
+    {
+      "op": "multiplicative_order",
+      "a": 0,
+      "p": 17,
+      "expected_error": "zero has no multiplicative order"
+    },
+    {
+      "op": "is_generator",
+      "a": 3,
+      "p": 17,
+      "expected": true
+    },
+    {
+      "op": "generators",
+      "p": 7,
+      "expected": [3, 5]
+    },
+    {
+      "op": "poly_eval",
+      "coefficients": [7, 3, 2],
+      "x": 4,
+      "p": 17,
+      "expected": 0
+    },
+    {
+      "op": "lagrange_interpolate_at",
+      "points": [[1, 12], [2, 4], [3, 0]],
+      "x": 0,
+      "p": 17,
+      "expected": 7
+    },
+    {
+      "op": "lagrange_interpolate_at",
+      "points": [[1, 12], [18, 4]],
+      "x": 0,
+      "p": 17,
+      "expected_error": "x coordinates must be distinct"
+    },
+    {
+      "op": "field_report",
+      "p": 5,
+      "expected": {
+        "p": 5,
+        "order": 5,
+        "characteristic": 5,
+        "zero": 0,
+        "one": 1,
+        "nonzero_elements": [1, 2, 3, 4],
+        "inverses": {
+          "1": 1,
+          "2": 3,
+          "3": 2,
+          "4": 4
+        },
+        "generators": [2, 3]
+      }
+    }
+  ]
+}
