@@ -238,6 +238,12 @@ log_4(504) = 123
 log_4(967) = 400
 ```
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 Production systems do not solve their own discrete logs. They choose groups where the best known attacks are too expensive, validate public inputs, and use audited protocol libraries.

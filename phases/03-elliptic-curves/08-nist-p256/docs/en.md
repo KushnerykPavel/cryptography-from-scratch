@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain the distinction between P-256's mathematical security (no known ECDLP break) and the trust concern about its non-rigid parameter generation process
+- Identify the four checks required when accepting a peer P-256 public key: valid encoding, point on curve, subgroup membership, and no secret-dependent branches
+- Implement SEC1 compressed/uncompressed public-key parsing and serialization for P-256, including the `rhs^((p+1)/4) mod p` square-root lift
+- Distinguish "rigid" curve generation (Curve25519-style) from the NIST seed-based process and articulate why some ecosystems prefer rigid curves even without a demonstrated attack
+- Apply an invalid-curve attack scenario to explain how accepting unvalidated points can leak a secret scalar modulo small factors on related curves
+
 ## The Problem
 
 If you work with TLS, JWT signing, Apple/Google platform crypto, WebAuthn, OpenSSL, or “enterprise crypto” in general, you will meet **NIST P-256** (also called `secp256r1`).
@@ -107,6 +115,12 @@ This is the same trick you used in earlier number theory lessons, just applied t
 
 ```text
 rhs = x^3 + a·x + b (mod p)
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

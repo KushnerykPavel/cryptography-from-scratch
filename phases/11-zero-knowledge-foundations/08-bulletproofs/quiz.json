@@ -1,4 +1,100 @@
 {
-  "title": "Bulletproofs from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main reason Bulletproofs range proofs are considered “short” compared to naive vector openings?",
+      "options": [
+        "They compress length-n witness vectors into O(log n) group elements using an inner product argument",
+        "They avoid using any hash function, so the transcript is smaller",
+        "They reveal the committed value so no proof is needed",
+        "They rely on a trusted setup that allows constant-size proofs for any statement"
+      ],
+      "correct": 0,
+      "explanation": "Bulletproofs use a recursive inner product argument (IPA) so the proof grows logarithmically in the witness dimension."
+    },
+    {
+      "stage": "pre",
+      "question": "In a Fiat–Shamir transformed proof, where do the verifier’s random challenges come from?",
+      "options": [
+        "A hash of a transcript that commits to the statement and all prior prover messages",
+        "A fresh random value sent by the verifier after seeing the full proof",
+        "A fixed constant challenge baked into the protocol spec",
+        "A random value sampled from the prover’s RNG and included as a field element"
+      ],
+      "correct": 0,
+      "explanation": "Fiat–Shamir replaces interaction by hashing a transcript to deterministically derive challenges."
+    },
+    {
+      "stage": "post",
+      "question": "In the IPA statement proved in this lesson, what does the public group element P' represent?",
+      "options": [
+        "P' = <a,G> + <b,H> + <a,b>·Q for some secret vectors a and b",
+        "P' = <a,b> alone, with no dependence on generators",
+        "P' = <G,H> alone, independent of the witness vectors",
+        "P' = a·G + b·H where a and b are public scalars"
+      ],
+      "correct": 0,
+      "explanation": "P' commits to both vectors and includes a Q term to tie in the inner product."
+    },
+    {
+      "stage": "post",
+      "question": "What do the prover’s round messages L and R capture in the recursive folding step?",
+      "options": [
+        "Cross terms between low/high halves needed to keep the statement true after folding",
+        "A direct opening of the full vectors a and b (all coordinates)",
+        "The final scalars a_final and b_final computed before any folding",
+        "A proof that q is prime and the group has the right order"
+      ],
+      "correct": 0,
+      "explanation": "L and R are commitments to cross terms so the verifier can account for what folding “mixes” across halves."
+    },
+    {
+      "stage": "post",
+      "question": "Which folding update is correct for the witness vectors in one IPA round (with challenge u)?",
+      "options": [
+        "a ← a_lo·u + a_hi·u^{-1} and b ← b_lo·u^{-1} + b_hi·u",
+        "a ← a_lo + a_hi and b ← b_lo + b_hi (no u needed)",
+        "a ← a_lo·u^{-1} + a_hi·u and b ← b_lo·u + b_hi·u^{-1}",
+        "a ← a_lo·u + a_hi·u and b ← b_lo·u^{-1} + b_hi·u^{-1}"
+      ],
+      "correct": 0,
+      "explanation": "The asymmetric use of u and u^{-1} keeps the verification equation consistent across halves."
+    },
+    {
+      "stage": "post",
+      "question": "Why must an IPA implementation enforce that the vector length n is a power of two (or apply deterministic padding)?",
+      "options": [
+        "Because each round halves the vectors, so the recursion must terminate exactly at length 1",
+        "Because Fiat–Shamir hashing only works for powers of two",
+        "Because multiscalar multiplication is undefined for odd-length vectors",
+        "Because inverses in Z_q exist only when n is a power of two"
+      ],
+      "correct": 0,
+      "explanation": "The protocol structure is a binary recursion; without padding/shape rules, prover and verifier won’t fold consistently."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: the Fiat–Shamir transcript derives challenges u_j using only (L_j, R_j) but does NOT commit to the statement element P'. What goes wrong?",
+      "options": [
+        "A proof can become transferable to a different statement, enabling replay/transplant attacks",
+        "The proof becomes longer than O(log n), so it no longer compresses",
+        "The verifier will always accept any proof regardless of inputs",
+        "The group order q stops being prime, invalidating scalar inverses"
+      ],
+      "correct": 0,
+      "explanation": "If challenges don’t bind the statement, an attacker may rebind the same transcript-derived challenges to a different context."
+    },
+    {
+      "stage": "post",
+      "question": "In the final verification equation, how do the round commitments (L_j, R_j) enter the check?",
+      "options": [
+        "They are weighted by u_j^2 and u_j^{-2} and combined into a single multiscalar check",
+        "They are ignored; only the final scalars a_final and b_final matter",
+        "They are hashed again to produce a_final and b_final, replacing the check",
+        "They must be revealed as discrete logs of the generators to be valid"
+      ],
+      "correct": 0,
+      "explanation": "Verification accounts for all folding rounds by subtracting the L/R terms with u_j^2 and u_j^{-2} weights."
+    }
+  ]
 }

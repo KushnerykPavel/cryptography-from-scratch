@@ -98,7 +98,11 @@ Inverse & Fast Exponentiation").
 
 ### Step 4: Present Questions One at a Time
 
-Use AskUserQuestion. Format:
+If the runtime exposes `AskUserQuestion`, use it. Otherwise (e.g. opencode,
+where only `bash, edit, glob, grep, read, skill, task, todowrite, webfetch,
+websearch, write` are available), render the question as a plain chat
+message and wait for the user's reply. The rendering rules below apply
+either way. Format:
 
 ```
 Question 1/8 (Conceptual) — from Lesson 02: GCD, Bezout, Extended Euclidean

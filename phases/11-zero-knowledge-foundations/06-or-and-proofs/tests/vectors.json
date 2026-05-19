@@ -1,1 +1,109 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors computed from the lesson's reference implementation (toy group p=467, q=233, g=3). Challenges use SHA-256 Fiat–Shamir with label binding; random choices use random.Random(seed=0) where applicable.",
+  "vectors": [
+    {
+      "op": "inv_mod",
+      "inputs": { "a": 17, "m": 467 },
+      "expected": 55
+    },
+    {
+      "op": "inv_mod",
+      "inputs": { "a": -3, "m": 467 },
+      "expected": 311
+    },
+    {
+      "op": "schnorr_simulate_commitment",
+      "inputs": { "p": 467, "g": 3, "y": 147, "c": 216, "s": 98 },
+      "expected": 388
+    },
+    {
+      "op": "schnorr_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "y": 407,
+        "proof": { "t": 349, "c": 216, "s": 201 },
+        "label": "schnorr"
+      },
+      "expected": true
+    },
+    {
+      "op": "schnorr_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "y": 407,
+        "proof": { "t": 349, "c": 216, "s": 202 },
+        "label": "schnorr"
+      },
+      "expected": false
+    },
+    {
+      "op": "and_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "y1": 407,
+        "y2": 147,
+        "proof": { "t1": 349, "t2": 49, "c": 43, "s1": 158, "s2": 161 },
+        "label": "or-demo"
+      },
+      "expected": true
+    },
+    {
+      "op": "and_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "y1": 407,
+        "y2": 147,
+        "proof": { "t1": 349, "t2": 49, "c": 43, "s1": 158, "s2": 162 },
+        "label": "or-demo"
+      },
+      "expected": false
+    },
+    {
+      "op": "or_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "y1": 407,
+        "y2": 147,
+        "proof": { "t1": 163, "t2": 388, "c1": 15, "c2": 216, "s1": 125, "s2": 98 },
+        "label": "or-demo"
+      },
+      "expected": true
+    },
+    {
+      "op": "or_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "y1": 407,
+        "y2": 147,
+        "proof": { "t1": 390, "t2": 163, "c1": 216, "c2": 125, "s1": 98, "s2": 220 },
+        "label": "or-demo"
+      },
+      "expected": true
+    },
+    {
+      "op": "or_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "y1": 407,
+        "y2": 147,
+        "proof": { "t1": 163, "t2": 388, "c1": 16, "c2": 216, "s1": 125, "s2": 98 },
+        "label": "or-demo"
+      },
+      "expected": false
+    }
+  ]
+}

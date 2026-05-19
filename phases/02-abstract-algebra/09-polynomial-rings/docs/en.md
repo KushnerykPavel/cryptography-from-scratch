@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Implement polynomial addition, subtraction, and multiplication over `F_p` using normalized low-to-high coefficient lists
+- Compute polynomial long division to obtain a quotient and remainder, verifying the invariant `f = q*g + r` with `deg(r) < deg(g)`
+- Apply the polynomial extended GCD to invert elements in quotient rings `F_p[x]/(m(x))` when `gcd(a, m) = 1`
+- Distinguish reducible from irreducible polynomial moduli by finding zero-divisor witnesses in quotient rings such as `F_5[x]/(x^2)`
+- Identify the `PolyMod` wrapper's role in preventing silent cross-ring arithmetic bugs when working with different moduli
+
 ## The Problem
 
 You have already seen two versions of "reduce after every operation": integers modulo `n`, and binary polynomials modulo an irreducible polynomial for `GF(2^n)`. The next cryptographic objects need the general version: polynomials with coefficients in a finite field.
@@ -344,6 +352,12 @@ a * b
 ```
 
 The wrapper rejects arithmetic between different quotient rings. This is a small habit with a large payoff: accidentally mixing polynomial moduli silently breaks crypto code.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

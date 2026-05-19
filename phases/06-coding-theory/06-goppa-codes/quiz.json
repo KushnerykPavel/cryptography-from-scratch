@@ -1,4 +1,100 @@
 {
-  "title": "Goppa Codes \u2014 McEliece's Foundation",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "For a binary linear code with parity-check matrix H, which condition defines the codewords?",
+      "options": [
+        "All codewords c satisfy H·c^T = 0 over GF(2)",
+        "All codewords c satisfy G·c^T = 0 over GF(2)",
+        "All codewords c are the rows of H by definition",
+        "All codewords c have Hamming weight exactly t"
+      ],
+      "correct": 0,
+      "explanation": "A parity-check matrix defines the code as the kernel: codewords are precisely the binary vectors with zero syndrome H·c^T."
+    },
+    {
+      "stage": "pre",
+      "question": "In GF(2^m) implemented in a polynomial basis, what operation corresponds to field addition?",
+      "options": [
+        "Bitwise XOR of the m coefficient bits (coefficient-wise mod-2 add)",
+        "Integer addition then reduce modulo 2^m (treat elements as integers)",
+        "Integer addition then reduce modulo an irreducible polynomial (as written)",
+        "Bitwise AND of the m coefficient bits (a bit trick, not a field add)"
+      ],
+      "correct": 0,
+      "explanation": "In characteristic 2, coefficient-wise addition is mod 2, which is exactly XOR on the bit representation."
+    },
+    {
+      "stage": "post",
+      "question": "Why must every support element L_i satisfy g(L_i) != 0 in the Goppa parity-check construction used here?",
+      "options": [
+        "So that 1/g(L_i) exists and the matrix entries are defined",
+        "So that g(x) is monic and has leading coefficient 1",
+        "So that L_i values can be expanded into exactly m bits",
+        "So that the code’s block length n equals 2^m exactly"
+      ],
+      "correct": 0,
+      "explanation": "The alternant/Goppa parity-check uses factors 1/g(L_i); if g(L_i)=0 then division is undefined and the construction breaks."
+    },
+    {
+      "stage": "post",
+      "question": "If g(x) has degree t over GF(2^m) and the support has length n, what is the shape of the expanded binary parity-check matrix H_bin in this lesson?",
+      "options": [
+        "(m·t) × n over GF(2)",
+        "t × (m·n) over GF(2)",
+        "t × n over GF(2^m)",
+        "m × (t·n) over GF(2^m)"
+      ],
+      "correct": 0,
+      "explanation": "Each of the t field rows expands into m binary rows by coefficient expansion, giving m·t rows total and n columns."
+    },
+    {
+      "stage": "post",
+      "question": "How does the lesson obtain a generator matrix for the toy code from H_bin?",
+      "options": [
+        "Compute a basis of the nullspace of H_bin over GF(2)",
+        "Invert H_bin over GF(2) and read off the rows as generators",
+        "Multiply H_bin by a random permutation matrix until systematic",
+        "Use g(x) as the generator polynomial and shift it to form rows"
+      ],
+      "correct": 0,
+      "explanation": "A generator matrix can be taken as any basis of the kernel of H_bin; those basis vectors are valid codewords."
+    },
+    {
+      "stage": "post",
+      "question": "What does the syndrome s = H_bin·r^T tell you about a received binary word r?",
+      "options": [
+        "s = 0 means r is a codeword; s != 0 means r violates checks",
+        "s = 0 means r has no bit flips; s != 0 means r is random noise",
+        "s is the message that was encoded; it does not depend on errors",
+        "s is always length n and equals r when decoding succeeds"
+      ],
+      "correct": 0,
+      "explanation": "The syndrome is the parity-check output. Zero syndrome means r lies in the code; nonzero indicates constraint violations (typically errors)."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the brute-force decoder in this lesson not a realistic decoding method for cryptographic-size Goppa codes?",
+      "options": [
+        "The number of error patterns grows combinatorially with n",
+        "The parity-check matrix stops being binary for large n",
+        "Field multiplication becomes undefined when m is large",
+        "Nullspace generators exist only when t is at least m"
+      ],
+      "correct": 0,
+      "explanation": "Searching all weight-≤t error patterns costs roughly sum_{w≤t} C(n,w), which becomes astronomically large for real parameters."
+    },
+    {
+      "stage": "post",
+      "question": "In McEliece/Niederreiter-style systems, what hard problem is the attacker believed to face given only a public, random-looking binary matrix?",
+      "options": [
+        "Decoding a random linear code (syndrome decoding) without structure",
+        "Factoring the irreducible polynomial used to define GF(2^m)",
+        "Computing discrete logarithms in the multiplicative group of GF(2^m)",
+        "Finding a collision in a cryptographic hash function on demand"
+      ],
+      "correct": 0,
+      "explanation": "Without the secret structure, decoding (or syndrome decoding) for general random-looking linear codes is believed computationally hard."
+    }
+  ]
 }

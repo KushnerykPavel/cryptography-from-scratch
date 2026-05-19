@@ -1,1 +1,46 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic hand-computed vectors for a tiny Schnorr Σ-protocol demo (p=23, q=11, g=2). Values are small on purpose for pedagogy.",
+  "vectors": [
+    {"op": "mod_inv", "a": 7, "mod": 23, "expected": 10},
+    {"op": "mod_inv", "a": 18, "mod": 23, "expected": 9},
+    {"op": "mod_inv", "a": 0, "mod": 23, "expect_error": "ValueError"},
+
+    {"op": "schnorr_public_key", "p": 23, "q": 11, "g": 2, "x": 7, "expected": 13},
+    {"op": "schnorr_commit", "p": 23, "q": 11, "g": 2, "r": 3, "expected": 8},
+    {"op": "schnorr_response", "q": 11, "r": 3, "e": 4, "x": 7, "expected": 9},
+    {
+      "op": "schnorr_verify",
+      "p": 23,
+      "q": 11,
+      "g": 2,
+      "y": 13,
+      "a": 8,
+      "e": 4,
+      "z": 9,
+      "expected": true
+    },
+    {
+      "op": "schnorr_simulate_hvz",
+      "p": 23,
+      "q": 11,
+      "g": 2,
+      "y": 13,
+      "e": 4,
+      "z": 9,
+      "expected": {"a": 8, "e": 4, "z": 9}
+    },
+    {"op": "schnorr_extract_witness", "q": 11, "e1": 4, "z1": 9, "e2": 2, "z2": 6, "expected": 7},
+
+    {
+      "op": "schnorr_verify",
+      "p": 23,
+      "q": 11,
+      "g": 2,
+      "y": 13,
+      "a": 8,
+      "e": 11,
+      "z": 9,
+      "expected": false
+    }
+  ]
+}

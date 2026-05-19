@@ -1,1 +1,71 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": [
+    "RFC 7693 (BLAKE2) Appendix B: BLAKE2s-256(\"abc\") = 508c5e8c327c14e2e1a72ba34eeb452f37458b209ed63a294d999b4c86675982",
+    "RFC 7693 (BLAKE2) Appendix E: blake2s_selftest() expected digest-of-digests = 6a411f08ce25adcdfb02aba641451cec53c598b24f4fc787fbdc88797f4c1dfe",
+    "BLAKE3-team/BLAKE3 test_vectors/test_vectors.json (official extended-output KATs): input is repeating bytes 0..250 (period 251), key is ASCII \"whats the Elvish word for friend\", context is ASCII \"BLAKE3 2019-12-27 16:29:52 test vectors context\"",
+    "cryptopp-modern BLAKE3 test vectors: BLAKE3(\"abc\") = 6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85"
+  ],
+  "vectors": [
+    {
+      "op": "blake2s_256",
+      "input_ascii": "abc",
+      "expected_hex": "508c5e8c327c14e2e1a72ba34eeb452f37458b209ed63a294d999b4c86675982"
+    },
+    {
+      "op": "blake2s_rfc7693_selftest_digest",
+      "expected_hex": "6a411f08ce25adcdfb02aba641451cec53c598b24f4fc787fbdc88797f4c1dfe"
+    },
+    {
+      "op": "blake3_hash",
+      "input_ascii": "abc",
+      "out_len": 32,
+      "expected_hex": "6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85"
+    },
+    {
+      "op": "blake3_hash",
+      "input_ascii": "abc",
+      "out_len": 64,
+      "expected_hex": "6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d851fb250ae7393f5d02813b65d521a0d492d9ba09cf7ce7f4cffd900f23374bf0b"
+    },
+    {
+      "op": "blake3_hash",
+      "input_pattern_len": 0,
+      "out_len": 131,
+      "expected_hex": "af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262e00f03e7b69af26b7faaf09fcd333050338ddfe085b8cc869ca98b206c08243a26f5487789e8f660afe6c99ef9e0c52b92e7393024a80459cf91f476f9ffdbda7001c22e159b402631f277ca96f2defdf1078282314e763699a31c5363165421cce14d"
+    },
+    {
+      "op": "blake3_keyed_hash",
+      "key_ascii": "whats the Elvish word for friend",
+      "input_pattern_len": 0,
+      "out_len": 131,
+      "expected_hex": "92b2b75604ed3c761f9d6f62392c8a9227ad0ea3f09573e783f1498a4ed60d26b18171a2f22a4b94822c701f107153dba24918c4bae4d2945c20ece13387627d3b73cbf97b797d5e59948c7ef788f54372df45e45e4293c7dc18c1d41144a9758be58960856be1eabbe22c2653190de560ca3b2ac4aa692a9210694254c371e851bc8f"
+    },
+    {
+      "op": "blake3_derive_key",
+      "context_string": "BLAKE3 2019-12-27 16:29:52 test vectors context",
+      "input_pattern_len": 0,
+      "out_len": 131,
+      "expected_hex": "2cc39783c223154fea8dfb7c1b1660f2ac2dcbd1c1de8277b0b0dd39b7e50d7d905630c8be290dfcf3e6842f13bddd573c098c3f17361f1f206b8cad9d088aa4a3f746752c6b0ce6a83b0da81d59649257cdf8eb3e9f7d4998e41021fac119deefb896224ac99f860011f73609e6e0e4540f93b273e56547dfd3aa1a035ba6689d89a0"
+    },
+    {
+      "op": "blake3_hash",
+      "input_pattern_len": 1024,
+      "out_len": 131,
+      "expected_hex": "42214739f095a406f3fc83deb889744ac00df831c10daa55189b5d121c855af71cf8107265ecdaf8505b95d8fcec83a98a6a96ea5109d2c179c47a387ffbb404756f6eeae7883b446b70ebb144527c2075ab8ab204c0086bb22b7c93d465efc57f8d917f0b385c6df265e77003b85102967486ed57db5c5ca170ba441427ed9afa684e"
+    },
+    {
+      "op": "blake3_keyed_hash",
+      "key_ascii": "whats the Elvish word for friend",
+      "input_pattern_len": 1024,
+      "out_len": 131,
+      "expected_hex": "75c46f6f3d9eb4f55ecaaee480db732e6c2105546f1e675003687c31719c7ba4a78bc838c72852d4f49c864acb7adafe2478e824afe51c8919d06168414c265f298a8094b1ad813a9b8614acabac321f24ce61c5a5346eb519520d38ecc43e89b5000236df0597243e4d2493fd626730e2ba17ac4d8824d09d1a4a8f57b8227778e2de"
+    },
+    {
+      "op": "blake3_derive_key",
+      "context_string": "BLAKE3 2019-12-27 16:29:52 test vectors context",
+      "input_pattern_len": 1024,
+      "out_len": 131,
+      "expected_hex": "7356cd7720d5b66b6d0697eb3177d9f8d73a4a5c5e968896eb6a6896843027066c23b601d3ddfb391e90d5c8eccdef4ae2a264bce9e612ba15e2bc9d654af1481b2e75dbabe615974f1070bba84d56853265a34330b4766f8e75edd1f4a1650476c10802f22b64bd3919d246ba20a17558bc51c199efdec67e80a227251808d8ce5bad"
+    }
+  ]
+}

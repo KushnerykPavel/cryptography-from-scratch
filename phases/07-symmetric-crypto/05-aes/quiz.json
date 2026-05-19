@@ -1,4 +1,101 @@
 {
-  "title": "AES from Scratch \u2014 SubBytes, ShiftRows, MixColumns",
-  "questions": []
+  "title": "AES from Scratch — One Block, Fully Explained",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is AES (by itself, not a mode like GCM)?",
+      "options": [
+        "A block cipher that maps 16-byte blocks under a key",
+        "A stream cipher that outputs a keystream",
+        "A hash function for 256-bit digests",
+        "A public-key algorithm based on factoring"
+      ],
+      "correct": 0,
+      "explanation": "AES is a 128-bit block cipher; modes (CBC/CTR/GCM) are separate constructions that use AES."
+    },
+    {
+      "stage": "pre",
+      "question": "In AES, what does AddRoundKey do to the state?",
+      "options": [
+        "XORs the state with a 16-byte round key",
+        "Substitutes each byte through the S-box",
+        "Rotates each row by a fixed offset",
+        "Multiplies each column by a matrix over GF(2^8)"
+      ],
+      "correct": 0,
+      "explanation": "AddRoundKey is just XOR with the round key; the other steps are SubBytes, ShiftRows, and MixColumns."
+    },
+    {
+      "stage": "post",
+      "question": "How is the AES state filled from the 16 input bytes?",
+      "options": [
+        "Column-by-column (byte i goes to state[r + 4*c])",
+        "Row-by-row (byte i goes to state[4*r + c])",
+        "In a zig-zag pattern to maximize diffusion",
+        "It depends on the key length (128 vs 256)"
+      ],
+      "correct": 0,
+      "explanation": "AES defines a fixed column-major state layout independent of key size."
+    },
+    {
+      "stage": "post",
+      "question": "Which AES step is non-linear and provides most of the 'confusion'?",
+      "options": [
+        "SubBytes (S-box lookup)",
+        "ShiftRows (row rotation)",
+        "MixColumns (linear mixing)",
+        "AddRoundKey (XOR)"
+      ],
+      "correct": 0,
+      "explanation": "SubBytes applies a non-linear S-box; the other steps are linear/permutations."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the final AES encryption round omit MixColumns?",
+      "options": [
+        "Because AES is specified that way; decryption uses matching inverse structure",
+        "Because MixColumns would make the output longer than 16 bytes",
+        "Because MixColumns is only needed for AES-256",
+        "Because the last round key already provides diffusion"
+      ],
+      "correct": 0,
+      "explanation": "AES’s structure is defined with MixColumns in rounds 1..Nr-1 and omitted in the final round, with decryption defined accordingly."
+    },
+    {
+      "stage": "post",
+      "question": "In AES's GF(2^8), what does xtime(x) compute?",
+      "options": [
+        "Multiply x by 2 modulo the AES irreducible polynomial",
+        "Divide x by 2 with rounding",
+        "Add 2 to x modulo 256",
+        "Rotate x left by one bit"
+      ],
+      "correct": 0,
+      "explanation": "xtime is byte multiplication by {02} in GF(2^8), with reduction modulo 0x11b."
+    },
+    {
+      "stage": "post",
+      "question": "What is the most important reason to avoid AES-ECB for encrypting multi-block messages?",
+      "options": [
+        "Identical plaintext blocks encrypt to identical ciphertext blocks, leaking patterns",
+        "ECB changes the key every block, causing decryption failures",
+        "ECB uses a nonce that can be reused safely",
+        "ECB is only insecure if the key is shorter than 128 bits"
+      ],
+      "correct": 0,
+      "explanation": "ECB is deterministic per block, so repeated blocks remain repeated and structure leaks."
+    },
+    {
+      "stage": "post",
+      "question": "What is the correct way to validate a from-scratch AES implementation?",
+      "options": [
+        "Run it against authoritative test vectors (e.g., FIPS 197 / NIST CAVP)",
+        "Encrypt some random data and check it looks random",
+        "Compare outputs against a different homegrown implementation",
+        "Only test decryption(encryption(x)) == x on a few inputs"
+      ],
+      "correct": 0,
+      "explanation": "Interoperability and correctness require matching published test vectors, not just 'looks random' or roundtrip tests."
+    }
+  ]
 }

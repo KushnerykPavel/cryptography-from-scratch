@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how LLL generalizes Gauss/Lagrange reduction to n dimensions using Gram–Schmidt orthogonalization
+- Compute Gram–Schmidt projection coefficients μ_{k,j} and orthogonal lengths using exact rational arithmetic
+- Implement the LLL loop: size-reduce each vector, check the Lovász condition, and swap adjacent vectors when it fails
+- Distinguish what LLL guarantees (a provably short basis, not the shortest vector) from exact SVP
+- Apply LLL to a toy subset-sum embedding lattice and identify when the short vector reveals the hidden secret
+
 ## The Problem
 
 In lattice cryptography, the “hardness” is phrased in terms of the lattice (SVP, CVP, shortest dual vector, etc.), but inputs arrive as a *basis* — and a basis can be wildly misleading.

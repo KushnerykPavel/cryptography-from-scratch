@@ -1,1 +1,65 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Educational vectors computed from the toy Schnorr parameters in this lesson (p=467, q=233, g=3). Values come from the reference implementation in phases/11-zero-knowledge-foundations/10-extractors/code/main.py.",
+  "vectors": [
+    {
+      "op": "inv_mod",
+      "inputs": { "a": 3, "m": 11 },
+      "expected": 4
+    },
+    {
+      "op": "schnorr_verify",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "y": 407,
+        "transcript": { "t": 186, "c": 123, "s": 57 }
+      },
+      "expected": true
+    },
+    {
+      "op": "schnorr_simulate_commitment",
+      "inputs": { "p": 467, "g": 3, "y": 407, "c": 77, "s": 202 },
+      "expected": 173
+    },
+    {
+      "op": "schnorr_extract_witness",
+      "inputs": {
+        "q": 233,
+        "transcript1": { "t": 186, "c": 10, "s": 204 },
+        "transcript2": { "t": 186, "c": 200, "s": 29 }
+      },
+      "expected": 42
+    },
+    {
+      "op": "or_verify",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "y1": 407,
+        "y2": 147,
+        "commitment": { "t1": 163, "t2": 388 },
+        "challenge": 7,
+        "response": { "c1": 24, "c2": 216, "s1": 37, "s2": 98 }
+      },
+      "expected": true
+    },
+    {
+      "op": "or_extract_witness_from_two_transcripts",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "y1": 407,
+        "y2": 147,
+        "commitment": { "t1": 163, "t2": 388 },
+        "challenge1": 7,
+        "response1": { "c1": 24, "c2": 216, "s1": 37, "s2": 98 },
+        "challenge2": 8,
+        "response2": { "c1": 25, "c2": 216, "s1": 79, "s2": 98 }
+      },
+      "expected": [1, 42]
+    }
+  ]
+}

@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how the Bezout coefficient of a becomes its modular inverse when gcd(a, n) = 1
+- Compute modular inverses using both the Extended Euclidean Algorithm and the Fermat shortcut a^(p-2) mod p
+- Implement square-and-multiply exponentiation with per-step reduction to keep operands bounded by n
+- Distinguish when the Fermat inverse shortcut applies (prime modulus) from when EEA is required (general modulus)
+- Identify timing side-channel leakage in branching square-and-multiply and explain why constant-time variants are necessary
+
 ## The Problem
 
 Lesson 01 let us add, subtract, multiply, and exponentiate inside `Z/nZ`. Lesson 02 explained when an inverse exists and how Bezout coefficients reveal it. This lesson turns those facts into the two operations that show up everywhere in cryptography: modular inversion and fast exponentiation.
@@ -160,6 +168,12 @@ That is a great sanity check because the algorithms come from different ideas:
 - Fermat uses group order
 
 When they match, your implementation is probably sound.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

@@ -1,1 +1,112 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors for a toy binary Goppa code over GF(2^4) with reduction polynomial x^4 + x + 1 (0b10011). The parity-check construction follows the standard alternant/Goppa parity-check matrix H = V * diag(1/g(L_i)) expanded to a binary matrix by writing GF(2^m) coefficients into m rows per field row.",
+  "vectors": [
+    {
+      "op": "gf_add",
+      "m": 4,
+      "irr_poly": 19,
+      "a": 3,
+      "b": 5,
+      "expected": 6
+    },
+    {
+      "op": "gf_mul",
+      "m": 4,
+      "irr_poly": 19,
+      "a": 3,
+      "b": 5,
+      "expected": 15
+    },
+    {
+      "op": "gf_inv",
+      "m": 4,
+      "irr_poly": 19,
+      "a": 3,
+      "expected": 14
+    },
+    {
+      "op": "gf_div",
+      "m": 4,
+      "irr_poly": 19,
+      "a": 5,
+      "b": 3,
+      "expected": 3
+    },
+    {
+      "op": "poly_eval",
+      "m": 4,
+      "irr_poly": 19,
+      "coeffs": [1, 1, 1],
+      "x": 2,
+      "expected": 7
+    },
+    {
+      "op": "choose_support",
+      "m": 4,
+      "irr_poly": 19,
+      "g_coeffs": [1, 1, 1],
+      "n": 10,
+      "expected": [0, 1, 2, 3, 4, 5, 8, 9, 10, 11]
+    },
+    {
+      "op": "parity_check_bin",
+      "m": 4,
+      "irr_poly": 19,
+      "g_coeffs": [1, 1, 1],
+      "support": [0, 1, 2, 3, 4, 5, 8, 9, 10, 11],
+      "expected": [
+        [1, 1, 0, 0, 1, 1, 1, 1, 0, 0],
+        [0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+        [0, 0, 1, 1, 1, 1, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+        [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 1, 0, 1, 1, 1, 0],
+        [0, 0, 1, 1, 1, 1, 0, 1, 0, 1]
+      ]
+    },
+    {
+      "op": "nullspace_basis",
+      "matrix": [
+        [1, 1, 0, 0, 1, 1, 1, 1, 0, 0],
+        [0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+        [0, 0, 1, 1, 1, 1, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+        [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 1, 0, 1, 1, 1, 0],
+        [0, 0, 1, 1, 1, 1, 0, 1, 0, 1]
+      ],
+      "expected": [
+        [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+        [1, 0, 0, 1, 1, 0, 1, 1, 1, 1]
+      ]
+    },
+    {
+      "op": "encode",
+      "G": [
+        [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+        [1, 0, 0, 1, 1, 0, 1, 1, 1, 1]
+      ],
+      "msg": [1, 0],
+      "expected": [1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+    },
+    {
+      "op": "decode_radius_t",
+      "H": [
+        [1, 1, 0, 0, 1, 1, 1, 1, 0, 0],
+        [0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+        [0, 0, 1, 1, 1, 1, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+        [0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 1, 0, 1, 1, 1, 0],
+        [0, 0, 1, 1, 1, 1, 0, 1, 0, 1]
+      ],
+      "received": [1, 0, 1, 1, 1, 1, 0, 1, 0, 0],
+      "t": 2,
+      "expected_decoded": [1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+      "expected_error": [0, 1, 0, 0, 0, 0, 0, 1, 0, 0]
+    }
+  ]
+}

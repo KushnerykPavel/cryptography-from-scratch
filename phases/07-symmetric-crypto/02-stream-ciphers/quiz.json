@@ -1,4 +1,100 @@
 {
-  "title": "Stream Ciphers \u2014 RC4, ChaCha20 from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a typical stream cipher, how do you encrypt plaintext?",
+      "options": [
+        "XOR the plaintext with a keystream",
+        "Multiply the plaintext by the key modulo a prime",
+        "Hash the plaintext and use the hash as ciphertext",
+        "Encrypt each byte with RSA using the same key"
+      ],
+      "correct": 0,
+      "explanation": "A stream cipher generates a keystream and encryption is plaintext XOR keystream; decryption is the same XOR again."
+    },
+    {
+      "stage": "pre",
+      "question": "What property must a nonce have for stream cipher security (for a fixed key)?",
+      "options": [
+        "It must be unique per key",
+        "It must be secret and never sent",
+        "It must be exactly 32 bytes long",
+        "It must be derived from the plaintext"
+      ],
+      "correct": 0,
+      "explanation": "Nonces are typically public, but must not repeat for the same key; repeats can cause keystream reuse."
+    },
+    {
+      "stage": "post",
+      "question": "You encrypt two different messages with the same (key, nonce) and the same initial counter. What is the immediate cryptographic consequence?",
+      "options": [
+        "The same keystream repeats, so c1 XOR c2 = p1 XOR p2",
+        "The ciphertexts become identical even for different plaintexts",
+        "Nothing; the nonce is public so reuse is safe",
+        "Only the last block is affected"
+      ],
+      "correct": 0,
+      "explanation": "Reusing (key, nonce) reuses keystream. XORing ciphertexts cancels the keystream and reveals the XOR of plaintexts (two-time pad)."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement about ChaCha20 (without Poly1305) is correct?",
+      "options": [
+        "It provides confidentiality but not integrity",
+        "It provides integrity but not confidentiality",
+        "It provides both confidentiality and integrity",
+        "It is deterministic and needs no nonce"
+      ],
+      "correct": 0,
+      "explanation": "Raw ChaCha20 is a stream cipher: it hides content but is malleable (bit flips in ciphertext flip bits in plaintext)."
+    },
+    {
+      "stage": "post",
+      "question": "In the IETF variant of ChaCha20 (RFC 8439), what are the key and nonce sizes?",
+      "options": [
+        "Key: 32 bytes, Nonce: 12 bytes",
+        "Key: 16 bytes, Nonce: 16 bytes",
+        "Key: 32 bytes, Nonce: 24 bytes",
+        "Key: 64 bytes, Nonce: 8 bytes"
+      ],
+      "correct": 0,
+      "explanation": "ChaCha20-IETF uses a 256-bit key and a 96-bit nonce, with a 32-bit block counter."
+    },
+    {
+      "stage": "post",
+      "question": "With a 32-bit block counter and 64-byte blocks, what is the maximum keystream you can generate for a single (key, nonce) pair before counter wraparound?",
+      "options": [
+        "2^32 blocks = 2^32 * 64 bytes ≈ 256 GiB",
+        "2^16 blocks = 2^16 * 64 bytes ≈ 4 MiB",
+        "2^64 blocks = 2^64 * 64 bytes ≈ 1 ZiB",
+        "Unlimited; the counter never repeats"
+      ],
+      "correct": 0,
+      "explanation": "If the counter wraps for the same (key, nonce), keystream blocks repeat. In ChaCha20-IETF the counter is 32-bit, so there are 2^32 blocks."
+    },
+    {
+      "stage": "post",
+      "question": "Assume c1 = p1 XOR k and c2 = p2 XOR k for the same keystream k. Which expression reveals p1 XOR p2?",
+      "options": [
+        "c1 XOR c2",
+        "c1 AND c2",
+        "c1 + c2 (mod 2^32)",
+        "c1 XOR p2"
+      ],
+      "correct": 0,
+      "explanation": "c1 XOR c2 = (p1 XOR k) XOR (p2 XOR k) = p1 XOR p2 because k cancels out."
+    },
+    {
+      "stage": "post",
+      "question": "Why does an AEAD mode (like ChaCha20-Poly1305) include 'associated data' (AAD)?",
+      "options": [
+        "To authenticate important metadata without encrypting it",
+        "To make the ciphertext shorter",
+        "To hide the nonce from attackers",
+        "To allow nonce reuse safely"
+      ],
+      "correct": 0,
+      "explanation": "AAD is authenticated (tamper-evident) but not encrypted; it binds headers and protocol metadata to the ciphertext/tag."
+    }
+  ]
 }

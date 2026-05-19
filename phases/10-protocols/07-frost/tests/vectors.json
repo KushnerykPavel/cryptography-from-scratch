@@ -1,1 +1,159 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Equations from RFC 9591 (FROST) instantiated over a toy subgroup of Z_p* with p=2039, q=1019. Numeric values are generated deterministically by phases/10-protocols/07-frost/code/main.py using fixed seeds (dealer-demo, round1-demo, nonce-reuse-demo).",
+  "vectors": [
+    {
+      "op": "find_generator_of_order_q",
+      "inputs": {"p": 2039, "q": 1019},
+      "expected": 4
+    },
+    {
+      "op": "modinv",
+      "inputs": {"a": 3, "m": 1019},
+      "expected": 340
+    },
+    {
+      "op": "eval_polynomial",
+      "inputs": {"coefficients": [5, 7, 9], "x": 3, "q": 1019},
+      "expected": 107
+    },
+    {
+      "op": "lagrange_coefficient_at_zero",
+      "inputs": {"identifier": 1, "participant_ids": [1, 2, 4], "q": 1019},
+      "expected": 682
+    },
+    {
+      "op": "lagrange_coefficient_at_zero",
+      "inputs": {"identifier": 2, "participant_ids": [1, 2, 4], "q": 1019},
+      "expected": 1017
+    },
+    {
+      "op": "lagrange_coefficient_at_zero",
+      "inputs": {"identifier": 4, "participant_ids": [1, 2, 4], "q": 1019},
+      "expected": 340
+    },
+    {
+      "op": "shamir_combine_at_zero",
+      "inputs": {
+        "shares": [
+          [1, 72],
+          [2, 69],
+          [4, 131]
+        ],
+        "q": 1019
+      },
+      "expected": 777
+    },
+    {
+      "op": "trusted_dealer_keygen",
+      "inputs": {
+        "secret": 777,
+        "threshold": 3,
+        "participant_ids": [1, 2, 3, 4, 5],
+        "seed": "dealer-demo"
+      },
+      "expected": {
+        "group_sk": 777,
+        "group_pk": 1590,
+        "sk_shares": {"1": 72, "2": 69, "3": 768, "4": 131, "5": 196}
+      }
+    },
+    {
+      "op": "nonce_generate_sequence",
+      "inputs": {
+        "participant_ids": [1, 2, 4],
+        "seed": "round1-demo"
+      },
+      "expected": {
+        "nonces": {
+          "1": {"d": 27, "e": 138, "D": 1998, "E": 129},
+          "2": {"d": 3, "e": 400, "D": 64, "E": 361},
+          "4": {"d": 747, "e": 189, "D": 1984, "E": 1636}
+        }
+      }
+    },
+    {
+      "op": "compute_binding_factors",
+      "inputs": {
+        "group_pk": 1590,
+        "commitment_list": [[1, 1998, 129], [2, 64, 361], [4, 1984, 1636]],
+        "msg_hex": "68656c6c6f2066726f7374"
+      },
+      "expected": {"1": 542, "2": 825, "4": 187}
+    },
+    {
+      "op": "commitment_share",
+      "inputs": {
+        "identifier": 1,
+        "commitment_list": [[1, 1998, 129], [2, 64, 361], [4, 1984, 1636]],
+        "binding_factors": {"1": 542, "2": 825, "4": 187},
+        "p": 2039
+      },
+      "expected": 1405
+    },
+    {
+      "op": "compute_group_commitment",
+      "inputs": {
+        "commitment_list": [[1, 1998, 129], [2, 64, 361], [4, 1984, 1636]],
+        "binding_factors": {"1": 542, "2": 825, "4": 187},
+        "p": 2039
+      },
+      "expected": 1272
+    },
+    {
+      "op": "compute_challenge",
+      "inputs": {"group_commitment": 1272, "group_pk": 1590, "msg_hex": "68656c6c6f2066726f7374"},
+      "expected": 344
+    },
+    {
+      "op": "sign_signature_share",
+      "inputs": {
+        "identifier": 1,
+        "sk_share": 72,
+        "nonce": {"d": 27, "e": 138},
+        "binding_factor": 542,
+        "challenge": 344,
+        "participant_ids": [1, 2, 4],
+        "q": 1019
+      },
+      "expected": 249
+    },
+    {
+      "op": "verify_signature_share",
+      "inputs": {
+        "identifier": 1,
+        "sig_share": 249,
+        "pk_share": 80,
+        "commitment_list": [[1, 1998, 129], [2, 64, 361], [4, 1984, 1636]],
+        "binding_factors": {"1": 542, "2": 825, "4": 187},
+        "challenge": 344,
+        "participant_ids": [1, 2, 4]
+      },
+      "expected": true
+    },
+    {
+      "op": "aggregate_signature",
+      "inputs": {"sig_shares": {"1": 249, "2": 268, "4": 501}, "group_commitment": 1272, "q": 1019},
+      "expected": {"R": 1272, "z": 1018}
+    },
+    {
+      "op": "prime_order_verify",
+      "inputs": {
+        "msg_hex": "68656c6c6f2066726f7374",
+        "sig": {"R": 1272, "z": 1018},
+        "pk": 1590
+      },
+      "expected": true
+    },
+    {
+      "op": "recover_secret_from_reused_nonce",
+      "inputs": {
+        "msg1_hex": "6d31",
+        "msg2_hex": "6d32",
+        "sig1": {"R": 450, "z": 39},
+        "sig2": {"R": 450, "z": 650},
+        "pk": 572
+      },
+      "expected": 123
+    }
+  ]
+}

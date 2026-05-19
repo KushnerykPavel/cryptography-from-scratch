@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain the inclusion-exclusion product formula phi(n) = n · ∏(1 − 1/p) and why it counts invertible residues
+- Compute lambda(n) from prime-power components using lcm, including the special cases for powers of two
+- Implement euler_totient from prime factorization and carmichael_lambda by combining prime-power cycle lengths
+- Distinguish phi(n) (group size) from lambda(n) (group exponent) and explain why lambda gives a tighter RSA private exponent
+- Apply the quadratic formula attack to factor a semiprime n given a leaked phi(n)
+
 ## The Problem
 
 Lesson 04 gave you Euler's theorem:
@@ -279,6 +287,12 @@ def factor_semiprime_from_phi(n: int, phi_n: int) -> tuple[int, int]:
 ```
 
 That second helper is the attack lesson hiding inside the arithmetic lesson.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

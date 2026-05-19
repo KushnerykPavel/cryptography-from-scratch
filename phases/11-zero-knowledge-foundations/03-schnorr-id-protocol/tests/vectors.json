@@ -1,1 +1,55 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-computed toy-group vectors for p=23, q=11, g=2. Fiat–Shamir challenge uses SHA-256 over UTF-8 bytes of `domain|y=<y>|t=<t>` reduced mod q.",
+  "vectors": [
+    {
+      "op": "mod_inv",
+      "inputs": { "a": 3, "mod": 11 },
+      "expected": 4
+    },
+    {
+      "op": "schnorr_public_key",
+      "inputs": { "p": 23, "q": 11, "g": 2, "x": 3 },
+      "expected": 8
+    },
+    {
+      "op": "schnorr_id_commit",
+      "inputs": { "p": 23, "q": 11, "g": 2, "r": 4 },
+      "expected": 16
+    },
+    {
+      "op": "schnorr_id_respond",
+      "inputs": { "q": 11, "r": 4, "c": 5, "x": 3 },
+      "expected": 8
+    },
+    {
+      "op": "schnorr_id_verify",
+      "inputs": { "p": 23, "q": 11, "g": 2, "y": 8, "t": 16, "c": 5, "s": 8 },
+      "expected": true
+    },
+    {
+      "op": "schnorr_id_verify",
+      "inputs": { "p": 23, "q": 11, "g": 2, "y": 8, "t": 16, "c": 5, "s": 9 },
+      "expected": false
+    },
+    {
+      "op": "schnorr_id_simulate_hvz",
+      "inputs": { "p": 23, "q": 11, "g": 2, "y": 8, "c": 2, "s": 7 },
+      "expected": { "t": 2, "c": 2, "s": 7 }
+    },
+    {
+      "op": "schnorr_extract_secret_from_nonce_reuse",
+      "inputs": { "q": 11, "c1": 2, "s1": 10, "c2": 5, "s2": 8 },
+      "expected": 3
+    },
+    {
+      "op": "schnorr_fiat_shamir_challenge",
+      "inputs": {
+        "q": 11,
+        "domain_sep": "schnorr-id-demo-v1",
+        "statement_y": 8,
+        "commitment_t": 18
+      },
+      "expected": 1
+    }
+  ]
+}

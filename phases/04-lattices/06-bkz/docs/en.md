@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how BKZ extends LLL by solving a projected SVP inside a sliding block of β consecutive basis vectors
+- Identify why block size β is the quality-versus-runtime tradeoff knob and why runtime grows exponentially in β
+- Implement a simplified BKZ tour loop: LLL-reduce, run a brute-force block SVP oracle, insert the short vector, and repeat
+- Distinguish what one BKZ "tour" achieves versus what multiple tours achieve in terms of basis quality
+- Apply BKZ to a hidden-short-vector lattice and compare how much shorter the output is compared to plain LLL
+
 ## The Problem
 
 LLL is the first lattice reduction algorithm you reach for — and it’s often surprisingly effective. But when you need stronger reduction quality, you almost always end up using **BKZ** (Block Korkine–Zolotarev).

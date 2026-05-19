@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how twisted Edwards curves (`ax² + y² = 1 + dx²y²`) differ from short Weierstrass form and why their identity `(0, 1)` and negation `(-x, y)` are simpler
+- Implement point encoding and decoding for Edwards25519 using the compressed 32-byte format (255-bit little-endian `y` plus one sign bit for `x`)
+- Compute point addition and doubling in extended Edwards coordinates `(X, Y, Z, T)` to avoid modular inversions
+- Distinguish points in the prime-order subgroup from torsion points using `l·P == 𝟘`, and apply cofactor clearing via `8·P`
+- Apply the small-subgroup confinement attack to demonstrate how an untrusted torsion point of order 8 leaks `secret mod 8`
+
 ## The Problem
 
 You’ll keep seeing “Curve25519”, “Ed25519”, “Ristretto”, “Decaf”, and “twisted Edwards” in real systems:
@@ -171,6 +179,12 @@ from main import ed25519_clear_cofactor, ed25519_decode, ed25519_is_in_prime_sub
 torsion = ed25519_decode(bytes.fromhex("c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a"))
 print(ed25519_is_in_prime_subgroup(torsion))
 print(ed25519_clear_cofactor(torsion))
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

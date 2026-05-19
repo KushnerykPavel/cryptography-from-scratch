@@ -116,6 +116,12 @@ Run:
 python phases/00-setup-and-tooling/06-picking-a-library/code/main.py
 ```
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 ### Hashing and HMAC (stdlib)

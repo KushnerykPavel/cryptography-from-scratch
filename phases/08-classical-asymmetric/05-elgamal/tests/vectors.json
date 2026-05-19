@@ -1,1 +1,71 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Vectors derived from textbook ElGamal formulas (Taher ElGamal, 1985) using the fixed demo parameters in code/main.py (p=467, g=2) for determinism. Expected values were computed by running the lesson implementation.",
+  "vectors": [
+    {
+      "op": "modinv",
+      "inputs": { "a": 17, "modulus": 467 },
+      "expected": 55
+    },
+    {
+      "op": "modinv",
+      "inputs": { "a": 81, "modulus": 466 },
+      "expected": 443
+    },
+    {
+      "op": "keygen_y",
+      "inputs": { "p": 467, "g": 2, "x": 37 },
+      "expected": 263
+    },
+    {
+      "op": "encrypt_int",
+      "inputs": { "p": 467, "g": 2, "x": 37, "m": 123, "k": 81 },
+      "expected": { "c1": 246, "c2": 294 }
+    },
+    {
+      "op": "decrypt_int",
+      "inputs": { "p": 467, "g": 2, "x": 37, "c1": 246, "c2": 294 },
+      "expected": 123
+    },
+    {
+      "op": "rerandomize",
+      "inputs": { "p": 467, "g": 2, "x": 37, "c1": 246, "c2": 294, "r": 19 },
+      "expected": { "c1": 189, "c2": 433 }
+    },
+    {
+      "op": "mul_ciphertexts",
+      "inputs": {
+        "p": 467,
+        "a": { "c1": 8, "c2": 437 },
+        "b": { "c1": 32, "c2": 170 }
+      },
+      "expected": { "c1": 256, "c2": 37 }
+    },
+    {
+      "op": "encrypt_bytes",
+      "inputs": {
+        "p": 467,
+        "g": 2,
+        "x": 37,
+        "k": 9,
+        "label_hex": "64656d6f",
+        "plaintext_hex": "656c67616d616c202d3e2073686172656420736563726574202d3e2073747265616d"
+      },
+      "expected": {
+        "c1": 45,
+        "ciphertext_hex": "e561b97019e25173d7e0d6408e16f7c75616fa749156503f1f1d5e39010cc834c865"
+      }
+    },
+    {
+      "op": "decrypt_bytes",
+      "inputs": {
+        "p": 467,
+        "g": 2,
+        "x": 37,
+        "label_hex": "64656d6f",
+        "c1": 45,
+        "ciphertext_hex": "e561b97019e25173d7e0d6408e16f7c75616fa749156503f1f1d5e39010cc834c865"
+      },
+      "expected": "656c67616d616c202d3e2073686172656420736563726574202d3e2073747265616d"
+    }
+  ]
+}

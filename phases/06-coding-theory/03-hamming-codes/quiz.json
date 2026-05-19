@@ -1,4 +1,96 @@
 {
-  "title": "Hamming Codes from Scratch",
-  "questions": []
+  "title": "Hamming Codes (7,4) from Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the role of a parity bit in an error-control code?",
+      "options": [
+        "Add a constraint so some subsets have even/odd parity",
+        "Encrypt the data so flips become harmless",
+        "Compress the data so fewer bits can flip",
+        "Guarantee the channel never flips bits"
+      ],
+      "correct": 0,
+      "explanation": "A parity bit is redundancy chosen so a subset of bits satisfies a parity constraint (even or odd)."
+    },
+    {
+      "stage": "pre",
+      "question": "In Hamming codes, why are parity bits commonly placed at positions 1, 2, 4, 8, ...?",
+      "options": [
+        "Their binary indices isolate which parity checks each bit participates in",
+        "It minimizes the number of 1s in the codeword",
+        "It makes the message bits always come first",
+        "It is required only for odd parity, not even parity"
+      ],
+      "correct": 0,
+      "explanation": "Using power-of-two positions makes the parity coverage correspond to the bits of the position index, enabling syndrome-as-address decoding."
+    },
+    {
+      "stage": "post",
+      "question": "For Hamming(7,4) with parity at positions 1,2,4, which positions hold data bits?",
+      "options": [
+        "3,5,6,7",
+        "1,2,4,7",
+        "1,3,5,7",
+        "2,3,4,5"
+      ],
+      "correct": 0,
+      "explanation": "Positions that are not powers of two are data positions: 3, 5, 6, and 7."
+    },
+    {
+      "stage": "post",
+      "question": "What does it mean if the syndrome of a received 7-bit word is 000?",
+      "options": [
+        "The word satisfies all parity checks (it is a valid codeword under the chosen convention)",
+        "The word must equal the original message bits",
+        "Exactly one bit was flipped and corrected",
+        "The decoder can safely assume there were two bit flips"
+      ],
+      "correct": 0,
+      "explanation": "A zero syndrome means the received word satisfies the parity-check equations; it may still be wrong if more complex error patterns map to a valid codeword."
+    },
+    {
+      "stage": "post",
+      "question": "If syndrome bits are ordered as [1,2,4] and the syndrome is [1,0,1], which 1-indexed position does it indicate?",
+      "options": ["5", "3", "6", "7"],
+      "correct": 0,
+      "explanation": "Interpret as 1 + 0·2 + 1·4 = 5."
+    },
+    {
+      "stage": "post",
+      "question": "In the layout [p1,p2,d1,p4,d2,d3,d4] with even parity, which equation correctly defines p4?",
+      "options": [
+        "p4 = d2 ⊕ d3 ⊕ d4",
+        "p4 = d1 ⊕ d2 ⊕ d4",
+        "p4 = d1 ⊕ d3 ⊕ d4",
+        "p4 = d1 ⊕ d2 ⊕ d3"
+      ],
+      "correct": 0,
+      "explanation": "p4 covers positions 4,5,6,7 (p4,d2,d3,d4), so for even parity p4 = d2 ⊕ d3 ⊕ d4."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what can happen if you apply single-error correction to a received word that actually has two flipped bits?",
+      "options": [
+        "You can miscorrect into a different valid codeword and decode the wrong message",
+        "You will always detect the two-bit error and refuse to decode",
+        "You will always recover the original message anyway",
+        "The syndrome is guaranteed to be 000 for any two-bit error"
+      ],
+      "correct": 0,
+      "explanation": "Plain Hamming(7,4) cannot reliably distinguish 1-bit from 2-bit errors; syndrome-based correction can silently produce the wrong valid codeword."
+    },
+    {
+      "stage": "post",
+      "question": "A Hamming(7,4) code has minimum distance d_min = 3. What does that guarantee?",
+      "options": [
+        "Correct up to 1 bit flip and detect up to 2 bit flips",
+        "Correct up to 2 bit flips and detect up to 3 bit flips",
+        "Detect up to 1 bit flip only",
+        "Correct any number of bit flips as long as syndrome is non-zero"
+      ],
+      "correct": 0,
+      "explanation": "With d_min=3, you can guarantee correcting t where 2t+1 ≤ 3, so t=1; and detect up to d_min-1 = 2."
+    }
+  ]
 }

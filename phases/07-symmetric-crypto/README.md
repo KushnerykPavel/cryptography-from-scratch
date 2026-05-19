@@ -3,6 +3,6 @@
 OTP, stream ciphers, Feistel, AES, modes, AEAD, hashes (SHA-2/3, BLAKE), HMAC, KDFs. The workhorses.
 
 **Lessons:** 14
-**Status:** ⬚ Planned
+**Status:** ✅ Complete (14/14)
 
 See [ROADMAP.md](../../ROADMAP.md) for full lesson list.

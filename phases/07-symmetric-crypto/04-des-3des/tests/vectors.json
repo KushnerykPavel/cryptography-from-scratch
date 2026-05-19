@@ -1,1 +1,70 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "DES vectors: classic DES example (K=133457799BBCDFF1, P=0123456789ABCDEF) and NIST SP 800-17 Known Answer Tests. 3DES (TDEA) vectors: NIST SP 800-67 Appendix B example values (Key1=0123456789ABCDEF, Key2=23456789ABCDEF01, Key3=456789ABCDEF0123).",
+  "vectors": [
+    {
+      "op": "des_encrypt_block",
+      "inputs": {"key_hex": "133457799BBCDFF1", "block_hex": "0123456789ABCDEF"},
+      "expected": "85E813540F0AB405"
+    },
+    {
+      "op": "des_decrypt_block",
+      "inputs": {"key_hex": "133457799BBCDFF1", "block_hex": "85E813540F0AB405"},
+      "expected": "0123456789ABCDEF"
+    },
+    {
+      "op": "des_encrypt_block",
+      "inputs": {"key_hex": "0101010101010101", "block_hex": "8000000000000000"},
+      "expected": "95F8A5E5DD31D900"
+    },
+    {
+      "op": "des_encrypt_block",
+      "inputs": {"key_hex": "0123456789ABCDEF", "block_hex": "5468652071756663"},
+      "expected": "A28E91724C4BBA31"
+    },
+    {
+      "op": "des_decrypt_block",
+      "inputs": {"key_hex": "0123456789ABCDEF", "block_hex": "A28E91724C4BBA31"},
+      "expected": "5468652071756663"
+    },
+    {
+      "op": "tdea_encrypt_block",
+      "inputs": {
+        "k1_hex": "0123456789ABCDEF",
+        "k2_hex": "23456789ABCDEF01",
+        "k3_hex": "456789ABCDEF0123",
+        "block_hex": "5468652071756663"
+      },
+      "expected": "A826FD8CE53B855F"
+    },
+    {
+      "op": "tdea_encrypt_block",
+      "inputs": {
+        "k1_hex": "0123456789ABCDEF",
+        "k2_hex": "23456789ABCDEF01",
+        "k3_hex": "456789ABCDEF0123",
+        "block_hex": "6B2062726F776E20"
+      },
+      "expected": "CCE21C8112256FE6"
+    },
+    {
+      "op": "tdea_encrypt_block",
+      "inputs": {
+        "k1_hex": "0123456789ABCDEF",
+        "k2_hex": "23456789ABCDEF01",
+        "k3_hex": "456789ABCDEF0123",
+        "block_hex": "666F78206A756D70"
+      },
+      "expected": "68D5C05DD9B6B900"
+    },
+    {
+      "op": "tdea_decrypt_block",
+      "inputs": {
+        "k1_hex": "0123456789ABCDEF",
+        "k2_hex": "23456789ABCDEF01",
+        "k3_hex": "456789ABCDEF0123",
+        "block_hex": "A826FD8CE53B855F"
+      },
+      "expected": "5468652071756663"
+    }
+  ]
+}

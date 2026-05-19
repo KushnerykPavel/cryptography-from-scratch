@@ -114,6 +114,12 @@ Interpreting a byte as a polynomial is just treating the bits as coefficients:
 
 The helpers `aes_mul(a, b)` and `aes_inverse(byte)` reproduce the standard examples (and raise on `0` inverse).
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 For real work you should prefer a vetted library. In Python, the `galois` package is a convenient reference implementation for experiments and for cross-checking:

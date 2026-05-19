@@ -1,4 +1,101 @@
 {
   "title": "One-Time Pad & Information-Theoretic Security",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is (p XOR k) XOR k for equal-length byte strings p and k?",
+      "options": [
+        "It equals p",
+        "It equals k",
+        "It equals p XOR k",
+        "It equals an all-zero byte string for any p and k"
+      ],
+      "correct": 0,
+      "explanation": "XOR is self-inverse: applying the same XOR mask twice cancels it out."
+    },
+    {
+      "stage": "pre",
+      "question": "Which condition is required for the one-time pad to provide perfect secrecy?",
+      "options": [
+        "The key is uniformly random, as long as the message, and never reused",
+        "The key is derived from a password using a slow KDF",
+        "The key is shorter than the message and repeated",
+        "The key is reused but the plaintexts are compressed first"
+      ],
+      "correct": 0,
+      "explanation": "Perfect secrecy needs a truly random, message-length key used once; other choices break the assumptions."
+    },
+    {
+      "stage": "post",
+      "question": "If c = p XOR k where k is uniformly random, secret, message-length, and used once, what does c reveal about p (ignoring the message length)?",
+      "options": [
+        "Nothing about the content of p beyond its length",
+        "The parity (XOR of all bits) of p",
+        "The first half of p",
+        "A unique recovery of p"
+      ],
+      "correct": 0,
+      "explanation": "With a uniform one-time key, every plaintext is equally likely given the ciphertext, so the ciphertext carries no information about the plaintext."
+    },
+    {
+      "stage": "post",
+      "question": "Two messages are encrypted with the same OTP key k: c1 = p1 XOR k and c2 = p2 XOR k. What is c1 XOR c2?",
+      "options": [
+        "p1 XOR p2",
+        "k",
+        "p1 XOR k",
+        "c1 XOR k"
+      ],
+      "correct": 0,
+      "explanation": "The key cancels: (p1 XOR k) XOR (p2 XOR k) = p1 XOR p2."
+    },
+    {
+      "stage": "post",
+      "question": "An attacker computes x = c1 XOR c2 from a two-time pad reuse, and learns p1. How can they recover p2?",
+      "options": [
+        "p2 = x XOR p1",
+        "p2 = x AND p1",
+        "p2 = x OR p1",
+        "p2 = x + p1 (bytewise addition mod 256)"
+      ],
+      "correct": 0,
+      "explanation": "Since x = p1 XOR p2, XORing x with p1 cancels p1 and yields p2."
+    },
+    {
+      "stage": "post",
+      "question": "What happens if an attacker flips one bit in an OTP ciphertext before decryption?",
+      "options": [
+        "The same bit flips in the decrypted plaintext at that position",
+        "Decryption fails with an error because OTP detects tampering",
+        "The plaintext becomes completely random",
+        "Only the key changes, not the plaintext"
+      ],
+      "correct": 0,
+      "explanation": "OTP is malleable: changing ciphertext bits changes the corresponding plaintext bits predictably."
+    },
+    {
+      "stage": "post",
+      "question": "In a real stream cipher like ChaCha20, what must never repeat to avoid a two-time pad style failure?",
+      "options": [
+        "The (key, nonce) pair",
+        "The plaintext message",
+        "The ciphertext length",
+        "The hash of the plaintext"
+      ],
+      "correct": 0,
+      "explanation": "Reusing the same keystream is the same as reusing an OTP key; unique nonces per key prevent keystream reuse."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main practical reason OTP is rarely used for general-purpose secure messaging?",
+      "options": [
+        "It requires distributing and storing key material as large as the total message volume",
+        "It is slower than AES on modern CPUs",
+        "It requires expensive public-key operations for every message",
+        "It cannot be implemented in software"
+      ],
+      "correct": 0,
+      "explanation": "OTP’s key management cost is enormous: you need as many secret random bytes as you plan to encrypt."
+    }
+  ]
 }

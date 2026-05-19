@@ -1,4 +1,100 @@
 {
-  "title": "Inner Product Argument",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the inner product ⟨a,b⟩ of two length-n vectors over a field?",
+      "options": [
+        "The element-wise sum a₁+b₁, …, aₙ+bₙ",
+        "The sum of products a₁·b₁ + … + aₙ·bₙ",
+        "The product of sums (a₁+…+aₙ)·(b₁+…+bₙ)",
+        "The maximum coordinate of a minus the maximum coordinate of b"
+      ],
+      "correct": 1,
+      "explanation": "By definition, ⟨a,b⟩ = Σᵢ aᵢ·bᵢ (computed in the field)."
+    },
+    {
+      "stage": "pre",
+      "question": "In Fiat–Shamir transforms, why do we hash the transcript to get a challenge?",
+      "options": [
+        "To reduce the proof size to exactly 1 group element",
+        "To make verifier randomness deterministic from public data",
+        "To let the prover pick challenges that minimize proof size",
+        "To avoid computing inverses in the finite field"
+      ],
+      "correct": 1,
+      "explanation": "Fiat–Shamir replaces interactive verifier randomness with a hash of what the verifier has seen so far."
+    },
+    {
+      "stage": "post",
+      "question": "What statement does the IPA verifier ultimately want to be true (in this lesson’s notation)?",
+      "options": [
+        "P' = ⟨a,G⟩ + ⟨b,H⟩ + ⟨a,b⟩·Q",
+        "P' = ⟨a,b⟩ + ⟨G,H⟩ + ⟨a,G⟩·⟨b,H⟩",
+        "P' = a·G + b·H, where a and b are scalars (not vectors)",
+        "P' = ⟨a,G⟩ + ⟨b,H⟩, without any Q term"
+      ],
+      "correct": 0,
+      "explanation": "The extra Q term binds the inner product ⟨a,b⟩ into the same equation as the vector commitment."
+    },
+    {
+      "stage": "post",
+      "question": "If n is a power of two, how many IPA rounds does the prover send (L,R) pairs?",
+      "options": [
+        "n rounds",
+        "n/2 rounds",
+        "log₂(n) rounds",
+        "1 round (independent of n)"
+      ],
+      "correct": 2,
+      "explanation": "Each round halves the vector length, so it takes log₂(n) folds to reach length 1."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the per-round challenge u be nonzero in an IPA?",
+      "options": [
+        "Because u is used only as u², and 0² would be undefined",
+        "Because the protocol needs u⁻¹ to fold vectors and generators",
+        "Because u must be a primitive root of the field modulus",
+        "Because u must equal the inner product ⟨a,b⟩"
+      ],
+      "correct": 1,
+      "explanation": "Folding uses both u and u⁻¹; if u=0 then u⁻¹ does not exist and the protocol breaks."
+    },
+    {
+      "stage": "post",
+      "question": "Which transcript elements must be hashed (directly or indirectly) to prevent replaying the same proof under a different statement?",
+      "options": [
+        "Only the final scalars a and b",
+        "Only L and R values, not the public statement",
+        "The public statement (P',G,H,Q) and the per-round messages (L,R)",
+        "Only the vector length n and the field modulus p"
+      ],
+      "correct": 2,
+      "explanation": "If the public statement is not bound into the transcript, the same L,R sequence could be reused across different statements."
+    },
+    {
+      "stage": "post",
+      "question": "Attack intuition: what breaks if the prover can choose challenges u after seeing what would make verification pass?",
+      "options": [
+        "Nothing breaks; u is only a performance parameter",
+        "Soundness can break because u controls the folding equations",
+        "Completeness breaks because honest proofs cannot be generated",
+        "Zero-knowledge breaks because L and R become constant"
+      ],
+      "correct": 1,
+      "explanation": "Challenges must be unpredictable to the prover; otherwise they can try to steer the fold to satisfy the final check without a real witness."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the toy group in this lesson (integers mod p under addition) not a faithful security model of real IPA deployments?",
+      "options": [
+        "Because it has no modular arithmetic at all",
+        "Because discrete log relations between generators are trivial in Z_p",
+        "Because elliptic curves cannot represent vectors of generators",
+        "Because Fiat–Shamir hashing is impossible over integers"
+      ],
+      "correct": 1,
+      "explanation": "In Z_p, any nonzero element is a known multiple of any other; real deployments rely on unknown discrete log relations in curve groups."
+    }
+  ]
 }

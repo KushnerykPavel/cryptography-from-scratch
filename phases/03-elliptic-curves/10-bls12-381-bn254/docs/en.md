@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Distinguish BN254 from BLS12-381 in terms of their embedding degree, base field sizes, and why modern security analyses place BN254 at ~100–103 bits rather than 128 bits in `GT`
+- Explain why a point being "on curve" is not sufficient for pairing protocols and why cofactor clearing or explicit subgroup membership checks are required
+- Implement a bilinearity check `e(aP, bQ) == e(P, Q)^(ab)` using `py_ecc` to verify that a library pairing behaves correctly on BN254 and BLS12-381 generators
+- Apply the subgroup-check forgery pattern to demonstrate how accepting a public key outside the prime-order subgroup allows a naive BLS verifier to accept a forged signature
+- Identify the correct full pipeline for hash-to-curve: map-to-curve followed by cofactor clearing, and explain why skipping cofactor clearing produces valid-looking but dangerous points
+
 ## The Problem
 
 If you work on zero-knowledge systems, blockchains, or BLS signatures, you will keep seeing two curve names:
@@ -130,6 +138,12 @@ This demo constructs:
 - a “public key” in the cofactor subgroup of `G1` (not the `r`-subgroup),
 - a “signature” equal to the identity point in `G2`,
 - and shows a naive verifier can accept it, while a strict verifier rejects it.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

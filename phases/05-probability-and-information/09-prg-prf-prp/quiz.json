@@ -1,4 +1,101 @@
 {
-  "title": "Pseudorandomness \u2014 PRG, PRF, PRP",
-  "questions": []
+  "title": "Pseudorandomness — PRG, PRF, PRP",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "A PRG stretches a 128-bit seed to 10,000 bits. What is the security level of the output?",
+      "options": [
+        "128 bits — stretching does not add security, only the seed length matters",
+        "10,000 bits — the output is longer so it is more secure",
+        "It depends on the hash function used for stretching",
+        "0 bits — a PRG is never secure"
+      ],
+      "correct": 0,
+      "explanation": "PRG security = seed security. An adversary only needs to guess the 128-bit seed to reproduce all 10,000 output bits. The stretch adds length but not entropy."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the key difference between a PRF and a PRP?",
+      "options": [
+        "A PRP is bijective (invertible) for each key; a PRF has no injectivity requirement",
+        "A PRF uses a shorter key than a PRP",
+        "A PRP can only be applied to fixed-length inputs; a PRF cannot",
+        "A PRF is faster than a PRP for the same security level"
+      ],
+      "correct": 0,
+      "explanation": "PRP: bijection (permutation) — no two distinct inputs produce the same output. PRF: no such constraint. AES is a PRP; HMAC is a PRF. The PRP-PRF switching lemma bounds how different they are."
+    },
+    {
+      "stage": "post",
+      "question": "AES-128 has a 128-bit block size. After how many AES encryptions does the PRP-PRF switching advantage exceed 2^{-32}?",
+      "options": [
+        "About 2^48 — from q*(q-1)/(2*2^128) ≤ 2^{-32}, solving gives q ≈ 2^48.5",
+        "Exactly 2^64 — always safe up to the birthday bound",
+        "2^32 — the block size divided by 4",
+        "2^128 — AES-128 is secure up to its full key space"
+      ],
+      "correct": 0,
+      "explanation": "From q²/2^{129} ≤ 2^{-32}: q ≤ sqrt(2^{97}) ≈ 2^{48.5}. NIST recommends 2^{48} as the practical limit for a single AES-128 key in CBC/CTR mode."
+    },
+    {
+      "stage": "post",
+      "question": "Why does nonce reuse in CTR mode completely break confidentiality?",
+      "options": [
+        "Both messages are XORed with the same keystream, so XOR-ing the two ciphertexts gives plaintext1 XOR plaintext2",
+        "The nonce is transmitted in the clear, so the adversary knows the key",
+        "CTR mode requires unique nonces only for authentication, not confidentiality",
+        "The PRF outputs repeat when the nonce is reused, creating a detectable pattern"
+      ],
+      "correct": 0,
+      "explanation": "CTR keystream = PRF(k, nonce||i). Same nonce → same keystream. ct1 = m1 XOR ks, ct2 = m2 XOR ks. ct1 XOR ct2 = m1 XOR m2. Any knowledge of m1 reveals m2 completely."
+    },
+    {
+      "stage": "post",
+      "question": "Why was the Sweet32 attack possible against 3DES and Blowfish?",
+      "options": [
+        "Both use 64-bit blocks. After 2^32 encryptions, the birthday bound gives ~50% probability of a block collision, breaking security",
+        "Their key sizes are too short for modern standards",
+        "They use a weak round function that can be distinguished from a PRF",
+        "64-bit blocks make decryption faster than encryption, enabling attacks"
+      ],
+      "correct": 0,
+      "explanation": "PRP-PRF switching: Adv ≤ q²/2^{n+1}. For n=64: Adv = 0.5 at q = 2^32 ≈ 4 billion blocks. At typical network speeds this is reached in hours. Sweet32 exploited birthday collisions in CBC mode with 64-bit blocks."
+    },
+    {
+      "stage": "post",
+      "question": "How is a PRG constructed from a PRF (counter-mode construction)?",
+      "options": [
+        "G(k) = F(k, 0) || F(k, 1) || F(k, 2) || … (concatenate PRF outputs for successive counters)",
+        "G(k) = F(k, k) (evaluate the PRF on itself)",
+        "G(k) = F(k, random) for a fresh random input",
+        "G(k) = F(k, 0) XOR F(k, 1) (XOR two PRF calls)"
+      ],
+      "correct": 0,
+      "explanation": "Counter-mode PRG: extend the seed using the PRF in counter mode. Each F(k, i) produces one block of pseudorandom output. Security follows from PRF security: if F is secure, an adversary cannot distinguish the concatenated outputs from uniform."
+    },
+    {
+      "stage": "post",
+      "question": "CTR mode achieves IND-CPA security. What exactly does IND-CPA guarantee?",
+      "options": [
+        "No PPT adversary can distinguish encryptions of two chosen plaintexts of equal length, even after making polynomially many encryption queries",
+        "The scheme is secure against chosen-ciphertext attacks",
+        "The scheme is information-theoretically secure",
+        "The adversary cannot decrypt any ciphertext it did not produce"
+      ],
+      "correct": 0,
+      "explanation": "IND-CPA (indistinguishability under chosen-plaintext attack): the adversary picks m0, m1, receives enc(m_b) for random b, and wins if it guesses b with non-negligible advantage. CTR achieves this assuming the PRF is secure — but it does NOT prevent ciphertext tampering (requires IND-CCA or authentication)."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement correctly describes the PRG → PRF → PRP derivation chain?",
+      "options": [
+        "PRG can build PRF via GGM tree; PRF can build PRP via Feistel networks (Luby-Rackoff); OWF can build PRG",
+        "PRF implies PRG implies PRP, so a PRP is strictly stronger than a PRG",
+        "AES is proven to be a PRG, which implies it is also a PRF and PRP",
+        "PRG, PRF, and PRP are independent assumptions with no known implications between them"
+      ],
+      "correct": 0,
+      "explanation": "The known hierarchy: OWF → PRG (Håstad-Impagliazzo-Levin-Luby), PRG → PRF (GGM tree), PRF → PRP (Feistel, Luby-Rackoff). In practice AES is directly assumed to be a PRP; the theoretical derivation is important for foundations but not for applied usage."
+    }
+  ]
 }

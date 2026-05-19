@@ -1,4 +1,101 @@
 {
   "title": "Threshold Signatures \u2014 FROST",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a Schnorr signature over a prime-order group, which verification equation is the right shape (up to notation)?",
+      "options": [
+        "g^z == R * PK^c, where c = H(R || PK || msg)",
+        "g^z == PK * R^c, where c = H(PK || msg)",
+        "z == H(R || msg) and verification recomputes z from R",
+        "g^c == R^z * PK, where c = H(msg)"
+      ],
+      "correct": 0,
+      "explanation": "Schnorr verification checks a linear relation between z, R, and the public key using a challenge hash."
+    },
+    {
+      "stage": "pre",
+      "question": "In Shamir secret sharing used for threshold signing, what does f(0) represent?",
+      "options": [
+        "The underlying secret scalar being shared",
+        "A random nonce used only for commitments",
+        "The participant identifier with the smallest value",
+        "The group generator element"
+      ],
+      "correct": 0,
+      "explanation": "The polynomial is constructed so that its constant term f(0) is the secret."
+    },
+    {
+      "stage": "post",
+      "question": "What does FROST output to verifiers after a successful signing session?",
+      "options": [
+        "A standard Schnorr signature (R, z) under the group public key",
+        "k separate Schnorr signatures, one per participant",
+        "A Merkle proof that at least k signers approved",
+        "A single ECDSA signature plus a list of signer ids"
+      ],
+      "correct": 0,
+      "explanation": "A key goal of FROST is that the final signature verifies exactly like a single-signer Schnorr signature."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the commitment list be sorted identically (e.g., ascending by identifier) for all parties?",
+      "options": [
+        "Because binding factors depend on the encoded commitment list; different order produces different rho values",
+        "Because group elements only multiply correctly when sorted",
+        "Because Lagrange coefficients require sorted inputs or they are undefined",
+        "Because sorting prevents replay attacks even if nonces are reused"
+      ],
+      "correct": 0,
+      "explanation": "Binding factors are hashes over the commitment list encoding, so ordering must be consistent and specified."
+    },
+    {
+      "stage": "post",
+      "question": "What is the coordinator's main benefit from verifying each signature share before aggregating?",
+      "options": [
+        "It can identify which participant produced an invalid share instead of only learning the final signature failed",
+        "It makes the final aggregate signature smaller",
+        "It removes the need for binding factors",
+        "It allows using fewer than the threshold number of shares"
+      ],
+      "correct": 0,
+      "explanation": "Per-share verification provides fault attribution and prevents publishing an invalid aggregate signature."
+    },
+    {
+      "stage": "post",
+      "question": "In threshold Schnorr with Shamir shares, what role do Lagrange coefficients lambda_i play for a signing subset S?",
+      "options": [
+        "They weight each share so the subset's contributions combine into the group secret at x=0",
+        "They randomize the group commitment R to hide which signers participated",
+        "They replace the need for two nonces (d_i, e_i) per signer",
+        "They are only used during key generation and never during signing"
+      ],
+      "correct": 0,
+      "explanation": "Lambda coefficients are the interpolation weights that make Σ(lambda_i * s_i) equal the group secret for that subset."
+    },
+    {
+      "stage": "post",
+      "question": "Attack: A signer accidentally reuses the same Schnorr nonce r for two different messages, producing signatures (R, z1) and (R, z2). What can an attacker do?",
+      "options": [
+        "Recover the secret key by solving x = (z1 - z2) / (c1 - c2) mod q",
+        "Forge signatures on any message without knowing the key, without further work",
+        "Only learn the public key again; nothing about the secret key",
+        "Recover r but not the secret key"
+      ],
+      "correct": 0,
+      "explanation": "Nonce reuse gives two linear equations in the same unknown key, allowing direct recovery of the secret scalar."
+    },
+    {
+      "stage": "post",
+      "question": "What is the purpose of FROST binding factors rho_i in the two-round protocol?",
+      "options": [
+        "Bind each signer's nonce commitments to the full transcript (message + commitment list) to prevent mix-and-match",
+        "Allow the coordinator to choose the signers after seeing their signature shares",
+        "Replace the hash function in the Schnorr challenge computation",
+        "Make Shamir shares information-theoretically secure even against t participants"
+      ],
+      "correct": 0,
+      "explanation": "Binding factors ensure the effective commitments depend on the message and the entire commitment list, reducing transcript malleability."
+    }
+  ]
 }

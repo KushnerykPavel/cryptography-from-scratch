@@ -244,6 +244,12 @@ def aks_primality_test(n: int) -> bool:
 
 This version is good for toy integers, testing, and understanding. It is not what you would run to make a 2048-bit RSA key.
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 Real libraries usually do not expose AKS as the default primality path. They instead combine:

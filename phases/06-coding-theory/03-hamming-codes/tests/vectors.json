@@ -1,1 +1,60 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Vectors are derived from the even-parity Hamming(7,4) layout [p1,p2,d1,p4,d2,d3,d4]. Parity checks are encoded by the standard H matrix whose columns are the non-zero 3-bit binary representations of positions 1..7 (syndrome bits ordered [1,2,4] least-significant first). Expected values were computed directly from these parity equations and cross-checked by exhaustive roundtrip and single-bit flip property tests in tests/test_vectors.py.",
+  "vectors": [
+    {
+      "op": "hamming74_parity_check_matrix",
+      "expected": [
+        [1, 0, 1, 0, 1, 0, 1],
+        [0, 1, 1, 0, 0, 1, 1],
+        [0, 0, 0, 1, 1, 1, 1]
+      ]
+    },
+    {
+      "op": "hamming74_encode",
+      "message": [1, 0, 1, 1],
+      "expected": [0, 1, 1, 0, 0, 1, 1]
+    },
+    {
+      "op": "hamming74_syndrome",
+      "received": [0, 1, 1, 0, 0, 1, 1],
+      "expected": [0, 0, 0]
+    },
+    {
+      "op": "hamming74_syndrome",
+      "received": [0, 1, 1, 0, 1, 1, 1],
+      "expected": [1, 0, 1]
+    },
+    {
+      "op": "syndrome_to_position",
+      "syndrome": [1, 0, 1],
+      "expected": 5
+    },
+    {
+      "op": "hamming74_correct_single_bit",
+      "received": [0, 1, 1, 0, 1, 1, 1],
+      "expected": {
+        "corrected": [0, 1, 1, 0, 0, 1, 1],
+        "flipped_pos": 5
+      }
+    },
+    {
+      "op": "hamming74_decode",
+      "received": [0, 1, 1, 0, 1, 1, 1],
+      "expected": {
+        "message": [1, 0, 1, 1],
+        "corrected": [0, 1, 1, 0, 0, 1, 1],
+        "flipped_pos": 5
+      }
+    },
+    {
+      "op": "hamming74_is_codeword",
+      "word": [0, 1, 1, 0, 0, 1, 1],
+      "expected": true
+    },
+    {
+      "op": "hamming74_is_codeword",
+      "word": [0, 1, 1, 0, 1, 1, 1],
+      "expected": false
+    }
+  ]
+}

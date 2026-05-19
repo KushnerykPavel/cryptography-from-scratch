@@ -1,1 +1,87 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "BLS Signatures logic based on Boneh–Lynn–Shacham (BLS01) and the CFRG BLS signatures draft. These vectors are for the lesson's *toy* bilinear model (not a real curve/pairing). Values are deterministic outputs of the code in code/main.py using SHA-256-based hashing and fixed domain separation tags.",
+  "vectors": [
+    {
+      "op": "keygen",
+      "seed_hex": "00010203",
+      "expected_sk_hex": "6de955c77e53a1799601acb0d2182952"
+    },
+    {
+      "op": "keygen",
+      "seed_hex": "04050607",
+      "expected_sk_hex": "0cf779d5edc88c527673e279446a54a9"
+    },
+    {
+      "op": "hash_to_g1",
+      "msg_hex": "68656c6c6f",
+      "expected_exp_hex": "1018dbb372c1744a90e4dfc276b74865"
+    },
+    {
+      "op": "sk_to_pk",
+      "sk_hex": "6de955c77e53a1799601acb0d2182952",
+      "expected_pk_exp_hex": "6de955c77e53a1799601acb0d2182952"
+    },
+    {
+      "op": "sign",
+      "sk_hex": "6de955c77e53a1799601acb0d2182952",
+      "msg_hex": "68656c6c6f",
+      "expected_sig_exp_hex": "3a125e46e927f47d82f079e3721a2c3f"
+    },
+    {
+      "op": "verify",
+      "pk_exp_hex": "6de955c77e53a1799601acb0d2182952",
+      "msg_hex": "68656c6c6f",
+      "sig_exp_hex": "3a125e46e927f47d82f079e3721a2c3f",
+      "expected": true
+    },
+    {
+      "op": "aggregate_signatures",
+      "sig_exp_hex_list": [
+        "3a125e46e927f47d82f079e3721a2c3f",
+        "793136d1e6ef9211c08487732b1b75d8"
+      ],
+      "expected_agg_sig_exp_hex": "33439518d017868f437501569d35a218"
+    },
+    {
+      "op": "aggregate_verify",
+      "pk_exp_hex_list": [
+        "6de955c77e53a1799601acb0d2182952",
+        "0cf779d5edc88c527673e279446a54a9"
+      ],
+      "msg_hex_list": ["68656c6c6f", "776f726c64"],
+      "agg_sig_exp_hex": "33439518d017868f437501569d35a218",
+      "expected": true
+    },
+    {
+      "op": "aggregate_verify",
+      "pk_exp_hex_list": [
+        "6de955c77e53a1799601acb0d2182952",
+        "0cf779d5edc88c527673e279446a54a9"
+      ],
+      "msg_hex_list": ["68656c6c6f", "68656c6c6f"],
+      "agg_sig_exp_hex": "33439518d017868f437501569d35a218",
+      "expected": false
+    },
+    {
+      "op": "pop_prove",
+      "sk_hex": "6de955c77e53a1799601acb0d2182952",
+      "expected_pop_exp_hex": "5b583a2d1a92707d4d5a95b301406154"
+    },
+    {
+      "op": "pop_verify",
+      "pk_exp_hex": "6de955c77e53a1799601acb0d2182952",
+      "pop_exp_hex": "5b583a2d1a92707d4d5a95b301406154",
+      "expected": true
+    },
+    {
+      "op": "fast_aggregate_verify_same_message",
+      "pk_exp_hex_list": [
+        "6de955c77e53a1799601acb0d2182952",
+        "0cf779d5edc88c527673e279446a54a9"
+      ],
+      "msg_hex": "73616d65",
+      "agg_sig_exp_hex": "6d4eef6725a2531e4d466734da4f7d78",
+      "expected": true
+    }
+  ]
+}

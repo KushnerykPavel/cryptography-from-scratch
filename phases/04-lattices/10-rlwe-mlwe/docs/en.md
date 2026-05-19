@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how Ring-LWE replaces dense matrices with polynomial multiplication in Z_q[x]/(x^n + 1), reducing key sizes while preserving the noisy-equation hardness structure
+- Implement cyclic polynomial multiplication using the relation x^n ≡ -1 for RLWE and x^n ≡ 1 for NTRU-style rings
+- Distinguish RLWE (single polynomial, maximally structured) from MLWE (length-k vector of polynomials, tunable structure) and explain the security assumption tradeoff
+- Apply Regev-style bit encryption and majority-vote decryption to toy RLWE and MLWE instances
+- Identify why CRYSTALS-Kyber is based on MLWE and how module rank k tunes the structure-vs-assumption balance
+
 ## The Problem
 
 Plain LWE is a beautiful definition, but it is expensive: it uses big dense matrices.
@@ -125,6 +133,12 @@ rng = Sha256CtrRng(b"demo")
 pk, sk = mlwe_keygen(rng, params)
 ct = mlwe_encrypt_bit(rng, params, pk, 1)
 mu_hat = mlwe_decrypt_bit(params, sk, ct)
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

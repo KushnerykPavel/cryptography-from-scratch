@@ -1,4 +1,101 @@
 {
-  "title": "Hash Functions \u2014 Merkle-Damgard, SHA-256",
-  "questions": []
+  "title": "SHA-256 from Scratch",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main purpose of a cryptographic hash function like SHA-256?",
+      "options": [
+        "Map arbitrary-length input bytes to a fixed-length digest",
+        "Encrypt data so only the key holder can read it",
+        "Sign data so anyone can verify who wrote it",
+        "Compress data to make it smaller for storage"
+      ],
+      "correct": 0,
+      "explanation": "A hash maps bytes of any length to a fixed-size digest; it is not encryption or signing."
+    },
+    {
+      "stage": "pre",
+      "question": "When you hash a string in a program, what is the safest default practice?",
+      "options": [
+        "Convert to bytes with an explicit encoding (e.g., UTF-8) and hash the bytes",
+        "Hash the language's string object directly with its default representation",
+        "Hash the hexadecimal text of the string for portability",
+        "Hash the string length and assume it uniquely identifies content"
+      ],
+      "correct": 0,
+      "explanation": "Hashes are defined over bytes. If you start from text, pick an explicit encoding and hash the resulting bytes."
+    },
+    {
+      "stage": "post",
+      "question": "In SHA-256, what is the digest size?",
+      "options": [
+        "256 bits (32 bytes)",
+        "128 bits (16 bytes)",
+        "512 bits (64 bytes)",
+        "1024 bits (128 bytes)"
+      ],
+      "correct": 0,
+      "explanation": "SHA-256 outputs 256 bits, which is 32 bytes (or 64 hex characters)."
+    },
+    {
+      "stage": "post",
+      "question": "What does SHA-256 padding append at the end of the message?",
+      "options": [
+        "A 64-bit big-endian encoding of the original message length in bits",
+        "A 32-bit little-endian encoding of the message length in bytes",
+        "A random salt so identical messages hash differently",
+        "A copy of the first 32 bytes of the message"
+      ],
+      "correct": 0,
+      "explanation": "SHA-256 pads with 0x80, zeros, and then the original message length as a 64-bit big-endian bit count."
+    },
+    {
+      "stage": "post",
+      "question": "How many 32-bit words are in one SHA-256 message block before expansion?",
+      "options": [
+        "16 words (from 64 bytes, big-endian)",
+        "8 words (from 32 bytes, little-endian)",
+        "32 words (from 128 bytes, big-endian)",
+        "64 words (from 256 bytes, little-endian)"
+      ],
+      "correct": 0,
+      "explanation": "Each 512-bit block is 64 bytes, interpreted as 16 big-endian 32-bit words before expansion to 64."
+    },
+    {
+      "stage": "post",
+      "question": "SHA-256 uses 64 rounds per block. What drives those rounds?",
+      "options": [
+        "A message schedule W[0..63] and fixed constants K[0..63]",
+        "A randomly generated per-message nonce and a secret constant",
+        "A public-key signature over the block and a verifier key",
+        "A table of S-boxes derived from the encryption key"
+      ],
+      "correct": 0,
+      "explanation": "Each round mixes the working state with one scheduled word W[i] and one fixed constant K[i]."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: a system uses token = sha256(secret || message) as an authentication tag. What is a realistic risk?",
+      "options": [
+        "Length extension can let an attacker compute a valid token for message || extra without knowing secret",
+        "A collision can be found instantly for any chosen message",
+        "The secret key can be recovered from one token and one message",
+        "The hash output becomes reversible, revealing the full secret"
+      ],
+      "correct": 0,
+      "explanation": "Merkle–Damgård hashes like SHA-256 can be length-extended when misused as a MAC; HMAC is designed to avoid this."
+    },
+    {
+      "stage": "post",
+      "question": "Why do from-scratch SHA-256 implementations in Python frequently mask with 0xFFFFFFFF?",
+      "options": [
+        "To force 32-bit modular arithmetic because Python integers do not overflow naturally",
+        "To increase the security level from 256 bits to 512 bits",
+        "To ensure the output is always ASCII for printing",
+        "To make the function constant-time on all CPUs"
+      ],
+      "correct": 0,
+      "explanation": "SHA-256 is defined over 32-bit words. Masking simulates wraparound arithmetic after additions and rotates."
+    }
+  ]
 }

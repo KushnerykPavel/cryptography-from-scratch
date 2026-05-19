@@ -1,4 +1,101 @@
 {
   "title": "ZK Foundations Lab \u2014 Build a \u03a3-Protocol Library",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a \u03a3-protocol transcript (a, c, s), what is the verifier\u2019s role for c in the interactive version?",
+      "options": [
+        "Choose c uniformly at random from a large challenge space",
+        "Compute c as H(statement || a) mod q",
+        "Choose c to minimize the prover\u2019s response size",
+        "Reuse the same c across sessions to simplify caching"
+      ],
+      "correct": 0,
+      "explanation": "Interactive \u03a3-protocols rely on an unpredictable verifier challenge; Fiat\u2013Shamir replaces this with hashing only in the non-interactive setting."
+    },
+    {
+      "stage": "pre",
+      "question": "What does \u201cHVZK\u201d (honest-verifier zero-knowledge) mean at a high level for a \u03a3-protocol?",
+      "options": [
+        "There is a simulator that can produce accepting transcripts without the witness, for any challenge",
+        "The prover can convince any verifier even if the statement is false",
+        "The verifier learns the witness but cannot prove it to others",
+        "The protocol is secure even if the verifier chooses challenges adversarially after seeing s"
+      ],
+      "correct": 0,
+      "explanation": "Special HVZK is demonstrated by a simulator that picks (c, s) and back-computes commitments so verification passes."
+    },
+    {
+      "stage": "post",
+      "question": "Why must a \u03a3-protocol implementation validate that statement elements (like y) are in the intended subgroup?",
+      "options": [
+        "Otherwise the verification equation may accept values outside the security model, enabling trivial or exploitable transcripts",
+        "Otherwise mod_inv will always throw an exception",
+        "Otherwise Fiat\u2013Shamir hashing becomes non-deterministic",
+        "Otherwise the protocol becomes constant-time"
+      ],
+      "correct": 0,
+      "explanation": "Group/subgroup membership is part of the statement domain; skipping it can invalidate soundness or allow cheating via small subgroups."
+    },
+    {
+      "stage": "post",
+      "question": "In Schnorr, what does special soundness say you can do with two accepting transcripts that share the same commitment a but have c1 \u2260 c2?",
+      "options": [
+        "Extract the witness x efficiently",
+        "Simulate a transcript without knowing x",
+        "Compute a discrete log in any group in polynomial time",
+        "Derive a collision in SHA-256"
+      ],
+      "correct": 0,
+      "explanation": "Two accepting responses to distinct challenges for the same commitment let you solve for x, which is why nonce reuse is catastrophic."
+    },
+    {
+      "stage": "post",
+      "question": "A developer accidentally reuses the same prover nonce r across two sessions in Schnorr with challenges c1 and c2. What is the concrete consequence?",
+      "options": [
+        "An attacker can recover the secret witness x from the two responses",
+        "Nothing; Schnorr remains secure as long as p is prime",
+        "The proof only fails to verify, but no secret is leaked",
+        "Only the commitment a is leaked, which is harmless"
+      ],
+      "correct": 0,
+      "explanation": "Nonce reuse produces two equations s1 = r + c1 x and s2 = r + c2 x; subtracting and dividing yields x."
+    },
+    {
+      "stage": "post",
+      "question": "In a Fiat\u2013Shamir proof built from a \u03a3-protocol, which data must be hashed (at minimum) to derive c?",
+      "options": [
+        "A domain separator plus the full statement and the commitment(s)",
+        "Only the response s (because it encodes everything)",
+        "Only the public parameters (p, q, g)",
+        "Only the witness x (to prove knowledge)"
+      ],
+      "correct": 0,
+      "explanation": "The challenge must be bound to the statement and commitment(s), and domain-separated, so proofs can\u2019t be replayed or transplanted."
+    },
+    {
+      "stage": "post",
+      "question": "Chaum\u2013Pedersen (DLEQ) proves that a single secret x is shared between (g1, y1) and (g2, y2). What changes compared to Schnorr?",
+      "options": [
+        "There are two commitments (a1, a2) and verification checks two equations with the same (c, s)",
+        "The challenge c is no longer needed",
+        "The response becomes a pair (s1, s2) with different challenges",
+        "The protocol stops being a \u03a3-protocol"
+      ],
+      "correct": 0,
+      "explanation": "DLEQ keeps the same transcript shape but uses a tuple of commitments and two verification equations tied to a single challenge and response."
+    },
+    {
+      "stage": "post",
+      "question": "Why is an explicit, non-empty domain separator important when computing Fiat\u2013Shamir challenges?",
+      "options": [
+        "It prevents cross-protocol replay where the same transcript bytes would be interpreted as a proof for a different protocol/context",
+        "It increases the prime size p used by the group",
+        "It makes the proof constant-time automatically",
+        "It removes the need for subgroup validation"
+      ],
+      "correct": 0,
+      "explanation": "Domain separation ensures that the same (statement, commitment) hashed under different protocols yields different challenges, avoiding transcript reuse across contexts."
+    }
+  ]
 }

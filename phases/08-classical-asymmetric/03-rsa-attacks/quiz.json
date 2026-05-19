@@ -1,4 +1,101 @@
 {
-  "title": "Attacking Textbook RSA \u2014 Common Modulus, Hastad, Wiener",
-  "questions": []
+  "title": "Attacking Textbook RSA — Common Modulus, Håstad, Wiener",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is “textbook RSA” encryption?",
+      "options": [
+        "Raw modular exponentiation `c = m^e mod n` with no randomized padding",
+        "RSA-OAEP encryption as defined in PKCS #1 v2.2 (RFC 8017)",
+        "A hybrid KEM+DEM scheme (RSA-KEM + AEAD) used in modern protocols",
+        "RSA-PSS signatures with salt and mask generation"
+      ],
+      "correct": 0,
+      "explanation": "“Textbook RSA” means treating RSA as a bare math transform. Without OAEP-like padding, it leaks structure and enables classic attacks."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the Chinese Remainder Theorem (CRT) help you do in practice?",
+      "options": [
+        "Combine multiple congruences `x mod n_i` into a single `x mod (∏ n_i)`",
+        "Compute modular inverses without the extended Euclidean algorithm",
+        "Prove that factoring `n` is always easy when `n` is composite",
+        "Turn any public-key encryption scheme into a signature scheme"
+      ],
+      "correct": 0,
+      "explanation": "CRT reconstructs one value consistent with several modular residues, assuming the moduli are pairwise coprime."
+    },
+    {
+      "stage": "post",
+      "question": "In the common modulus attack, why is the condition `gcd(e1, e2) = 1` important?",
+      "options": [
+        "It guarantees Bézout coefficients `a, b` exist with `a*e1 + b*e2 = 1`",
+        "It guarantees `n` is prime, so decryption is trivial",
+        "It guarantees both ciphertexts are equal for any message `m`",
+        "It guarantees the attacker can compute `φ(n)` directly from `e1` and `e2`"
+      ],
+      "correct": 0,
+      "explanation": "When `gcd(e1, e2) = 1`, extended GCD gives integers `a, b` so you can algebraically combine `c1^a * c2^b` to recover `m`."
+    },
+    {
+      "stage": "post",
+      "question": "In the common modulus attack formula, what does a negative exponent mean (e.g. `c1^-3 mod n`)?",
+      "options": [
+        "Compute a modular inverse and then exponentiate: `(c1^-1)^3 mod n`",
+        "Compute a floating-point reciprocal and round to an integer",
+        "Subtract 3 from the ciphertext and reduce modulo `n`",
+        "Interpret the ciphertext bytes as a signed integer"
+      ],
+      "correct": 0,
+      "explanation": "Exponentiation with a negative exponent in modular arithmetic is defined via multiplicative inverse (when it exists)."
+    },
+    {
+      "stage": "post",
+      "question": "Which set of conditions best matches the core preconditions for Håstad’s broadcast attack?",
+      "options": [
+        "Same plaintext sent to enough recipients with small `e`, no randomized padding, and `m^e` smaller than the product modulus",
+        "Any RSA ciphertext, as long as the attacker knows the public exponent `e`",
+        "Two ciphertexts under the same modulus with different exponents `e1, e2`",
+        "Any RSA key where the modulus `n` is larger than 2048 bits"
+      ],
+      "correct": 0,
+      "explanation": "Broadcast attacks exploit deterministic reuse: if you can reconstruct `m^e` as an integer (via CRT) you can take an integer root."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the CRT combiner in this lesson require moduli to be pairwise coprime?",
+      "options": [
+        "Without coprimality, a unique reconstruction modulo the product is not guaranteed",
+        "Without coprimality, modular exponentiation is undefined",
+        "Without coprimality, RSA encryption becomes constant-time",
+        "Without coprimality, the extended Euclidean algorithm cannot run"
+      ],
+      "correct": 0,
+      "explanation": "CRT reconstruction relies on modular inverses between the accumulated modulus and each new modulus, which requires coprimality."
+    },
+    {
+      "stage": "post",
+      "question": "Wiener’s attack targets which RSA key-generation mistake?",
+      "options": [
+        "Choosing a private exponent `d` that is too small",
+        "Choosing a public exponent `e` that is too large",
+        "Using OAEP padding instead of PSS padding",
+        "Using a modulus `n` that is exactly a power of two"
+      ],
+      "correct": 0,
+      "explanation": "If `d` is unusually small (relative to `n`), continued fractions can recover it from the public key `(e, n)`."
+    },
+    {
+      "stage": "post",
+      "question": "Which mitigation most directly prevents the common modulus and broadcast attacks shown here?",
+      "options": [
+        "Do not reuse moduli, and use randomized padding/encoding (OAEP for encryption)",
+        "Switch from CRT to a different modular reconstruction algorithm",
+        "Increase `e` from 3 to 65537 while keeping encryption deterministic",
+        "Hide the public exponent `e` so attackers cannot read it"
+      ],
+      "correct": 0,
+      "explanation": "These attacks exploit deterministic structure (reused `n` or reused `m`). Unique moduli and randomized padding remove the exploitable algebra."
+    }
+  ]
 }

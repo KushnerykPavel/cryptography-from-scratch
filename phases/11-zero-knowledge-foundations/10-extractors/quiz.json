@@ -1,4 +1,101 @@
 {
   "title": "Knowledge Soundness \u2014 Extractors",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a Schnorr sigma protocol transcript (t, c, s), which verifier equation is checked?",
+      "options": [
+        "g^s == t \u00b7 y^c (mod p)",
+        "y^s == t \u00b7 g^c (mod p)",
+        "g^t == s \u00b7 y^c (mod p)",
+        "g^s == y \u00b7 t^c (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "Schnorr verification checks that the response s opens the commitment t consistently with statement y = g^x."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the goal of a knowledge extractor in a proof of knowledge definition?",
+      "options": [
+        "Recover a valid witness if a prover convinces the verifier often enough",
+        "Simulate a transcript without interacting with the prover",
+        "Find a hash collision to break Fiat\u2013Shamir",
+        "Compute the discrete logarithm of every group element"
+      ],
+      "correct": 0,
+      "explanation": "Knowledge soundness is formalized by the existence of an extractor that outputs a witness when the prover has a non-negligible success probability."
+    },
+    {
+      "stage": "post",
+      "question": "Special soundness for a sigma protocol typically says an extractor can compute a witness from:",
+      "options": [
+        "Two accepting transcripts with the same commitment and different challenges",
+        "Two rejecting transcripts with different commitments and the same challenge",
+        "One accepting transcript and one rejecting transcript for the same challenge",
+        "Any single accepting transcript"
+      ],
+      "correct": 0,
+      "explanation": "The extractor needs a 'collision' on the first message (commitment) and two distinct challenges to eliminate randomness and solve for the witness."
+    },
+    {
+      "stage": "post",
+      "question": "Given Schnorr transcripts (t, c, s) and (t, c', s') that both verify and have c \u2260 c' (mod q), which formula extracts x (mod q)?",
+      "options": [
+        "x = (s - s') \u00b7 (c - c')^{-1} (mod q)",
+        "x = (c - c') \u00b7 (s - s')^{-1} (mod p)",
+        "x = (s + s') \u00b7 (c + c')^{-1} (mod q)",
+        "x = (t - t') \u00b7 (c - c')^{-1} (mod q)"
+      ],
+      "correct": 0,
+      "explanation": "Subtracting the two response equations cancels the nonce r and leaves x multiplied by (c - c'), which you invert modulo q."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the extractor need 'rewinding' access (or an equivalent forking ability) in many PoK proofs?",
+      "options": [
+        "To obtain two different challenges for the same commitment",
+        "To learn the prover's random seed directly from memory",
+        "To make the verifier accept even when the statement is false",
+        "To avoid modular arithmetic entirely"
+      ],
+      "correct": 0,
+      "explanation": "Special soundness extraction requires two accepting transcripts that share the same first message; rewinding is how the proof obtains them."
+    },
+    {
+      "stage": "post",
+      "question": "In an OR proof built from two Schnorr branches, you get two accepting OR transcripts with the same commitments but different global challenges. What can you extract?",
+      "options": [
+        "A witness for at least one branch",
+        "Witnesses for both branches",
+        "Only the prover's nonce r, never a witness",
+        "Nothing; OR proofs are never proofs of knowledge"
+      ],
+      "correct": 0,
+      "explanation": "Different global challenges force at least one branch to have different per-branch challenges, enabling Schnorr extraction for that branch."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: a prover accidentally reuses the same Schnorr nonce r (same commitment t) in two sessions with different challenges c and c'. What is the consequence?",
+      "options": [
+        "The witness x can be recovered from the two transcripts",
+        "Nothing changes; reusing r only affects performance",
+        "Only the public key y leaks, not x",
+        "Verification fails automatically in both sessions"
+      ],
+      "correct": 0,
+      "explanation": "Nonce reuse gives exactly the two-transcript condition special soundness needs, so x is computed as (s - s') / (c - c') mod q."
+    },
+    {
+      "stage": "post",
+      "question": "In Schnorr, which modulus is used for computing the response s = r + c\u00b7x?",
+      "options": [
+        "Modulo q (the subgroup order / scalar field)",
+        "Modulo p (the group modulus)",
+        "Modulo (p - 1) always",
+        "No modulus is needed"
+      ],
+      "correct": 0,
+      "explanation": "The response lives in the scalar field Z_q; group operations like exponentiation happen modulo p."
+    }
+  ]
 }

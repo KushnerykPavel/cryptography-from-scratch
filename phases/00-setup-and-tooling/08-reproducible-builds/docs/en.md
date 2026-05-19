@@ -120,6 +120,12 @@ Run the demo:
 python phases/00-setup-and-tooling/08-reproducible-builds/code/main.py demo
 ```
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 Real-world release verification tends to look like one of these:

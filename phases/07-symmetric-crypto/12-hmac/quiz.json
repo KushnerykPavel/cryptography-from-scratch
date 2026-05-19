@@ -1,4 +1,95 @@
 {
-  "title": "HMAC \u2014 Build, Attack, Defend",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "A MAC tag is primarily used to:",
+      "options": [
+        "Detect tampering by someone without the secret key",
+        "Hide the message content from passive eavesdroppers",
+        "Compress a message into a fixed-length fingerprint",
+        "Negotiate a shared secret over a public channel"
+      ],
+      "correct": 0,
+      "explanation": "A MAC provides integrity/authenticity under a shared secret key; it does not provide confidentiality or key exchange by itself."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the SHA-256 block size used by HMAC key normalization?",
+      "options": ["64 bytes", "32 bytes", "128 bytes", "16 bytes"],
+      "correct": 0,
+      "explanation": "SHA-256 processes input in 512-bit (64-byte) blocks, and HMAC normalizes the key to that block size."
+    },
+    {
+      "stage": "post",
+      "question": "Which expression matches the HMAC construction (for a hash H) most closely?",
+      "options": [
+        "H((K0 ⊕ opad) || H((K0 ⊕ ipad) || M))",
+        "H((K0 ⊕ ipad) || H((K0 ⊕ opad) || M))",
+        "H(K0 || H(opad || ipad || M)) (one pass)",
+        "H(H(K0) || (opad ⊕ ipad) || M) (mixed pads)"
+      ],
+      "correct": 0,
+      "explanation": "HMAC uses an inner hash keyed with ipad and an outer hash keyed with opad, with the same normalized key block K0."
+    },
+    {
+      "stage": "post",
+      "question": "In HMAC-SHA-256, what should you do when the key is longer than 64 bytes?",
+      "options": [
+        "Hash the key with SHA-256, then zero-pad to 64 bytes",
+        "Zero-pad the key up to the SHA-256 digest size only",
+        "Truncate the key to 64 bytes without hashing it first",
+        "Repeat the key bytes until it reaches 64 bytes"
+      ],
+      "correct": 0,
+      "explanation": "HMAC defines K0 as hash(key) when the key exceeds the hash block size, then pads with zeros to the block size."
+    },
+    {
+      "stage": "post",
+      "question": "Why can `sha256(key || message)` be dangerous as a MAC when SHA-256 is a Merkle–Damgård hash?",
+      "options": [
+        "It can be vulnerable to a length-extension style forgery",
+        "It leaks the key bytes directly through the digest output",
+        "It makes SHA-256 collisions trivial to compute in practice",
+        "It forces the key to be at least 64 bytes to be secure"
+      ],
+      "correct": 0,
+      "explanation": "For Merkle–Damgård hashes, knowing sha256(key||message) can allow computing a tag for (key||message||suffix) without knowing the key, given key-length assumptions."
+    },
+    {
+      "stage": "post",
+      "question": "Why should MAC verification use a constant-time equality check instead of `==` on tags?",
+      "options": [
+        "To reduce timing leakage about how many prefix bytes matched",
+        "To prevent hash collisions from being found by an attacker",
+        "To ensure the tag is encrypted before being compared",
+        "To make verification faster on modern CPUs in practice"
+      ],
+      "correct": 0,
+      "explanation": "A constant-time compare avoids early-exit behavior that can leak information about the secret tag via timing."
+    },
+    {
+      "stage": "post",
+      "question": "If a protocol uses a 16-byte truncated HMAC-SHA-256 tag, the verifier should:",
+      "options": [
+        "Compute full HMAC then compare exactly 16 bytes in constant time",
+        "Compute full HMAC and accept any prefix length that matches",
+        "Compute HMAC over a 16-byte key to match the 16-byte tag",
+        "Compute SHA-256 once and then slice to 16 bytes as a shortcut"
+      ],
+      "correct": 0,
+      "explanation": "Truncation is done after computing HMAC; verification must enforce the exact tag length and use a constant-time compare on that length."
+    },
+    {
+      "stage": "post",
+      "question": "If you must reuse one HMAC key across multiple features, what is the minimum safe practice?",
+      "options": [
+        "Add domain separation labels to the signed bytes for each feature",
+        "Switch the order to `sha256(message || key)` for all features",
+        "Use the same tag but base64-encode it differently per feature",
+        "Rotate the key every time a message is signed or verified"
+      ],
+      "correct": 0,
+      "explanation": "Domain separation (context labels) reduces cross-protocol confusion when the same key might sign different message formats or semantics."
+    }
+  ]
 }

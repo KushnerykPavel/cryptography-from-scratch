@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain Rabin's irreducibility criterion and how it combines Frobenius power checks with gcd conditions to certify an irreducible polynomial
+- Apply root testing to detect reducibility in quadratic and cubic polynomials over `F_p`, and explain why root absence is insufficient for higher degrees
+- Implement `poly_pow_mod` to compute `x^(p^k) mod f(x)` efficiently using square-and-multiply on polynomials
+- Identify a reducible-modulus witness by factoring a polynomial and constructing two nonzero elements whose product is zero in the quotient
+- Distinguish the `ExtensionField` wrapper's validation step from unchecked quotient arithmetic and explain why the irreducibility check is the field-construction gate
+
 ## The Problem
 
 The previous lesson built `F_p[x]/(m(x))`, but it left the most important question open: which `m(x)` are safe to use when you want a field?
@@ -282,6 +290,12 @@ a * b
 
 b.inverse()
 # ExtensionField([2, 4], modulus=[2, 0, 1], p=5)
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

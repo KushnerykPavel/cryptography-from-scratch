@@ -1,4 +1,100 @@
 {
-  "title": "BLS Signatures & Aggregation",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which statement best captures bilinearity of a pairing e : G1 × G2 → GT?",
+      "options": [
+        "e(a·P, b·Q) = e(P, Q)^(a·b) for scalars a, b",
+        "e(P, Q) = e(Q, P) for all inputs",
+        "e(P + Q, R) = e(P, R) + e(Q, R) as integers",
+        "e(P, Q) outputs a point in G1"
+      ],
+      "correct": 0,
+      "explanation": "Bilinearity means the pairing is linear in each input, letting scalars move into the exponent in GT."
+    },
+    {
+      "stage": "pre",
+      "question": "In the core BLS scheme, what is the signature on a message m under secret key sk?",
+      "options": [
+        "sig = sk·H(m), a group element (point) in the signing group",
+        "sig = H(sk || m), a 32-byte hash",
+        "sig = H(m)^(-sk), an inverse in GT",
+        "sig = (r, s) like ECDSA"
+      ],
+      "correct": 0,
+      "explanation": "BLS signs by multiplying the hash-to-curve point by the secret scalar, producing a single group element signature."
+    },
+    {
+      "stage": "post",
+      "question": "Why does BLS verification check e(sig, G2) == e(H(m), pk)?",
+      "options": [
+        "Because bilinearity implies e(sk·H(m), G2) = e(H(m), sk·G2)",
+        "Because hash functions are collision resistant",
+        "Because pk is a hash of sig",
+        "Because e is symmetric so inputs can be swapped freely"
+      ],
+      "correct": 0,
+      "explanation": "The check is exactly the bilinear identity with pk = sk·G2 and sig = sk·H(m)."
+    },
+    {
+      "stage": "post",
+      "question": "In the basic BLS aggregate signature scheme, what rule is required to prevent rogue-key issues?",
+      "options": [
+        "All messages in the aggregate must be distinct",
+        "All public keys must be identical",
+        "All signatures must include a random nonce",
+        "All messages must be empty strings"
+      ],
+      "correct": 0,
+      "explanation": "The basic scheme defends against rogue-key attacks by enforcing message distinctness in AggregateVerify."
+    },
+    {
+      "stage": "post",
+      "question": "Attack concept: what is a 'rogue-key attack' in same-message BLS multi-signatures?",
+      "options": [
+        "An attacker crafts a public key dependent on others so a forged aggregate verifies without all signers participating",
+        "An attacker recovers sk from pk by solving a hash preimage",
+        "An attacker flips a bit in a signature and it still verifies",
+        "An attacker forces the pairing output to be 1 for all inputs"
+      ],
+      "correct": 0,
+      "explanation": "If you allow fast same-message aggregation without defenses, a maliciously chosen public key can make a forged aggregate signature verify."
+    },
+    {
+      "stage": "post",
+      "question": "Which mechanism is commonly used to enable fast same-message aggregation safely?",
+      "options": [
+        "Require a proof of possession (PoP) for each public key",
+        "Switch from SHA-256 to MD5",
+        "Encode points in base58 instead of bytes",
+        "Disable hashing-to-curve and sign raw messages"
+      ],
+      "correct": 0,
+      "explanation": "PoP ties each registered public key to a signer who knows the corresponding secret key, blocking rogue-key constructions."
+    },
+    {
+      "stage": "post",
+      "question": "Why must BLS implementations specify a concrete hash-to-curve ciphersuite / domain separation tag?",
+      "options": [
+        "So different protocols can't accidentally interpret the same bytes as the same group element",
+        "So signatures become randomized instead of deterministic",
+        "So aggregation becomes impossible",
+        "So subgroup checks are no longer needed"
+      ],
+      "correct": 0,
+      "explanation": "Domain separation makes the hash-to-curve mapping protocol-specific, preventing cross-protocol reuse and mismatched hashing."
+    },
+    {
+      "stage": "post",
+      "question": "What is the most important validation step when deserializing BLS public keys or signatures in real libraries?",
+      "options": [
+        "Ensure the point is in the correct prime-order subgroup (including cofactor/subgroup checks)",
+        "Ensure the bytes are ASCII",
+        "Ensure the point has an x-coordinate less than y",
+        "Ensure the signature is probabilistic"
+      ],
+      "correct": 0,
+      "explanation": "Pairing curves have cofactors and multiple subgroups; accepting points outside the intended subgroup can break security or consensus."
+    }
+  ]
 }

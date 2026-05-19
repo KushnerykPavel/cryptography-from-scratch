@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how the convolution theorem reduces polynomial multiplication to three steps: forward FFT, pointwise multiply, inverse FFT
+- Implement the iterative Cooley-Tukey FFT with bit-reversal permutation and complex twiddle factors over the complex numbers
+- Apply zero-padding to ensure linear convolution rather than circular convolution, and compute the required transform length
+- Distinguish FFT-based polynomial multiplication over complex numbers from NTT-based multiplication in `F_p`, explaining the rounding and exact-arithmetic trade-off
+- Identify the circular convolution bug caused by insufficient padding and construct a small counterexample where the wrapped output differs from the true product
+
 ## The Problem
 
 Polynomial multiplication is the hidden workhorse in modern crypto and ZK:
@@ -206,6 +214,12 @@ def poly_mul_fft(a: list[int], b: list[int]) -> list[int]:
     ifft_inplace(fa)
 
     return [int(round(fa[i].real)) for i in range(out_len)]
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

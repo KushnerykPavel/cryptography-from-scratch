@@ -1,4 +1,100 @@
 {
-  "title": "Authenticated Encryption \u2014 GCM, CCM, OCB",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main reason to use an AEAD (like AES-GCM) instead of just encryption (like AES-CTR) for messages sent over an untrusted network?",
+      "options": [
+        "AEAD provides confidentiality and detects tampering of ciphertext and associated data.",
+        "AEAD makes ciphertext shorter than plaintext, saving bandwidth.",
+        "AEAD hides the nonce/IV so you do not need to transmit it.",
+        "AEAD eliminates the need to rotate keys."
+      ],
+      "correct": 0,
+      "explanation": "AEAD combines encryption with authentication so modifications to ciphertext or AAD are detected during decryption."
+    },
+    {
+      "stage": "pre",
+      "question": "In AES-GCM, what is the security impact of reusing the same (key, nonce) pair to encrypt two different plaintexts?",
+      "options": [
+        "It can leak relationships between plaintexts (e.g., plaintext XOR) and can enable forgeries.",
+        "It is safe as long as the authentication tag is 16 bytes.",
+        "It only affects performance, not security.",
+        "It only breaks security if the plaintexts are longer than one block."
+      ],
+      "correct": 0,
+      "explanation": "GCM uses CTR for encryption; nonce reuse reuses the keystream and breaks the intended security guarantees."
+    },
+    {
+      "stage": "post",
+      "question": "Which input(s) are authenticated by an AEAD tag?",
+      "options": [
+        "Nonce, AAD, and ciphertext (and therefore the plaintext).",
+        "Only the plaintext.",
+        "Only the nonce.",
+        "Only the ciphertext; AAD is never authenticated."
+      ],
+      "correct": 0,
+      "explanation": "The tag is computed over the AEAD context, binding nonce + AAD + ciphertext together under the key."
+    },
+    {
+      "stage": "post",
+      "question": "When decrypting AEAD-protected data, what is the correct rule for handling the plaintext?",
+      "options": [
+        "Verify the tag first and reject on failure before using or parsing the plaintext.",
+        "Decrypt and parse the plaintext, then verify the tag at the end if convenient.",
+        "Decrypt and return the plaintext even if tag verification fails (the caller can decide).",
+        "Skip verification if the ciphertext looks well-formed."
+      ],
+      "correct": 0,
+      "explanation": "Using unauthenticated plaintext creates oracle and injection vulnerabilities; tag verification must gate usage."
+    },
+    {
+      "stage": "post",
+      "question": "In AES-GCM, what are the two main components that provide (a) confidentiality and (b) authentication?",
+      "options": [
+        "Confidentiality: AES-CTR (GCTR). Authentication: GHASH over AAD and ciphertext.",
+        "Confidentiality: GHASH. Authentication: AES-CTR.",
+        "Confidentiality: AES-CBC. Authentication: HMAC-SHA256.",
+        "Confidentiality: AES-ECB. Authentication: AES-ECB."
+      ],
+      "correct": 0,
+      "explanation": "GCM encrypts using counter mode and authenticates using a polynomial hash (GHASH) plus a final AES-derived mask."
+    },
+    {
+      "stage": "post",
+      "question": "Suppose you see two AES-GCM ciphertexts produced with the same key and the same nonce, and you know they used the same AAD. What can an attacker compute from the ciphertexts alone (ignoring tags)?",
+      "options": [
+        "The XOR of the two plaintexts (for the overlapping length).",
+        "The AES key.",
+        "The full plaintexts directly, with no additional information.",
+        "Nothing; authentication tags prevent all leakage."
+      ],
+      "correct": 0,
+      "explanation": "CTR-mode reuse means C1 ^ C2 = (P1 ^ S) ^ (P2 ^ S) = P1 ^ P2, revealing relationships between plaintexts."
+    },
+    {
+      "stage": "post",
+      "question": "Which of the following is a good candidate to put into AAD (authenticated but not encrypted) for an application message?",
+      "options": [
+        "A protocol version and message type that must not be altered by an attacker.",
+        "A secret key that you do not want to encrypt.",
+        "The plaintext itself (because AAD is more secure than ciphertext).",
+        "A random padding string used only to change ciphertext length."
+      ],
+      "correct": 0,
+      "explanation": "AAD is for public metadata that must be integrity-protected (e.g., ids, versions, types, routing headers)."
+    },
+    {
+      "stage": "post",
+      "question": "Why should tag comparisons use a constant-time comparison primitive (e.g., compare_digest)?",
+      "options": [
+        "To reduce timing side-channels that could leak information about the correct tag.",
+        "Because constant-time compares make encryption faster.",
+        "Because constant-time compares are required to keep ciphertext length constant.",
+        "Because non-constant-time compares break confidentiality even with fresh nonces."
+      ],
+      "correct": 0,
+      "explanation": "Timing differences during verification can leak partial information about the correct tag and help attackers."
+    }
+  ]
 }

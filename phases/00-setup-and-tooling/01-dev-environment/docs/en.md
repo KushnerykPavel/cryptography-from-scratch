@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why environment reproducibility is a security property in cryptographic development
+- Identify the four layers of a crypto development stack (system foundation, runtime, math tooling, crypto libraries)
+- Apply virtual environment isolation to prevent dependency drift across machines
+- Verify a working crypto and math stack by running the course environment check script
+- Distinguish between optional toolchains (Rust, Node.js, SageMath) and the Python baseline required for early phases
+
 ## The Problem
 
 This course is hundreds of hours of code, tests, and RFC/NIST test vectors. If your environment is flaky, you will spend more time fighting installs than learning cryptography.
@@ -105,6 +113,12 @@ sage --version
 ```
 
 If you don’t have these installed yet, skip them. This course should not be blocked on optional tooling.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

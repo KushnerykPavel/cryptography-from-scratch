@@ -1,176 +1,210 @@
 # Babai's Nearest Plane Algorithm
-
-> Approximate CVP by rounding in a Gram–Schmidt coordinate system: “walk down orthogonal planes, one coefficient at a time.”
+> Approximate CVP by rounding in a Gram–Schmidt coordinate system.
 
 **Type:** Build
 **Languages:** Python
-**Prerequisites:** `04-lattices/03-svp-cvp` (CVP definition + brute force), `04-lattices/05-lll` (LLL reduction intuition + Gram–Schmidt)
+**Prerequisites:** `04-lattices/03-svp-cvp` (CVP definition + brute force), `04-lattices/05-lll` (Gram–Schmidt + reduction intuition)
 **Time:** ~75 minutes
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+- Explain why Babai’s nearest-plane algorithm is a basis-dependent approximate CVP solver
+- Compute exact Gram–Schmidt data (`b*`, `μ`, `||b*_i||^2`) using rational arithmetic
+- Implement the nearest-plane loop (project → round → subtract) from last to first direction
+- Distinguish BDD (guaranteed-near targets) from general CVP and predict when Babai succeeds
+- Apply the standard LLL-then-Babai workflow and measure improvement on a skew basis
+
 ## The Problem
 
-The **Closest Vector Problem (CVP)** is the workhorse query in lattice cryptography and lattice attacks:
+In lattice cryptography and lattice attacks, you repeatedly need a “good guess” for the **Closest Vector Problem (CVP)**: given a basis `B = (b1, …, bn)` and a target point `t`, find a lattice vector `v ∈ L(B)` minimizing `||v - t||`. Exact CVP is expensive, even in small dimensions, so you need a fast approximation that behaves well on typical instances.
 
-- given a basis `B = (b1, ..., bn)` and a target point `t ∈ R^n`,
-- find the lattice vector `v ∈ L(B)` that minimizes `||v - t||`.
+This shows up concretely in **bounded-distance decoding (BDD)** situations where `t` is *promised* to be close to the lattice (cryptosystems: secret + small error), and in attack demos where the workflow is “reduce the basis → do a CVP-ish step → see the secret pop out”. In real tooling, Babai’s algorithm is often the first candidate you try before you do anything more expensive.
 
-Exact CVP is hard in general, but you still need a practical way to get *a good candidate* quickly:
-
-- **Bounded Distance Decoding (BDD):** if you know the target is close to the lattice (typical in cryptosystems), you want the “correct” nearest lattice point efficiently.
-- **Attack demos:** in knapsack-style constructions, subset-sum embeddings, and many toy cryptanalytic setups, “LLL + a CVP-ish step” is the moment the secret pops out.
-- **Tooling mental model:** real libraries (fplll/fpylll, Sage) expose *Babai* as a fast approximate CVP primitive used inside more powerful enumeration routines.
-
-This lesson builds the classic approximation: **Babai’s nearest-plane algorithm**.
+This lesson implements **Babai’s nearest-plane algorithm** and shows why the standard recipe is “LLL first, then Babai”.
 
 ## The Concept
 
-### CVP depends on the basis you choose
+Babai is “rounding in the right coordinate system”.
 
-The lattice `L` is the *set* of all integer combinations of the basis vectors, but the basis itself can be wildly skew.
-
-Babai’s algorithm is a “CVP approximation **relative to a basis**”. If the basis is close to orthogonal, it tends to work very well. If the basis is skew, it can be noticeably wrong.
-
-This is why the standard recipe is:
+For an orthogonal basis, CVP reduces to independent rounding of coordinates. For a skew basis, naive rounding is meaningless because basis coordinates are entangled. Gram–Schmidt turns the basis into orthogonal directions `b*_1, …, b*_n` with projection coefficients
 
 ```text
-LLL-reduce the basis  →  run Babai in the reduced basis
+μ_{i,j} = <b_i, b*_j> / <b*_j, b*_j>    (j < i)
 ```
 
-### Gram–Schmidt gives the right “coordinate system”
-
-Given a basis `b1, ..., bn`, Gram–Schmidt produces orthogonal vectors:
+Nearest-plane solves an approximate CVP by walking from the last orthogonal direction to the first:
 
 ```text
-b1* , b2* , ... , bn*
+residual ← t
+for i = n .. 1:
+  c_i = <residual, b*_i> / ||b*_i||^2
+  k_i = round(c_i)
+  residual ← residual - k_i b_i
+return v = Σ k_i b_i
 ```
 
-and projection coefficients:
-
-```text
-μ_{i,j} = <b_i, b*_j> / <b*_j, b*_j>    for j < i
-```
-
-Intuition:
-
-- `b*_i` is the “new orthogonal direction” contributed by `b_i`.
-- `μ_{i,j}` tells you how much of `b_i` lies along earlier orthogonal directions.
-
-### Nearest plane = round one coefficient, subtract, repeat
-
-Think of walking from the last vector to the first:
-
-1. project the current residual onto the last orthogonal direction `b*_n`,
-2. **round** that coordinate to the nearest integer,
-3. subtract that integer multiple of the original basis vector,
-4. continue with `b*_{n-1}`, etc.
-
-On an orthogonal basis, this is literally “round each coordinate” and it solves CVP exactly. On a general basis, it’s an approximation that becomes better as the basis becomes more orthogonal.
+If the basis is close to orthogonal, the rounding decisions are reliable. If the basis is very skew, an early rounding decision can send you to the wrong “plane”, and later steps can’t recover. This is why basis reduction (LLL/BKZ) is the usual pre-processing step.
 
 ## Build It
 
-### Step 1: Exact Gram–Schmidt (rational arithmetic)
+### Step 1: Exact Gram–Schmidt (Fractions)
+```python
+def _dot_frac_int(a: list[Fraction], b: list[int]) -> Fraction:
+    return sum(x * y for x, y in zip(a, b))
 
-Babai’s decisions depend on dot products and divisions. Using floating point can introduce “almost 0.5” rounding mistakes on large integers.
 
-For an educational implementation, keep it deterministic:
+def _dot_frac(a: list[Fraction], b: list[Fraction]) -> Fraction:
+    return sum(x * y for x, y in zip(a, b))
 
-- represent Gram–Schmidt values with `fractions.Fraction`.
 
-This lesson reuses the same exact Gram–Schmidt style as the LLL lesson.
+def _gram_schmidt(basis: list[list[int]]):
+    n = len(basis)
+    b_star: list[list[Fraction]] = []
+    mu: list[list[Fraction]] = [[Fraction(0) for _ in range(n)] for __ in range(n)]
+    B: list[Fraction] = [Fraction(0) for _ in range(n)]
 
-### Step 2: Babai’s nearest-plane loop
+    for i in range(n):
+        v = [Fraction(x) for x in basis[i]]
+        for j in range(i):
+            if B[j] == 0:
+                raise ValueError("basis must be full rank (det != 0)")
+            mu_ij = _dot_frac_int(b_star[j], basis[i]) / B[j]
+            mu[i][j] = mu_ij
+            if mu_ij:
+                v = [vk - mu_ij * bjk for vk, bjk in zip(v, b_star[j])]
+        b_star.append(v)
+        B[i] = _dot_frac(v, v)
+    return b_star, mu, B
+```
+Gram–Schmidt uses dot products and divisions, and Babai’s decisions depend on “is this coefficient closer to `k` or `k+1`?”. Using `Fraction` makes these comparisons deterministic and avoids floating-point “almost 0.5” bugs on integer inputs.
 
-Given a basis `B` and target `t`:
+### Step 2: Nearest-integer rounding for rationals
+```python
+def _round_fraction_nearest(x: Fraction) -> int:
+    if x < 0:
+        return -_round_fraction_nearest(-x)
+    p = x.numerator
+    q = x.denominator
+    return (2 * p + q) // (2 * q)
+```
+Babai needs a precise “nearest integer” operation on exact rationals. This implementation rounds half-integers away from zero (e.g., `±1/2 → ±1`), which is simple and deterministic for teaching and testing.
 
-1. compute Gram–Schmidt `b*` and squared lengths `||b*_i||^2`,
-2. initialize `residual ← t`,
-3. for `i = n-1 .. 0`:
-   - compute `c_i = <residual, b*_i> / ||b*_i||^2`,
-   - choose `k_i = round(c_i)`,
-   - update `residual ← residual - k_i * b_i`.
+### Step 3: Babai’s nearest-plane loop
+```python
+def babai_nearest_plane(basis: Basis, target: Vec) -> BabaiResult:
+    n = _require_full_rank_square_basis(basis)
+    _require_same_dim(target)
+    if len(target) != n:
+        raise ValueError("target dimension mismatch")
 
-At the end, `v = Σ k_i b_i` is the algorithm’s approximate closest vector.
+    B = [list(b) for b in basis]
+    b_star, _, Bsq = _gram_schmidt(B)
 
-Run the demo:
+    residual = [Fraction(x) for x in target]
+    coeffs = [0 for _ in range(n)]
 
+    for i in range(n - 1, -1, -1):
+        if Bsq[i] == 0:
+            raise ValueError("basis must be full rank (det != 0)")
+        ci = _dot_frac(residual, b_star[i]) / Bsq[i]
+        ki = _round_fraction_nearest(ci)
+        coeffs[i] = ki
+        if ki != 0:
+            residual = [ri - ki * bi for ri, bi in zip(residual, B[i])]
+
+    v = lattice_vector(basis, tuple(coeffs))
+    diff = [Fraction(v_i) - Fraction(t_i) for v_i, t_i in zip(v, target)]
+    dist2 = _dot_frac(diff, diff)
+    return BabaiResult(coeffs=tuple(coeffs), vector=v, residual=tuple(residual), dist2=dist2)
+```
+The loop processes directions from last to first, repeatedly projecting the residual onto `b*_i`, rounding that coefficient, and subtracting the corresponding multiple of the original basis vector `b_i`. The result is an approximate closest vector whose quality depends on the basis geometry.
+
+### Step 4: LLL-then-Babai (and a tiny brute-force checker)
+```python
+def babai_after_lll(
+    basis: Basis,
+    target: Vec,
+    *,
+    delta: Fraction = Fraction(3, 4),
+    max_iters: int = 100_000,
+) -> tuple[Basis, BabaiResult]:
+    reduced = lll_reduce(basis, delta=delta, max_iters=max_iters)
+    return reduced, babai_nearest_plane(reduced, target)
+
+
+def cvp_bruteforce(basis: Basis, target: Vec, coeff_bound: int) -> CVPResult:
+    n = _require_full_rank_square_basis(basis)
+    _require_same_dim(target)
+    if len(target) != n:
+        raise ValueError("target dimension mismatch")
+    if coeff_bound < 0:
+        raise ValueError("coeff_bound must be non-negative")
+
+    best_key = None
+    best = None
+    for z in iter_coeffs(n, coeff_bound):
+        v = lattice_vector(basis, z)
+        d2 = norm2(vec_sub(v, target))
+        key = (d2, z, v)
+        if best_key is None or key < best_key:
+            best_key = key
+            best = CVPResult(coeffs=tuple(z), vector=v, dist2=d2)
+
+    if best is None:
+        raise ValueError("no candidates found")
+    return best
+```
+In practice you almost always reduce the basis first (LLL/BKZ) and then run Babai. To make the demo concrete, we also include a brute-force CVP routine over a small coefficient window so you can verify when Babai is optimal (and when it is not) in toy dimensions.
+
+Run it:
 ```bash
 python3 code/main.py
 ```
 
-It prints:
-
-- `babai(B, t)` on a skew basis,
-- `babai(LLL(B), t)` after LLL reduction,
-- the exact CVP answer via brute-force search in a bounded coefficient window (only feasible in tiny dimensions).
-
 ## Use It
 
-In practice you don’t implement Babai by hand — you use lattice toolchains that already provide:
+Use Babai through mature lattice toolchains that already combine basis reduction, stable Gram–Schmidt, and CVP/BDD-related primitives:
 
-- high-performance Gram–Schmidt with stable floating-point precision management,
-- LLL/BKZ reduction,
-- Babai as a fast “good first guess” inside enumeration and BDD-style routines.
+- **SageMath** — high-level lattice interface; wraps mature backends.
+- **fplll / fpylll** — LLL/BKZ and CVP-related building blocks (including Babai-style nearest-plane).
 
-Common options:
+Treat Babai as a fast candidate generator, not as a “production CVP solver”.
 
-- **SageMath** (wraps mature lattice libraries).
-- **fplll / fpylll** (LLL/BKZ and CVP-related primitives).
+## Pitfalls
 
-Your takeaway: Babai is a *building block*, not a standalone “CVP solver for production”.
-
-## Attack It
-
-Babai’s “attack surface” is not a bug in arithmetic — it’s a **basis-quality failure mode**.
-
-You can build two bases for the same lattice:
-
-- one close to orthogonal (Babai works well),
-- one skew (Babai makes an early rounding choice that sends you to the wrong coset).
-
-This is exactly why lattice attacks almost always begin with **basis reduction**:
-
-```text
-bad basis  --(LLL/BKZ)-->  good basis  --(Babai / enumeration)-->  useful CVP candidates
-```
-
-In the lesson vectors, you’ll find an instance where:
-
-- `babai(B, t)` returns a vector at distance `2`,
-- `babai(LLL(B), t)` returns a vector at distance `1` (optimal in that toy case).
+- **Row/column confusion:** decide whether your basis vectors are stored as columns or rows and stick to it everywhere (dot products, determinants, lattice-vector reconstruction).
+- **Float rounding bugs:** using floats can flip a `round()` decision when a coefficient is near a half-integer; the output can jump to a different lattice coset.
+- **Skew basis overconfidence:** Babai can be far from optimal on a skew basis; LLL/BKZ first is not optional in most workflows.
+- **Tie-breaking:** Python’s `round()` is banker’s rounding; if you use it accidentally, you can get different behavior than “nearest integer, half away from zero”.
+- **Comparing to CVP without bounds:** brute-force CVP checks only a coefficient window; choose bounds carefully and don’t mistake “best in window” for “global optimum”.
 
 ## Ship It
 
-This lesson ships a small reusable artifact:
+This lesson ships a reusable checklist you can paste into a review, design doc, or incident note:
 
-- `outputs/skill-babai-nearest-plane.md` — a quick checklist for “LLL then Babai” as an approximate CVP primitive.
+- `outputs/skill-babai-nearest-plane.md` — a “LLL then Babai” procedure + diagnostics for approximate CVP / BDD work.
+
+Use it when you need a fast CVP candidate and want a repeatable, reviewable workflow.
 
 ## Exercises
 
-1. **Easy:** Pick a 2D lattice basis `B` and a target `t`. Verify that Babai is exact when `B` is orthogonal (e.g., `((a,0),(0,b))`).
-2. **Medium:** Find a 2D basis `B` where Babai returns a non-optimal vector for some target `t`. Confirm with brute-force CVP in a small coefficient window.
-3. **Hard:** Build a small “BDD-style” instance: choose a lattice vector `v`, add a small error `e`, and try to recover `v` from `t = v + e` using `LLL + Babai`. Explore when it succeeds or fails as you change the error size.
+1. **Easy:** Run `python3 code/main.py`. Observe how `babai(B,t)` improves after LLL reduction on the skew basis demo.
+2. **Medium:** Extend `code/main.py` with a second 2D skew basis of your choice. Measure the distance before/after LLL and compare to `cvp_bruteforce` for a small coefficient window.
+3. **Hard:** Integrate a real library workflow (e.g., SageMath or fpylll): reduce a random basis with LLL/BKZ and compare the library’s nearest-plane candidate to your toy implementation on the same small instance.
 
 ## Key Terms
 
 | Term | What people say | What it actually means |
-|------|----------------|----------------------|
-| CVP | “Find the nearest lattice point” | Given a basis and target `t`, find `v ∈ L` minimizing `||v - t||`. |
-| BDD | “CVP but easy if noise is small” | CVP restricted to targets guaranteed to be within a decoding radius. |
-| Gram–Schmidt | “Orthogonalize the basis” | Produces orthogonal `b*` plus coefficients `μ` that describe projections. |
-| Nearest plane | “Round in a smart coordinate system” | Process `b*_n ... b*_1`, round one coordinate at a time, subtract, repeat. |
+|------|------------------|------------------------|
+| CVP | “Find the nearest lattice point” | Given `B` and target `t`, find `v ∈ L(B)` minimizing `||v - t||`. |
+| BDD | “CVP but easy if noise is small” | CVP restricted to targets promised to be within a decoding radius. |
+| Gram–Schmidt | “Orthogonalize the basis” | Produces orthogonal `b*` plus projection coefficients `μ`. |
+| Nearest plane | “Round in a smart coordinate system” | Walk `b*_n → … → b*_1`, rounding one coordinate at a time. |
 | Basis reduction | “Make the basis nicer” | Unimodular transforms (LLL/BKZ) that preserve the lattice but improve geometry. |
-
-## Test Vectors
-
-Vectors live in `tests/vectors.json`. They are deterministic toy instances (not RFC/NIST), designed to:
-
-- validate the Babai implementation,
-- demonstrate how LLL reduction can improve Babai’s output in a skew basis.
 
 ## Further Reading
 
-- L. Babai (1986): *On Lovász' lattice reduction and the nearest lattice point problem*.
-- H. W. Lenstra, A. K. Lenstra, L. Lovász (1982): *Factoring polynomials with rational coefficients* (LLL).
-- N. Gama, P. Q. Nguyen (2008): *Predicting Lattice Reduction* (reduction quality intuition).
+- L. Babai, *On Lovász' lattice reduction and the nearest lattice point problem* (1986) — introduces nearest-plane / closest-hyperplane approximation for CVP.
+- H. W. Lenstra, A. K. Lenstra, L. Lovász, *Factoring polynomials with rational coefficients* (1982) — LLL algorithm and lattice basis reduction.
+- N. Gama, P. Q. Nguyen, *Predicting Lattice Reduction* (2008) — intuition about reduction quality and practical behavior.

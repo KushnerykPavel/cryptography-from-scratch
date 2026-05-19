@@ -1,4 +1,101 @@
 {
   "title": "Negligible Functions & Reductions",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which of the following functions is negligible in n?",
+      "options": [
+        "2^{-n}",
+        "1/n^{100}",
+        "1/n",
+        "0.0001"
+      ],
+      "correct": 0,
+      "explanation": "2^{-n} is negligible: for any polynomial p, eventually 2^n > p(n), so 2^{-n} < 1/p(n). The others are all non-negligible: 1/n^{100} is an inverse polynomial (p(n)=n^{100} witnesses it), 1/n is 1/poly, and 0.0001 is a positive constant."
+    },
+    {
+      "stage": "pre",
+      "question": "A reduction proves: if adversary A breaks scheme X with advantage ε, then B breaks primitive Y with advantage ε/q(n) where q is polynomial. Why does this establish security of X?",
+      "options": [
+        "If Y is hard, ε/q(n) must be negligible, so ε = q(n)·(ε/q(n)) is also negligible",
+        "Because q(n) is large, ε/q(n) is always negligible regardless of ε",
+        "Because B runs in exponential time, its advantage does not matter",
+        "The reduction proves X and Y have the same security level"
+      ],
+      "correct": 0,
+      "explanation": "Hardness of Y means Adv_B = ε/q(n) is negligible. Since q is polynomial and ε/q is negligible, ε = q·(ε/q) = poly·negl = negl. So A cannot have non-negligible advantage against X."
+    },
+    {
+      "stage": "post",
+      "question": "A scheme uses a 128-bit primitive. The security reduction has total loss factor 2^{20}. What is the concrete security of the scheme?",
+      "options": [
+        "108 bits",
+        "128 bits",
+        "148 bits",
+        "20 bits"
+      ],
+      "correct": 0,
+      "explanation": "concrete_security = primitive_bits - log2(loss) = 128 - log2(2^20) = 128 - 20 = 108 bits."
+    },
+    {
+      "stage": "post",
+      "question": "You want 128-bit scheme security. Your reduction chain has total loss 2^{30}. What primitive security level do you need?",
+      "options": [
+        "158 bits",
+        "128 bits",
+        "98 bits",
+        "30 bits"
+      ],
+      "correct": 0,
+      "explanation": "required_primitive = target + log2(loss) = 128 + log2(2^30) = 128 + 30 = 158 bits."
+    },
+    {
+      "stage": "post",
+      "question": "Three reductions compose with loss factors 4, 8, and 16. What is the total loss?",
+      "options": [
+        "512",
+        "28",
+        "48",
+        "4096"
+      ],
+      "correct": 0,
+      "explanation": "Total loss = product of per-hop losses = 4 × 8 × 16 = 512. Security bits eaten = log2(512) = 9."
+    },
+    {
+      "stage": "post",
+      "question": "Is f(n) = 1/n^{100} negligible?",
+      "options": [
+        "No — the polynomial p(n) = n^{100} witnesses f(n) ≥ 1/p(n) for all n",
+        "Yes — it is astronomically small at practical n",
+        "Yes — any inverse polynomial is negligible",
+        "It depends on the security parameter"
+      ],
+      "correct": 0,
+      "explanation": "Negligible means below EVERY inverse polynomial. For p(n) = n^{100}, f(n) = 1/n^{100} = 1/p(n), which does not satisfy f(n) < 1/p(n). So f is non-negligible — it is exactly one particular inverse polynomial."
+    },
+    {
+      "stage": "post",
+      "question": "Which operations preserve negligibility?",
+      "options": [
+        "Multiplying a negligible function by a polynomial",
+        "Dividing one negligible function by another",
+        "Taking the reciprocal of a negligible function",
+        "Raising a negligible function to a negative exponent"
+      ],
+      "correct": 0,
+      "explanation": "poly(n) × negl(n) = negl(n): for any polynomial p, choose q = poly·p; negl < 1/q = 1/(poly·p), so poly·negl < 1/p. Dividing or taking reciprocals of negligible functions can yield non-negligible (or even growing) functions."
+    },
+    {
+      "stage": "post",
+      "question": "An adversary has advantage 2^{-64} against a scheme. Is this sufficient for 128-bit security?",
+      "options": [
+        "No — 128-bit security requires advantage < 2^{-128}",
+        "Yes — 2^{-64} is negligible",
+        "Yes — 64 bits is half of 128, which is acceptable",
+        "It depends on the reduction loss factor"
+      ],
+      "correct": 0,
+      "explanation": "128-bit security means the adversary's advantage is at most 2^{-128}. An advantage of 2^{-64} gives only 64 security bits — half the target. The scheme is not 128-bit secure."
+    }
+  ]
 }

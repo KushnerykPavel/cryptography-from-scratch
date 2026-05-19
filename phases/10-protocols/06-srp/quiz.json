@@ -1,4 +1,101 @@
 {
-  "title": "SRP \u2014 Secure Remote Password",
-  "questions": []
+  "title": "SRP — Secure Remote Password",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In SRP, what should the server store per user (ignoring metadata like account status)?",
+      "options": [
+        "The plaintext password P",
+        "A fast hash of the password H(P)",
+        "A salt s and verifier v = g^x mod N",
+        "Only a salt s (no password-derived value)"
+      ],
+      "correct": 2,
+      "explanation": "SRP stores a salt and a verifier derived from the password, not the password itself and not a simple reusable password hash."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the purpose of u = H(A || B) in SRP-6a?",
+      "options": [
+        "It encrypts the password before sending it to the server",
+        "It mixes the client and server public values into the exponent so they can’t be combined independently",
+        "It is the client’s session key K",
+        "It is a long-term server secret"
+      ],
+      "correct": 1,
+      "explanation": "u is a transcript-derived mixing scalar computed from A and B; it ties the exponent to the session’s public values."
+    },
+    {
+      "stage": "post",
+      "question": "Which formula matches SRP’s password-to-exponent mapping x?",
+      "options": [
+        "x = H(P)",
+        "x = H(s || H(I \":\" P))",
+        "x = H(A || B)",
+        "x = H(v)"
+      ],
+      "correct": 1,
+      "explanation": "SRP derives x from the salt and H(I \":\" P), binding the password guess to the username and salt."
+    },
+    {
+      "stage": "post",
+      "question": "In SRP-6a, what is the verifier v used for?",
+      "options": [
+        "It lets the server authenticate the client without storing P, by enabling the server’s computation of the shared secret S",
+        "It is sent by the client during login to prove knowledge of P",
+        "It replaces the need for a salt",
+        "It is an ephemeral secret that must be regenerated each login"
+      ],
+      "correct": 0,
+      "explanation": "The server stores v and uses it with A, u, and b to compute S; the client never sends v during login."
+    },
+    {
+      "stage": "post",
+      "question": "Why does SRP include key confirmation proofs (M1, M2) instead of stopping at K = H(S)?",
+      "options": [
+        "Because without proofs, an active attacker can splice transcripts and neither side knows if the other derived the same K",
+        "Because K is always the same value across all logins",
+        "Because the server cannot compute S without M1",
+        "Because M1 encrypts A and B"
+      ],
+      "correct": 0,
+      "explanation": "M1/M2 bind the session key to the full transcript and provide mutual confirmation that both sides derived the same K."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-themed: what can go wrong if a server fails to reject a client public value A where A mod N == 0?",
+      "options": [
+        "Nothing; A is always safe because it’s public",
+        "The attacker can force the shared secret S to a known value (e.g., 0) and therefore predict K",
+        "The attacker learns the server’s long-term verifier v immediately",
+        "The attacker can compute the plaintext password P directly from A"
+      ],
+      "correct": 1,
+      "explanation": "If A is not validated, the attacker can construct degenerate values that force a predictable session key, breaking authentication."
+    },
+    {
+      "stage": "post",
+      "question": "Which implementation detail most often causes client/server SRP failures even when the math is “right”?",
+      "options": [
+        "Using different encodings/padding when hashing integers into the transcript (e.g., PAD(A) and PAD(B))",
+        "Using too long a password",
+        "Using a salt longer than 16 bytes",
+        "Using a username that contains a colon"
+      ],
+      "correct": 0,
+      "explanation": "SRP depends on canonical transcript hashing; mismatched integer-to-bytes padding/encoding makes u, M1, or k disagree."
+    },
+    {
+      "stage": "post",
+      "question": "After a database leak (salt s and verifier v), which statement is most accurate?",
+      "options": [
+        "The attacker cannot test password guesses offline because SRP prevents it",
+        "The attacker can test password guesses offline by recomputing v from a guessed password and comparing",
+        "The attacker can immediately compute the session key K for any future login without interaction",
+        "The attacker learns nothing useful because v is random"
+      ],
+      "correct": 1,
+      "explanation": "Given s and v, an attacker can try guesses offline by recomputing x and v for each guess and checking for equality."
+    }
+  ]
 }

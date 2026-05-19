@@ -1,1 +1,29 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal vectors derived from: exact birthday = 1 - prod((N-k)/N, k=1..q-1), approx = q*(q-1)/(2*2^n), threshold = sqrt(-2*2^n*ln(1-p)), preimage = 2^n, collision = sqrt(pi/2 * 2^n), multi_target = q*k/2^n.",
+  "vectors": [
+    {"op": "birthday_exact",   "q": 0,  "N": 365,  "expected": 0.0},
+    {"op": "birthday_exact",   "q": 1,  "N": 365,  "expected": 0.0},
+    {"op": "birthday_exact",   "q": 2,  "N": 365,  "expected": 0.002739726027397249},
+    {"op": "birthday_exact",   "q": 23, "N": 365,  "expected": 0.5072972343239854},
+    {"op": "birthday_exact",   "q": 2,  "N": 1024, "expected": 0.0009765625},
+    {"op": "birthday_approx",  "q": 0,  "n": 10,   "expected": 0.0},
+    {"op": "birthday_approx",  "q": 1,  "n": 10,   "expected": 0.0},
+    {"op": "birthday_approx",  "q": 2,  "n": 10,   "expected": 0.0009765625},
+    {"op": "birthday_approx",  "q": 3,  "n": 10,   "expected": 0.0029296875},
+    {"op": "birthday_approx",  "q": 1024, "n": 128, "expected": 1.5392393227407362e-33},
+    {"op": "collision_threshold", "n": 10, "p": 0.5,  "expected": 37.67712072049519},
+    {"op": "collision_threshold", "n": 16, "p": 0.5,  "expected": 301.4169657639615},
+    {"op": "collision_threshold", "n": 10, "p": 0.01, "expected": 4.536858806263531},
+    {"op": "preimage_expected",   "n": 8,  "expected": 256.0},
+    {"op": "preimage_expected",   "n": 10, "expected": 1024.0},
+    {"op": "collision_expected",  "n": 8,  "expected": 20.053026197048002},
+    {"op": "collision_expected",  "n": 10, "expected": 40.106052394096004},
+    {"op": "security_bits_birthday", "n": 10,  "expected": 5.0},
+    {"op": "security_bits_birthday", "n": 128, "expected": 64.0},
+    {"op": "security_bits_birthday", "n": 256, "expected": 128.0},
+    {"op": "multi_target", "q": 0,   "k": 10, "n": 128, "expected": 0.0},
+    {"op": "multi_target", "q": 100, "k": 10, "n": 128, "expected": 2.9387358770557188e-36},
+    {"op": "double_enc_security", "key_bits": 56,  "expected": 56},
+    {"op": "double_enc_security", "key_bits": 128, "expected": 128}
+  ]
+}

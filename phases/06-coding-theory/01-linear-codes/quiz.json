@@ -1,4 +1,81 @@
 {
   "title": "Linear Codes \u2014 Generator & Parity-Check Matrices",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In GF(2), what operation corresponds to addition?",
+      "options": ["XOR (\u2295)", "AND (\u2227)", "OR (\u2228)", "Integer addition with carry"],
+      "correct": 0,
+      "explanation": "Over GF(2), addition is mod 2, which matches XOR on bits."
+    },
+    {
+      "stage": "pre",
+      "question": "What does it mean for a binary code C \u2286 {0,1}^n to be linear?",
+      "options": [
+        "If c1,c2 \u2208 C then c1 \u2295 c2 \u2208 C",
+        "If c \u2208 C then reversing c is also in C",
+        "All codewords have the same Hamming weight",
+        "C contains exactly n codewords"
+      ],
+      "correct": 0,
+      "explanation": "Linearity means C is a subspace: closed under addition (XOR) and contains 0."
+    },
+    {
+      "stage": "post",
+      "question": "A generator matrix G for a binary (n,k) linear code has which shape?",
+      "options": ["k\u00d7n", "n\u00d7k", "n\u00d7n", "k\u00d7k"],
+      "correct": 0,
+      "explanation": "G maps k-bit messages to n-bit codewords via c = m\u00b7G, so it is k\u00d7n."
+    },
+    {
+      "stage": "post",
+      "question": "Given a parity-check matrix H, when is a word r a valid codeword?",
+      "options": [
+        "When H\u00b7r^T = 0 (mod 2)",
+        "When r\u00b7H = 0 (mod 2)",
+        "When G\u00b7r^T = 0 (mod 2)",
+        "When the Hamming weight of r is zero"
+      ],
+      "correct": 0,
+      "explanation": "Codewords satisfy the parity constraints; the syndrome H\u00b7r^T must be the zero vector."
+    },
+    {
+      "stage": "post",
+      "question": "If G is systematic in the form G = [I_k | P], what is a matching parity-check matrix form?",
+      "options": ["H = [P^T | I_{n-k}]", "H = [I_k | P]", "H = [P | I_{n-k}]", "H = [I_{n-k} | P^T]"],
+      "correct": 0,
+      "explanation": "In GF(2), H = [P^T | I] ensures G\u00b7H^T = 0, so every codeword has zero syndrome."
+    },
+    {
+      "stage": "post",
+      "question": "In Hamming(7,4) syndrome decoding, why does a non-zero syndrome identify a single bit index to flip?",
+      "options": [
+        "Each non-zero syndrome equals exactly one column of H",
+        "Because H is always the inverse of G",
+        "Because the syndrome is the message itself",
+        "Because every error produces syndrome 000"
+      ],
+      "correct": 0,
+      "explanation": "For Hamming(7,4), the columns of H are all distinct non-zero 3-bit vectors; they index bit positions."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what can happen if you apply single-error correction to a received word that actually has two bit flips?",
+      "options": [
+        "You can miscorrect into the wrong valid codeword (wrong message)",
+        "You will always detect the two-bit error and refuse to decode",
+        "You will always recover the original message anyway",
+        "The syndrome must be 000 for any two-bit error"
+      ],
+      "correct": 0,
+      "explanation": "Two-bit errors can produce the same syndrome as a one-bit error, so 'correcting' can flip a third bit and decode incorrectly."
+    },
+    {
+      "stage": "post",
+      "question": "If a (7,4) Hamming code has minimum distance d_min = 3, what is the maximum number of errors it can guarantee to correct?",
+      "options": ["1", "2", "3", "0"],
+      "correct": 0,
+      "explanation": "A code corrects t errors when d_min \u2265 2t+1; with d_min=3, t=1."
+    }
+  ]
 }

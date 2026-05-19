@@ -114,6 +114,12 @@ Implement:
 
 Decoding must validate that the resulting point is on-curve, and must reject invalid encodings cleanly.
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 Do not implement EC arithmetic from scratch for production.

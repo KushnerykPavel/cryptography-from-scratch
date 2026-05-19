@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Distinguish between encoding (hex, base64) and encryption, and explain why encoding provides no secrecy
+- Implement hex encoding and decoding from scratch using nibble-level bit manipulation
+- Implement base64 encoding and decoding from scratch including padding rules for non-multiple-of-3 inputs
+- Apply strict boundary decoding rules to reject non-canonical hex and base64 inputs in cryptographic contexts
+- Identify common encoding bugs that lead to security vulnerabilities, such as signing a string instead of its decoded bytes
+
 ## The Problem
 
 Cryptography is a bytes-in / bytes-out discipline.
@@ -137,6 +145,12 @@ In cryptographic contexts, treat decoding like parsing:
 - reject base64 with “weird” padding (`=` only at the end, only in the final 4-char block)
 
 You can always build a “loose” decoder later for interoperability. Start strict.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

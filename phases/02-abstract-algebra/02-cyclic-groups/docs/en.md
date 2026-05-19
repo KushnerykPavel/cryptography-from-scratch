@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain what makes a group cyclic and why a generator's order determines the size of the subgroup it spans
+- Compute the generated subgroup `<g>` for elements in both additive `Z/nZ` and multiplicative `(Z/pZ)*` groups
+- Identify all generators of a finite cyclic group and distinguish primitive roots from non-generators
+- Apply the brute-force discrete logarithm to demonstrate why small generator order makes secrets trivially recoverable
+- Verify generator validity by confirming that the generated subgroup covers the entire intended group
+
 ## The Problem
 
 Groups tell you when an operation is well behaved. Cyclic groups tell you when one element can walk through the whole group by repetition.
@@ -297,6 +305,12 @@ assert discrete_log_bruteforce(3, 6, u7, u7_mul) == 3
 ```
 
 This is intentionally tiny. It is here to show the shape of the attack, not to solve real discrete logs.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

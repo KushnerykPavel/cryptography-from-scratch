@@ -1,4 +1,101 @@
 {
-  "title": "Schnorr ID Protocol & Proof of Knowledge",
-  "questions": []
+  "title": "Schnorr ID Protocol (Proof of Knowledge for Login)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In Schnorr ID, what is the public statement being proved about?",
+      "options": [
+        "That y equals g^x (mod p) for some secret x the prover knows",
+        "That the prover can factor the modulus p into primes",
+        "That y is a random value with no relationship to g",
+        "That the verifier knows the prover's secret x"
+      ],
+      "correct": 0,
+      "explanation": "Schnorr ID is a proof of knowledge of a discrete log: the prover knows x such that y = g^x."
+    },
+    {
+      "stage": "pre",
+      "question": "Which move is the verifier's contribution in the interactive protocol?",
+      "options": [
+        "Sending a fresh random challenge c",
+        "Publishing the public key y",
+        "Computing the commitment t = g^r",
+        "Computing the response s = r + c·x"
+      ],
+      "correct": 0,
+      "explanation": "The verifier supplies unpredictability by sending a fresh random challenge c after receiving the commitment."
+    },
+    {
+      "stage": "post",
+      "question": "Which verification equation defines Schnorr ID in a subgroup of Z_p*?",
+      "options": [
+        "g^s == t · y^c (mod p)",
+        "g^t == s · y^c (mod p)",
+        "g^c == t · y^s (mod p)",
+        "g^y == t · s^c (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "The verifier checks that the response exponent s is consistent with the commitment t and statement y: g^s equals t times y^c."
+    },
+    {
+      "stage": "post",
+      "question": "With q=11, r=4, c=5, x=3, what is the Schnorr response s = r + c·x (mod q)?",
+      "options": [
+        "8",
+        "7",
+        "9",
+        "10"
+      ],
+      "correct": 0,
+      "explanation": "Compute 4 + 5·3 = 19, then reduce mod 11 to get 8."
+    },
+    {
+      "stage": "post",
+      "question": "Why can an honest-verifier zero-knowledge (HVZK) simulator pick (c, s) first?",
+      "options": [
+        "Because it can back-compute a commitment t that makes verification pass without knowing x",
+        "Because the simulator learns x from the verifier before the protocol starts",
+        "Because choosing t first forces c to be zero",
+        "Because picking (c, s) first prevents replay attacks automatically"
+      ],
+      "correct": 0,
+      "explanation": "Given chosen (c, s), the simulator can solve for t so that g^s == t·y^c holds, producing an accepting transcript without the witness."
+    },
+    {
+      "stage": "post",
+      "question": "Attack: the prover accidentally reuses the same nonce r (same commitment t) for two different challenges. What can an attacker do?",
+      "options": [
+        "Extract the secret x from the two transcripts",
+        "Force the verifier to accept any transcript without checks",
+        "Compute the modulus p from the transcripts",
+        "Make the protocol perfectly hiding and perfectly sound"
+      ],
+      "correct": 0,
+      "explanation": "Two accepting transcripts with the same commitment and different challenges let you algebraically solve for x (special soundness)."
+    },
+    {
+      "stage": "post",
+      "question": "In Fiat–Shamir, which data should be hashed to derive the challenge c (at minimum)?",
+      "options": [
+        "A domain separation tag, the public statement (y), and the commitment (t)",
+        "Only the response (s), because it is the last message",
+        "Only the public statement (y), because it identifies the user",
+        "Only the commitment (t), because it is fresh randomness"
+      ],
+      "correct": 0,
+      "explanation": "Fiat–Shamir must bind context: a domain tag/version plus the statement and commitment, otherwise proofs can be replayed or transplanted."
+    },
+    {
+      "stage": "post",
+      "question": "Why is checking subgroup membership (e.g., y^q == 1 mod p) important in Schnorr-style protocols?",
+      "options": [
+        "Because security arguments assume y is in the intended prime-order subgroup",
+        "Because it makes hashing unnecessary in Fiat–Shamir",
+        "Because it guarantees the prover's nonce r is never reused",
+        "Because it prevents the verifier from learning the challenge c"
+      ],
+      "correct": 0,
+      "explanation": "If y is outside the assumed subgroup, verification and soundness/knowledge arguments may fail or become exploitable."
+    }
+  ]
 }

@@ -1,3 +1,10 @@
+"""
+Babai's nearest-plane algorithm (approximate CVP) with exact (Fraction) Gram–Schmidt.
+
+Run:
+  python3 code/main.py
+"""
+
 from __future__ import annotations
 
 import math
@@ -324,7 +331,7 @@ def _fmt_coeffs(z: tuple[int, ...]) -> str:
     return "(" + ", ".join(str(x) for x in z) + ")"
 
 
-def _demo() -> None:
+def main() -> None:
     B: Basis = ((1, 5), (6, 21))
     t: Vec = (10, 10)
 
@@ -333,16 +340,31 @@ def _demo() -> None:
     print(f"target t = {_fmt_vec(t)}")
     print()
 
-    b0 = babai_nearest_plane(B, t)
-    print(f"babai(B,t) coeffs = {_fmt_coeffs(b0.coeffs)}  v={_fmt_vec(b0.vector)}  dist={math.sqrt(float(b0.dist2)):.6f}")
+    print("=== Step 1: Exact Gram–Schmidt (Fractions) ===")
+    b_star, mu, Bsq = _gram_schmidt([list(b) for b in B])
+    print(f"b* vectors: {[tuple(x for x in row) for row in b_star]}")
+    print(f"mu: {[[mu[i][j] for j in range(len(B))] for i in range(len(B))]}")
+    print(f'||b*_i||^2: {Bsq}')
+    print()
 
+    print("=== Step 2: Nearest-integer rounding for rationals ===")
+    for x in [Fraction(7, 3), Fraction(5, 2), Fraction(-5, 2), Fraction(1, 2), Fraction(-1, 2)]:
+        print(f"round_nearest({x}) = {_round_fraction_nearest(x)}")
+    print()
+
+    print("=== Step 3: Babai’s nearest-plane loop ===")
+    b0 = babai_nearest_plane(B, t)
+    print(
+        f"babai(B,t) coeffs = {_fmt_coeffs(b0.coeffs)}  v={_fmt_vec(b0.vector)}  dist={math.sqrt(float(b0.dist2)):.6f}"
+    )
+    print()
+
+    print("=== Step 4: LLL-then-Babai (and a tiny brute-force checker) ===")
     Bred, b1 = babai_after_lll(B, t)
     print(f"lll(B)            = {Bred}")
     print(
         f"babai(lll(B),t)   coeffs = {_fmt_coeffs(b1.coeffs)}  v={_fmt_vec(b1.vector)}  dist={math.sqrt(float(b1.dist2)):.6f}"
     )
-    print()
-
     cvp = cvp_bruteforce(B, t, coeff_bound=20)
     print(
         f"cvp brute-force (window [-20,20]^2): v={_fmt_vec(cvp.vector)}  dist={math.sqrt(cvp.dist2):.6f}  coeffs={_fmt_coeffs(cvp.coeffs)}"
@@ -350,4 +372,4 @@ def _demo() -> None:
 
 
 if __name__ == "__main__":
-    _demo()
+    main()

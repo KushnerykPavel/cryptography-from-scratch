@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why modular reduction is a ring homomorphism from Z to Z/nZ and when Z/nZ becomes a field
+- Compute modular addition, subtraction, multiplication, and exponentiation by hand on small examples
+- Implement square-and-multiply exponentiation that keeps intermediate values bounded by n
+- Distinguish between a ring modulo a composite and a field modulo a prime in terms of invertibility
+- Identify how the common-modulus RSA attack exploits shared n by recovering m via Bezout coefficients
+
 ## The Problem
 
 Every cryptographic primitive you'll meet — RSA, Diffie-Hellman, ECDSA, AES key schedule, Kyber, Bulletproofs — operates on integers reduced modulo something: a prime, a composite, or a polynomial. If `5 + 4 = 2 (mod 7)` doesn't feel as natural as `5 + 4 = 9`, every later lesson will be a fight.
@@ -108,6 +116,12 @@ def clock(n: int, marks: list[int]) -> None:
 ```
 
 Watch what `7 + 5 mod 12` looks like: start at 7, walk 5 steps, land at 0.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

@@ -1,1 +1,17 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal vectors for toy Schnorr sigma-protocol. Group: p=23, g=5, order=22. Public key pk=g^secret mod p. Real transcripts: R=g^r, c random, s=(r+c*secret) mod order. Simulated: c,s random, R=g^s * pk^{-c} mod p. Both verify g^s == R*pk^c mod p.",
+  "group": {"p": 23, "g": 5, "order": 22},
+  "vectors": [
+    {"op": "keygen", "secret": 3, "expected": 10},
+    {"op": "keygen", "secret": 7, "expected": 17},
+    {"op": "group_exp", "base": 5, "exp": 3, "expected": 10},
+    {"op": "group_inv", "a": 10, "expected": 7},
+    {"op": "group_mul", "a": 10, "b": 7, "expected": 1},
+    {"op": "verify_real",      "R": 17, "c": 4, "s": 19, "pk": 10, "expected": true},
+    {"op": "verify_real",      "R": 10, "c": 5, "s": 18, "pk": 10, "expected": true},
+    {"op": "verify_simulated", "R": 19, "c": 6, "s": 11, "pk": 10, "expected": true},
+    {"op": "verify_simulated", "R":  9, "c": 9, "s": 15, "pk": 10, "expected": true},
+    {"op": "verify_bad",       "R": 17, "c": 4, "s": 20, "pk": 10, "expected": false},
+    {"op": "verify_bad",       "R":  1, "c": 1, "s":  1, "pk": 10, "expected": false}
+  ]
+}

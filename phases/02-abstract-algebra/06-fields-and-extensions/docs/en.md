@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why `Z/pZ` is a field exactly when `p` is prime and why composite moduli produce zero divisors that prevent division
+- Compute addition, multiplication, and inverses in a quadratic extension field `F_p[u]/(u^2 - beta)` using the norm-based inversion formula
+- Apply the Legendre symbol to determine whether a given `beta` makes `u^2 - beta` irreducible, and hence whether the quotient is a field
+- Identify zero divisors in a reducible quadratic extension by constructing a pair of nonzero elements whose product is zero
+- Distinguish prime fields from extension fields and describe how tower constructions like `F_p -> F_p^2 -> F_p^6 -> F_p^12` are used in pairing-based cryptography
+
 ## The Problem
 
 The previous lesson gave you quotient rings. That is the broad construction behind modular integers, polynomial remainders, AES bytes, NTT rings, and pairing fields. But cryptography often needs a stronger promise than "this is a ring." It needs division.
@@ -318,6 +326,12 @@ def fp2_is_field(p: int, beta: int) -> bool:
 ```
 
 Use this before assuming extension arithmetic is field arithmetic.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

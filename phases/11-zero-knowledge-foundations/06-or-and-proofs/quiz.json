@@ -1,4 +1,101 @@
 {
   "title": "OR Proofs & AND Proofs",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a Schnorr-style sigma protocol for y = g^x, what is the role of the nonce r?",
+      "options": [
+        "It randomizes the commitment t so transcripts don’t repeat.",
+        "It is the verifier’s random challenge in the second move.",
+        "It is the prover’s long-term secret witness x.",
+        "It is a public parameter that defines the group order q."
+      ],
+      "correct": 0,
+      "explanation": "The nonce r is fresh per proof and determines the commitment t = g^r; reusing it can leak the witness."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the Fiat–Shamir transform do in a public-coin sigma protocol?",
+      "options": [
+        "Replaces the verifier’s challenge with a hash of the transcript.",
+        "Replaces modular exponentiation with elliptic-curve multiplication.",
+        "Replaces the prover’s witness with a commitment scheme.",
+        "Replaces an interactive proof with a symmetric-key MAC."
+      ],
+      "correct": 0,
+      "explanation": "Fiat–Shamir makes the challenge deterministic as c = H(transcript) (modeled as a random oracle)."
+    },
+    {
+      "stage": "post",
+      "question": "In an AND composition of two Schnorr proofs, why do we use a single shared challenge c for both statements?",
+      "options": [
+        "So the prover must answer one challenge consistently for both relations.",
+        "So the verifier can skip checking one of the two verification equations.",
+        "So the proof becomes independent of the public statements y1 and y2.",
+        "So the prover can reuse the same nonce r for both commitments."
+      ],
+      "correct": 0,
+      "explanation": "A shared c forces both responses to correspond to the same challenge; otherwise you just have two unrelated proofs."
+    },
+    {
+      "stage": "post",
+      "question": "For a 2-branch OR proof with branch challenges c1 and c2, which condition must hold?",
+      "options": [
+        "(c1 + c2) mod q equals the global challenge c derived from hashing the transcript.",
+        "c1 must equal c2 to hide which branch is real.",
+        "c1 must be 0 and c2 must be c so only one branch matters.",
+        "c1 and c2 must be random but not reduced modulo q."
+      ],
+      "correct": 0,
+      "explanation": "The verifier recomputes c from the transcript and checks that the branch challenges sum to c modulo q."
+    },
+    {
+      "stage": "post",
+      "question": "In an OR proof, how can a prover simulate a valid-looking Schnorr transcript for a statement they do not know a witness for?",
+      "options": [
+        "Choose (c, s) first and back-compute t so that g^s = t · y^c holds.",
+        "Choose x first by solving a discrete log, then compute the transcript normally.",
+        "Choose t first, then set c = 0 so the verifier ignores the statement.",
+        "Choose s = 0 and t = 1 so the verification equation always holds."
+      ],
+      "correct": 0,
+      "explanation": "Schnorr verification is linear in the exponent, so given c and s you can compute a matching t without knowing x."
+    },
+    {
+      "stage": "post",
+      "question": "What is a concrete risk if a Fiat–Shamir challenge is computed as c = H(t) instead of c = H(statement, t, ...)?",
+      "options": [
+        "A proof transcript can be replayed or transplanted to a different statement because it isn’t bound to y.",
+        "The prover’s nonce r becomes publicly recoverable from the hash output.",
+        "The verifier can no longer reduce the challenge modulo q.",
+        "The proof becomes interactive again and requires a verifier message."
+      ],
+      "correct": 0,
+      "explanation": "If the statement isn’t hashed, the proof may verify for unintended statements (or enable replay across contexts)."
+    },
+    {
+      "stage": "post",
+      "question": "In Schnorr-style proofs, what modulus should be used for challenges and responses (c and s)?",
+      "options": [
+        "Modulo q, the (sub)group order.",
+        "Modulo p, the prime defining the multiplicative group.",
+        "Modulo p·q, to avoid reduction bias.",
+        "No modulus is needed; integers can be unbounded."
+      ],
+      "correct": 0,
+      "explanation": "Challenges and responses are scalars in the exponent group, so they live in Z_q (the subgroup order)."
+    },
+    {
+      "stage": "post",
+      "question": "If the prover reuses the same nonce r in two Schnorr proofs for the same statement y = g^x, what can an attacker typically recover?",
+      "options": [
+        "The witness x (the secret discrete log).",
+        "The generator g (the group base).",
+        "The modulus p (the group prime).",
+        "The hash function’s internal state."
+      ],
+      "correct": 0,
+      "explanation": "Nonce reuse can let an attacker solve for x from two equations of the form s = r + c·x (mod q)."
+    }
+  ]
 }

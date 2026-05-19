@@ -1,4 +1,96 @@
 {
-  "title": "Coding Lab \u2014 Build a Reed-Solomon Encoder",
-  "questions": []
+  "title": "RS Encoder Lab — Parity as a Remainder (GSM/EDGE RS8(85,73))",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a polynomial-view Reed–Solomon code, what makes a codeword “valid”?",
+      "options": [
+        "It has an even number of 1 bits.",
+        "It is divisible by the generator polynomial g(x) over the field.",
+        "It has a checksum byte equal to 0x00.",
+        "It decodes correctly for any number of errors."
+      ],
+      "correct": 1,
+      "explanation": "In the cyclic/polynomial view, valid codewords are exactly the multiples of g(x), so dividing by g(x) leaves remainder 0."
+    },
+    {
+      "stage": "pre",
+      "question": "In GF(2^8) as used in this lesson, what is addition?",
+      "options": [
+        "Integer addition modulo 256.",
+        "Bitwise XOR.",
+        "Carryless multiplication reduced mod the primitive polynomial.",
+        "Lookup in a log table."
+      ],
+      "correct": 1,
+      "explanation": "GF(2^m) addition is coefficient-wise mod 2, which is XOR on bytes."
+    },
+    {
+      "stage": "post",
+      "question": "For the GSM/EDGE RS8(255,243) code in this lesson, what is the first consecutive root exponent (first_root / B) used to build g(x)?",
+      "options": ["0", "12", "122", "255"],
+      "correct": 2,
+      "explanation": "GSM/EDGE uses g(x) = ∏_{i=0}^{11} (x − α^{i+122}), which makes the listed coefficients self-reciprocal."
+    },
+    {
+      "stage": "post",
+      "question": "Systematic RS encoding computes parity symbols as the remainder of which division?",
+      "options": [
+        "remainder[D(x) / g(x)]",
+        "remainder[x^nsym · D(x) / g(x)]",
+        "remainder[g(x) / D(x)]",
+        "remainder[D(x) / x^nsym]"
+      ],
+      "correct": 1,
+      "explanation": "You multiply the message polynomial by x^nsym (append nsym zeros) and take the remainder modulo g(x); that remainder becomes parity."
+    },
+    {
+      "stage": "post",
+      "question": "How do you shorten RS(255,243) to RS(85,73) in the method used here?",
+      "options": [
+        "Append 170 zeros to the codeword after encoding, then truncate parity.",
+        "Prepend 170 zeros to the message to make 243 symbols, encode as RS(255,243), then drop the first 170 codeword symbols.",
+        "Append 170 zeros to the message to make 243 symbols, encode, then drop the last 170 codeword symbols.",
+        "Encode 73 symbols directly with the same generator polynomial without any padding."
+      ],
+      "correct": 1,
+      "explanation": "Shortening is done by inserting known-zero symbols into the message (here: 170 leading zeros), encoding at full length, then removing the corresponding leading codeword symbols."
+    },
+    {
+      "stage": "post",
+      "question": "What does it usually mean if the syndromes at the generator roots are not all zero?",
+      "options": [
+        "The codeword is valid and error-free.",
+        "The codeword is not a multiple of g(x) (so it is corrupted or from a different RS convention).",
+        "The primitive polynomial must be 0x11B.",
+        "The message length is always too long."
+      ],
+      "correct": 1,
+      "explanation": "Non-zero syndromes indicate the received polynomial is not divisible by g(x), which means an error or a convention mismatch."
+    },
+    {
+      "stage": "post",
+      "question": "Why can two encoders with the same (n,k) and the same GF(256) primitive polynomial still be incompatible?",
+      "options": [
+        "Because XOR is not associative.",
+        "Because the first consecutive root (first_root / B) and symbol ordering conventions can differ, changing g(x) and parity.",
+        "Because g(x) is unique for any (n,k).",
+        "Because systematic encoding is impossible in GF(256)."
+      ],
+      "correct": 1,
+      "explanation": "The generator polynomial depends on the chosen root set (including B), and implementations can also disagree on symbol order; both affect parity and interop."
+    },
+    {
+      "stage": "post",
+      "question": "If an encoder claims it is systematic, which property must hold for its output codeword?",
+      "options": [
+        "The parity symbols come first, then the message.",
+        "The codeword has no zero symbols.",
+        "The first k symbols of the codeword equal the original message symbols exactly.",
+        "The syndromes are random-looking but small."
+      ],
+      "correct": 2,
+      "explanation": "Systematic encoding preserves the message symbols verbatim in the codeword and appends parity symbols."
+    }
+  ]
 }

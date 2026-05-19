@@ -1,4 +1,100 @@
 {
-  "title": "Pedersen Commitments",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main goal of a commitment scheme?",
+      "options": [
+        "Let someone publish a value now and reveal it later, while preventing changes in-between",
+        "Let two parties exchange keys without revealing the keys to eavesdroppers",
+        "Let someone encrypt a message so only the receiver can read it",
+        "Let someone prove they know a secret without revealing any information at all"
+      ],
+      "correct": 0,
+      "explanation": "A commitment is a two-phase protocol: commit now (hide the value), open later (bind you to that value)."
+    },
+    {
+      "stage": "pre",
+      "question": "In a group of order q, what does it mean for an exponent to live in Z_q?",
+      "options": [
+        "Exponents are interpreted modulo q",
+        "Exponents must be prime numbers less than q",
+        "Exponents are interpreted modulo p for some prime p",
+        "Exponents must be non-negative integers with no wraparound"
+      ],
+      "correct": 0,
+      "explanation": "Working in Z_q means you reduce exponents modulo q, so values wrap around at q."
+    },
+    {
+      "stage": "post",
+      "question": "In multiplicative notation, what is a Pedersen commitment to message m with blinding r?",
+      "options": [
+        "C = g^m · h^r",
+        "C = g^(m·r)",
+        "C = H(m || r)",
+        "C = g^r · h^m · (m + r)"
+      ],
+      "correct": 0,
+      "explanation": "Pedersen’s commit is C = g^m h^r in a prime-order cyclic group with public generators g and h."
+    },
+    {
+      "stage": "post",
+      "question": "Why is Pedersen commitment perfectly hiding when r is uniform in Z_q (in a prime-order group)?",
+      "options": [
+        "Because h^r is uniform over the group, making C independent of m",
+        "Because discrete log is hard, so m cannot be recovered",
+        "Because g is secret and never revealed",
+        "Because the verifier checks a hash of (m, r) instead of C"
+      ],
+      "correct": 0,
+      "explanation": "Perfect hiding is information-theoretic: uniform r makes h^r uniform, so C reveals no information about m."
+    },
+    {
+      "stage": "post",
+      "question": "If C1 = Commit(m1, r1) and C2 = Commit(m2, r2) use the same parameters, what does C1 · C2 commit to?",
+      "options": [
+        "(m1 + m2 mod q, r1 + r2 mod q)",
+        "(m1 · m2 mod q, r1 · r2 mod q)",
+        "(m1 − m2 mod q, r1 − r2 mod q)",
+        "(m1, r2)"
+      ],
+      "correct": 0,
+      "explanation": "Pedersen commitments are additively homomorphic: multiplying commitments adds messages and blindings modulo q."
+    },
+    {
+      "stage": "post",
+      "question": "What goes wrong if the party choosing parameters knows α such that h = g^α (i.e., log_g(h))?",
+      "options": [
+        "They can forge openings and claim the same commitment is to any message they want",
+        "They can recover m from C without the opening",
+        "They can make commitments that cannot be verified by anyone",
+        "Nothing goes wrong; α is always safe to publish alongside parameters"
+      ],
+      "correct": 0,
+      "explanation": "Knowing α breaks binding for that party: they can adjust r to open the same C to a different m."
+    },
+    {
+      "stage": "post",
+      "question": "When using a prime-order subgroup of Z_p* of order q, which check helps ensure a received element C is in the subgroup?",
+      "options": [
+        "0 < C < p and C^q ≡ 1 (mod p)",
+        "C is even",
+        "C has at most q bits",
+        "C^p ≡ 1 (mod q)"
+      ],
+      "correct": 0,
+      "explanation": "Subgroup membership checks prevent small-subgroup and invalid-element issues in protocols built on commitments."
+    },
+    {
+      "stage": "post",
+      "question": "Why do systems that commit to amounts (e.g., balances) typically require a range proof in addition to a Pedersen commitment?",
+      "options": [
+        "Because commitments are modulo q, so without constraints the committer could encode negative/overflow values",
+        "Because Pedersen commitments cannot be verified without a signature",
+        "Because Pedersen commitments leak the message unless m is a hash output",
+        "Because range proofs are needed to make commitments deterministic"
+      ],
+      "correct": 0,
+      "explanation": "A Pedersen commitment binds only to an exponent in Z_q; range proofs enforce that the intended integer lies in a safe interval."
+    }
+  ]
 }

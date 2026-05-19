@@ -122,6 +122,12 @@ In Python, prefer:
 
 These are designed to avoid content-based short-circuiting and are the right default for comparing MACs/tags/signatures.
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 ### Verifying a tag (pattern)

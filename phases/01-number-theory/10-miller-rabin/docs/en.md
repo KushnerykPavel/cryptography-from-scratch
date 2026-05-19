@@ -242,6 +242,12 @@ def generate_probable_prime(bits: int, randbits=secrets.randbits) -> tuple[int, 
 
 This is still educational. Production key generation needs carefully reviewed randomness, side-channel discipline, prime-shape constraints, and library-level hardening.
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 Python's `sympy.isprime(n)` offers a practical primality predicate for mathematical work. Crypto libraries such as PyCryptodome use probabilistic prime tests inside key-generation utilities instead of exposing raw toy Miller-Rabin loops as a security boundary.

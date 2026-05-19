@@ -1,1 +1,156 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Generated from code/main.py reference implementation (2026-05-18) for regression tests.",
+  "vectors": [
+    {
+      "expected": {
+        "non_default_nodes": 33,
+        "root_hex": "3ce672f0bad75014f5c250afce09b7b290c89fa29015c5141e176c8b882caa03"
+      },
+      "inputs": {
+        "bit_length": 16,
+        "updates": [
+          {
+            "key": "alice",
+            "value": "100"
+          },
+          {
+            "key": "bob",
+            "value": "250"
+          }
+        ]
+      },
+      "op": "smt_root"
+    },
+    {
+      "expected": {
+        "leaf_index": 58210,
+        "siblings_hex": [
+          "40238b937ef192de936eeb1b5e134e241ed2c205cfb8420df81fafe3d50352c5",
+          "563189e9fa32efdb1469d3c4fea23d50f366801cdb67aa1a31acc2aaf82179d8",
+          "432df453e00956888d90f3f590f719df12c608cca6c3a88e0539d5108416b31e",
+          "e6b8b89a484359d97d544e8add704a29e56e6b1234eec4714245bd3e53cce20f",
+          "f8c41500676a5a98ce050b6ea8d70d20d964b207d4c3d4832a8197da18271dda",
+          "bf0c3892ed007d03920abde4d30d0dadbfa9c82b70db5fcdb1f3e9078f291fd4",
+          "c2c36c0475b85387aad3f3f72a677bad48370cc77e46eba4497e1b04600dff39",
+          "090e928d040369a3261394e186d3baba2544f1c80e6b260dfe001fcfc282f117",
+          "ad34bbf50b372ea1b12bab5fdf6f30d74aaba28c81561a3809702dbcfccb57ad",
+          "d139073643675776e0a49b9435de85c7f366f948ef549177de1b17affa1d93dd",
+          "be69568a638c357a6348fa9500eeb74651dc22d18f888e113cec89ecbfb5c4d6",
+          "58aa7ae3cf80f550babcd360d0e4c49eb8079149e9118ea417c886dc948fb0c2",
+          "2a358ba677f3e2b1d85abad95c5e89dee59f692348e805e95cb1fccf305f6a5f",
+          "c2998cd9e34c799857aeeff00c91395de093892e5e9bff03223127d268b1ebc4",
+          "22825bfc44e00f138d942359f8a49d991ce8b455cbdd2edc03e326863f27d220",
+          "d44186a161d8d2eb3bb9d18080169c3a74b3c30ac5bea4e418647b3ee6d114d4"
+        ]
+      },
+      "inputs": {
+        "bit_length": 16,
+        "key": "alice",
+        "updates": [
+          {
+            "key": "alice",
+            "value": "100"
+          },
+          {
+            "key": "bob",
+            "value": "250"
+          }
+        ],
+        "value": "100"
+      },
+      "op": "smt_proof"
+    },
+    {
+      "expected": {
+        "leaf_index": 23798,
+        "siblings_hex": [
+          "40238b937ef192de936eeb1b5e134e241ed2c205cfb8420df81fafe3d50352c5",
+          "563189e9fa32efdb1469d3c4fea23d50f366801cdb67aa1a31acc2aaf82179d8",
+          "432df453e00956888d90f3f590f719df12c608cca6c3a88e0539d5108416b31e",
+          "e6b8b89a484359d97d544e8add704a29e56e6b1234eec4714245bd3e53cce20f",
+          "f8c41500676a5a98ce050b6ea8d70d20d964b207d4c3d4832a8197da18271dda",
+          "bf0c3892ed007d03920abde4d30d0dadbfa9c82b70db5fcdb1f3e9078f291fd4",
+          "c2c36c0475b85387aad3f3f72a677bad48370cc77e46eba4497e1b04600dff39",
+          "090e928d040369a3261394e186d3baba2544f1c80e6b260dfe001fcfc282f117",
+          "ad34bbf50b372ea1b12bab5fdf6f30d74aaba28c81561a3809702dbcfccb57ad",
+          "d139073643675776e0a49b9435de85c7f366f948ef549177de1b17affa1d93dd",
+          "be69568a638c357a6348fa9500eeb74651dc22d18f888e113cec89ecbfb5c4d6",
+          "58aa7ae3cf80f550babcd360d0e4c49eb8079149e9118ea417c886dc948fb0c2",
+          "2a358ba677f3e2b1d85abad95c5e89dee59f692348e805e95cb1fccf305f6a5f",
+          "fe6ba9286cbf3a5b88f296f7640bc3c1a852446fc53043ec5685c232296880ec",
+          "22825bfc44e00f138d942359f8a49d991ce8b455cbdd2edc03e326863f27d220",
+          "0a16ab98721a7f316185962c081d231a08e111ac2dacef14f9059362f1022ddd"
+        ]
+      },
+      "inputs": {
+        "bit_length": 16,
+        "key": "carol",
+        "updates": [
+          {
+            "key": "alice",
+            "value": "100"
+          },
+          {
+            "key": "bob",
+            "value": "250"
+          }
+        ]
+      },
+      "op": "smt_non_inclusion_proof"
+    },
+    {
+      "expected": {
+        "commitment": "0x19084dab2ebb232ca557ace18cb03a9",
+        "g": 5,
+        "n": "0x1af6756207427c9a032ed6b3b6f6a8f",
+        "opened": "43",
+        "verifies": true,
+        "witness": "0x93a3f5b5a920fed8fca8af4382a8f6"
+      },
+      "inputs": {
+        "index": 2,
+        "values": [
+          "41",
+          "42",
+          "43",
+          "44"
+        ]
+      },
+      "op": "vc_open"
+    },
+    {
+      "expected": {
+        "empty_root": "0x1573a8f3ff64148581eb3cf6e47accc",
+        "g": 5,
+        "indices": [
+          1,
+          10,
+          7,
+          6
+        ],
+        "n": "0x1af6756207427c9a032ed6b3b6f6a8f",
+        "root": "0x18c3f1fec8753562b12c01ce9f383fe",
+        "values_hex": [
+          "007d95a403fbbf27a9ab61489e8fb1ee",
+          "012aad9778ef9d03a76dcd61f5b2590b",
+          "018d4220222e6914924768b38970cf2b",
+          "1d0793d79b4158183b7b99a32cd913378cf059ee6000b0b58893cc2adbf3a627"
+        ],
+        "verifies": true,
+        "witnesses_hex": [
+          "0x177fd48d9a8354b0cd07bf5ad5ee7a0",
+          "0x224a639f975fedae4656c599ac03e6",
+          "0x8250da3d701f6d0d4c657e87646cbb",
+          "0x560f4ca72354de7558cd39f6653163"
+        ]
+      },
+      "inputs": {
+        "depth": 4,
+        "key": "alice",
+        "value": "100",
+        "width": 16
+      },
+      "op": "toy_verkle_proof"
+    }
+  ]
+}

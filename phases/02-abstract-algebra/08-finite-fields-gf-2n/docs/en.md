@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why addition in `GF(2^n)` is XOR and why multiplication is carryless, contrasting with ordinary integer arithmetic
+- Implement binary polynomial multiplication and reduction modulo an irreducible polynomial such as the AES modulus `0x11b`
+- Compute the multiplicative inverse of a field element using the polynomial extended GCD algorithm
+- Identify zero divisors produced by a reducible modulus and explain why irreducibility is the prerequisite for a valid field
+- Apply `GF(2^8)` arithmetic to verify the AES `xtime` and MixColumns operations using the standard `x^8 + x^4 + x^3 + x + 1` modulus
+
 ## The Problem
 
 Prime fields use integer residues. AES, BCH codes, binary elliptic curves, GHASH-style polynomial arithmetic, and many compact hardware circuits use a different shape: `GF(2^n)`.
@@ -283,6 +291,12 @@ AES MixColumns is a matrix-vector multiplication over the same field:
 ```
 
 The code implements one column with `aes_mix_single_column`.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

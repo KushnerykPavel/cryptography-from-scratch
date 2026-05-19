@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how a stereotyped RSA message (known prefix A, small unknown suffix x) reduces decryption to finding a small root of a polynomial congruence f(x) ≡ 0 mod N
+- Implement the Howgrave–Graham polynomial basis: scale shifted copies of f(x)^i by powers of N and X to encode the root-size bound into the lattice
+- Apply LLL to the coefficient-vector lattice and convert the short output vector back into a polynomial with an integer root
+- Verify recovered roots by checking f(x₀) ≡ 0 mod N and reconstructing the plaintext m = A + x₀
+- Identify the parameters m (power depth) and t (x-shifts) and explain how lattice dimension n = d·m + t trades off success probability against runtime
+
 ## The Problem
 
 Textbook RSA (no padding) is brittle: it is not enough that “RSA is hard” in the abstract. Security depends on *how you encode and pad messages*.
@@ -144,6 +152,12 @@ Divide each coefficient by `X^k` to recover `h(x)` and then find small integer r
 - factor `h(x)` over the integers,
 - keep integer roots `|x| < X`,
 - verify `f(x) ≡ 0 (mod N)` (or equivalently `gcd(N, f(x)) = N` when `beta = 1`).
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

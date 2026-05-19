@@ -1,4 +1,101 @@
 {
-  "title": "KZG / Polynomial Commitments",
-  "questions": []
+  "title": "KZG Polynomial Commitments (Toy)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does a polynomial commitment scheme like KZG let a prover do after publishing a commitment C?",
+      "options": [
+        "Prove statements about f(z) at chosen points without revealing all coefficients of f",
+        "Encrypt the polynomial so nobody can evaluate it at any point",
+        "Compress the polynomial into fewer coefficients with no loss",
+        "Turn any polynomial into a hash function with collision resistance"
+      ],
+      "correct": 0,
+      "explanation": "A polynomial commitment binds to f and enables short evaluation proofs at specific points z."
+    },
+    {
+      "stage": "pre",
+      "question": "In KZG, which value is considered the 'toxic waste' that must be destroyed after setup?",
+      "options": [
+        "The secret scalar s used to generate the SRS powers [s^i]",
+        "The public SRS list of group elements [s^i]",
+        "The verifier’s chosen evaluation point z",
+        "The polynomial coefficients a_i"
+      ],
+      "correct": 0,
+      "explanation": "If s is known, an attacker can break binding by forging openings; the SRS is meant to be public."
+    },
+    {
+      "stage": "post",
+      "question": "In additive notation, what is the KZG commitment to f(x)=Σ a_i x^i given an SRS containing [s^i] in G1?",
+      "options": [
+        "C = Σ a_i · [s^i] = [f(s)]",
+        "C = [Σ a_i] (sum of coefficients only)",
+        "C = [f(z)] for the verifier’s chosen z",
+        "C = Σ [a_i] · s^i (scalars outside the group)"
+      ],
+      "correct": 0,
+      "explanation": "The commitment is a linear combination of SRS powers, which equals [f(s)] at the secret setup point."
+    },
+    {
+      "stage": "post",
+      "question": "What is the witness (quotient) polynomial used for a single-point opening at z?",
+      "options": [
+        "q(x) = (f(x) - f(z)) / (x - z)",
+        "q(x) = f(x) · (x - z)",
+        "q(x) = f(z) / (x - z)",
+        "q(x) = f(x) - z"
+      ],
+      "correct": 0,
+      "explanation": "Dividing by (x - z) removes the root at z, producing a polynomial q such that f(x)-f(z)=(x-z)q(x)."
+    },
+    {
+      "stage": "post",
+      "question": "Which theorem explains why dividing f(x) by (x - z) leaves remainder f(z)?",
+      "options": [
+        "Remainder theorem",
+        "Chinese remainder theorem",
+        "Fermat’s little theorem",
+        "Cayley–Hamilton theorem"
+      ],
+      "correct": 0,
+      "explanation": "The remainder theorem states that the remainder of division by (x - z) is exactly f(z)."
+    },
+    {
+      "stage": "post",
+      "question": "Which pairing equation is the core KZG verification check in additive notation?",
+      "options": [
+        "e(C - [y], [1]) == e(π, [s] - [z])",
+        "e(C + [y], [1]) == e(π, [s] + [z])",
+        "e(C, [z]) == e(π, [y])",
+        "e([1], [1]) == e(C, π)"
+      ],
+      "correct": 0,
+      "explanation": "It enforces f(s)-y = q(s)(s-z) in the exponent without revealing s, using C=[f(s)] and π=[q(s)]."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: if an adversary learns the toxic waste s after the ceremony, what can they do?",
+      "options": [
+        "Forge valid-looking openings for commitments, breaking binding",
+        "Make the pairing bilinear again so verification starts working",
+        "Prevent anyone from computing commitments from coefficients",
+        "Convert the scheme into an information-theoretic commitment"
+      ],
+      "correct": 0,
+      "explanation": "Knowing s lets the adversary manipulate witnesses/openings and produce proofs for false evaluations."
+    },
+    {
+      "stage": "post",
+      "question": "If a prover tries to commit to a polynomial whose degree exceeds the setup's max_degree, what should a correct implementation do?",
+      "options": [
+        "Reject (or fail) because the SRS does not cover the needed powers",
+        "Automatically truncate higher-degree coefficients to fit",
+        "Accept, because KZG verification is constant-size anyway",
+        "Replace missing SRS powers with zeros and accept"
+      ],
+      "correct": 0,
+      "explanation": "The SRS only includes [s^i] up to max_degree; exceeding it makes the commitment undefined and must be rejected."
+    }
+  ]
 }

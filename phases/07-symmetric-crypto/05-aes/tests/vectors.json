@@ -1,1 +1,56 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "NIST FIPS 197 (AES) — Appendix C.1 (AES-128 example) and Section 4.2.1 (finite field multiplication examples). https://csrc.nist.gov/files/pubs/fips/197/final/docs/fips-197.pdf",
+  "vectors": [
+    {
+      "op": "gf_mul",
+      "a": 87,
+      "b": 131,
+      "expected": 193
+    },
+    {
+      "op": "gf_mul",
+      "a": 87,
+      "b": 19,
+      "expected": 254
+    },
+    {
+      "op": "sub_bytes",
+      "state": "00102030405060708090a0b0c0d0e0f0",
+      "expected": "63cab7040953d051cd60e0e7ba70e18c"
+    },
+    {
+      "op": "shift_rows",
+      "state": "63cab7040953d051cd60e0e7ba70e18c",
+      "expected": "6353e08c0960e104cd70b751bacad0e7"
+    },
+    {
+      "op": "mix_columns",
+      "state": "6353e08c0960e104cd70b751bacad0e7",
+      "expected": "5f72641557f5bc92f7be3b291db9f91a"
+    },
+    {
+      "op": "expand_key_round_key",
+      "key": "000102030405060708090a0b0c0d0e0f",
+      "round": 1,
+      "expected": "d6aa74fdd2af72fadaa678f1d6ab76fe"
+    },
+    {
+      "op": "expand_key_round_key",
+      "key": "000102030405060708090a0b0c0d0e0f",
+      "round": 10,
+      "expected": "13111d7fe3944a17f307a78b4d2b30c5"
+    },
+    {
+      "op": "aes_encrypt_block",
+      "key": "000102030405060708090a0b0c0d0e0f",
+      "plaintext": "00112233445566778899aabbccddeeff",
+      "expected": "69c4e0d86a7b0430d8cdb78070b4c55a"
+    },
+    {
+      "op": "aes_decrypt_block",
+      "key": "000102030405060708090a0b0c0d0e0f",
+      "ciphertext": "69c4e0d86a7b0430d8cdb78070b4c55a",
+      "expected": "00112233445566778899aabbccddeeff"
+    }
+  ]
+}

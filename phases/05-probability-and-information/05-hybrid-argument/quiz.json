@@ -1,4 +1,101 @@
 {
   "title": "The Hybrid Argument",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the hybrid argument used for in cryptography?",
+      "options": [
+        "Bounding the advantage between Real and Ideal worlds by summing advantages across a chain of intermediate distributions",
+        "Proving that a distribution has high min-entropy",
+        "Computing the statistical distance between two distributions",
+        "Showing that a PRG has exponential stretch"
+      ],
+      "correct": 0,
+      "explanation": "The hybrid argument chains intermediate distributions H_0=Real, H_1, …, H_k=Ideal. By the triangle inequality, Adv(Real, Ideal) ≤ Σ Adv(H_i, H_{i+1}). If each hop is negligible, the total is too."
+    },
+    {
+      "stage": "pre",
+      "question": "How many components should change between adjacent hybrids H_i and H_{i+1}?",
+      "options": [
+        "Exactly one (one PRF call, one key, one ciphertext)",
+        "As many as needed to reach the ideal world faster",
+        "All remaining components at once",
+        "It depends on the security parameter"
+      ],
+      "correct": 0,
+      "explanation": "Each hop changes exactly one component so that the advantage on that hop is cleanly reducible to the hardness of one primitive. Changing two components at once makes the reduction simulation ambiguous."
+    },
+    {
+      "stage": "post",
+      "question": "A scheme encrypts 5 messages with independent PRG keys. A distinguisher has total advantage 0.10 against Real vs Ideal. What is the lower bound on the worst per-hop PRG advantage via the averaging argument?",
+      "options": [
+        "0.02",
+        "0.10",
+        "0.50",
+        "0.005"
+      ],
+      "correct": 0,
+      "explanation": "5 hops, total advantage 0.10. By averaging, at least one hop has advantage ≥ 0.10/5 = 0.02. The reduction exploits that hop to break the PRG."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the number of hybrid hops be polynomial in the security parameter?",
+      "options": [
+        "A polynomial times a negligible function is still negligible; an exponential times a negligible function may not be",
+        "The distinguisher needs polynomial time to traverse all hops",
+        "Statistical distance is only defined for polynomial-length distributions",
+        "More hops always increase the total advantage"
+      ],
+      "correct": 0,
+      "explanation": "If k(n) is polynomial and ε(n) is negligible, k·ε is negligible (for any polynomial p, pick q=k·p; ε<1/q implies k·ε<1/p). With exponentially many hops, the sum may exceed any inverse polynomial."
+    },
+    {
+      "stage": "post",
+      "question": "In a hybrid proof for multi-message encryption, what does H_i typically represent?",
+      "options": [
+        "A world where the first i ciphertexts use truly random pads and the rest use PRG outputs",
+        "A world where exactly i messages have been decrypted",
+        "A world where i keys have been leaked to the adversary",
+        "A world where the PRG seed has i bits of entropy"
+      ],
+      "correct": 0,
+      "explanation": "H_i replaces the first i PRG calls with truly uniform randomness, leaving the rest as real PRG outputs. H_0 = Real (all PRG), H_n = Ideal (all random). Each hop changes one PRG call."
+    },
+    {
+      "stage": "post",
+      "question": "The triangle inequality for advantage states:",
+      "options": [
+        "Adv(H_0, H_k) ≤ Adv(H_0, H_1) + Adv(H_1, H_2) + … + Adv(H_{k-1}, H_k)",
+        "Adv(H_0, H_k) = Adv(H_0, H_1) · Adv(H_1, H_2) · … · Adv(H_{k-1}, H_k)",
+        "Adv(H_0, H_k) ≥ max_i Adv(H_i, H_{i+1})",
+        "Adv(H_0, H_k) = SD(H_0, H_k) / k"
+      ],
+      "correct": 0,
+      "explanation": "The triangle inequality (inherited from statistical distance, extended to computational advantage) bounds the endpoint gap by the sum of per-hop gaps. This is the core inequality that makes the hybrid argument work."
+    },
+    {
+      "stage": "post",
+      "question": "A hybrid proof has a simulation that is only computationally (not perfectly) indistinguishable from the real game at each hop. Does the proof still go through?",
+      "options": [
+        "Yes — computational indistinguishability at each hop still sums to computational indistinguishability at the endpoints",
+        "No — only perfectly indistinguishable hops are allowed",
+        "Only if the number of hops is exactly 1",
+        "Only if statistical distance at each hop is exactly 0"
+      ],
+      "correct": 0,
+      "explanation": "The hybrid argument works with computational (not just statistical) indistinguishability at each hop. The sum of polynomially many negligible PPT advantages is still negligible."
+    },
+    {
+      "stage": "post",
+      "question": "What goes wrong if a hybrid proof has 2^n hops (exponentially many)?",
+      "options": [
+        "The sum 2^n · ε(n) may not be negligible even if each per-hop advantage ε(n) is negligible",
+        "The distinguisher cannot run in polynomial time with 2^n hybrids",
+        "Statistical distance is undefined for more than poly(n) distributions",
+        "Nothing — more hops always strengthen the proof"
+      ],
+      "correct": 0,
+      "explanation": "Negligibility: ε < 1/p(n) for every polynomial p. If we multiply by 2^n (not a polynomial), the product 2^n · ε can exceed 1/p(n) for every p, breaking the negligibility claim."
+    }
+  ]
 }

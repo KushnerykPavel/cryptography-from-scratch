@@ -1,4 +1,101 @@
 {
   "title": "ChaCha20-Poly1305 from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does a stream cipher like ChaCha20 do at a high level?",
+      "options": [
+        "Turns a key+nonce(+counter) into a keystream that is XORed with data",
+        "Encrypts by permuting 16-byte blocks with an S-box and MixColumns",
+        "Hashes the message and uses the hash as the ciphertext",
+        "Signs the message with a private key to hide it"
+      ],
+      "correct": 0,
+      "explanation": "ChaCha20 expands key+nonce+counter into a keystream; encryption/decryption is XOR with that keystream."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the main job of an AEAD scheme like ChaCha20-Poly1305?",
+      "options": [
+        "Provide confidentiality and integrity for plaintext, plus integrity for associated data (AAD)",
+        "Provide confidentiality only, leaving integrity to the application",
+        "Provide integrity only, leaving confidentiality to the application",
+        "Provide key exchange plus encryption in one primitive"
+      ],
+      "correct": 0,
+      "explanation": "AEAD provides encryption + authentication, and also authenticates AAD without encrypting it."
+    },
+    {
+      "stage": "post",
+      "question": "In RFC 8439 ChaCha20-Poly1305, which ChaCha20 block counter is used to encrypt the plaintext?",
+      "options": [
+        "Counter = 1 (and then 2, 3, ... for subsequent blocks)",
+        "Counter = 0 (and then 1, 2, ...)",
+        "Counter = the plaintext length in bytes",
+        "Counter = the Poly1305 tag interpreted as an integer"
+      ],
+      "correct": 0,
+      "explanation": "Counter 0 is reserved to derive the Poly1305 one-time key; encryption starts at counter 1."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the AEAD construction include pad-to-16 and the two 64-bit little-endian length fields in the MAC input?",
+      "options": [
+        "To remove ambiguity about where AAD ends and ciphertext begins, and to MAC the exact lengths",
+        "To make the ciphertext length always a multiple of 16 bytes",
+        "To increase the nonce space from 96 bits to 128 bits",
+        "To speed up ChaCha20 by aligning its state"
+      ],
+      "correct": 0,
+      "explanation": "Padding and explicit lengths ensure the Poly1305 input is unambiguous and binds the exact AAD/ciphertext lengths."
+    },
+    {
+      "stage": "post",
+      "question": "What is the Poly1305 one-time key in RFC 8439 ChaCha20-Poly1305 derived from?",
+      "options": [
+        "The first 32 bytes of chacha20_block(key, counter=0, nonce)",
+        "The last 32 bytes of chacha20_block(key, counter=1, nonce)",
+        "A hash of (key || nonce) using SHA-256",
+        "The ciphertext itself, encrypted again"
+      ],
+      "correct": 0,
+      "explanation": "RFC 8439 derives the Poly1305 key from ChaCha20 block 0 and uses only the first 32 bytes."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: you reuse the same (key, nonce) pair for two different ChaCha20 encryptions. What definitely becomes possible?",
+      "options": [
+        "An attacker can compute plaintext1 XOR plaintext2 from ciphertext1 XOR ciphertext2",
+        "An attacker can recover the secret key in one step",
+        "An attacker can decrypt both plaintexts without any additional information",
+        "Nothing breaks because Poly1305 prevents malleability"
+      ],
+      "correct": 0,
+      "explanation": "Nonce reuse reuses the keystream. XORing two ciphertexts cancels the keystream and reveals plaintext1 XOR plaintext2."
+    },
+    {
+      "stage": "post",
+      "question": "What should a correct AEAD decryption routine do if the tag verification fails?",
+      "options": [
+        "Reject and return an error without returning any plaintext",
+        "Return the plaintext anyway, but set a warning flag",
+        "Retry verification with a different padding rule",
+        "Decrypt first and only verify later if the caller asks"
+      ],
+      "correct": 0,
+      "explanation": "If authentication fails, you must not release plaintext: it may be attacker-controlled."
+    },
+    {
+      "stage": "post",
+      "question": "What is AAD (Associated Authenticated Data) in an AEAD scheme?",
+      "options": [
+        "Data that is not encrypted but is covered by the authentication tag",
+        "Data that is encrypted but not authenticated",
+        "A secret key that is sent alongside the ciphertext",
+        "A replacement for the nonce that can be reused safely"
+      ],
+      "correct": 0,
+      "explanation": "AAD stays in plaintext (e.g., headers) but is authenticated so tampering is detected."
+    }
+  ]
 }

@@ -1,4 +1,100 @@
 {
-  "title": "Diffie-Hellman & Discrete Log",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does Diffie-Hellman (DH) let two parties do over an insecure channel?",
+      "options": [
+        "Agree on a shared secret without sending it directly",
+        "Encrypt messages without any shared keys or public keys",
+        "Prove their identities to each other automatically",
+        "Recover each other’s private keys from public keys"
+      ],
+      "correct": 0,
+      "explanation": "DH lets both parties compute the same shared secret from public values, assuming discrete logs are hard in the chosen group."
+    },
+    {
+      "stage": "pre",
+      "question": "In a basic DH exchange, which value must remain secret for security?",
+      "options": [
+        "Each party’s private exponent (e.g., a or b)",
+        "The prime modulus p",
+        "The generator g",
+        "The public keys A and B"
+      ],
+      "correct": 0,
+      "explanation": "The public parameters (p, g) and public keys (A, B) are visible; the secret exponents must remain hidden."
+    },
+    {
+      "stage": "post",
+      "question": "If Alice publishes A = g^a mod p and Bob publishes B = g^b mod p, what shared secret do both compute?",
+      "options": [
+        "Z = g^(ab) mod p",
+        "Z = g^(a+b) mod p",
+        "Z = (a·b) mod p",
+        "Z = (A + B) mod p"
+      ],
+      "correct": 0,
+      "explanation": "Alice computes B^a = (g^b)^a = g^(ab); Bob computes A^b = (g^a)^b = g^(ab)."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it reasonable to publish A = g^a mod p without revealing a?",
+      "options": [
+        "Because computing a from (g, p, A) is the discrete logarithm problem",
+        "Because A is always prime so it hides a",
+        "Because modular exponentiation is reversible with a modular inverse",
+        "Because a is encrypted inside A by default"
+      ],
+      "correct": 0,
+      "explanation": "Given g, p, and g^a mod p, recovering a is the discrete log problem, believed hard for good parameters."
+    },
+    {
+      "stage": "post",
+      "question": "What is the core security failure if you run DH without authenticating the public keys you receive?",
+      "options": [
+        "A man-in-the-middle can negotiate two different shared secrets and read/modify traffic",
+        "The protocol becomes vulnerable to hash collisions even if you don’t use hashing",
+        "The modulus p becomes easy to factor",
+        "The generator g stops generating the group"
+      ],
+      "correct": 0,
+      "explanation": "DH provides secrecy against passive eavesdroppers, not identity. Without authentication, MITM is the default failure mode."
+    },
+    {
+      "stage": "post",
+      "question": "In subgroup-based DH with subgroup order q, which check helps ensure a received public key is in the intended subgroup?",
+      "options": [
+        "Verify public_key^q mod p == 1 (and public_key is not 0 or 1)",
+        "Verify public_key is an odd number",
+        "Verify gcd(public_key, p) == public_key",
+        "Verify public_key < q"
+      ],
+      "correct": 0,
+      "explanation": "For a subgroup of order q, elements in the subgroup satisfy y^q ≡ 1 (mod p); range checks prevent trivial values."
+    },
+    {
+      "stage": "post",
+      "question": "Why do real protocols run the raw DH shared secret through a KDF like HKDF?",
+      "options": [
+        "To derive fixed-length keys with context binding (salt/info) from shared secret bytes",
+        "To make modular exponentiation faster",
+        "To avoid needing randomness for private exponents",
+        "To turn DH into an authenticated protocol automatically"
+      ],
+      "correct": 0,
+      "explanation": "HKDF turns shared secret material into uniform keys and allows binding to protocol context via salt/info (and typically the transcript)."
+    },
+    {
+      "stage": "post",
+      "question": "Which practice is most directly responsible for forward secrecy in DH-based handshakes?",
+      "options": [
+        "Using fresh ephemeral private exponents for each session",
+        "Using a larger prime modulus p",
+        "Using the same private exponent across sessions",
+        "Skipping public-key validation to reduce overhead"
+      ],
+      "correct": 0,
+      "explanation": "Ephemeral keys mean that even if a long-term credential is later compromised, past session keys are not recoverable."
+    }
+  ]
 }

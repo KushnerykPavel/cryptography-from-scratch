@@ -89,7 +89,9 @@ a code generator. Do not silently fill in stubs.
      not yet authored and ask whether to (a) generate 8 questions from the
      lesson doc and write them to `quiz.json` for review, or (b) skip the
      quiz for this lesson.
-   - Render quiz via `AskUserQuestion`, one Q at a time, following the same
+   - Render quiz one Q at a time via `AskUserQuestion` if available, else
+     as a plain chat message (opencode does not expose `AskUserQuestion`);
+     follow the same
      rendering rules as `check-understanding` (bare option labels, neutral
      parallel descriptions, length parity, no answer leakage).
    - Score post questions only (0–6). Pre questions inform pacing, not

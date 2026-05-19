@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain the three security layers (primitive, implementation, system) and why a failure at any layer can break the overall system
+- Identify the five components of a threat model: assets, security goals, trust boundaries, attacker capabilities, and explicit assumptions
+- Apply the one-page threat model template to a real system by naming a concrete adversary and selecting appropriate cryptographic guarantees
+- Distinguish between common attacker profiles (passive observer, active MITM, malicious client, compromised endpoint, side-channel attacker) and what each breaks first
+- Implement a structured threat model generator that enforces consistent schema and produces a reviewable Markdown one-pager
+
 ## The Problem
 
 Two teams build “secure encryption for our app”.
@@ -123,6 +131,12 @@ python phases/00-setup-and-tooling/07-threat-modeling/code/main.py --in threat_m
 ```
 
 This prints a Markdown document you can paste into an issue/PR and review.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

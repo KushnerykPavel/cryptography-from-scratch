@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain the difference between in-memory representation (limbs), wire encoding (endianness), and canonicalization of big integers
+- Implement OS2IP and I2OSP to convert between big-endian byte strings and arbitrary-precision integers per RFC 8017
+- Compute big-endian and little-endian byte encodings of multi-byte integers and explain why crypto protocols prefer big-endian
+- Implement limb-based addition with carry to model how big-integer libraries handle arithmetic in fixed-width word sizes
+- Identify malleability vulnerabilities caused by accepting multiple byte-length encodings of the same integer value
+
 ## The Problem
 
 Cryptography is built on integers that are far larger than what “native” machine integers can hold: 256-bit scalars, 2048-bit RSA moduli, 12,381-bit curve field elements, 4096-bit groups, and beyond.
@@ -108,6 +116,12 @@ def split_uint_le_limbs(x: int, *, limb_bits: int = 32) -> list[int]:
 
 def add_le_limbs(a: list[int], b: list[int], *, limb_bits: int = 32) -> list[int]:
     ...
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

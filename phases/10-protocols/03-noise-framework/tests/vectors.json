@@ -1,1 +1,48 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Generated from phases/10-protocols/03-noise-framework/code/main.py with fixed inputs (2026-05-18). Toy functions; not official Noise test vectors.",
+  "vectors": [
+    {
+      "op": "hkdf_sha256",
+      "chaining_key_hex": "4e6f6973655f4e4e5f32353531395f5348413235365f546f7941454144000000",
+      "ikm_hex": "696e7075742d6b65792d6d6174657269616c",
+      "num_outputs": 2,
+      "expected_hex": [
+        "6a23cc91c2c9c3bc3f6a6c289b27faa8838cdbb01537759712daf1a8892c1669",
+        "17d421247127756eef5793fdfd788bea76c741c317bbc6929dc92f464a7d96c0"
+      ]
+    },
+    {
+      "op": "mix_hash",
+      "h_hex": "4e6f6973655f4e4e5f32353531395f5348413235365f546f7941454144000000",
+      "data_hex": "616263",
+      "expected_hex": "0a4e1df8711c05735a8fe453e4b151e56be2df211f7109dde348def8149da743"
+    },
+    {
+      "op": "dh_shared_secret",
+      "private": 12345,
+      "public": 5487713542301214838549944046265295836,
+      "expected_hex": "00000000000000000000000000000000004ae1acf14f2e2c001c829d641044be"
+    },
+    {
+      "op": "aead_encrypt",
+      "key_hex": "0000000000000000000000000000000000000000000000000000000000000000",
+      "nonce": 1,
+      "aad_hex": "616164",
+      "plaintext_hex": "68656c6c6f",
+      "expected_hex": "69a6ea69a7845eb2256c391785cbd4b0dca7d13212"
+    },
+    {
+      "op": "noise_nn_handshake",
+      "initiator_e_priv": 12345,
+      "responder_e_priv": 67890,
+      "prologue_hex": "64656d6f",
+      "expected": {
+        "handshake_hash_hex": "c94dcd84e4dce0cd23d54e43c7b989e71801f85a58e02fd28498b5ff3e799018",
+        "initiator_tx_hex": "b72347acacf6ef7c8c290dd86dfd79b893a6fb4fb7e59eb19d8e0507179af83c",
+        "initiator_rx_hex": "ec8ecc0d6414256fd42d031cf409a4eab5334828e3adbb01967261fd86f652f9",
+        "responder_tx_hex": "ec8ecc0d6414256fd42d031cf409a4eab5334828e3adbb01967261fd86f652f9",
+        "responder_rx_hex": "b72347acacf6ef7c8c290dd86dfd79b893a6fb4fb7e59eb19d8e0507179af83c"
+      }
+    }
+  ]
+}

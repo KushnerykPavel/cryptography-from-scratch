@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why naive "try `x = H(m) mod p`, lift to curve, retry" fails as a hash-to-curve strategy — covering rejection-sampling bias, variable-time behavior, and biased point distribution
+- Implement `expand_message_xmd` (SHA-256) to expand `(msg, DST)` into uniform bytes, explaining how the DST prevents cross-protocol collision between different protocols hashing the same message
+- Compute `hash_to_field` by slicing uniform bytes into field-sized chunks reduced mod `p`, and use it to produce the two field elements needed by the RO suite
+- Apply the Simplified SWU (`map_to_curve_simple_swu`) to deterministically map a field element to a P-256 point without rejection sampling, using the `sqrt_ratio` helper
+- Distinguish the `encode_to_curve` (NU, one field element) from the `hash_to_curve` (RO, two field elements added together) suites and explain when each distribution guarantee is required
+
 ## The Problem
 
 You keep seeing protocols that say “hash the message to a curve point”:
@@ -93,6 +101,12 @@ The key trick: instead of retrying until something is square, SSWU uses a struct
 - RO suite: `P = map_to_curve(u[0]) + map_to_curve(u[1])`
 
 This repository’s implementation lives in `code/main.py`.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

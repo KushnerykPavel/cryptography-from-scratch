@@ -1,4 +1,91 @@
 {
-  "title": "DES & 3DES \u2014 History and Why They Died",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a Feistel network, why can decryption use the same round function F as encryption?",
+      "options": [
+        "Because XOR is invertible and the halves swap each round, so you can undo the round by reversing key order",
+        "Because F is always a bijection on the right half",
+        "Because the initial and final permutations cancel the need for decryption",
+        "Because DES uses the same subkey in all rounds"
+      ],
+      "correct": 0,
+      "explanation": "A Feistel round is invertible even if F is not, as long as you can recompute F and XOR with it, using round keys in reverse."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the block size of DES (and therefore also 3DES/TDEA)?",
+      "options": ["64 bits", "56 bits", "128 bits", "256 bits"],
+      "correct": 0,
+      "explanation": "DES is a 64-bit block cipher; 3DES reuses the same 64-bit block primitive three times."
+    },
+    {
+      "stage": "post",
+      "question": "Which expression matches the standard 3DES/TDEA forward (encryption) operation in EDE form?",
+      "options": [
+        "C = E_K3(D_K2(E_K1(P)))",
+        "C = E_K1(E_K2(E_K3(P)))",
+        "C = D_K3(E_K2(D_K1(P)))",
+        "C = E_K2(D_K1(E_K3(P)))"
+      ],
+      "correct": 0,
+      "explanation": "TDEA encryption is defined as encrypt with K1, decrypt with K2, then encrypt with K3 (EDE)."
+    },
+    {
+      "stage": "post",
+      "question": "DES keys are often written as 64 bits (8 bytes). Why is the effective key size only 56 bits?",
+      "options": [
+        "Each byte includes a parity bit that is not used by the key schedule",
+        "DES discards 8 bits because the initial permutation removes them",
+        "DES uses only 56-bit plaintext blocks",
+        "DES compresses the key with a hash to 56 bits"
+      ],
+      "correct": 0,
+      "explanation": "The key schedule drops one bit per byte (parity), leaving 56 effective key bits."
+    },
+    {
+      "stage": "post",
+      "question": "Why is a 64-bit block size a practical security problem for long-lived encryptions (e.g., CBC/CTR with huge volumes)?",
+      "options": [
+        "Because birthday collisions become likely after about 2^32 blocks under one key/IV context",
+        "Because it makes brute-forcing the key easier by a factor of 2^64",
+        "Because it forces you to use ECB mode",
+        "Because it prevents padding from working correctly"
+      ],
+      "correct": 0,
+      "explanation": "With 64-bit blocks, the birthday bound is around 2^32 blocks; collisions leak structure and can enable practical attacks in some settings."
+    },
+    {
+      "stage": "post",
+      "question": "If your DES implementation fails known-answer tests, which bug is most likely?",
+      "options": [
+        "A permutation/table bit-ordering mistake (e.g., interpreting table positions from LSB instead of MSB)",
+        "Using too many rounds (more than 16)",
+        "Using little-endian integers instead of big-endian in hex parsing only",
+        "Forgetting to include the final swap of halves is never an issue"
+      ],
+      "correct": 0,
+      "explanation": "DES is extremely sensitive to bit numbering and table application; off-by-one or MSB/LSB interpretation errors are common."
+    },
+    {
+      "stage": "post",
+      "question": "Why didn’t “Double DES” (encrypting twice with two independent keys) give ~112-bit security in practice?",
+      "options": [
+        "Meet-in-the-middle attacks reduce the work to roughly 2^57 time and 2^56 memory",
+        "Because parity bits reduce the key space to 56 bits total",
+        "Because S-boxes make two encryptions cancel out",
+        "Because DES decryption is identical to encryption"
+      ],
+      "correct": 0,
+      "explanation": "Meet-in-the-middle allows matching intermediate values between the two encryptions, far cheaper than brute-forcing both keys."
+    },
+    {
+      "stage": "post",
+      "question": "A TDEA key bundle with K1=K2=K3 effectively reduces to what?",
+      "options": ["Single DES", "AES-128", "A secure 3-key construction", "A one-time pad"],
+      "correct": 0,
+      "explanation": "EDE with identical keys collapses to single DES, which is why standards forbid all-three-equal key bundles."
+    }
+  ]
 }
+

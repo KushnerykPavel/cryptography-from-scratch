@@ -1,68 +1,717 @@
 # Protocol Lab — Build a Mini Signal
+> Handshake once, then evolve keys every message (even while someone is offline).
 
-> [One-line motto. The core idea that sticks.]
-
-**Type:** Build
-**Languages:** Python
-**Prerequisites:** [prior lessons]
+**Type:** Build  
+**Languages:** Python  
+**Prerequisites:** `phases/10-protocols/04-signal-x3dh-double-ratchet`, `phases/10-protocols/03-noise-framework`, `phases/07-symmetric-crypto/13-kdfs`, `phases/08-classical-asymmetric/04-diffie-hellman`  
 **Time:** ~120 minutes
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+- **Explain** how prekey bundles enable offline session setup
+- **Compute** an X3DH-style session secret and bind identities via AD
+- **Implement** a Double Ratchet core (RK/CKs/CKr + per-message keys)
+- **Distinguish** identity verification (safety number / TOFU) from encryption correctness
+- **Apply** skipped message keys to decrypt out-of-order deliveries
+
 ## The Problem
 
-[2-3 paragraphs. What can't a learner do without this? Make it concrete.]
+You want “Signal-like” messaging: Alice can message Bob while he’s offline, only Bob can read it, and compromising a device today doesn’t automatically decrypt yesterday. You also want the system to tolerate reality: messages can arrive out of order, sessions can persist across restarts, and you can’t ask users to manually re-negotiate keys every time.
+
+If you only do one ECDH and use the resulting key forever, a single compromise blows up everything. If you rotate keys naively, you lose ordering and offline delivery (“which key applies to which message?”). And if you ignore identity verification, you can get *perfect* encryption… to the wrong person (a MitM relaying between two encrypted links).
+
+This lab builds a tiny end-to-end “mini Signal”: a server that stores prekey bundles and queues messages, clients that do X3DH-style setup, then switch to a Double Ratchet for per-message keys, and a safety-number-style identity check (TOFU) that makes MitM visible.
 
 ## The Concept
 
-[Intuition first. Diagrams, tables, mental models. No code yet.]
+Signal-style messaging is easier to reason about if you split it into **setup** and **steady state**:
+
+- **Setup (asynchronous):** Bob uploads a prekey bundle to a server. Alice fetches it, performs 3–4 DH computations, and KDFs them into a 32-byte `SK` (shared secret). She also computes `AD` (“associated data”) that binds identities.
+- **Steady state (ratcheting):** Using `SK` as a starting point, each message derives a fresh message key from a chain key (symmetric ratchet). When a new DH ratchet public key arrives, both sides mix in a new DH output (DH ratchet) to “heal” after compromise.
+- **Identity verification:** Safety numbers / fingerprints are about **who** you’re talking to. Even a flawless ratchet doesn’t prevent MitM unless you verify identity keys out-of-band (or via a stronger trust model).
+
+Minimal state (per peer):
+
+| Name | Meaning |
+|---|---|
+| `IK` | Long-term identity keypair |
+| `SPK` / `OPK` | Medium-term / one-time prekeys for offline setup |
+| `SK` | Session secret derived from X3DH-style DH mix |
+| `AD` | Identity binding authenticated along with each ciphertext |
+| `RK` | Root key (evolves when DH ratchet steps occur) |
+| `CKs` / `CKr` | Sending / receiving chain keys |
+| `MK` | One-time message key derived from chain key |
+| `MKSKIPPED` | Cache of message keys for out-of-order delivery |
 
 ## Build It
 
-### Step 1: [name]
-
-[explanation]
-
-```python
-# code here
-```
-
-### Step 2: [name]
-
-[explanation]
+### Step 1: Primitives: X25519 + HKDF + toy AEAD
+We need:
+- **X25519** for DH shared secrets.
+- **HKDF-SHA256** for turning DH outputs into uniform keys with domain separation.
+- A tiny **toy AEAD** shape: encrypt via XOR stream, authenticate via HMAC (educational only).
 
 ```python
-# code here
+import hashlib
+import hmac
+import os
+from dataclasses import dataclass
+
+
+HASHLEN = 32
+TAGLEN = 16
+MAX_SKIP = 50
+
+X25519_BASEPOINT = (9).to_bytes(32, "little")
+P_25519 = (1 << 255) - 19
+A24_25519 = 121665
+
+X3DH_INFO = b"mini-signal-lab/x3dh/sk"
+DR_RK_INFO = b"mini-signal-lab/double-ratchet/rk"
+DR_CK_INFO = b"mini-signal-lab/double-ratchet/ck"
+AEAD_ENC_INFO = b"mini-signal-lab/aead/enc"
+AEAD_MAC_INFO = b"mini-signal-lab/aead/mac"
+SAFETY_NUMBER_INFO = b"mini-signal-lab/safety-number/v1"
+
+
+def sha256(data: bytes) -> bytes:
+    return hashlib.sha256(data).digest()
+
+
+def hmac_sha256(key: bytes, data: bytes) -> bytes:
+    return hmac.new(key, data, hashlib.sha256).digest()
+
+
+def xor_bytes(a: bytes, b: bytes) -> bytes:
+    if len(a) != len(b):
+        raise ValueError("xor requires equal-length inputs")
+    return bytes(x ^ y for x, y in zip(a, b, strict=True))
+
+
+def hkdf_extract_sha256(salt: bytes | None, ikm: bytes) -> bytes:
+    if salt is None:
+        salt = b"\x00" * HASHLEN
+    return hmac_sha256(salt, ikm)
+
+
+def hkdf_expand_sha256(prk: bytes, info: bytes, length: int) -> bytes:
+    if len(prk) != HASHLEN:
+        raise ValueError("prk must be 32 bytes")
+    if length < 0:
+        raise ValueError("length must be non-negative")
+    if length > 255 * HASHLEN:
+        raise ValueError("length too large")
+
+    out = b""
+    t = b""
+    counter = 1
+    while len(out) < length:
+        t = hmac_sha256(prk, t + info + bytes([counter]))
+        out += t
+        counter += 1
+    return out[:length]
+
+
+def hkdf_sha256(salt: bytes | None, ikm: bytes, info: bytes, length: int) -> bytes:
+    prk = hkdf_extract_sha256(salt, ikm)
+    return hkdf_expand_sha256(prk, info, length)
+
+
+def _cswap(swap: int, x2: int, x3: int) -> tuple[int, int]:
+    mask = -swap
+    dummy = mask & (x2 ^ x3)
+    return x2 ^ dummy, x3 ^ dummy
+
+
+def _clamp_scalar(k: bytes) -> bytes:
+    if len(k) != 32:
+        raise ValueError("X25519 scalar must be 32 bytes")
+    k_list = bytearray(k)
+    k_list[0] &= 248
+    k_list[31] &= 127
+    k_list[31] |= 64
+    return bytes(k_list)
+
+
+def x25519_private_key_from_seed(seed: bytes) -> bytes:
+    return _clamp_scalar(sha256(seed))
+
+
+def x25519(scalar: bytes, u: bytes) -> bytes:
+    if len(scalar) != 32 or len(u) != 32:
+        raise ValueError("X25519 inputs must be 32 bytes")
+
+    k = int.from_bytes(_clamp_scalar(scalar), "little")
+    x1 = int.from_bytes(u, "little")
+    x2 = 1
+    z2 = 0
+    x3 = x1
+    z3 = 1
+    swap = 0
+
+    for t in reversed(range(255)):
+        k_t = (k >> t) & 1
+        swap ^= k_t
+        x2, x3 = _cswap(swap, x2, x3)
+        z2, z3 = _cswap(swap, z2, z3)
+        swap = k_t
+
+        a = (x2 + z2) % P_25519
+        aa = (a * a) % P_25519
+        b = (x2 - z2) % P_25519
+        bb = (b * b) % P_25519
+        e = (aa - bb) % P_25519
+        c = (x3 + z3) % P_25519
+        d = (x3 - z3) % P_25519
+        da = (d * a) % P_25519
+        cb = (c * b) % P_25519
+        x3 = ((da + cb) ** 2) % P_25519
+        z3 = (x1 * ((da - cb) ** 2 % P_25519)) % P_25519
+        x2 = (aa * bb) % P_25519
+        z2 = (e * (aa + A24_25519 * e) % P_25519) % P_25519
+
+    x2, x3 = _cswap(swap, x2, x3)
+    z2, z3 = _cswap(swap, z2, z3)
+    z2_inv = pow(z2, P_25519 - 2, P_25519)
+    out = (x2 * z2_inv) % P_25519
+    return out.to_bytes(32, "little")
+
+
+def x25519_public_key(private_scalar: bytes) -> bytes:
+    return x25519(private_scalar, X25519_BASEPOINT)
+
+
+def x25519_is_all_zero(shared: bytes) -> bool:
+    return shared == b"\x00" * 32
+
+
+def dh(dh_priv: bytes, dh_pub: bytes) -> bytes:
+    shared = x25519(dh_priv, dh_pub)
+    if x25519_is_all_zero(shared):
+        raise ValueError("all-zero shared secret (small-order point)")
+    return shared
+
+
+def _keystream(key: bytes, length: int) -> bytes:
+    out = b""
+    counter = 0
+    while len(out) < length:
+        out += hmac_sha256(key, counter.to_bytes(4, "big"))
+        counter += 1
+    return out[:length]
+
+
+def aead_encrypt(mk: bytes, plaintext: bytes, associated_data: bytes) -> tuple[bytes, bytes]:
+    if len(mk) != 32:
+        raise ValueError("mk must be 32 bytes")
+    enc_key = hkdf_sha256(None, mk, AEAD_ENC_INFO, 32)
+    mac_key = hkdf_sha256(None, mk, AEAD_MAC_INFO, 32)
+    ciphertext = xor_bytes(plaintext, _keystream(enc_key, len(plaintext)))
+    tag_full = hmac_sha256(mac_key, associated_data + ciphertext)
+    return ciphertext, tag_full[:TAGLEN]
+
+
+def aead_decrypt(mk: bytes, ciphertext: bytes, tag: bytes, associated_data: bytes) -> bytes:
+    if len(mk) != 32:
+        raise ValueError("mk must be 32 bytes")
+    if len(tag) != TAGLEN:
+        raise ValueError("invalid tag length")
+    enc_key = hkdf_sha256(None, mk, AEAD_ENC_INFO, 32)
+    mac_key = hkdf_sha256(None, mk, AEAD_MAC_INFO, 32)
+    expected = hmac_sha256(mac_key, associated_data + ciphertext)[:TAGLEN]
+    if not hmac.compare_digest(expected, tag):
+        raise ValueError("authentication failed")
+    return xor_bytes(ciphertext, _keystream(enc_key, len(ciphertext)))
 ```
+
+This step gives us: (1) DH outputs, (2) a KDF, and (3) an authenticated encryption shape.
+
+### Step 2: Prekeys: server bundles + X3DH session setup
+Now we build “offline setup”:
+- Bob uploads `IK_B`, `SPK_B`, and a few `OPK_B[i]` to the server.
+- Alice fetches one bundle and derives `(SK, AD)`.
+- We also build a safety-number-style fingerprint and a minimal message container format.
+
+```python
+def x3dh_kdf(dh_concat: bytes) -> bytes:
+    return hkdf_sha256(None, dh_concat, X3DH_INFO, 32)
+
+
+def x3dh_associated_data(ik_a_pub: bytes, ik_b_pub: bytes) -> bytes:
+    if len(ik_a_pub) != 32 or len(ik_b_pub) != 32:
+        raise ValueError("identity public keys must be 32 bytes")
+    return ik_a_pub + ik_b_pub
+
+
+def x3dh_initiator(
+    ik_a_priv: bytes,
+    ek_a_priv: bytes,
+    ik_b_pub: bytes,
+    spk_b_pub: bytes,
+    opk_b_pub: bytes | None,
+) -> tuple[bytes, bytes]:
+    dh1 = dh(ik_a_priv, spk_b_pub)
+    dh2 = dh(ek_a_priv, ik_b_pub)
+    dh3 = dh(ek_a_priv, spk_b_pub)
+    dh_concat = dh1 + dh2 + dh3
+    if opk_b_pub is not None:
+        dh4 = dh(ek_a_priv, opk_b_pub)
+        dh_concat += dh4
+    sk = x3dh_kdf(dh_concat)
+    ad = x3dh_associated_data(x25519_public_key(ik_a_priv), ik_b_pub)
+    return sk, ad
+
+
+def x3dh_responder(
+    ik_b_priv: bytes,
+    spk_b_priv: bytes,
+    ik_a_pub: bytes,
+    ek_a_pub: bytes,
+    opk_b_priv: bytes | None,
+) -> tuple[bytes, bytes]:
+    dh1 = dh(spk_b_priv, ik_a_pub)
+    dh2 = dh(ik_b_priv, ek_a_pub)
+    dh3 = dh(spk_b_priv, ek_a_pub)
+    dh_concat = dh1 + dh2 + dh3
+    if opk_b_priv is not None:
+        dh4 = dh(opk_b_priv, ek_a_pub)
+        dh_concat += dh4
+    sk = x3dh_kdf(dh_concat)
+    ad = x3dh_associated_data(ik_a_pub, x25519_public_key(ik_b_priv))
+    return sk, ad
+
+
+def safety_number(ik_a_pub: bytes, ik_b_pub: bytes) -> str:
+    if len(ik_a_pub) != 32 or len(ik_b_pub) != 32:
+        raise ValueError("identity public keys must be 32 bytes")
+
+    a = sha256(SAFETY_NUMBER_INFO + ik_a_pub)
+    b = sha256(SAFETY_NUMBER_INFO + ik_b_pub)
+    mod = 10**30
+    a_num = int.from_bytes(a[:16], "big") % mod
+    b_num = int.from_bytes(b[:16], "big") % mod
+    a_str = str(a_num).zfill(30)
+    b_str = str(b_num).zfill(30)
+    first, second = sorted([a_str, b_str])
+    combined = first + second
+    groups = [combined[i : i + 5] for i in range(0, len(combined), 5)]
+    return " ".join(groups)
+
+
+@dataclass(frozen=True)
+class PreKeyBundlePublic:
+    user_id: str
+    ik_pub: bytes
+    spk_pub: bytes
+    spk_id: int
+    opk_id: int | None
+    opk_pub: bytes | None
+
+
+@dataclass(frozen=True)
+class PreKeyMessage:
+    sender_id: str
+    recipient_id: str
+    sender_ik_pub: bytes
+    sender_ek_pub: bytes
+    recipient_spk_id: int
+    recipient_opk_id: int | None
+    header: bytes
+    ciphertext: bytes
+    tag: bytes
+
+
+@dataclass(frozen=True)
+class SignalMessage:
+    sender_id: str
+    recipient_id: str
+    header: bytes
+    ciphertext: bytes
+    tag: bytes
+
+
+class MiniSignalServer:
+    def __init__(self) -> None:
+        self._bundles: dict[str, tuple[bytes, bytes, int, dict[int, bytes]]] = {}
+        self._mailboxes: dict[str, list[object]] = {}
+
+    def publish_prekeys(self, user_id: str, ik_pub: bytes, spk_pub: bytes, spk_id: int, opk_pubs: dict[int, bytes]) -> None:
+        self._bundles[user_id] = (ik_pub, spk_pub, spk_id, dict(opk_pubs))
+
+    def fetch_prekey_bundle(self, user_id: str) -> PreKeyBundlePublic:
+        if user_id not in self._bundles:
+            raise KeyError(f"unknown user_id: {user_id}")
+        ik_pub, spk_pub, spk_id, opks = self._bundles[user_id]
+        opk_id: int | None = None
+        opk_pub: bytes | None = None
+        if opks:
+            opk_id = min(opks.keys())
+            opk_pub = opks.pop(opk_id)
+            self._bundles[user_id] = (ik_pub, spk_pub, spk_id, opks)
+        return PreKeyBundlePublic(
+            user_id=user_id,
+            ik_pub=ik_pub,
+            spk_pub=spk_pub,
+            spk_id=spk_id,
+            opk_id=opk_id,
+            opk_pub=opk_pub,
+        )
+
+    def deliver(self, msg: object) -> None:
+        recipient = getattr(msg, "recipient_id", None)
+        if not isinstance(recipient, str):
+            raise ValueError("message missing recipient_id")
+        self._mailboxes.setdefault(recipient, []).append(msg)
+
+    def drain_mailbox(self, user_id: str) -> list[object]:
+        msgs = self._mailboxes.get(user_id, [])
+        self._mailboxes[user_id] = []
+        return msgs
+```
+
+This step gives you: a realistic “Bob can be offline” path and an identity-check primitive (safety number) that you can verify out-of-band.
+
+### Step 3: Double Ratchet: per-message keys + out-of-order
+We now implement the steady-state: every message consumes one chain step and yields one-time message keys. Headers carry `(dh_pub, PN, N)` so the receiver can derive and cache skipped keys.
+
+```python
+def kdf_rk(rk: bytes, dh_out: bytes) -> tuple[bytes, bytes]:
+    if len(rk) != 32:
+        raise ValueError("rk must be 32 bytes")
+    okm = hkdf_sha256(rk, dh_out, DR_RK_INFO, 64)
+    return okm[:32], okm[32:]
+
+
+def kdf_ck(ck: bytes) -> tuple[bytes, bytes]:
+    if len(ck) != 32:
+        raise ValueError("ck must be 32 bytes")
+    okm = hkdf_sha256(None, ck, DR_CK_INFO, 64)
+    return okm[:32], okm[32:]
+
+
+def serialize_header(dh_pub: bytes, pn: int, n: int) -> bytes:
+    if len(dh_pub) != 32:
+        raise ValueError("dh_pub must be 32 bytes")
+    if pn < 0 or n < 0:
+        raise ValueError("pn/n must be non-negative")
+    return dh_pub + pn.to_bytes(4, "big") + n.to_bytes(4, "big")
+
+
+@dataclass
+class RatchetState:
+    dhs_priv: bytes
+    dhs_pub: bytes
+    dhr_pub: bytes | None
+    rk: bytes
+    cks: bytes | None
+    ckr: bytes | None
+    ns: int
+    nr: int
+    pn: int
+    mkskipped: dict[tuple[bytes, int], bytes]
+
+
+def generate_dh(seed: bytes | None = None) -> tuple[bytes, bytes]:
+    if seed is None:
+        priv = _clamp_scalar(os.urandom(32))
+    else:
+        priv = x25519_private_key_from_seed(seed)
+    return priv, x25519_public_key(priv)
+
+
+def dr_init_alice(sk: bytes, bob_ratchet_pub: bytes, seed: bytes) -> RatchetState:
+    dhs_priv, dhs_pub = generate_dh(seed=seed)
+    rk, cks = kdf_rk(sk, dh(dhs_priv, bob_ratchet_pub))
+    return RatchetState(
+        dhs_priv=dhs_priv,
+        dhs_pub=dhs_pub,
+        dhr_pub=bob_ratchet_pub,
+        rk=rk,
+        cks=cks,
+        ckr=None,
+        ns=0,
+        nr=0,
+        pn=0,
+        mkskipped={},
+    )
+
+
+def dr_init_bob(sk: bytes, bob_ratchet_priv: bytes, bob_ratchet_pub: bytes) -> RatchetState:
+    return RatchetState(
+        dhs_priv=_clamp_scalar(bob_ratchet_priv),
+        dhs_pub=bob_ratchet_pub,
+        dhr_pub=None,
+        rk=sk,
+        cks=None,
+        ckr=None,
+        ns=0,
+        nr=0,
+        pn=0,
+        mkskipped={},
+    )
+
+
+def dr_skip_message_keys(state: RatchetState, until: int) -> None:
+    if until < 0:
+        raise ValueError("until must be non-negative")
+    if state.ckr is None:
+        return
+    if state.nr + MAX_SKIP < until:
+        raise ValueError("too many skipped keys")
+    if state.dhr_pub is None:
+        raise ValueError("missing dhr_pub for skip")
+    while state.nr < until:
+        state.ckr, mk = kdf_ck(state.ckr)
+        state.mkskipped[(state.dhr_pub, state.nr)] = mk
+        state.nr += 1
+
+
+def dr_dh_ratchet(state: RatchetState, received_dh_pub: bytes, seed: bytes) -> None:
+    state.pn = state.ns
+    state.ns = 0
+    state.nr = 0
+    state.dhr_pub = received_dh_pub
+
+    state.rk, state.ckr = kdf_rk(state.rk, dh(state.dhs_priv, state.dhr_pub))
+
+    state.dhs_priv, state.dhs_pub = generate_dh(seed=seed)
+    state.rk, state.cks = kdf_rk(state.rk, dh(state.dhs_priv, state.dhr_pub))
+
+
+def dr_try_skipped_message_key(state: RatchetState, dh_pub: bytes, n: int) -> bytes | None:
+    key = (dh_pub, n)
+    mk = state.mkskipped.get(key)
+    if mk is None:
+        return None
+    del state.mkskipped[key]
+    return mk
+
+
+def dr_encrypt(state: RatchetState, plaintext: bytes, ad: bytes) -> tuple[bytes, bytes, bytes]:
+    if state.cks is None:
+        raise ValueError("cannot encrypt without a sending chain key (cks)")
+    state.cks, mk = kdf_ck(state.cks)
+    header = serialize_header(state.dhs_pub, state.pn, state.ns)
+    state.ns += 1
+    ciphertext, tag = aead_encrypt(mk, plaintext, ad + header)
+    return header, ciphertext, tag
+
+
+def dr_decrypt(state: RatchetState, header: bytes, ciphertext: bytes, tag: bytes, ad: bytes, seed: bytes) -> bytes:
+    if len(header) != 40:
+        raise ValueError("invalid header length")
+    dh_pub = header[:32]
+    pn = int.from_bytes(header[32:36], "big")
+    n = int.from_bytes(header[36:40], "big")
+
+    skipped = dr_try_skipped_message_key(state, dh_pub, n)
+    if skipped is not None:
+        return aead_decrypt(skipped, ciphertext, tag, ad + header)
+
+    if state.dhr_pub != dh_pub:
+        dr_skip_message_keys(state, pn)
+        dr_dh_ratchet(state, dh_pub, seed=seed)
+
+    dr_skip_message_keys(state, n)
+    if state.ckr is None:
+        raise ValueError("cannot decrypt without a receiving chain key (ckr)")
+    state.ckr, mk = kdf_ck(state.ckr)
+    state.nr += 1
+    return aead_decrypt(mk, ciphertext, tag, ad + header)
+```
+
+The key idea: you can lose, delay, or reorder ciphertexts and still recover, because the receiver can “catch up” and temporarily store skipped keys.
+
+### Step 4: Mini client loop: sessions + offline delivery
+Finally, we glue everything together into a minimal “client” that:
+- publishes prekeys
+- initiates a session (sends a `PreKeyMessage`)
+- sends/receives ratcheted `SignalMessage`s
+- enforces a TOFU-style identity key pin (if the identity key changes, abort)
+
+```python
+@dataclass
+class Session:
+    peer_id: str
+    peer_ik_pub: bytes
+    ad: bytes
+    ratchet: RatchetState
+
+
+class MiniSignalClient:
+    def __init__(self, user_id: str, server: MiniSignalServer, seed: bytes) -> None:
+        self.user_id = user_id
+        self.server = server
+
+        self.ik_priv = x25519_private_key_from_seed(seed + b"/ik")
+        self.ik_pub = x25519_public_key(self.ik_priv)
+        self.spk_priv = x25519_private_key_from_seed(seed + b"/spk")
+        self.spk_pub = x25519_public_key(self.spk_priv)
+        self.spk_id = int.from_bytes(sha256(seed + b"/spk-id")[:4], "big")
+
+        self.opk_privs: dict[int, bytes] = {}
+        opk_pubs: dict[int, bytes] = {}
+        for i in range(5):
+            opk_priv = x25519_private_key_from_seed(seed + b"/opk/" + bytes([i]))
+            opk_id = i
+            self.opk_privs[opk_id] = opk_priv
+            opk_pubs[opk_id] = x25519_public_key(opk_priv)
+        self._opk_pubs_for_server = opk_pubs
+
+        self.known_identities: dict[str, bytes] = {}
+        self.sessions: dict[str, Session] = {}
+
+    def publish_prekeys(self) -> None:
+        self.server.publish_prekeys(
+            user_id=self.user_id,
+            ik_pub=self.ik_pub,
+            spk_pub=self.spk_pub,
+            spk_id=self.spk_id,
+            opk_pubs=self._opk_pubs_for_server,
+        )
+
+    def _remember_or_warn_identity(self, peer_id: str, peer_ik_pub: bytes) -> None:
+        prev = self.known_identities.get(peer_id)
+        if prev is None:
+            self.known_identities[peer_id] = peer_ik_pub
+            return
+        if prev != peer_ik_pub:
+            raise ValueError(f"identity key changed for {peer_id} (safety number changed)")
+
+    def get_safety_number(self, peer_id: str, peer_ik_pub: bytes) -> str:
+        return safety_number(self.ik_pub, peer_ik_pub)
+
+    def initiate_session(self, peer_id: str, plaintext: bytes, seed: bytes) -> PreKeyMessage:
+        bundle = self.server.fetch_prekey_bundle(peer_id)
+        self._remember_or_warn_identity(peer_id, bundle.ik_pub)
+
+        ek_priv = x25519_private_key_from_seed(seed + b"/ek/" + peer_id.encode("utf-8"))
+        ek_pub = x25519_public_key(ek_priv)
+
+        sk, ad = x3dh_initiator(
+            ik_a_priv=self.ik_priv,
+            ek_a_priv=ek_priv,
+            ik_b_pub=bundle.ik_pub,
+            spk_b_pub=bundle.spk_pub,
+            opk_b_pub=bundle.opk_pub,
+        )
+
+        ratchet = dr_init_alice(sk, bob_ratchet_pub=bundle.spk_pub, seed=seed + b"/dr-alice0")
+        header, ct, tag = dr_encrypt(ratchet, plaintext, ad)
+
+        self.sessions[peer_id] = Session(peer_id=peer_id, peer_ik_pub=bundle.ik_pub, ad=ad, ratchet=ratchet)
+        return PreKeyMessage(
+            sender_id=self.user_id,
+            recipient_id=peer_id,
+            sender_ik_pub=self.ik_pub,
+            sender_ek_pub=ek_pub,
+            recipient_spk_id=bundle.spk_id,
+            recipient_opk_id=bundle.opk_id,
+            header=header,
+            ciphertext=ct,
+            tag=tag,
+        )
+
+    def send(self, peer_id: str, plaintext: bytes) -> SignalMessage:
+        sess = self.sessions.get(peer_id)
+        if sess is None:
+            raise ValueError("no session for peer; initiate_session first")
+        header, ct, tag = dr_encrypt(sess.ratchet, plaintext, sess.ad)
+        return SignalMessage(sender_id=self.user_id, recipient_id=peer_id, header=header, ciphertext=ct, tag=tag)
+
+    def receive(self, msg: object, seed: bytes) -> bytes:
+        if isinstance(msg, PreKeyMessage):
+            return self._receive_prekey_message(msg, seed=seed)
+        if isinstance(msg, SignalMessage):
+            return self._receive_signal_message(msg, seed=seed)
+        raise TypeError("unknown message type")
+
+    def _receive_prekey_message(self, msg: PreKeyMessage, seed: bytes) -> bytes:
+        self._remember_or_warn_identity(msg.sender_id, msg.sender_ik_pub)
+
+        opk_priv = None
+        if msg.recipient_opk_id is not None:
+            opk_priv = self.opk_privs.get(msg.recipient_opk_id)
+            if opk_priv is None:
+                raise ValueError("missing OPK private key (already used?)")
+            del self.opk_privs[msg.recipient_opk_id]
+
+        sk, ad = x3dh_responder(
+            ik_b_priv=self.ik_priv,
+            spk_b_priv=self.spk_priv,
+            ik_a_pub=msg.sender_ik_pub,
+            ek_a_pub=msg.sender_ek_pub,
+            opk_b_priv=opk_priv,
+        )
+
+        ratchet = dr_init_bob(sk, bob_ratchet_priv=self.spk_priv, bob_ratchet_pub=self.spk_pub)
+        plaintext = dr_decrypt(ratchet, msg.header, msg.ciphertext, msg.tag, ad, seed=seed + b"/dr-bob1")
+        self.sessions[msg.sender_id] = Session(peer_id=msg.sender_id, peer_ik_pub=msg.sender_ik_pub, ad=ad, ratchet=ratchet)
+        return plaintext
+
+    def _receive_signal_message(self, msg: SignalMessage, seed: bytes) -> bytes:
+        sess = self.sessions.get(msg.sender_id)
+        if sess is None:
+            raise ValueError("no session for peer; expected PreKeyMessage first")
+        return dr_decrypt(sess.ratchet, msg.header, msg.ciphertext, msg.tag, sess.ad, seed=seed + b"/dr-recv")
+```
+
+Run it:
+`python3 code/main.py`
 
 ## Use It
 
-[How a real library solves the same thing. Compare your version.]
+Real-world equivalents are *libraries*, not “roll your own crypto”:
 
-## Attack It
+- **Signal protocol:** `libsignal` (Signal’s protocol library; used by Signal clients)
+- **Noise:** use a audited Noise implementation rather than custom handshakes
+- **Key exchange & AEAD:** libsodium / RustCrypto / BoringSSL (pick one per ecosystem)
 
-[For primitives: textbook attack on the from-scratch version.]
+In production you also need: session persistence, multi-device (Sesame), key transparency / trust policies, backups, and careful metadata handling.
+
+## Pitfalls
+
+- Treating “encryption works” as “identity is verified”: without safety number (or stronger trust), MitM can proxy two encrypted links.
+- Forgetting domain separation in KDFs: reusing the same HKDF labels across different purposes causes key reuse across roles/directions.
+- Unbounded skipped-key caches: attacker can force memory/CPU blowups by sending huge `N` gaps; the `MAX_SKIP` limit matters.
+- Reusing prekeys: OPKs must be one-time; SPKs must rotate; stale bundles enable replay-like confusion and weaken FS.
+- Persisting ratchet state incorrectly: crashes/restarts can lead to key/nonce reuse or permanent decryption failure.
 
 ## Ship It
 
-[Reusable artifact this lesson produces. Save in outputs/.]
+Save and reuse the protocol review checklist in:
+- `outputs/mini-signal-session-review-checklist.md`
+
+Use it as a PR review template for “Signal-like” or ratchet-based designs (prekeys, identity binding, KDF labels, skipped-key limits, persistence, and failure modes).
 
 ## Exercises
 
-1. [Easy — reinforce core concept]
-2. [Medium — apply to a different problem]
-3. [Hard — extend, attack, or combine with prior lessons]
+1. Easy: Run `python3 code/main.py`. Observe: Bob decrypts messages sent while offline, and the delivery order doesn’t matter after the session is set up.
+2. Medium: Add replay detection for message headers (e.g., cache seen `(dh_pub, n)` pairs per session). Demonstrate a replay is rejected.
+3. Hard: Replace the toy AEAD with a real AEAD in a real library (PyCA cryptography / libsodium / RustCrypto) and map how you’d serialize messages on the wire.
 
 ## Key Terms
 
 | Term | What people say | What it actually means |
-|------|----------------|----------------------|
-|      |                |                      |
-
-## Test Vectors
-
-[Source: RFC / NIST CAVP / academic. Code must pass tests/vectors.json.]
+|---|---|---|
+| Prekey bundle | “Keys on the server” | Public keys uploaded so initiators can start sessions while you’re offline |
+| `IK` | “Identity key” | Long-term key that must be verified out-of-band to prevent MitM |
+| `SPK` | “Signed prekey” | Medium-term prekey (normally signed by `IK`) used for session setup |
+| `OPK` | “One-time prekey” | Single-use prekey that improves forward secrecy for offline setup |
+| `SK` | “Session key” | Output of X3DH-style DH mix, used to seed a ratchet |
+| `AD` | “Associated data” | Authenticated (not encrypted) identity/context bound to every ciphertext |
+| `RK` | “Root key” | Ratchet state that evolves when a DH ratchet step happens |
+| `CK` | “Chain key” | Evolves every message; each step yields a new message key |
+| `MK` | “Message key” | One-time key used to encrypt/authenticate a single message |
+| `MAX_SKIP` | “Out-of-order tolerance” | Upper bound on how many skipped keys you’ll derive/store |
+| TOFU | “Trust on first use” | Pin the first seen identity key; warn/fail on changes |
+| Safety number | “Fingerprint” | Human-checkable representation of identity keys for verification |
 
 ## Further Reading
 
-- []() — []
+- Moxie Marlinspike, Trevor Perrin, “The X3DH Key Agreement Protocol” (2016) — prekeys + offline setup.
+- Trevor Perrin, Moxie Marlinspike, “The Double Ratchet Algorithm” (2016) — per-message keys + out-of-order handling.
+- “The Sesame Algorithm” (Signal specification) (2016) — session management for async + multi-device messaging.
+- RFC 7748, “Elliptic Curves for Security” (2016) — X25519 definition + test vectors.
+- RFC 5869, “HMAC-based Extract-and-Expand Key Derivation Function (HKDF)” (2010) — HKDF extract/expand rationale and vectors.

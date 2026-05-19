@@ -1,4 +1,101 @@
 {
-  "title": "Random Oracle Model \u2014 Heuristic vs Reality",
-  "questions": []
+  "title": "Random Oracle Model — Heuristic vs Reality",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the key property of a random oracle that distinguishes it from a concrete hash function?",
+      "options": [
+        "Its outputs are truly uniformly random for each new input and can be programmed by the simulator",
+        "It is faster to compute than SHA-256",
+        "It has a fixed input length",
+        "It is collision-free by construction"
+      ],
+      "correct": 0,
+      "explanation": "A random oracle is lazy-sampled (truly random per new input) and programmable. Concrete hash functions are deterministic and efficiently computable without querying an oracle — they cannot be programmed by a simulator."
+    },
+    {
+      "stage": "pre",
+      "question": "A 256-bit hash function provides how many bits of collision security (birthday bound)?",
+      "options": [
+        "128 bits — a birthday attack needs 2^128 queries",
+        "256 bits — collisions are as hard as preimages",
+        "64 bits — birthday attacks always halve the security",
+        "192 bits — the birthday bound loses one third of bits"
+      ],
+      "correct": 0,
+      "explanation": "Birthday bound: collision probability ≈ 1/2 after q ≈ 2^(n/2) queries. For n=256: q ≈ 2^128. So collision security = 128 bits, not 256."
+    },
+    {
+      "stage": "post",
+      "question": "An adversary makes q=2^40 queries to a 256-bit random oracle. What is the preimage-finding advantage?",
+      "options": [
+        "2^40 / 2^256 = 2^{-216}",
+        "2^40 / 256 = 2^{32.7}",
+        "1 — 40 bits of queries always find a preimage",
+        "2^{-40} — the advantage equals 1/q"
+      ],
+      "correct": 0,
+      "explanation": "Preimage bound: q/2^n = 2^40 / 2^256 = 2^{-216}. Each query hits the target independently with probability 2^{-256}; union bound over 2^40 queries."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'programmability' of the random oracle and why does it matter for reductions?",
+      "options": [
+        "The simulator can pre-set H(x*) = v before the adversary queries x*, enabling embedding of a hard problem instance",
+        "The adversary can reprogram H after querying it to change outputs",
+        "The hash output can be truncated to any desired length",
+        "The reduction can rewind the adversary to replay queries"
+      ],
+      "correct": 0,
+      "explanation": "Programmability: the simulator controls the RO and sets H(x*) = challenge before the adversary queries x*. The adversary sees a random-looking value and cannot distinguish programmed from fresh. This is how RSA-FDH, OAEP, and Schnorr proofs embed their challenges."
+    },
+    {
+      "stage": "post",
+      "question": "What does the CGH theorem (Canetti-Goldreich-Halevi) say about ROM proofs?",
+      "options": [
+        "There exist schemes that are ROM-secure but insecure with any concrete hash function",
+        "All ROM-secure schemes are also secure in the standard model",
+        "Replacing the random oracle with SHA-256 always preserves security",
+        "ROM proofs are only valid for symmetric-key schemes"
+      ],
+      "correct": 0,
+      "explanation": "CGH 1998: there exist contrived (but valid) signature and encryption schemes that are provably secure in the ROM yet insecure when the oracle is replaced by any concrete efficiently-computable hash. ROM proofs are therefore heuristic — not unconditional guarantees."
+    },
+    {
+      "stage": "post",
+      "question": "You want a hash function with 128-bit collision security AND 128-bit preimage security. What minimum output length do you need?",
+      "options": [
+        "256 bits — collision security requires n ≥ 2k, so n ≥ 256 for k=128",
+        "128 bits — both attacks require 2^128 work",
+        "192 bits — a compromise between preimage and collision security",
+        "512 bits — you always need 4k bits to be safe"
+      ],
+      "correct": 0,
+      "explanation": "Preimage: need n ≥ 128. Collision (birthday): need n ≥ 256. The binding constraint is collision. SHA-256 (n=256) gives exactly 128-bit collision and 256-bit preimage security. SHA-128 would give only 64-bit collision security."
+    },
+    {
+      "stage": "post",
+      "question": "A protocol proof says 'the adversary queries the random oracle at most q times'. Why does bounding q matter?",
+      "options": [
+        "All ROM security bounds (preimage q/2^n, collision q²/2^n) degrade with q — more queries = higher advantage",
+        "The oracle slows down with more queries, making the adversary computationally weaker",
+        "Bounding q is just a formality; real security does not depend on it",
+        "Only collision security depends on q; preimage security is unconditional"
+      ],
+      "correct": 0,
+      "explanation": "ROM advantages are proportional to q: preimage ≤ q/2^n, collision ≤ q²/2^(n+1). Every additional query increases the adversary's chance. Bounding q to polynomial(n) keeps the advantage negligible — this is why the ROM is compatible with the PPT adversary model."
+    },
+    {
+      "stage": "post",
+      "question": "In a ROM security proof, how does the reduction handle an adversary's hash query H(m)?",
+      "options": [
+        "It either returns a pre-programmed value (if m was programmed) or lazy-samples a fresh random value and records it",
+        "It evaluates SHA-256(m) and returns the result",
+        "It rejects the query and forces the adversary to guess",
+        "It returns the same value for every query to detect patterns"
+      ],
+      "correct": 0,
+      "explanation": "The reduction maintains a table. For pre-programmed inputs, it returns the programmed value. For new inputs, it samples a uniform random value, stores it (for consistency), and returns it. From the adversary's view this is identical to a true random function."
+    }
+  ]
 }

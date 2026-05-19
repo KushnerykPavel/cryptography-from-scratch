@@ -1,4 +1,101 @@
 {
   "title": "Computational Indistinguishability",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the distinguishing advantage of a PPT algorithm D between distributions D0 and D1?",
+      "options": [
+        "|Pr[D(x)=1 | x←D0] - Pr[D(x)=1 | x←D1]|",
+        "Pr[D(x)=1 | x←D0] + Pr[D(x)=1 | x←D1]",
+        "SD(D0, D1) / 2",
+        "H_∞(D0) - H_∞(D1)"
+      ],
+      "correct": 0,
+      "explanation": "Advantage measures the gap between the probability D outputs 1 under each distribution. It ranges from 0 (no ability to distinguish) to 1 (perfect distinguishing)."
+    },
+    {
+      "stage": "pre",
+      "question": "Which of the following functions is negligible in n?",
+      "options": [
+        "2^{-n}",
+        "1/n",
+        "1/√n",
+        "0.001"
+      ],
+      "correct": 0,
+      "explanation": "2^{-n} shrinks faster than any inverse polynomial — for any polynomial p, eventually 2^{-n} < 1/p(n). The others are non-negligible: 1/n is 1/poly, 1/√n is superpolynomial but still non-negligible, and 0.001 is a constant."
+    },
+    {
+      "stage": "post",
+      "question": "If SD(D0, D1) = 0.4, what is the maximum possible advantage of any distinguisher (PPT or unbounded)?",
+      "options": [
+        "0.4 — SD upper-bounds every distinguisher's advantage",
+        "0.2 — you divide SD by 2 for the advantage",
+        "0.8 — you double SD for the game-form advantage",
+        "It depends on the specific distinguisher"
+      ],
+      "correct": 0,
+      "explanation": "SD(D0, D1) equals the advantage of the optimal unbounded distinguisher and upper-bounds all others. No distinguisher, PPT or unbounded, can exceed SD."
+    },
+    {
+      "stage": "post",
+      "question": "A PRG stretches 128-bit seeds to 256-bit outputs. Why is this computationally indistinguishable from uniform despite having large statistical distance from uniform?",
+      "options": [
+        "The image of G has size 2^128 out of 2^256 strings; enumerating it takes 2^128 time, which is not PPT",
+        "The PRG output always has min-entropy 256 bits",
+        "The PRG is a bijection so its output is uniform over its range",
+        "Statistical distance and computational indistinguishability are the same thing"
+      ],
+      "correct": 0,
+      "explanation": "The unbounded distinguisher D(x)='is x in image(G)?' wins with Adv≈1 — so SD≈1. But finding the image requires enumerating 2^128 seeds, which is not polynomial time. A PPT adversary cannot perform this check."
+    },
+    {
+      "stage": "post",
+      "question": "How does the hybrid argument use computational indistinguishability?",
+      "options": [
+        "Build a chain D0, D1, …, Dk of distributions; sum negligible per-hop advantages to bound Adv(D0, Dk)",
+        "Show SD(D0, Dk) = 0 by induction",
+        "Replace each distribution with its min-entropy equivalent",
+        "Apply the leftover hash lemma at each hop"
+      ],
+      "correct": 0,
+      "explanation": "By the triangle inequality for advantage, Adv(D0, Dk) ≤ Σ Adv(D_{i}, D_{i+1}). Each hop is negligible by assumption; a polynomial sum of negligible functions is still negligible."
+    },
+    {
+      "stage": "post",
+      "question": "What does it mean for two distributions to be computationally indistinguishable (D0 ≈_c D1)?",
+      "options": [
+        "For every PPT distinguisher D, Adv_D(n) is negligible in the security parameter n",
+        "SD(D0, D1) = 0",
+        "No distinguisher of any kind can tell them apart",
+        "The min-entropy of D0 equals the min-entropy of D1"
+      ],
+      "correct": 0,
+      "explanation": "Computational indistinguishability restricts to PPT adversaries. It does not require SD to be small — a PRG's output can be statistically far from uniform yet computationally indistinguishable from it."
+    },
+    {
+      "stage": "post",
+      "question": "Which containment is correct?",
+      "options": [
+        "Perfectly secure ⊆ statistically secure ⊆ computationally secure",
+        "Computationally secure ⊆ statistically secure ⊆ perfectly secure",
+        "Statistically secure ⊆ computationally secure ⊆ perfectly secure",
+        "The three notions are incomparable"
+      ],
+      "correct": 0,
+      "explanation": "Perfect security (SD=0) implies statistical security (SD≤negl), which implies computational security (no PPT has non-negligible advantage). The converses all fail."
+    },
+    {
+      "stage": "post",
+      "question": "In the IND game, the challenger picks b ← {0,1} and sends x ← D_b to the distinguisher D, who outputs b'. What is the advantage formula?",
+      "options": [
+        "|Pr[b' = b] - 1/2| × 2",
+        "Pr[b' = 1]",
+        "Pr[b' = b]",
+        "|Pr[b' = 0] - Pr[b' = 1]|"
+      ],
+      "correct": 0,
+      "explanation": "A random guesser wins with probability 1/2. Advantage = how much better than random = |Pr[win] - 1/2| × 2, normalised to [0,1]. Equivalent to |Pr[D=1|D0] - Pr[D=1|D1]|."
+    }
+  ]
 }

@@ -1,4 +1,101 @@
 {
-  "title": "Range Proofs \u2014 From Naive to Bulletproofs",
-  "questions": []
+  "title": "Range Proofs — From Naive to Bulletproofs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the typical form of a Pedersen commitment to a value v with blinding r (multiplicative notation)?",
+      "options": [
+        "C = g^v · h^r (mod p), for generators g and h.",
+        "C = H(v || r), where H is a cryptographic hash function.",
+        "C = v·g + r·h (mod p), where g and h are integers.",
+        "C = g^(v+r) (mod p), using a single generator."
+      ],
+      "correct": 0,
+      "explanation": "A Pedersen commitment combines the value exponent under g and a random blinding exponent under h."
+    },
+    {
+      "stage": "pre",
+      "question": "If v is represented in binary as v = Σ 2^i·b_i, what constraint must each b_i satisfy for a range check?",
+      "options": [
+        "Each b_i must be either 0 or 1.",
+        "Each b_i must be uniformly random in Z_q.",
+        "Each b_i must be an odd integer.",
+        "Each b_i must be a generator of the group."
+      ],
+      "correct": 0,
+      "explanation": "A binary decomposition is only meaningful for a range check when every digit is constrained to {0,1}."
+    },
+    {
+      "stage": "post",
+      "question": "Why do systems with Pedersen commitments typically require a range proof for hidden amounts?",
+      "options": [
+        "Because without it, values wrap modulo q and a prover can commit to negative/overflow values while still passing algebraic checks.",
+        "Because commitments reveal v unless you add a range proof.",
+        "Because a range proof makes commitments perfectly binding instead of computationally binding.",
+        "Because a range proof is needed to compute modular inverses."
+      ],
+      "correct": 0,
+      "explanation": "Commitments alone only enforce equations modulo the group order; a range proof constrains the real-world interpretation."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson’s bit proof, the prover OR-proves one of two Schnorr statements under base h. What are those statements for a bit commitment C = g^b · h^r?",
+      "options": [
+        "Either C = h^r (b=0) or C/g = h^r (b=1).",
+        "Either C = g^r (b=0) or C/h = g^r (b=1).",
+        "Either C = g^b (b=0) or C = h^b (b=1).",
+        "Either C = g^(b+r) or C = h^(b+r)."
+      ],
+      "correct": 0,
+      "explanation": "Dividing by g removes the b=1 factor, reducing both cases to a discrete-log statement under h."
+    },
+    {
+      "stage": "post",
+      "question": "What does the recomposed commitment D = Π C_i^{2^i} represent if each C_i commits to bit b_i with blinding r_i?",
+      "options": [
+        "A commitment to v = Σ 2^i·b_i with combined blinding r' = Σ 2^i·r_i.",
+        "A commitment to Σ b_i with combined blinding Σ r_i.",
+        "A commitment to the product Π b_i with combined blinding Π r_i.",
+        "A commitment to a random value independent of the bits."
+      ],
+      "correct": 0,
+      "explanation": "Exponentiating by 2^i and multiplying uses the homomorphism: exponents add, so bits and blindings combine linearly."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson require choosing n such that 2^n < q?",
+      "options": [
+        "So the value range doesn’t wrap around modulo q, making the statement “v is in [0, 2^n)” unambiguous.",
+        "So the verifier doesn’t need to check any proofs for the bits.",
+        "So the group modulus p can be smaller than the value range.",
+        "So the OR proof can omit the c1 + c2 = c check."
+      ],
+      "correct": 0,
+      "explanation": "If 2^n reaches q, different integers become the same element modulo q and the range statement loses meaning."
+    },
+    {
+      "stage": "post",
+      "question": "In Fiat–Shamir-style proofs, what should the challenge hash bind to prevent replay/transplant attacks?",
+      "options": [
+        "A domain label plus all statement inputs and commitments in the transcript.",
+        "Only the last commitment value, to keep hashing fast.",
+        "Only the prover’s responses, because they contain the witness.",
+        "Only the group modulus p, because everything else is derived."
+      ],
+      "correct": 0,
+      "explanation": "If you don’t hash the full statement and transcript, a proof can be reused in a different context or for a different statement."
+    },
+    {
+      "stage": "post",
+      "question": "In the demo, why does verification fail when the verifier uses a different label than the prover used?",
+      "options": [
+        "Because the label changes the Fiat–Shamir challenges, so the proof no longer matches the verifier’s recomputed challenges.",
+        "Because the label changes the group generator g.",
+        "Because the label changes the committed value v.",
+        "Because the label disables subgroup checks."
+      ],
+      "correct": 0,
+      "explanation": "The label is part of domain separation; changing it changes the challenge and invalidates the transcript."
+    }
+  ]
 }

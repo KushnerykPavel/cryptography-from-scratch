@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how the NTT evaluates a polynomial at powers of a primitive `n`-th root of unity in `F_p`, replacing complex exponentials with modular arithmetic
+- Implement the Cooley-Tukey butterfly structure with bit-reversal permutation and verify that forward NTT followed by inverse NTT recovers the original coefficients
+- Apply cyclic convolution via `iNTT(NTT(a) * NTT(b))` to multiply polynomials in `F_p[x]/(x^n - 1)` and confirm correctness against naive multiplication
+- Distinguish cyclic convolution in `(x^n - 1)` from negacyclic convolution in `(x^n + 1)` and explain the `psi`-twist needed for the negacyclic case
+- Verify that using a non-primitive `n`-th root as the twiddle base produces a non-invertible transform by exhibiting two distinct inputs that collide
+
 ## The Problem
 
 Modern cryptography uses polynomial arithmetic everywhere: lattice schemes multiply polynomials in rings like `Z_q[x]/(x^n + 1)`, and many ZK proof systems rely on fast polynomial operations to keep prover time reasonable.
@@ -207,6 +215,12 @@ Negacyclic convolution computes multiplication in `F_p[x]/(x^n + 1)` using a pri
 ```
 
 and a twist / untwist by powers of `ψ`.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

@@ -1,1 +1,29 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal vectors derived from definitions: security_bits = -log2(adv), concrete_security = prim_bits - log2(loss), required_primitive_security = target + log2(loss), reduction_advantage = adv/loss, compose_reductions = product of losses.",
+  "vectors": [
+    {"op": "security_bits", "adv": 0.5,    "expected": 1.0},
+    {"op": "security_bits", "adv": 0.25,   "expected": 2.0},
+    {"op": "security_bits", "adv": 0.125,  "expected": 3.0},
+    {"op": "security_bits", "adv": 1.0,    "expected": 0.0},
+    {"op": "advantage_from_security_bits", "bits": 0,   "expected": 1.0},
+    {"op": "advantage_from_security_bits", "bits": 1,   "expected": 0.5},
+    {"op": "advantage_from_security_bits", "bits": 2,   "expected": 0.25},
+    {"op": "advantage_from_security_bits", "bits": 128, "expected": 2.938735877055719e-39},
+    {"op": "reduction_advantage", "adv": 0.1,  "loss": 10,  "expected": 0.01},
+    {"op": "reduction_advantage", "adv": 0.5,  "loss": 1,   "expected": 0.5},
+    {"op": "reduction_advantage", "adv": 0.08, "loss": 4,   "expected": 0.02},
+    {"op": "compose_reductions", "losses": [2.0, 4.0, 8.0], "expected": 64.0},
+    {"op": "compose_reductions", "losses": [],              "expected": 1.0},
+    {"op": "compose_reductions", "losses": [1.0],           "expected": 1.0},
+    {"op": "compose_reductions", "losses": [16.0, 16.0],    "expected": 256.0},
+    {"op": "concrete_security", "prim_bits": 128.0, "loss": 1.0,   "expected": 128.0},
+    {"op": "concrete_security", "prim_bits": 128.0, "loss": 256.0, "expected": 120.0},
+    {"op": "concrete_security", "prim_bits": 256.0, "loss": 1024.0,"expected": 246.0},
+    {"op": "required_primitive_security", "target": 128.0, "loss": 1.0,   "expected": 128.0},
+    {"op": "required_primitive_security", "target": 128.0, "loss": 256.0, "expected": 136.0},
+    {"op": "required_primitive_security", "target": 128.0, "loss": 1024.0,"expected": 138.0},
+    {"op": "is_secure", "adv": 1e-40, "min_bits": 128, "expected": true},
+    {"op": "is_secure", "adv": 0.001, "min_bits": 128, "expected": false},
+    {"op": "is_secure", "adv": 0.5,   "min_bits": 1,   "expected": false}
+  ]
+}

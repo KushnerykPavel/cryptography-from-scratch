@@ -1,4 +1,101 @@
 {
   "title": "Deterministic Nonces \u2014 RFC 6979",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In DSA/ECDSA, which value must be unique and secret for each signature under the same private key?",
+      "options": [
+        "The public key",
+        "The signature (r,s)",
+        "The per-signature nonce k",
+        "The generator g / base point G"
+      ],
+      "correct": 2,
+      "explanation": "DSA/ECDSA security depends on a fresh secret nonce k per signature; reuse or leakage can reveal the private key."
+    },
+    {
+      "stage": "pre",
+      "question": "What problem does RFC 6979 primarily address for DSA/ECDSA signing?",
+      "options": [
+        "The need for high-quality randomness at signing time",
+        "The need to keep the public key secret",
+        "The need to compress signatures into fewer bytes",
+        "The need to avoid hashing the message"
+      ],
+      "correct": 0,
+      "explanation": "RFC 6979 makes nonce generation deterministic from (x, H(m)), reducing dependence on an RNG during signing."
+    },
+    {
+      "stage": "post",
+      "question": "Which relation best captures why nonce k is dangerous if reused in (EC)DSA-style signing over order q?",
+      "options": [
+        "s \u00b7 k \u2261 h + x \u00b7 r (mod q)",
+        "r \u00b7 k \u2261 h + x \u00b7 s (mod q)",
+        "s \u00b7 x \u2261 h + k \u00b7 r (mod q)",
+        "h \u00b7 k \u2261 r + s \u00b7 x (mod q)"
+      ],
+      "correct": 0,
+      "explanation": "Rearranging the signature equation yields s\u00b7k \u2261 h + x\u00b7r (mod q); if k repeats, you can solve for k and then x."
+    },
+    {
+      "stage": "post",
+      "question": "RFC 6979 uses bits2int() when converting a hash to an integer. If the hash output is longer than qlen bits, what does bits2int() keep?",
+      "options": [
+        "The rightmost qlen bits",
+        "The leftmost qlen bits",
+        "All bits (no truncation)",
+        "Only the middle qlen bits"
+      ],
+      "correct": 1,
+      "explanation": "bits2int() keeps the leftmost qlen bits, matching how DSA/ECDSA interpret hash outputs relative to the group order bit length."
+    },
+    {
+      "stage": "post",
+      "question": "In RFC 6979 nonce generation, what should you do if a generated candidate k is 0 or k \u2265 q?",
+      "options": [
+        "Clamp k into the range by taking k mod q and using it",
+        "Increment k by 1 until it is in range",
+        "Update the internal HMAC-DRBG state and try again",
+        "Abort signing because deterministic nonces cannot handle this case"
+      ],
+      "correct": 2,
+      "explanation": "RFC 6979 specifies how to update (K,V) and continue generating candidates until 1 \u2264 k < q."
+    },
+    {
+      "stage": "post",
+      "question": "Two DSA signatures on different messages accidentally reused the same nonce k (so r repeats). Given h1, h2, s1, s2 (mod q), which formula recovers k?",
+      "options": [
+        "k \u2261 (h1 + h2) \u00b7 (s1 + s2)^{-1} (mod q)",
+        "k \u2261 (h1 - h2) \u00b7 (s1 - s2)^{-1} (mod q)",
+        "k \u2261 (s1 - s2) \u00b7 (h1 - h2)^{-1} (mod q)",
+        "k \u2261 (r1 - r2) \u00b7 (s1 - s2)^{-1} (mod q)"
+      ],
+      "correct": 1,
+      "explanation": "From s1\u00b7k \u2261 h1 + x\u00b7r and s2\u00b7k \u2261 h2 + x\u00b7r, subtract to get (s1-s2)\u00b7k \u2261 (h1-h2) (mod q)."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement about deterministic nonces (RFC 6979) is correct?",
+      "options": [
+        "Deterministic nonces remove the need for private key randomness during key generation",
+        "Deterministic nonces guarantee the implementation is constant-time",
+        "Deterministic nonces make signatures compatible with standard DSA/ECDSA verifiers",
+        "Deterministic nonces allow reusing the same k safely across different messages"
+      ],
+      "correct": 2,
+      "explanation": "RFC 6979 changes only how k is derived; the signature equations and verification remain standard and compatible."
+    },
+    {
+      "stage": "post",
+      "question": "You switch the hash function from SHA-256 to SHA-512 but keep the same DSA private key x and the same message bytes. Under RFC 6979, what should happen to k?",
+      "options": [
+        "k must stay identical because deterministic means hash-independent",
+        "k should usually change because the input h1 changes",
+        "k must become 0 for one of the hash functions",
+        "k should become unpredictable again, like a random nonce"
+      ],
+      "correct": 1,
+      "explanation": "RFC 6979 is deterministic given (x, H(m)) under a specific hash function; changing the hash changes h1 and typically changes k."
+    }
+  ]
 }

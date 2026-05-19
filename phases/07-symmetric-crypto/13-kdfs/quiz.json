@@ -1,4 +1,100 @@
 {
-  "title": "KDFs \u2014 HKDF, PBKDF2, Argon2, scrypt",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "You have a 32-byte ECDH shared secret and need three independent keys (encryption, MAC, nonces). Which KDF is the best fit?",
+      "options": [
+        "HKDF with context-specific info labels for key separation.",
+        "PBKDF2 with a low iteration count so it runs fast.",
+        "A single SHA-256 hash of the shared secret, then reuse it everywhere.",
+        "scrypt with a huge memory setting because it is always stronger."
+      ],
+      "correct": 0,
+      "explanation": "HKDF is designed to expand a high-entropy secret into multiple independent subkeys with explicit domain separation via info."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the main purpose of a per-password salt in password KDFs like PBKDF2/scrypt/Argon2?",
+      "options": [
+        "Prevent precomputation (rainbow tables) and ensure identical passwords do not share the same derived key/hash.",
+        "Keep the password secret so it never appears in memory.",
+        "Allow the server to decrypt stored passwords later.",
+        "Replace the need for a work factor (iterations/memory)."
+      ],
+      "correct": 0,
+      "explanation": "Salts are public uniqueness; they defeat precomputed tables and ensure password reuse does not imply hash reuse."
+    },
+    {
+      "stage": "post",
+      "question": "In HKDF-SHA256, what does the Extract step output, and what is its length?",
+      "options": [
+        "A pseudorandom key (PRK) of length 32 bytes (the SHA-256 digest size).",
+        "A ciphertext of the input keying material, length equal to the IKM length.",
+        "A random nonce, length 12 bytes.",
+        "An authentication tag, length 16 bytes."
+      ],
+      "correct": 0,
+      "explanation": "Extract outputs PRK = HMAC(salt, IKM) and its length is the underlying hash output size."
+    },
+    {
+      "stage": "post",
+      "question": "What is the security role of the HKDF 'info' parameter?",
+      "options": [
+        "Domain separation: different info values yield independent keys for different contexts/uses.",
+        "It must be secret; leaking info breaks HKDF security.",
+        "It is a required random nonce to avoid replay attacks.",
+        "It compresses the output to make HKDF faster."
+      ],
+      "correct": 0,
+      "explanation": "Info is typically public context that ensures keys for different purposes do not accidentally collide."
+    },
+    {
+      "stage": "post",
+      "question": "HKDF Expand has a hard maximum output length. What is it and why does it exist?",
+      "options": [
+        "At most 255 * HashLen bytes, because the counter is a single byte (1..255).",
+        "At most HashLen bytes, because HKDF can only output one digest.",
+        "At most 2^32 bytes, because the counter is 32-bit.",
+        "There is no maximum; you can expand indefinitely."
+      ],
+      "correct": 0,
+      "explanation": "The Expand step concatenates blocks indexed by a 1-byte counter, limiting the number of blocks to 255."
+    },
+    {
+      "stage": "post",
+      "question": "What does PBKDF2 fundamentally do to make password guessing slower?",
+      "options": [
+        "It repeats a PRF (e.g., HMAC) many times and XORs the results per output block.",
+        "It encrypts the password with AES and uses the ciphertext as the key.",
+        "It hashes the password once with SHA-256 and truncates it.",
+        "It relies on a secret salt that must never be stored."
+      ],
+      "correct": 0,
+      "explanation": "PBKDF2's cost comes from many PRF evaluations per guess; the salt is public and stored with the output."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: a developer derives an AES key as HKDF(password, salt, info). What is the main problem?",
+      "options": [
+        "HKDF is fast, so an attacker can do cheap offline password guessing if they obtain the ciphertext and salt/info.",
+        "HKDF outputs are always the same length, so AES cannot use them.",
+        "HKDF requires a secret salt, so the system will not work.",
+        "HKDF prevents brute force by design, so it is safe for passwords."
+      ],
+      "correct": 0,
+      "explanation": "Password inputs require a password KDF with an intentionally expensive work factor (and preferably memory hardness)."
+    },
+    {
+      "stage": "post",
+      "question": "Why are memory-hard password KDFs (scrypt/Argon2) often preferred over PBKDF2 when available?",
+      "options": [
+        "They force attackers to spend substantial RAM per guess, making GPU/ASIC brute force less efficient.",
+        "They make salts unnecessary because memory provides uniqueness.",
+        "They allow password recovery by the server if needed.",
+        "They are faster than PBKDF2 for the same security level on all hardware."
+      ],
+      "correct": 0,
+      "explanation": "Memory-hardness increases the cost of parallel guessing and limits hardware acceleration by requiring large working memory."
+    }
+  ]
 }

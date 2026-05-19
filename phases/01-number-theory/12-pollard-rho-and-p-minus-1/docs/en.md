@@ -303,6 +303,12 @@ def factor_with_pollard(n: int, bound: int = 25) -> tuple[int, int] | None:
 
 This is still a toy wrapper. A serious factoring tool would use many restarts, multiple polynomials, stage-two p-1, ECM, quadratic sieve, and eventually number field sieve.
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 Mathematical software such as SageMath, PARI/GP, Magma, and SymPy includes integer factorization routines that combine many methods. They do not bet everything on one Pollard rho walk or one p-1 bound. They use cheap filters first, then escalate.

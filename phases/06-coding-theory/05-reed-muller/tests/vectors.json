@@ -1,1 +1,74 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Vectors are derived from the Reed-Muller definition RM(r,m) as evaluations of all Boolean monomials of degree <= r on all points x in {0,1}^m, ordered by integer x = 0..2^m-1 (bit i is variable xi). Encoding is message · G over GF(2), where message bits are coefficients for monomials ordered by increasing degree then lexicographic variable indices. RM(1,m) decoding vectors use the Walsh-Hadamard transform (WHT) maximum-correlation rule (Hadamard / first-order Reed-Muller decoding). Expected values were computed directly from these definitions and cross-checked by exhaustive roundtrip and single-bit error correction tests in tests/test_vectors.py.",
+  "vectors": [
+    {
+      "op": "rm_parameters",
+      "r": 1,
+      "m": 3,
+      "expected": {"n": 8, "k": 4, "d": 4}
+    },
+    {
+      "op": "rm_parameters",
+      "r": 2,
+      "m": 3,
+      "expected": {"n": 8, "k": 7, "d": 2}
+    },
+    {
+      "op": "rm_monomials_upto_degree",
+      "r": 1,
+      "m": 3,
+      "expected": [[], [0], [1], [2]]
+    },
+    {
+      "op": "rm_generator_matrix",
+      "r": 1,
+      "m": 3,
+      "expected": [
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [0, 1, 0, 1, 0, 1, 0, 1],
+        [0, 0, 1, 1, 0, 0, 1, 1],
+        [0, 0, 0, 0, 1, 1, 1, 1]
+      ]
+    },
+    {
+      "op": "rm_encode",
+      "r": 1,
+      "m": 3,
+      "message": [1, 0, 1, 1],
+      "expected": [1, 1, 0, 0, 0, 0, 1, 1]
+    },
+    {
+      "op": "rm_encode",
+      "r": 2,
+      "m": 3,
+      "message": [1, 0, 1, 1, 1, 0, 1],
+      "expected": [1, 1, 0, 1, 0, 0, 0, 1]
+    },
+    {
+      "op": "rm1_decode_coeffs",
+      "m": 3,
+      "received": [1, 1, 0, 0, 0, 1, 1, 1],
+      "expected": [1, 0, 1, 1]
+    },
+    {
+      "op": "rm1_correct",
+      "m": 3,
+      "received": [1, 1, 0, 0, 0, 1, 1, 1],
+      "expected": {
+        "decoded": [1, 0, 1, 1],
+        "corrected": [1, 1, 0, 0, 0, 0, 1, 1]
+      }
+    },
+    {
+      "op": "hamming_distance",
+      "a": [1, 1, 0, 0, 0, 1, 1, 1],
+      "b": [1, 1, 0, 0, 0, 0, 1, 1],
+      "expected": 1
+    },
+    {
+      "op": "fwht_inplace",
+      "a": [1, 1, 1, 1],
+      "expected": [4, 0, 0, 0]
+    }
+  ]
+}

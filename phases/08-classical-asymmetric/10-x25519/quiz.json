@@ -1,4 +1,100 @@
 {
-  "title": "X25519 ECDH",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is X25519 primarily used for in real protocols?",
+      "options": [
+        "Key agreement (ECDH) to derive a shared secret",
+        "Digital signatures for message authenticity",
+        "Hashing messages into fixed-size digests",
+        "Encrypting data directly without a KDF"
+      ],
+      "correct": 0,
+      "explanation": "X25519 is a scalar-multiplication function used for ECDH-style key agreement; you feed its output into a KDF."
+    },
+    {
+      "stage": "pre",
+      "question": "In X25519, what do the 32-byte inputs represent?",
+      "options": [
+        "A scalar (private key bytes) and a u-coordinate (public key bytes), both little-endian",
+        "Two independent AES keys used for encryption and MAC",
+        "A nonce and a ciphertext tag for authenticated encryption",
+        "A signature (R,s) split into two 32-byte halves"
+      ],
+      "correct": 0,
+      "explanation": "X25519 takes 32 scalar bytes and 32 u-coordinate bytes (both little-endian encodings) and outputs a 32-byte u-coordinate."
+    },
+    {
+      "stage": "post",
+      "question": "Why does X25519 'clamp' certain bits of the private scalar bytes before scalar multiplication?",
+      "options": [
+        "To force the scalar into a safe form (multiple of the cofactor and within a fixed range)",
+        "To make the output u-coordinate look uniformly random without any math assumptions",
+        "To ensure the peer’s public key is on the curve by construction",
+        "To prevent hash collisions in the protocol transcript"
+      ],
+      "correct": 0,
+      "explanation": "Clamping sets/clears specific bits so the scalar has a fixed shape, which helps avoid edge cases and improves robustness against certain invalid inputs."
+    },
+    {
+      "stage": "post",
+      "question": "What does the Montgomery ladder buy you in X25519 implementations?",
+      "options": [
+        "A regular sequence of operations for all scalars, which helps resist simple side-channel leakage",
+        "A way to compute full (x,y) points so you can do signatures directly",
+        "A shortcut that avoids modular arithmetic entirely",
+        "A guarantee that no invalid public keys can be provided by an attacker"
+      ],
+      "correct": 0,
+      "explanation": "The ladder performs the same pattern of field operations for each scalar bit, which is a key building block for constant-time implementations."
+    },
+    {
+      "stage": "post",
+      "question": "In an ECDH exchange using X25519, what should you do with the raw 32-byte shared secret output before using it as an encryption key?",
+      "options": [
+        "Run it through a KDF (e.g., HKDF) with context (public keys / protocol info)",
+        "Use it directly as an AES key with no further processing",
+        "Base64-encode it and treat the string as the key material",
+        "Hash only the peer public key and ignore the shared secret"
+      ],
+      "correct": 0,
+      "explanation": "The shared secret is key material, not a ready-to-use session key; a KDF binds context and produces keys of the right length."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-themed: RFC 7748 notes that X25519 can output the all-zero value for certain malicious/degenerate public inputs. What is the recommended mitigation in an ECDH protocol?",
+      "options": [
+        "Check for an all-zero shared secret and abort the handshake if it occurs",
+        "Ignore it because an all-zero secret is just as secure as any other",
+        "Clamp the peer public key bytes the same way as the private scalar",
+        "Retry scalar multiplication until the output is non-zero"
+      ],
+      "correct": 0,
+      "explanation": "An all-zero output can indicate a small-order/invalid input; protocols commonly check for all-zero and abort to avoid key compromise."
+    },
+    {
+      "stage": "post",
+      "question": "X25519 treats u-coordinates as little-endian byte strings. What common bug can this cause in implementations?",
+      "options": [
+        "Interpreting inputs as big-endian and deriving incompatible keys",
+        "Forgetting to pad AES blocks to 16 bytes",
+        "Reusing nonces in AEAD modes by accident",
+        "Mixing up RSA public exponent with modulus"
+      ],
+      "correct": 0,
+      "explanation": "Many crypto APIs use big-endian integers, but X25519 specifies little-endian encodings; endianness mistakes break interoperability."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best describes what X25519 returns?",
+      "options": [
+        "A 32-byte little-endian encoding of the u-coordinate of the scalar-multiplied point",
+        "A compressed Edwards point encoding (y plus sign bit)",
+        "A pair of coordinates (u,v) that uniquely identifies the curve point",
+        "A signature over the transcript that authenticates the exchange"
+      ],
+      "correct": 0,
+      "explanation": "X25519 outputs only the u-coordinate (x-coordinate in Montgomery form), encoded as 32 bytes little-endian with the top bit cleared."
+    }
+  ]
 }

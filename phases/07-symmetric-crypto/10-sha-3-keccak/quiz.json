@@ -1,4 +1,101 @@
 {
   "title": "SHA-3 / Keccak from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In the Keccak sponge construction, what does the \"rate\" control?",
+      "options": [
+        "How many bytes per block are absorbed/squeezed per permutation call",
+        "How many rounds Keccak-f runs",
+        "The output digest length",
+        "The size of each lane (word) in bits"
+      ],
+      "correct": 0,
+      "explanation": "The rate r is the part of the state that interacts with the message/output; it sets the block size for absorb/squeeze."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the most important practical difference between SHA3-256 and SHAKE128?",
+      "options": [
+        "SHAKE128 is an XOF: you choose any output length",
+        "SHA3-256 is based on SHA-2 while SHAKE128 is based on Keccak",
+        "SHAKE128 is keyed while SHA3-256 is unkeyed",
+        "SHA3-256 uses a larger state than SHAKE128"
+      ],
+      "correct": 0,
+      "explanation": "Both use Keccak-f[1600], but SHAKE is extendable-output: you can squeeze as many bytes as you need."
+    },
+    {
+      "stage": "post",
+      "question": "Why does SHA-3 include a domain-separation suffix (e.g., 0x06 for SHA3, 0x1F for SHAKE) in padding?",
+      "options": [
+        "To ensure different named functions produce unrelated outputs on the same message",
+        "To make Keccak-f invertible",
+        "To reduce the number of rounds needed",
+        "To speed up absorption by aligning blocks"
+      ],
+      "correct": 0,
+      "explanation": "Domain separation prevents accidental cross-protocol collisions (e.g., SHA3-256(M) being mistaken for SHAKE output or raw Keccak)."
+    },
+    {
+      "stage": "post",
+      "question": "What does the final 0x80 bit (the last \"1\" in pad10*1) guarantee for byte-aligned messages?",
+      "options": [
+        "The padding is unambiguous and the padded length is a multiple of the rate",
+        "The digest length becomes 256 bits",
+        "The output is constant-time to compute",
+        "The state becomes all zeros before squeezing"
+      ],
+      "correct": 0,
+      "explanation": "Multi-rate padding (pad10*1) ensures no two different messages map to the same padded string and finishes on a rate boundary."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement about length-extension attacks is correct?",
+      "options": [
+        "Merkle–Damgård hashes (like SHA-256) have length extension; SHA-3's sponge construction avoids that specific attack",
+        "SHA-3 is vulnerable to length extension because it is iterative",
+        "Length extension affects only keyed hashes (MACs), not plain hashes",
+        "Length extension is prevented by using a larger digest size"
+      ],
+      "correct": 0,
+      "explanation": "The classic length-extension attack exploits Merkle–Damgård padding and exposed chaining state; SHA-3 uses a sponge and doesn't have that same structure."
+    },
+    {
+      "stage": "post",
+      "question": "For SHA3-256, which (rate, capacity) pair is used (in bits)?",
+      "options": [
+        "(1088, 512)",
+        "(512, 1088)",
+        "(1024, 576)",
+        "(1344, 256)"
+      ],
+      "correct": 0,
+      "explanation": "SHA3-256 uses Keccak-f[1600] with capacity 512 bits and rate 1600−512=1088 bits."
+    },
+    {
+      "stage": "post",
+      "question": "In our byte-oriented implementation, how are message bytes mapped into the 64-bit lanes during absorption?",
+      "options": [
+        "Little-endian within each 64-bit lane",
+        "Big-endian within each 64-bit lane",
+        "Reversed per block but little-endian per lane",
+        "It alternates endianness each round"
+      ],
+      "correct": 0,
+      "explanation": "FIPS 202 defines a little-endian bit/byte convention for packing bytes into 64-bit lanes for Keccak-f[1600]."
+    },
+    {
+      "stage": "post",
+      "question": "You need 48 bytes of output from SHAKE128 for a KDF-like use. What should you do?",
+      "options": [
+        "Compute SHAKE128(message) and request exactly 48 output bytes",
+        "Compute SHA3-256(message) and truncate to 48 bytes",
+        "Compute SHAKE128(message) once, then hash the result again to get more bytes",
+        "Compute SHA3-512(message) and truncate to 48 bytes"
+      ],
+      "correct": 0,
+      "explanation": "SHAKE is designed to output an arbitrary number of bytes by continuing to squeeze after additional permutations."
+    }
+  ]
 }

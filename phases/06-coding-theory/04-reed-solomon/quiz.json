@@ -1,4 +1,91 @@
 {
   "title": "Reed-Solomon Codes",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In GF(2^8), what operation is used for addition (and subtraction) of two symbols?",
+      "options": ["Bitwise XOR", "Integer addition mod 256", "Bitwise AND", "Rotate-left by 1 bit"],
+      "correct": 0,
+      "explanation": "In characteristic-2 fields, addition and subtraction are the same operation: XOR of coefficients."
+    },
+    {
+      "stage": "pre",
+      "question": "If you add nsym = 10 parity symbols to a message, what is the maximum number of unknown symbol errors you can correct?",
+      "options": ["5", "10", "2", "9"],
+      "correct": 0,
+      "explanation": "With nsym parity symbols, a Reed-Solomon decoder can correct at most t = floor(nsym/2) unknown symbol errors."
+    },
+    {
+      "stage": "post",
+      "question": "What does it mean if all computed syndromes are zero?",
+      "options": [
+        "The received codeword satisfies the parity constraints (no detectable errors)",
+        "The message must be all zeros",
+        "The generator polynomial is irreducible",
+        "The decoder can correct any number of errors"
+      ],
+      "correct": 0,
+      "explanation": "Syndromes are evaluations at the roots of the generator polynomial; all-zero syndromes mean the received word is a valid codeword for that RS code."
+    },
+    {
+      "stage": "post",
+      "question": "Which choice must match between the encoder and the syndrome computation for decoding to work?",
+      "options": [
+        "The generator polynomial roots (evaluation points) used by the code",
+        "Only the message length",
+        "Only the parity length (nsym)",
+        "Only the byte endianness of the machine"
+      ],
+      "correct": 0,
+      "explanation": "If the encoder and syndrome calculator disagree on field/roots, syndromes won’t correspond to the intended parity constraints."
+    },
+    {
+      "stage": "post",
+      "question": "In the decoding pipeline, what does Berlekamp–Massey compute from the syndromes?",
+      "options": [
+        "The error locator polynomial (whose roots identify error positions)",
+        "The parity bytes to append during encoding",
+        "The corrected message directly",
+        "The generator polynomial"
+      ],
+      "correct": 0,
+      "explanation": "BM synthesizes the minimal-degree locator polynomial consistent with the syndrome sequence."
+    },
+    {
+      "stage": "post",
+      "question": "What is Chien search used for in Reed-Solomon decoding?",
+      "options": [
+        "Finding the error positions by locating roots of the locator polynomial",
+        "Computing syndromes from a codeword",
+        "Computing error magnitudes once positions are known",
+        "Generating the GF(256) log/exp tables"
+      ],
+      "correct": 0,
+      "explanation": "Chien search evaluates the locator polynomial across field powers to find where it becomes zero, which maps to error positions."
+    },
+    {
+      "stage": "post",
+      "question": "Why must a practical decoder recompute syndromes after applying corrections?",
+      "options": [
+        "Because beyond the correction radius a decoder can miscorrect, so you must detect failure",
+        "Because XOR is not associative",
+        "Because RS encoding always changes the message bytes",
+        "Because it makes Forney’s algorithm faster"
+      ],
+      "correct": 0,
+      "explanation": "If the final syndromes are not all zero, the correction was not valid (typically too many errors). Failing closed prevents silent corruption."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s implementation, what happens when there are too many symbol errors to correct?",
+      "options": [
+        "Decoding fails with an exception (it does not return a “best effort” message)",
+        "The decoder always returns a corrected message anyway",
+        "The decoder replaces the whole message with zeros",
+        "The decoder switches to integer arithmetic and retries"
+      ],
+      "correct": 0,
+      "explanation": "The implementation raises on failure (e.g., wrong number of roots or non-zero syndromes after correction), which is the safe behavior."
+    }
+  ]
 }

@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how the chord-and-tangent geometric construction defines point addition on an elliptic curve over the reals
+- Identify the identity element, inverse, and group axioms satisfied by the set of points on a Weierstrass curve
+- Compute point addition and scalar multiplication on a small finite-field toy curve (`y² = x³ + 7 mod 211`)
+- Distinguish why ECC achieves ~128-bit security with 256-bit keys while RSA requires ~3072-bit keys for equivalent strength
+- Apply a brute-force discrete-log search to recover a scalar on the toy curve and explain why the same attack is infeasible on real 256-bit curves
+
 ## The Problem
 
 Elliptic curves show up everywhere: TLS certificates (ECDSA), modern key exchange (ECDH / X25519), blockchains (secp256k1), and even inside zero-knowledge systems (curve groups for commitments, pairings, and polynomial commitments).
@@ -222,6 +230,12 @@ assert is_on_curve(curve, g)
 p = scalar_mul(curve, 123, g)
 assert discrete_log_bruteforce(curve, g, p, limit=199) == 123
 assert point_add(curve, g, point_neg(curve, g)) is None
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

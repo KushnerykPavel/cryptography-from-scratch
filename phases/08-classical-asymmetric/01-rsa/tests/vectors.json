@@ -1,1 +1,16 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "RSA toy example: Wikipedia 'RSA (cryptosystem)' and many textbooks use p=61, q=53, e=17, d=2753, n=3233, with m=65 encrypting to c=2790. Modular exponent example 4^13 mod 497 = 445 is a common RSA tutorial check.",
+  "vectors": [
+    {"op": "mod_inverse", "a": 17, "modulus": 3120, "expected": 2753},
+    {"op": "mod_pow", "base": 4, "exponent": 13, "modulus": 497, "expected": 445},
+    {"op": "is_probable_prime", "n": 97, "expected": true},
+    {"op": "is_probable_prime", "n": 221, "expected": false},
+    {"op": "rsa_keypair_from_primes", "p": 61, "q": 53, "e": 17, "expected_n": 3233, "expected_d": 2753},
+    {"op": "rsa_encrypt_int", "m": 65, "n": 3233, "e": 17, "expected": 2790},
+    {"op": "rsa_decrypt_int", "c": 2790, "n": 3233, "d": 2753, "expected": 65},
+    {"op": "bytes_to_int", "bytes_hex": "6869", "expected": 26729},
+    {"op": "int_to_bytes", "x": 26729, "length": 2, "expected_hex": "6869"},
+    {"op": "factor_semiprime_trial", "n": 3233, "expected_factors": [53, 61]},
+    {"op": "recover_private_exponent_from_factoring", "n": 3233, "e": 17, "expected_factors": [53, 61], "expected_d": 2753}
+  ]
+}

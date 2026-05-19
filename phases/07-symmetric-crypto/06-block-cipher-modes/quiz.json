@@ -1,4 +1,101 @@
 {
   "title": "Block Cipher Modes \u2014 ECB, CBC, CTR, CFB",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In ECB mode, what happens to two identical plaintext blocks encrypted under the same key?",
+      "options": [
+        "They produce identical ciphertext blocks",
+        "They produce unrelated ciphertext blocks because ECB uses an IV",
+        "They produce identical ciphertext only if the plaintext is ASCII",
+        "They produce identical ciphertext only if padding is disabled"
+      ],
+      "correct": 0,
+      "explanation": "ECB encrypts each block independently: the same input block under the same key yields the same output block."
+    },
+    {
+      "stage": "pre",
+      "question": "In CTR mode, what must be true about nonce+counter values under a fixed key?",
+      "options": [
+        "They must never repeat (keystream reuse breaks confidentiality)",
+        "They must be unpredictable, but repetition is fine",
+        "They must be secret, but repetition is fine",
+        "They must increase by exactly 1 across all devices globally"
+      ],
+      "correct": 0,
+      "explanation": "CTR generates a keystream by encrypting nonce||counter; reusing the same nonce+counter under a key repeats the keystream and leaks relationships between plaintexts."
+    },
+    {
+      "stage": "post",
+      "question": "PKCS#7 padding rule: if a message is already an exact multiple of the block size, what padding is added?",
+      "options": [
+        "A full block of padding bytes, each equal to the block size",
+        "No padding bytes are added",
+        "A single 0x00 byte is added",
+        "Padding is random bytes of any length"
+      ],
+      "correct": 0,
+      "explanation": "PKCS#7 always adds padding; when the length is already aligned, it adds an extra full block so unpadding is unambiguous."
+    },
+    {
+      "stage": "post",
+      "question": "CBC decryption: which formula recovers plaintext block P_i (with C_0 = IV)?",
+      "options": [
+        "P_i = D_K(C_i) \u2295 C_{i-1}",
+        "P_i = E_K(C_i) \u2295 C_{i-1}",
+        "P_i = D_K(C_{i-1}) \u2295 C_i",
+        "P_i = E_K(P_i) \u2295 C_{i-1}"
+      ],
+      "correct": 0,
+      "explanation": "CBC decrypts each ciphertext block, then XORs with the previous ciphertext (or IV for the first block)."
+    },
+    {
+      "stage": "post",
+      "question": "Malleability intuition: in CTR mode, what is the effect of flipping one bit in the ciphertext?",
+      "options": [
+        "The same bit flips in the decrypted plaintext at that position",
+        "The entire message decrypts to random garbage",
+        "Only the next block is corrupted, not the flipped position",
+        "Decryption fails with a padding error"
+      ],
+      "correct": 0,
+      "explanation": "CTR is XOR with a keystream; flipping a ciphertext bit flips the corresponding plaintext bit unless an integrity check is added."
+    },
+    {
+      "stage": "post",
+      "question": "Attack intuition: two CTR ciphertexts are produced with the same key and the same nonce/counter sequence. What can an attacker compute from the ciphertexts alone?",
+      "options": [
+        "P1 \u2295 P2",
+        "P1 and P2 exactly",
+        "The secret key",
+        "The nonce (even if it was never transmitted)"
+      ],
+      "correct": 0,
+      "explanation": "With keystream reuse, C1 = P1 \u2295 S and C2 = P2 \u2295 S, so C1 \u2295 C2 = P1 \u2295 P2."
+    },
+    {
+      "stage": "post",
+      "question": "In CFB mode decryption, which block-cipher operation is used to generate the keystream?",
+      "options": [
+        "Block-cipher encryption E_K(\u00b7) (not D_K)",
+        "Block-cipher decryption D_K(\u00b7) (not E_K)",
+        "Both E_K and D_K are required on every block",
+        "Neither; CFB never calls the block cipher once initialized"
+      ],
+      "correct": 0,
+      "explanation": "CFB uses E_K on the feedback register (previous ciphertext/IV) to produce a keystream that is XORed with data."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement is correct about integrity for ECB/CBC/CTR/CFB?",
+      "options": [
+        "None of them provide integrity by themselves; you need AEAD or a MAC",
+        "CBC provides integrity because it chains blocks",
+        "CTR provides integrity because counters prevent tampering",
+        "ECB provides integrity because blocks are independent"
+      ],
+      "correct": 0,
+      "explanation": "These classic modes are confidentiality-only; they are malleable without an authentication tag (AEAD) or a separate MAC."
+    }
+  ]
 }

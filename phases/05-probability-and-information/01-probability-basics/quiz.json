@@ -1,4 +1,101 @@
 {
   "title": "Probability Basics for Cryptographers",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does the notation `Pr[Exp(...) = 1]` mean in game-based cryptography?",
+      "options": [
+        "The probability that the experiment returns the bit 1",
+        "The probability that the adversary's runtime is exactly 1 second",
+        "A guarantee that the experiment always returns 1",
+        "The expected value of the experiment's output"
+      ],
+      "correct": 0,
+      "explanation": "`Pr[Exp(...) = 1]` is read as: the probability that the randomized experiment `Exp` outputs 1."
+    },
+    {
+      "stage": "pre",
+      "question": "Which statement correctly characterizes independence of events A and B?",
+      "options": [
+        "A and B are independent if `Pr[A|B] = Pr[A]`",
+        "A and B are independent if `Pr[A|B] = Pr[B]`",
+        "A and B are independent if `Pr[A ∩ B] = Pr[A] + Pr[B]`",
+        "A and B are independent if `Pr[A]` and `Pr[B]` are both 1/2"
+      ],
+      "correct": 0,
+      "explanation": "Independence means learning B does not change the probability of A: `Pr[A|B] = Pr[A]` (equivalently, `Pr[A∩B] = Pr[A]·Pr[B]`)."
+    },
+    {
+      "stage": "post",
+      "question": "If `Pr[B] > 0`, which formula defines conditional probability?",
+      "options": [
+        "`Pr[A|B] = Pr[A ∩ B] / Pr[B]`",
+        "`Pr[A|B] = Pr[A] / Pr[B]`",
+        "`Pr[A|B] = Pr[B] / Pr[A ∩ B]`",
+        "`Pr[A|B] = Pr[A ∪ B] - Pr[B]`"
+      ],
+      "correct": 0,
+      "explanation": "By definition, `Pr[A|B] = Pr[A∩B] / Pr[B]` for `Pr[B] > 0`."
+    },
+    {
+      "stage": "post",
+      "question": "A deck has 4 kings and 12 face cards (J/Q/K). What is `Pr[King | Face card]`?",
+      "options": [
+        "1/13",
+        "1/3",
+        "3/13",
+        "3/4"
+      ],
+      "correct": 1,
+      "explanation": "`Pr[King|Face] = (4/52) / (12/52) = 4/12 = 1/3`."
+    },
+    {
+      "stage": "post",
+      "question": "What does the union bound say about events E1, ..., Ek?",
+      "options": [
+        "`Pr[E1 ∪ ... ∪ Ek] ≤ Pr[E1] + ... + Pr[Ek]`",
+        "`Pr[E1 ∪ ... ∪ Ek] = Pr[E1] + ... + Pr[Ek]` always",
+        "`Pr[E1 ∪ ... ∪ Ek] ≥ Pr[E1] + ... + Pr[Ek]`",
+        "`Pr[E1 ∪ ... ∪ Ek] = Pr[E1] · ... · Pr[Ek]` always"
+      ],
+      "correct": 0,
+      "explanation": "The union bound (Boole's inequality) upper-bounds the probability that any bad event happens by the sum of their probabilities."
+    },
+    {
+      "stage": "post",
+      "question": "Which scenario is a common source of *invalid* independence assumptions?",
+      "options": [
+        "Two separate fair coin flips",
+        "Two draws from a deck without replacement",
+        "Two runs of a sampler with independent fresh randomness",
+        "Two independent uniform choices from {0,1}^n using a secure RNG"
+      ],
+      "correct": 1,
+      "explanation": "Without replacement, draws are correlated (the first draw changes the distribution of the second), so independence fails."
+    },
+    {
+      "stage": "post",
+      "question": "In many crypto definitions, a distinguisher's advantage is written as `|p_real - p_ideal|`. What does this measure?",
+      "options": [
+        "How far apart the two worlds look to the distinguisher",
+        "How much runtime the distinguisher uses on average",
+        "The expected number of oracle queries the distinguisher makes",
+        "The probability that the distinguisher outputs the correct key"
+      ],
+      "correct": 0,
+      "explanation": "If `p_real` and `p_ideal` are the probabilities that `D` outputs 1 in each world, `|p_real - p_ideal|` measures how distinguishable the worlds are."
+    },
+    {
+      "stage": "post",
+      "question": "A protocol repeats a randomized step k times, and each step fails with probability at most p. Which upper bound is always valid for 'any failure happens'?",
+      "options": [
+        "At most `k · p` by the union bound",
+        "Exactly `k · p` for any k and p",
+        "At most `p / k` since more repetitions reduce failure",
+        "At most `p^k` since failures must align"
+      ],
+      "correct": 0,
+      "explanation": "The union bound gives `Pr[any failure] ≤ Σ Pr[failure_i] ≤ k·p`. It is an upper bound, not necessarily tight."
+    }
+  ]
 }

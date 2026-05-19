@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why naive repeated addition is infeasible for 256-bit scalars and how the binary double-and-add method reduces additions to `O(log k)`
+- Compute the Non-Adjacent Form (NAF) of a scalar and explain why NAF digits have no two adjacent nonzero entries
+- Implement windowed NAF (wNAF) scalar multiplication by precomputing a table of odd multiples and using it to reduce the number of point additions
+- Distinguish the operation traces of double-and-add, NAF, and wNAF and compare their average nonzero-digit densities
+- Identify how variable-time control flow in double-and-add leaks scalar bits to a side-channel attacker observing the add/double pattern
+
 ## The Problem
 
 Almost every elliptic-curve protocol reduces to one operation:
@@ -118,6 +126,12 @@ For `w=5`, that’s a table of 8 points: `1P,3P,...,15P`.
 from main import wnaf_digits
 
 print(wnaf_digits(12345, 4))
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

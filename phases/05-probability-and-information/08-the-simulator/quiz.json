@@ -1,4 +1,101 @@
 {
-  "title": "The Simulator \u2014 How Security Proofs Work",
-  "questions": []
+  "title": "The Simulator — How Security Proofs Work",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does it mean for a protocol to be zero-knowledge?",
+      "options": [
+        "A simulator can produce the verifier's view without the witness, so the verifier learns nothing beyond the statement being true",
+        "The proof transcript is encrypted so the verifier cannot read it",
+        "The prover never sends any information to the verifier",
+        "The prover's secret is hidden inside a hash function"
+      ],
+      "correct": 0,
+      "explanation": "Zero-knowledge: for every verifier V*, there exists a PPT simulator S(x) (no witness) whose output is computationally indistinguishable from the real view. The simulation's existence proves the view contains no information about the witness."
+    },
+    {
+      "stage": "pre",
+      "question": "In a Schnorr sigma protocol, why does the simulator pick c and s before computing R?",
+      "options": [
+        "To back-compute R = g^s · pk^{-c}, making the transcript satisfy g^s == R · pk^c without knowing the secret",
+        "Because the challenge c must be sent before the commitment R in the protocol",
+        "To avoid computing discrete logarithms",
+        "Because the response s must be chosen before the verifier sees the commitment"
+      ],
+      "correct": 0,
+      "explanation": "The honest prover commits R = g^r first, then receives c, then computes s = r+cx. The simulator reverses this: pick c, s freely, then set R = g^s · pk^{-c}. The verification equation holds by construction, without needing x."
+    },
+    {
+      "stage": "post",
+      "question": "A sigma protocol has special soundness. What does this mean?",
+      "options": [
+        "Given two valid transcripts (R, c1, s1) and (R, c2, s2) with c1≠c2, one can extract the witness x",
+        "The protocol is secure against quantum adversaries",
+        "The challenge c must be special (non-interactive) to be secure",
+        "The prover only needs to send one message instead of three"
+      ],
+      "correct": 0,
+      "explanation": "Special soundness: two accepting transcripts with the same commitment R but different challenges c1≠c2 allow computing x = (s1-s2)·(c1-c2)^{-1} mod order. This knowledge extractor proves the prover 'knows' the witness."
+    },
+    {
+      "stage": "post",
+      "question": "In the Schnorr protocol, why are real and simulated transcripts identically distributed?",
+      "options": [
+        "In both cases, (c, s) are uniformly random; R is then determined by the verification equation and (c, s, pk)",
+        "The simulator uses the same random tape as the prover",
+        "The commitment R is always set to g^1 = g in both cases",
+        "Real and simulated transcripts have different distributions — the simulation is only computationally indistinguishable"
+      ],
+      "correct": 0,
+      "explanation": "Real: c uniform, s = r+cx uniform (since r is fresh uniform). Sim: c, s both explicitly uniform. In both cases (c, s) are i.i.d. uniform, and R is then uniquely determined by g^s = R·pk^c. So the joint distribution of (R, c, s) is identical — this is perfect ZK."
+    },
+    {
+      "stage": "post",
+      "question": "Why does parallel composition break zero-knowledge for the basic Schnorr protocol?",
+      "options": [
+        "If the prover reuses the same r for two rounds, an adversary seeing (s1, s2) with different challenges (c1, c2) can compute x = (s1-s2)/(c1-c2)",
+        "Parallel composition always breaks ZK because two messages are sent simultaneously",
+        "The simulator cannot handle two verifiers at once",
+        "The group order is too small for two simultaneous protocols"
+      ],
+      "correct": 0,
+      "explanation": "With shared r: s1 = r+c1·x, s2 = r+c2·x, so s1-s2 = (c1-c2)·x, revealing x. The simulator also fails: it cannot program two independent challenges for the same commitment simultaneously (that would require solving discrete log)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the Fiat-Shamir transform and how does the simulator handle it?",
+      "options": [
+        "Replace the interactive challenge c with H(R || pk || m) in a ROM; the simulator programs H(R_sim || pk || m) = c_sim before committing to R_sim",
+        "Replace the commitment R with a hash of the witness",
+        "Apply the simulator in the standard model without a random oracle",
+        "Hash both the commitment and response together to bind them"
+      ],
+      "correct": 0,
+      "explanation": "Fiat-Shamir: c = H(R || pk || m). The simulator (in ROM) picks c and s first, back-computes R = g^s·pk^{-c}, then programs H(R || pk || m) = c. Since the adversary hasn't queried this input yet, the programming is undetectable."
+    },
+    {
+      "stage": "post",
+      "question": "What is the difference between HVZK (honest-verifier zero-knowledge) and full ZK?",
+      "options": [
+        "HVZK: simulator only works when the verifier sends a uniform random challenge. Full ZK: simulator works for any (malicious) verifier that may bias the challenge",
+        "HVZK: the prover is honest. Full ZK: the verifier is honest",
+        "HVZK: requires a random oracle. Full ZK: works in the standard model",
+        "HVZK and full ZK are identical for sigma protocols"
+      ],
+      "correct": 0,
+      "explanation": "HVZK: verifier follows the protocol exactly (sends uniform c). The Schnorr simulator works here. Full ZK: for ANY verifier strategy, including biased or adaptive challenges. Achieving full ZK from sigma protocols usually requires additional techniques (e.g., commitments to the challenge)."
+    },
+    {
+      "stage": "post",
+      "question": "In a simulation-based security proof, what role does the simulator play?",
+      "options": [
+        "It constructs the adversary's view in the ideal world, proving that the real and ideal worlds are indistinguishable",
+        "It runs the real protocol on behalf of the prover",
+        "It extracts the witness from a cheating prover",
+        "It generates the trusted setup parameters"
+      ],
+      "correct": 0,
+      "explanation": "The simulator S(x) produces the ideal-world view without the witness w. If Real_view ≈_c Ideal_view = S(x), then no information about w leaks from the protocol — because whatever the adversary/verifier sees could have been generated by S alone."
+    }
+  ]
 }

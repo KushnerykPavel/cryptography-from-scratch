@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why a lattice is defined as a set of integer combinations rather than as a fixed basis
+- Identify which quantities are lattice invariants (determinant, successive minima) versus basis-dependent properties
+- Compute lattice points from a 2D integer basis using linear combinations of basis vectors
+- Distinguish between different bases that generate the same lattice via unimodular transformations
+- Apply a unimodular basis change and verify that the fundamental parallelepiped volume is preserved
+
 ## The Problem
 
 Post-quantum cryptography is, in practice, mostly lattice cryptography: LWE / Ring-LWE, NTRU, Dilithium, Kyber, and a long list of “noisy linear equations” whose security is explained using lattices.
@@ -176,6 +184,12 @@ def shortest_vector_bruteforce_2d(basis: Basis2D, coeff_bound: int) -> tuple[int
     if best is None:
         raise ValueError("no non-zero vectors in the given coefficient window")
     return best
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

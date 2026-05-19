@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why the Jacobi symbol is a multiplicative product of Legendre symbols and what each output value guarantees
+- Compute the Jacobi symbol without factoring n by applying the factor-of-two rule and quadratic reciprocity to reduce the top argument
+- Implement jacobi_symbol using the reciprocity-based Euclidean-style loop and cross-check it against the factorization-based definition
+- Distinguish a true quadratic residue modulo a composite from a pseudosquare whose Jacobi symbol is +1 but has no square root
+- Apply the Solovay-Strassen witness test to detect composite numbers by checking where Euler's criterion disagrees with the Jacobi symbol
+
 ## The Problem
 
 In the previous lesson, you learned how to compute modular square roots over a prime field. Before taking a square root, though, you need to know whether a root exists. Over an odd prime `p`, that question has a compact answer: the Legendre symbol `(a/p)`.
@@ -273,6 +281,12 @@ def solovay_strassen_witness(a: int, n: int) -> bool:
 ```
 
 This is a probabilistic primality test. One base can miss a composite; several independent bases reduce the error.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

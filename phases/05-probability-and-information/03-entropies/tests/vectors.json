@@ -1,1 +1,18 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal vectors derived from definitions: Shannon -Σ p log2 p, min-entropy -log2 max p, collision -log2 Σ p^2, max-entropy log2 |support|, KL divergence Σ p log2 (p/q).",
+  "vectors": [
+    {"op": "shannon_entropy", "pmf": {"0": 0.5, "1": 0.5}, "expected": 1.0},
+    {"op": "shannon_entropy", "pmf": {"0": 1.0}, "expected": 0.0},
+    {"op": "shannon_entropy", "pmf": {"0": 0.25, "1": 0.25, "2": 0.25, "3": 0.25}, "expected": 2.0},
+    {"op": "shannon_entropy", "pmf": {"0": 0.1, "1": 0.9}, "expected": 0.4689955935892812},
+    {"op": "min_entropy", "pmf": {"0": 0.5, "1": 0.5}, "expected": 1.0},
+    {"op": "min_entropy", "pmf": {"0": 0.1, "1": 0.9}, "expected": 0.15200309344504997},
+    {"op": "min_entropy", "pmf": {"a": 0.5, "b": 0.25, "c": 0.125, "d": 0.125}, "expected": 1.0},
+    {"op": "collision_entropy", "pmf": {"0": 0.5, "1": 0.5}, "expected": 1.0},
+    {"op": "collision_entropy", "pmf": {"a": 0.5, "b": 0.25, "c": 0.125, "d": 0.125}, "expected": 1.5405683813627028},
+    {"op": "max_entropy", "pmf": {"a": 0.5, "b": 0.25, "c": 0.125, "d": 0.125}, "expected": 2.0},
+    {"op": "max_entropy", "pmf": {"a": 1.0, "b": 0.0}, "expected": 0.0},
+    {"op": "kl_divergence", "p": {"0": 0.5, "1": 0.5}, "q": {"0": 0.5, "1": 0.5}, "expected": 0.0},
+    {"op": "kl_divergence", "p": {"0": 0.1, "1": 0.9}, "q": {"0": 0.5, "1": 0.5}, "expected": 0.5310044064107186}
+  ]
+}

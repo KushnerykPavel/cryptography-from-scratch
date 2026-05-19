@@ -1,1 +1,21 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal toy Pedersen parameters p=23, q=11, g=4, h=8 with expected values cross-checked via Python pow(..., mod).",
+  "vectors": [
+    {"op": "mod_inverse", "a": 7, "n": 11, "expected": 8},
+    {"op": "mod_inverse", "a": 0, "n": 11, "expected_error": "not invertible modulo n"},
+
+    {"op": "pedersen_commit", "p": 23, "q": 11, "g": 4, "h": 8, "m": 0, "r": 0, "expected": 1},
+    {"op": "pedersen_commit", "p": 23, "q": 11, "g": 4, "h": 8, "m": 3, "r": 5, "expected": 12},
+
+    {"op": "pedersen_verify", "p": 23, "q": 11, "g": 4, "h": 8, "c": 12, "m": 3, "r": 5, "expected": true},
+    {"op": "pedersen_verify", "p": 23, "q": 11, "g": 4, "h": 8, "c": 12, "m": 4, "r": 5, "expected": false},
+
+    {"op": "pedersen_combine", "p": 23, "q": 11, "g": 4, "h": 8, "c1": 8, "c2": 4, "expected": 9},
+    {"op": "pedersen_add_openings", "p": 23, "q": 11, "g": 4, "h": 8, "m1": 2, "r1": 7, "m2": 6, "r2": 4, "expected": [8, 0]},
+
+    {"op": "pedersen_rerandomize", "p": 23, "q": 11, "g": 4, "h": 8, "c": 12, "delta_r": 8, "expected": 2},
+
+    {"op": "forge_opening_if_trapdoor_known", "p": 23, "q": 11, "g": 4, "h": 8, "m_from": 3, "r_from": 5, "m_target": 9, "alpha": 7, "expected": 1},
+    {"op": "extract_log_g_h_from_double_opening", "q": 11, "m1": 3, "r1": 5, "m2": 9, "r2": 1, "expected": 7}
+  ]
+}

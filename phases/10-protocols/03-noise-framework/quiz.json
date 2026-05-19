@@ -1,4 +1,101 @@
 {
   "title": "Noise Protocol Framework",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why do real protocols run the raw Diffie–Hellman shared secret through a KDF like HKDF?",
+      "options": [
+        "To turn shared secret bytes into uniform keys and bind them to protocol context",
+        "To hide the handshake messages from passive observers",
+        "To make Diffie–Hellman faster by shortening the exponentiation",
+        "To avoid needing any randomness in the protocol"
+      ],
+      "correct": 0,
+      "explanation": "HKDF produces key material with the right size and distribution, and lets you safely incorporate context (salt/info/transcript) into derived keys."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the main risk if an AEAD key is ever used with the same nonce twice?",
+      "options": [
+        "Nothing breaks as long as the plaintexts are different",
+        "It can enable plaintext recovery and/or message forgery, depending on the AEAD",
+        "Only performance degrades; security is unchanged",
+        "Only authentication breaks; confidentiality remains intact"
+      ],
+      "correct": 1,
+      "explanation": "Nonce reuse is catastrophic for most AEADs (e.g., stream-cipher based modes and GCM), often breaking confidentiality and sometimes integrity too."
+    },
+    {
+      "stage": "post",
+      "question": "In Noise, what does the handshake hash h (updated by mix_hash) represent?",
+      "options": [
+        "A commitment to the exact bytes sent/received so far in the handshake",
+        "A long-term shared secret stored across connections",
+        "A checksum that only detects accidental network corruption",
+        "A hash of the final application data stream"
+      ],
+      "correct": 0,
+      "explanation": "h is a transcript hash: it commits to the handshake messages so both parties can bind key derivation and AEAD associated data to what was actually exchanged."
+    },
+    {
+      "stage": "post",
+      "question": "What does mix_key do when new secret material (like a DH output) becomes available?",
+      "options": [
+        "It replaces the handshake hash h with a hash of the new secret",
+        "It updates the chaining key ck via HKDF and produces a derived key for encryption",
+        "It encrypts the secret and appends it to the handshake transcript",
+        "It signs the secret using a static private key"
+      ],
+      "correct": 1,
+      "explanation": "mix_key feeds the secret into HKDF with ck as salt, producing a new ck and a temporary key used by the handshake's encrypt-and-hash steps."
+    },
+    {
+      "stage": "post",
+      "question": "Why does Noise hash the ciphertext (including the tag) into the transcript after encrypting a handshake payload?",
+      "options": [
+        "So both sides commit to the exact encrypted bytes, preventing transcript splicing and desynchronization",
+        "So the payload can be decrypted without the key",
+        "So the payload becomes smaller on the wire",
+        "So the protocol can skip AEAD associated data"
+      ],
+      "correct": 0,
+      "explanation": "Encrypt-and-hash binds the encrypted payload into h, ensuring both parties agree on the same transcript and preventing attackers from swapping or replaying handshake fragments."
+    },
+    {
+      "stage": "post",
+      "question": "If you use the NN pattern in a setting that requires server authentication, what attack is enabled?",
+      "options": [
+        "A man-in-the-middle can establish two separate handshakes and relay traffic between them",
+        "A passive eavesdropper can decrypt traffic without participating",
+        "The AEAD tag can be forged without knowing the key",
+        "Forward secrecy is guaranteed even if static keys are compromised"
+      ],
+      "correct": 0,
+      "explanation": "NN provides confidentiality but no authentication, so an active attacker can impersonate each side to the other and relay messages."
+    },
+    {
+      "stage": "post",
+      "question": "Why does Noise split transport keys into per-direction tx/rx keys instead of using one key for both directions?",
+      "options": [
+        "To reduce the number of keys and simplify the state machine",
+        "To avoid nonce collisions, reflection issues, and key/nonce reuse across directions",
+        "Because HKDF can only output one key at a time",
+        "Because AEAD requires two independent secrets to work"
+      ],
+      "correct": 1,
+      "explanation": "Per-direction keys let each side maintain its own nonce counter safely and prevent cross-direction replay/reflection patterns that can arise with shared keys."
+    },
+    {
+      "stage": "post",
+      "question": "After the handshake completes, what should transport encryption use?",
+      "options": [
+        "The last handshake encryption key k, reused for all application data",
+        "Only the transcript hash h, used as the encryption key",
+        "The split transport keys derived from ck (one for each direction)",
+        "The raw DH shared secret directly, without a KDF"
+      ],
+      "correct": 2,
+      "explanation": "Noise derives transport keys from the final chaining key and then uses those per-direction keys for application data; handshake keys are transient and scoped to the handshake."
+    }
+  ]
 }

@@ -1,1 +1,45 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Vectors generated from this lesson's reference implementation (GF(256) with primitive polynomial 0x11D, generator 2). The values are stable and act as regression tests.",
+  "vectors": [
+    { "op": "gf_mul", "inputs": { "x": 83, "y": 202 }, "expected": 143 },
+    { "op": "gf_div", "inputs": { "x": 83, "y": 202 }, "expected": 109 },
+    {
+      "op": "poly_mul",
+      "inputs": { "p": [1, 2, 3], "q": [5, 0, 7] },
+      "expected": [5, 10, 8, 14, 9]
+    },
+    {
+      "op": "rs_generator_poly",
+      "inputs": { "nsym": 8 },
+      "expected": [1, 255, 11, 81, 54, 239, 173, 200, 24]
+    },
+    {
+      "op": "rs_encode_msg",
+      "inputs": {
+        "msg": [114, 101, 101, 100, 45, 115, 111, 108, 111, 109, 111, 110],
+        "nsym": 8
+      },
+      "expected": [114, 101, 101, 100, 45, 115, 111, 108, 111, 109, 111, 110, 141, 109, 245, 146, 86, 197, 116, 40]
+    },
+    {
+      "op": "rs_calc_syndromes",
+      "inputs": {
+        "codeword": [114, 101, 101, 100, 45, 115, 111, 108, 111, 109, 111, 110, 141, 109, 245, 146, 86, 197, 116, 40],
+        "nsym": 8
+      },
+      "expected": [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "op": "rs_decode",
+      "inputs": {
+        "codeword": [114, 154, 101, 100, 60, 115, 111, 46, 111, 109, 111, 110, 141, 109, 245, 146, 86, 197, 237, 40],
+        "nsym": 8
+      },
+      "expected": {
+        "message": [114, 101, 101, 100, 45, 115, 111, 108, 111, 109, 111, 110],
+        "corrected": [114, 101, 101, 100, 45, 115, 111, 108, 111, 109, 111, 110, 141, 109, 245, 146, 86, 197, 116, 40],
+        "err_pos": [18, 7, 4, 1]
+      }
+    }
+  ]
+}

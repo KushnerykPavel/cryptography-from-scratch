@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain the operation-preservation property that defines a group homomorphism and verify it exhaustively for finite examples
+- Compute the kernel and image of a finite homomorphism and interpret their sizes using the first isomorphism theorem
+- Distinguish injective, surjective, and isomorphic maps and determine which classification applies to a given mapping
+- Apply the exponent map `f(k) = g^k` to show why Diffie-Hellman-style protocols depend on a homomorphism from addition to multiplication
+- Identify how a non-trivial kernel causes distinct domain elements to become indistinguishable in the codomain, breaking uniqueness assumptions in protocols
+
 ## The Problem
 
 Cryptography constantly moves between representations of the same structure.
@@ -408,6 +416,12 @@ f(a + b) = 3^(a+b)
 In this toy group, the map is an isomorphism because the domain is reduced modulo the exact order of `3`, and the codomain is exactly `<3>`.
 
 The inverse direction asks for `k` from `3^k`. In large cryptographic groups, that inverse is the discrete logarithm problem.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

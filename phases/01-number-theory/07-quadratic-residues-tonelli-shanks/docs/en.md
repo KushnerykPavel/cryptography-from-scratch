@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why exactly half of the non-zero residues modulo an odd prime are quadratic residues
+- Apply Euler's criterion a^((p-1)/2) mod p to decide whether a square root exists before attempting extraction
+- Implement Tonelli-Shanks by factoring p-1 into q·2^s and iteratively reducing the order of the auxiliary element t
+- Distinguish the closed-form shortcut a^((p+1)/4) mod p (valid when p ≡ 3 mod 4) from the general Tonelli-Shanks algorithm
+- Identify how obtaining two non-negated square roots modulo a composite n = p·q via gcd(r − s, n) reveals a prime factor
+
 ## The Problem
 
 Suppose an elliptic-curve point arrives compressed: you get the `x` coordinate and one extra parity bit, and you need to recover `y`. That recovery step is a modular square root. If you cannot compute square roots modulo a prime efficiently, point decompression is impossible.
@@ -223,6 +231,12 @@ def sqrt_mod_semiprime_via_crt(a: int, p: int, q: int) -> tuple[int, int, int, i
 ```
 
 That produces the four roots modulo `n = p*q`.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

@@ -1,4 +1,100 @@
 {
-  "title": "OPRFs & VOPRFs",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In an OPRF, what is the main purpose of the client \"blinding\" step?",
+      "options": [
+        "To let the server recover the input faster by precomputing tables",
+        "To hide the client's input from the server while still enabling evaluation",
+        "To ensure the server's secret key becomes public for verifiability",
+        "To replace hashing with encryption so the PRF output is reversible"
+      ],
+      "correct": 1,
+      "explanation": "Blinding randomizes the client’s query so the server can evaluate without learning (or linking) the underlying input."
+    },
+    {
+      "stage": "pre",
+      "question": "Why do OPRF constructions typically use a prime-order group (or a prime-order subgroup) of order `q`?",
+      "options": [
+        "So every non-zero scalar has an inverse modulo `q`, enabling unblinding",
+        "So discrete logarithms become easy, simplifying verification",
+        "So the group operation can be implemented without modular reduction",
+        "So hashes naturally land in the group without any mapping"
+      ],
+      "correct": 0,
+      "explanation": "Unblinding needs `r^{-1} mod q`, which exists for all non-zero `r` when the scalar field has prime order."
+    },
+    {
+      "stage": "post",
+      "question": "In the DH-style OPRF from the lesson, the client sends `α = H1(x)^r` and receives `β = α^k`. What should the client compute to remove the blinding?",
+      "options": [
+        "`β^r`",
+        "`β^(1/r mod q)`",
+        "`α^(1/k mod q)`",
+        "`H1(x)^(r·k)`"
+      ],
+      "correct": 1,
+      "explanation": "Raising `β = (H1(x)^r)^k` to `r^{-1}` cancels the blinding: `β^{1/r} = H1(x)^k`."
+    },
+    {
+      "stage": "post",
+      "question": "What does a DLEQ proof in a VOPRF protocol allow the client to verify?",
+      "options": [
+        "That the server knows the client's input `x`",
+        "That the server used the same secret exponent to compute `pk = g^k` and `β = α^k`",
+        "That the client chose a uniformly random blind `r`",
+        "That the PRF output is equal to the server's public key"
+      ],
+      "correct": 1,
+      "explanation": "DLEQ (discrete log equality) proves the same exponent links two base/result pairs, without revealing the exponent."
+    },
+    {
+      "stage": "post",
+      "question": "In VOPRF mode, what should a client do if proof verification fails?",
+      "options": [
+        "Proceed anyway, since OPRF privacy still holds",
+        "Retry with the same `α` but a different proof",
+        "Abort and treat the response as invalid",
+        "Accept `β` but skip finalization to avoid leaks"
+      ],
+      "correct": 2,
+      "explanation": "Verifiability means the client only completes the protocol if it can assert the server evaluated correctly; otherwise it must abort."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it dangerous to skip subgroup/membership checks on received group elements (like `α`) in DH-style OPRFs?",
+      "options": [
+        "It lets the server learn `x` directly from `α` by taking a logarithm",
+        "It enables small-subgroup/invalid-group attacks that can leak information about the server key",
+        "It makes the hash function output longer than expected, causing parsing bugs",
+        "It forces the client to reuse the same blind `r` across sessions"
+      ],
+      "correct": 1,
+      "explanation": "If elements can live in small subgroups (or the wrong group), an attacker can craft inputs that reveal key information through the server’s responses."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson use domain separation strings (DSTs) for hash-to-scalar, hash-to-group, and DLEQ challenges?",
+      "options": [
+        "To make SHA-256 faster by caching partial state",
+        "To prevent cross-protocol collisions where the same bytes are interpreted in different roles",
+        "To guarantee the group parameters are prime",
+        "To ensure the PRF output can be decrypted back to the input"
+      ],
+      "correct": 1,
+      "explanation": "DSTs ensure hashes used for different purposes don’t accidentally overlap, which is a common source of real-world protocol vulnerabilities."
+    },
+    {
+      "stage": "post",
+      "question": "When is VOPRF verifiability most important compared to a base (non-verifiable) OPRF?",
+      "options": [
+        "When the client cannot trust the server to follow the protocol and must detect malformed evaluations",
+        "When the server wants to learn the client's input so it can rate-limit per user",
+        "When the client wants the PRF to be invertible so it can recover `k`",
+        "When the protocol needs to work without hashing the input at all"
+      ],
+      "correct": 0,
+      "explanation": "If the server might cheat, misconfigure keys, or be attacked, verifiability lets clients detect incorrect evaluations and abort."
+    }
+  ]
 }

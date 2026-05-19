@@ -294,6 +294,12 @@ For `n = 1649`, early relations include:
 
 These are exactly the kind of small smooth residues a square-finding attack wants.
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 Python's standard library has `fractions.Fraction` for exact rational arithmetic, and SymPy has `continued_fraction`, `continued_fraction_convergents`, and tools for quadratic irrationals. SageMath and PARI/GP are stronger choices for serious computational number theory.

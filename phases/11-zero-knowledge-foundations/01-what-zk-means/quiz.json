@@ -1,4 +1,100 @@
 {
-  "title": "What ZK Means \u2014 Completeness, Soundness, ZK",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which property is specifically about the verifier learning nothing beyond the statement’s truth?",
+      "options": [
+        "Completeness (honest prover convinces)",
+        "Soundness (cheaters usually fail)",
+        "Zero-knowledge (simulatable view)",
+        "Succinctness (short proof size)"
+      ],
+      "correct": 2,
+      "explanation": "Zero-knowledge is defined via existence of a simulator that can reproduce the verifier’s view without the witness."
+    },
+    {
+      "stage": "pre",
+      "question": "In an interactive protocol, what is a transcript (informally) meant to capture?",
+      "options": [
+        "Only the final accept/reject bit",
+        "All messages exchanged in order",
+        "The prover’s private witness itself",
+        "The trusted setup secret parameters"
+      ],
+      "correct": 1,
+      "explanation": "A transcript is the ordered sequence of protocol messages (often plus how they are sampled), i.e., what a verifier gets to observe."
+    },
+    {
+      "stage": "post",
+      "question": "Completeness of a proof system means what, in the honest-honest case?",
+      "options": [
+        "True statements are accepted with high probability",
+        "False statements are rejected with high probability",
+        "Proofs reveal no information about the witness",
+        "Proofs are shorter than the computation trace"
+      ],
+      "correct": 0,
+      "explanation": "Completeness is about honest prover and honest verifier succeeding on true statements (usually with probability close to 1)."
+    },
+    {
+      "stage": "post",
+      "question": "Soundness error ε is best interpreted as which probability?",
+      "options": [
+        "An honest prover fails on a true statement",
+        "A cheater convinces a verifier on a false statement",
+        "A verifier learns the witness from a true statement",
+        "A simulator fails to output any transcript at all"
+      ],
+      "correct": 1,
+      "explanation": "Soundness bounds the maximum success probability of any cheating prover on false statements."
+    },
+    {
+      "stage": "post",
+      "question": "A protocol is zero-knowledge if (informally) which statement holds?",
+      "options": [
+        "A prover can always answer every verifier challenge",
+        "A simulator can fake the verifier view without witness",
+        "The verifier can recover the witness from two transcripts",
+        "The proof is non-interactive after Fiat–Shamir"
+      ],
+      "correct": 1,
+      "explanation": "Zero-knowledge is defined by the existence of an efficient simulator whose output is indistinguishable from a real interaction."
+    },
+    {
+      "stage": "post",
+      "question": "What does HVZK guarantee that full ZK may strengthen?",
+      "options": [
+        "ZK only for honest random challenges",
+        "Soundness only for honest provers",
+        "Completeness only on false statements",
+        "Succinctness only for large witnesses"
+      ],
+      "correct": 0,
+      "explanation": "HVZK usually assumes the verifier follows the protocol (e.g., samples challenges uniformly); full ZK considers arbitrary verifier behavior."
+    },
+    {
+      "stage": "post",
+      "question": "In Schnorr’s 3-move protocol, what check does the verifier perform?",
+      "options": [
+        "g^z == a * y^e (mod p)",
+        "g^e == a * y^z (mod p)",
+        "y^z == a * g^e (mod p)",
+        "a^z == g * y^e (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "The verifier checks that the response z is consistent with the commitment a and the public key y under challenge e: g^z = a·y^e."
+    },
+    {
+      "stage": "post",
+      "question": "If a prover reuses the same commitment (same r) and answers two different challenges, what can an extractor compute?",
+      "options": [
+        "The witness x (discrete log) modulo q",
+        "The modulus p from the public transcript",
+        "A shorter proof with the same security",
+        "The verifier’s random seed exactly"
+      ],
+      "correct": 0,
+      "explanation": "Two accepting transcripts with the same commitment but different challenges give two equations that let you solve for x modulo q."
+    }
+  ]
 }

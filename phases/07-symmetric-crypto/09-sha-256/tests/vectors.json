@@ -1,1 +1,69 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "NIST FIPS 180-4 (Secure Hash Standard), SHA-256 examples; plus common cross-checks against Python's hashlib.sha256 (stdlib).",
+  "vectors": [
+    {
+      "op": "sha256_hex",
+      "inputs": {
+        "msg_utf8": ""
+      },
+      "expected": {
+        "digest_hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "op": "sha256_hex",
+      "inputs": {
+        "msg_utf8": "abc"
+      },
+      "expected": {
+        "digest_hex": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+      }
+    },
+    {
+      "op": "sha256_hex",
+      "inputs": {
+        "msg_utf8": "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"
+      },
+      "expected": {
+        "digest_hex": "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1"
+      }
+    },
+    {
+      "op": "sha256_hex",
+      "inputs": {
+        "msg_utf8": "The quick brown fox jumps over the lazy dog"
+      },
+      "expected": {
+        "digest_hex": "d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592"
+      }
+    },
+    {
+      "op": "sha256_hex",
+      "inputs": {
+        "repeat_utf8": "a",
+        "repeat_count": 1000000
+      },
+      "expected": {
+        "digest_hex": "cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0"
+      }
+    },
+    {
+      "op": "sha256_padding",
+      "inputs": {
+        "message_len_bytes": 0
+      },
+      "expected": {
+        "padding_hex": "80000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "op": "sha256_padding",
+      "inputs": {
+        "message_len_bytes": 3
+      },
+      "expected": {
+        "padding_hex": "80000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018"
+      }
+    }
+  ]
+}

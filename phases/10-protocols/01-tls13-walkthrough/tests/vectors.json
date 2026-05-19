@@ -1,1 +1,91 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "HKDF vectors: RFC 5869 (HMAC-SHA256) test case 1. TLS 1.3 vectors: computed from the RFC 8446 key schedule formulas for a deterministic toy transcript used by this lesson.",
+  "vectors": [
+    {
+      "op": "hkdf_extract_sha256",
+      "salt_hex": "000102030405060708090a0b0c",
+      "ikm_hex": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+      "expected_hex": "077709362c2e32df0ddc3f0dc47bba6390b6c73bb50f9c3122ec844ad7c2b3e5"
+    },
+    {
+      "op": "hkdf_expand_sha256",
+      "prk_hex": "077709362c2e32df0ddc3f0dc47bba6390b6c73bb50f9c3122ec844ad7c2b3e5",
+      "info_hex": "f0f1f2f3f4f5f6f7f8f9",
+      "length": 42,
+      "expected_hex": "3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf34007208d5b887185865"
+    },
+    {
+      "op": "tls13_hkdf_label",
+      "length": 16,
+      "label": "key",
+      "context_hex": "",
+      "expected_hex": "001009746c733133206b657900"
+    },
+    {
+      "op": "transcript_hash_sha256",
+      "messages_hex": [
+        "436c69656e7448656c6c6f2876657273696f6e733d746c7331332c636970686572733d544c535f4145535f3132385f47434d5f53484132353629",
+        "53657276657248656c6c6f2873656c65637465643d746c7331332c67726f75703d78323535313929"
+      ],
+      "expected_hex": "29273c70b8d79ac899bd8bfe3b638d69a64930e4f4cf3b956cc24738eb79fa0c"
+    },
+    {
+      "op": "tls13_key_schedule_sha256",
+      "shared_secret_hex": "0c3ef524edcd94eeab1e326f22fd8bf1735041328467e2b3f9f665f71ac28875",
+      "transcript": {
+        "client_hello_hex": "436c69656e7448656c6c6f2876657273696f6e733d746c7331332c636970686572733d544c535f4145535f3132385f47434d5f53484132353629",
+        "server_hello_hex": "53657276657248656c6c6f2873656c65637465643d746c7331332c67726f75703d78323535313929",
+        "encrypted_extensions_hex": "456e63727970746564457874656e73696f6e7328616c706e3d683229",
+        "server_certificate_hex": "436572746966696361746528636861696e3d6578616d706c652e636f6d29",
+        "server_certificate_verify_hex": "4365727469666963617465566572696679287369673d746f7929",
+        "server_finished_hex": "46696e6973686564287665726966795f646174613d3f3f29"
+      },
+      "expected": {
+        "early_secret": "b613679a0814d9ec772f95d778c35fc5ff1697c493715653c6c712144292c5ad",
+        "handshake_secret": "9917dab0d556ddc6bcaeda8287eeb9b3896e646c63fc75b9c066c73845a3e076",
+        "c_hs_traffic": "ee84b51ad3fa68603e0ca55d875624bc0935d9d60ca2005f47e9d48e3b57d741",
+        "s_hs_traffic": "fc018c07bca96438a7241f0074a98dd3451c76c27e136975c83a0d9e105e283c",
+        "master_secret": "741601f7d292722fce4b7e878ca4e71fa064eaaa11d9742786047da4aad26cc3",
+        "c_ap_traffic_0": "033f30c06f86019ea5c7e6c503fe2463234963a84915b3b631377462ff4d583c",
+        "s_ap_traffic_0": "39c99553051bb1104654365e353359e9937c52dcf5a680cb5edc1a66f337d24e",
+        "exp_master": "34ada17efab88fbf90a1f8802d638a8c34aa4381200356483c16a94d11f1605e",
+        "res_master": "e7b518b885d2a0eefed3b2f7ebbc27e7d620784d59c8335ae1143345c1091b41"
+      }
+    },
+    {
+      "op": "traffic_key_iv_sha256",
+      "traffic_secret_hex": "ee84b51ad3fa68603e0ca55d875624bc0935d9d60ca2005f47e9d48e3b57d741",
+      "expected_key_hex": "5ba01eed2f8fe9c9d4beea6317f7f989",
+      "expected_iv_hex": "caaa65562c89db31ba3ed0bd"
+    },
+    {
+      "op": "traffic_key_iv_sha256",
+      "traffic_secret_hex": "fc018c07bca96438a7241f0074a98dd3451c76c27e136975c83a0d9e105e283c",
+      "expected_key_hex": "6d482eeca5421244878ed53d855d08b6",
+      "expected_iv_hex": "3eef19d4d55cc1a66d5e29a0"
+    },
+    {
+      "op": "finished_verify_data_sha256",
+      "finished_key_hex": "986e35f4a32198433c2ad289a244f08236b9343c6bc2cd08f28a462ae2b9658a",
+      "transcript_hash_hex": "f795d0a44e25d232927d471ecfb695eb9335aae756c6f9910ebdf68fdb2b56ee",
+      "expected_hex": "7dae07ec700eb121fd4ad4ffd1fabaefab321e9e03a36761c628cdf1abea9d53"
+    },
+    {
+      "op": "finished_verify_data_sha256",
+      "finished_key_hex": "60fc377d36736a96b307bd739fcd597c94b7ce1a48180068e58c2f26a0e3c0d8",
+      "transcript_hash_hex": "5285f0a8dcbb87a671b40b72d0b077c7f5eaf0b80f5b7bd8c7fc1a8a223d645b",
+      "expected_hex": "74ff334d61a6429ae71331d3699a297c77f4290a00d65fd2783393da014b2eda"
+    },
+    {
+      "op": "update_traffic_secret_sha256",
+      "traffic_secret_hex": "39c99553051bb1104654365e353359e9937c52dcf5a680cb5edc1a66f337d24e",
+      "expected_hex": "3284fb3ca810859d7dbfcd994fdfedd1233a679f0936676a0fa3b8d106acd9a5"
+    },
+    {
+      "op": "traffic_key_iv_sha256",
+      "traffic_secret_hex": "3284fb3ca810859d7dbfcd994fdfedd1233a679f0936676a0fa3b8d106acd9a5",
+      "expected_key_hex": "053de3a8285d7a1a856b6cf233575e25",
+      "expected_iv_hex": "27994714cb092eabf534a6d0"
+    }
+  ]
+}

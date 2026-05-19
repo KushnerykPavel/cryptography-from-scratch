@@ -1,4 +1,101 @@
 {
   "title": "Vector Commitments",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main purpose of a vector commitment?",
+      "options": [
+        "Compress a list losslessly into a smaller list",
+        "Commit to an ordered list and later prove a single entry with a short proof",
+        "Encrypt a list so only the owner can read it",
+        "Generate a random value from a list deterministically"
+      ],
+      "correct": 1,
+      "explanation": "A VC lets you publish one commitment to a whole vector and later open one index with a succinct proof."
+    },
+    {
+      "stage": "pre",
+      "question": "In a Merkle-style construction, how big is a single opening proof (roughly) for a vector of length n?",
+      "options": [
+        "O(1) hashes, independent of n",
+        "O(log n) hashes along a path to the root",
+        "O(n) hashes, one per element",
+        "O(n log n) hashes due to rehashing the whole tree"
+      ],
+      "correct": 1,
+      "explanation": "A Merkle opening is a root-to-leaf path, which has length proportional to log2(n)."
+    },
+    {
+      "stage": "post",
+      "question": "Which API matches the idea of a vector commitment most closely?",
+      "options": [
+        "commit(v) -> root; open(v, i) -> (value, proof); verify(root, i, value, proof, n) -> bool",
+        "hash(v) -> root; decrypt(root) -> v",
+        "sign(sk, v) -> sig; verify(pk, sig) -> bool",
+        "encrypt(pk, v) -> c; decrypt(sk, c) -> v"
+      ],
+      "correct": 0,
+      "explanation": "A VC has a commitment plus an opening/verification procedure per index."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson's `leaf_hash` include the index `i` when hashing a leaf?",
+      "options": [
+        "To make the commitment hiding",
+        "To bind the value to a specific position so proofs cannot be reused for other indices",
+        "To speed up hashing by avoiding internal nodes",
+        "To allow verifying without knowing the vector length n"
+      ],
+      "correct": 1,
+      "explanation": "Including `i` provides index binding: a proof for position j should not verify at position i."
+    },
+    {
+      "stage": "post",
+      "question": "What does 'length binding' mean in this lesson's commitment root?",
+      "options": [
+        "The proof length is always the same for any n",
+        "The commitment is hashed together with n so the same Merkle root cannot be reused under a different vector length",
+        "The commitment leaks the length but hides values",
+        "The verifier can reconstruct the vector length from the proof alone"
+      ],
+      "correct": 1,
+      "explanation": "The final root is `H(tag || n || merkle_root)`, so changing n changes the commitment even if the underlying tree hash matches."
+    },
+    {
+      "stage": "post",
+      "question": "What is 'domain separation' in this Merkle-based VC?",
+      "options": [
+        "Using different network domains for different nodes",
+        "Using different hash functions for each tree level",
+        "Prefixing inputs (e.g., 'VC:leaf', 'VC:node', 'VC:root') so different hash contexts cannot be confused",
+        "Using base64 instead of hex encoding"
+      ],
+      "correct": 2,
+      "explanation": "Tags/prefixes ensure leaf hashing, internal-node hashing, and the final root hashing are distinct domains."
+    },
+    {
+      "stage": "post",
+      "question": "Attack question: If a design hashes leaves as H(str(i) + value) with no length-prefixing, what is a realistic risk?",
+      "options": [
+        "Ambiguous encodings can let an attacker craft different (i, value) pairs that hash the same input bytes before hashing",
+        "It becomes information-theoretically hiding",
+        "Merkle proofs become constant size",
+        "SHA-256 stops being collision resistant"
+      ],
+      "correct": 0,
+      "explanation": "Without an unambiguous encoding, different structured inputs can map to the same byte string before hashing, enabling malleability bugs."
+    },
+    {
+      "stage": "post",
+      "question": "If you mutate one element of the vector after publishing the commitment, what should happen?",
+      "options": [
+        "The same root remains valid, but proofs change",
+        "The same proofs remain valid, but the root changes",
+        "Both the root and any old openings for that index should fail to verify under the new root",
+        "Nothing changes because commitments are randomized"
+      ],
+      "correct": 2,
+      "explanation": "A binding commitment changes when the underlying vector changes; old openings should not verify against a different commitment."
+    }
+  ]
 }

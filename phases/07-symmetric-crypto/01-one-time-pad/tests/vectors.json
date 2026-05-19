@@ -1,1 +1,23 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Vector 1 is from Cryptopals Set 1, Challenge 2 (fixed XOR). OTP vectors are computed directly from the OTP definition: ciphertext = plaintext XOR key, with equal-length byte strings.",
+  "vectors": [
+    {
+      "op": "xor_bytes",
+      "a_hex": "1c0111001f010100061a024b53535009181c",
+      "b_hex": "686974207468652062756c6c277320657965",
+      "expected_hex": "746865206b696420646f6e277420706c6179"
+    },
+    {
+      "op": "otp_encrypt",
+      "plaintext_hex": "61747461636b206174206461776e2121",
+      "key_hex": "00112233445566778899aabbccddeeff",
+      "expected_hex": "61655652273e4616fcb9cedabbb3cfde"
+    },
+    {
+      "op": "otp_decrypt",
+      "ciphertext_hex": "61655652273e4616fcb9cedabbb3cfde",
+      "key_hex": "00112233445566778899aabbccddeeff",
+      "expected_hex": "61747461636b206174206461776e2121"
+    }
+  ]
+}

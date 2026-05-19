@@ -1,1 +1,110 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "SHA-256 is defined in NIST FIPS 180-4. Merkle hashing in this lesson uses domain separation prefixes 0x00 (leaf) and 0x01 (node), a common convention used by systems like Certificate Transparency (RFC 9162). Expected values were computed from this repository's reference implementation (phases/09-hashes-commitments-accumulators/04-merkle-trees/code/main.py) to lock behavior.",
+  "vectors": [
+    {
+      "op": "sha256_hex",
+      "inputs": { "data_hex": "616263" },
+      "expected_hex": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    {
+      "op": "encode_leaf_value_hex",
+      "inputs": { "value_hex": "747830" },
+      "expected_hex": "00000003747830"
+    },
+    {
+      "op": "hash_leaf_hex",
+      "inputs": { "value_hex": "747830" },
+      "expected_hex": "876ddc6fadedf88c87a5498b997374c6017fa478af19ecbaf328e93d1820494f"
+    },
+    {
+      "op": "hash_leaf_hex",
+      "inputs": { "value_hex": "747831" },
+      "expected_hex": "7988c166e32b46f5e9b7c481ffa65f56d4ce0ab7e697382aa8779ac06f076696"
+    },
+    {
+      "op": "hash_node_hex",
+      "inputs": {
+        "left_hex": "876ddc6fadedf88c87a5498b997374c6017fa478af19ecbaf328e93d1820494f",
+        "right_hex": "7988c166e32b46f5e9b7c481ffa65f56d4ce0ab7e697382aa8779ac06f076696"
+      },
+      "expected_hex": "3dc14d8ebcd9e9832129d1163cbeacae4b07bc1ea45ae1da2772763449b59654"
+    },
+    {
+      "op": "merkle_root_hex",
+      "inputs": { "leaves_hex": ["747830"] },
+      "expected_hex": "876ddc6fadedf88c87a5498b997374c6017fa478af19ecbaf328e93d1820494f"
+    },
+    {
+      "op": "merkle_root_hex",
+      "inputs": { "leaves_hex": ["747830", "747831"] },
+      "expected_hex": "3dc14d8ebcd9e9832129d1163cbeacae4b07bc1ea45ae1da2772763449b59654"
+    },
+    {
+      "op": "merkle_root_hex",
+      "inputs": { "leaves_hex": ["747830", "747831", "747832", "747833", "747834"] },
+      "expected_hex": "129381a63de6d118e86728ba146a45623dec49111355a8a97027582ee31a4fcb"
+    },
+    {
+      "op": "merkle_proof",
+      "inputs": { "leaves_hex": ["747830", "747831", "747832", "747833", "747834"], "index": 2 },
+      "expected": [
+        {
+          "side": "right",
+          "sibling_hex": "d1076c2083d4f78bc78a839514c53168880cfa7b803a7e03fc1deba1c5984d81"
+        },
+        {
+          "side": "left",
+          "sibling_hex": "3dc14d8ebcd9e9832129d1163cbeacae4b07bc1ea45ae1da2772763449b59654"
+        },
+        {
+          "side": "right",
+          "sibling_hex": "0fcef3bae520dba6d660d3452230247b243a845268a5a726f78bfd52809d8101"
+        }
+      ]
+    },
+    {
+      "op": "verify_merkle_proof_bool",
+      "inputs": {
+        "leaf_hex": "747832",
+        "root_hex": "129381a63de6d118e86728ba146a45623dec49111355a8a97027582ee31a4fcb",
+        "proof": [
+          {
+            "side": "right",
+            "sibling_hex": "d1076c2083d4f78bc78a839514c53168880cfa7b803a7e03fc1deba1c5984d81"
+          },
+          {
+            "side": "left",
+            "sibling_hex": "3dc14d8ebcd9e9832129d1163cbeacae4b07bc1ea45ae1da2772763449b59654"
+          },
+          {
+            "side": "right",
+            "sibling_hex": "0fcef3bae520dba6d660d3452230247b243a845268a5a726f78bfd52809d8101"
+          }
+        ]
+      },
+      "expected": true
+    },
+    {
+      "op": "verify_merkle_proof_bool",
+      "inputs": {
+        "leaf_hex": "74783221",
+        "root_hex": "129381a63de6d118e86728ba146a45623dec49111355a8a97027582ee31a4fcb",
+        "proof": [
+          {
+            "side": "right",
+            "sibling_hex": "d1076c2083d4f78bc78a839514c53168880cfa7b803a7e03fc1deba1c5984d81"
+          },
+          {
+            "side": "left",
+            "sibling_hex": "3dc14d8ebcd9e9832129d1163cbeacae4b07bc1ea45ae1da2772763449b59654"
+          },
+          {
+            "side": "right",
+            "sibling_hex": "0fcef3bae520dba6d660d3452230247b243a845268a5a726f78bfd52809d8101"
+          }
+        ]
+      },
+      "expected": false
+    }
+  ]
+}

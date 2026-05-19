@@ -1,4 +1,101 @@
 {
   "title": "Birthday Bound & Generic Attacks",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "SHA-256 has 256-bit output. What is its collision resistance in bits?",
+      "options": [
+        "128 bits — birthday bound halves the exponent: 2^128 collision cost",
+        "256 bits — output length equals security level",
+        "64 bits — SHA-256 is only half-secure",
+        "192 bits — two-thirds of the output length"
+      ],
+      "correct": 0,
+      "explanation": "Birthday bound: collision after ~2^{n/2} = 2^128 queries for n=256. Preimage resistance is 256 bits; collision resistance is 128 bits. Any n-bit hash has n/2-bit collision security by the birthday argument."
+    },
+    {
+      "stage": "pre",
+      "question": "In a room of 23 people, the probability two share a birthday is approximately:",
+      "options": [
+        "~50% — the birthday bound kicks in around sqrt(365) ≈ 19 people",
+        "~6% — 23/365",
+        "~1% — tiny because 23 << 365",
+        "~99% — you need many more before it drops below 50%"
+      ],
+      "correct": 0,
+      "explanation": "The exact probability is 50.7%. The birthday threshold is sqrt(2*ln(2)*N) ≈ 1.177*sqrt(N) ≈ 22.5 for N=365. This counterintuitive result is the birthday paradox."
+    },
+    {
+      "stage": "post",
+      "question": "3DES uses two 56-bit DES keys (double encryption). What is the effective security against key recovery?",
+      "options": [
+        "56 bits — meet-in-the-middle reduces 2k-bit double encryption to k bits",
+        "112 bits — two keys give double the security",
+        "56 bits for collision, 112 for preimage",
+        "28 bits — birthday bound halves again"
+      ],
+      "correct": 0,
+      "explanation": "Meet-in-the-middle: build a table of E_{k1}(P) for all k1 (2^56 entries), then search D_{k2}(C) for all k2. Cost: 2*2^56 time, 2^56 space. Effective security: 56 bits, not 112. This is why 2-DES was abandoned."
+    },
+    {
+      "stage": "post",
+      "question": "AES-GCM uses a 96-bit random nonce. After 2^32 messages under the same key, what is the approximate nonce collision probability?",
+      "options": [
+        "≈ 2^{-33} — birthday approx q²/2^n = (2^32)²/2^96 = 2^{-33}",
+        "≈ 2^{-96} — nonce is 96 bits so virtually impossible",
+        "≈ 2^{-64} — birthday halves the 96 bits",
+        "Exactly 0 — if nonces are random they never repeat"
+      ],
+      "correct": 0,
+      "explanation": "q²/2^n = (2^32)²/2^96 = 2^64/2^96 = 2^{-32}. Divided by 2 (exact birthday): ≈ 2^{-33}. This is why TLS 1.3 limits AES-GCM nonce use and recommends key rotation after 2^24.5 records."
+    },
+    {
+      "stage": "post",
+      "question": "An adversary has q=2^60 queries and attacks k=2^20 password hashes from a stolen database (n=256-bit SHA-256). What is the multi-target advantage?",
+      "options": [
+        "2^{-176} — q*k/2^n = 2^60 * 2^20 / 2^256 = 2^{-176} (still negligible)",
+        "2^{-176} is too small — the attack is useless",
+        "2^{-64} — birthday bound with k targets",
+        "2^{-20} — each target reduces security by 1/k"
+      ],
+      "correct": 0,
+      "explanation": "Multi-target preimage: Adv ≤ q*k/2^n = 2^{80}/2^{256} = 2^{-176}. With SHA-256, even 2^60 queries against 2^20 accounts is negligible. (With MD5 n=128: 2^{80}/2^{128} = 2^{-48} — much more concerning.)"
+    },
+    {
+      "stage": "post",
+      "question": "Sweet32 attacked 3DES and Blowfish in HTTPS. Why was this possible?",
+      "options": [
+        "Both use 64-bit blocks. After 2^32 blocks (~32 GB), the birthday bound gives ~50% ciphertext block collision probability",
+        "The keys were too short (56 bits for DES)",
+        "3DES has a weak round function that can be distinguished from a PRF",
+        "HTTPS does not authenticate ciphertexts, allowing chosen-ciphertext attacks"
+      ],
+      "correct": 0,
+      "explanation": "collision_threshold(64 bits, 0.5) ≈ 2^32. After 2^32 CBC blocks with the same key, two ciphertext blocks collide with ~50% probability. The collision reveals the XOR of two plaintext blocks, leaking session cookies when HTTP headers are predictable."
+    },
+    {
+      "stage": "post",
+      "question": "What is the expected number of queries to find a preimage for an n-bit hash?",
+      "options": [
+        "2^n — each query hits the target with probability 2^{-n}; geometric expectation is 2^n",
+        "2^{n/2} — same as collision",
+        "n — linear in the output length",
+        "1 — a preimage always exists by definition"
+      ],
+      "correct": 0,
+      "explanation": "Preimage: find x with H(x) = y for a fixed y. Each query succeeds with probability 1/2^n. Expected number of trials = 2^n. Collision is harder in terms of output targeting (any pair), easier in terms of queries (only 2^{n/2}) — two different problems."
+    },
+    {
+      "stage": "post",
+      "question": "Why does 'second preimage' cost 2^n, not 2^{n/2} like collision?",
+      "options": [
+        "Second preimage fixes one input x; the adversary must find x'≠x matching a specific target H(x), not any collision pair",
+        "Second preimage is the same as preimage so they cost the same",
+        "Second preimage is easier than preimage because you already know one input",
+        "The birthday bound applies equally to second preimage and collision"
+      ],
+      "correct": 0,
+      "explanation": "Collision: find ANY x≠y with H(x)=H(y) — 2^{n/2} queries suffice (birthday). Second preimage: given x, find x'≠x with H(x')=H(x) — the target H(x) is fixed, so it reduces to a preimage problem requiring 2^n queries. Birthday cannot help because you need to hit one specific target."
+    }
+  ]
 }

@@ -1,4 +1,101 @@
 {
-  "title": "Merkle Trees from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main purpose of a Merkle root?",
+      "options": [
+        "Commit to a whole dataset with one hash",
+        "Encrypt a whole dataset with one key",
+        "Compress a whole dataset into fewer bytes",
+        "Sign a whole dataset without a private key"
+      ],
+      "correct": 0,
+      "explanation": "A Merkle root is a compact commitment to all leaves under a specific hashing and tree-shape rule."
+    },
+    {
+      "stage": "pre",
+      "question": "For a tree with n leaves, how large is a typical inclusion proof (number of sibling hashes)?",
+      "options": [
+        "O(log n)",
+        "O(n)",
+        "O(1)",
+        "O(n log n)"
+      ],
+      "correct": 0,
+      "explanation": "Each tree level contributes one sibling hash, so the proof grows with the tree height, about log2(n)."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson hash leaves as SHA256(0x00 || encode(leaf)) and internal nodes as SHA256(0x01 || left || right)?",
+      "options": [
+        "To domain-separate leaf hashes from node hashes so they can't be confused",
+        "To make the Merkle root longer than 256 bits automatically",
+        "To make SHA-256 collision-free for all inputs",
+        "To ensure the tree is balanced without duplicating nodes"
+      ],
+      "correct": 0,
+      "explanation": "Different prefixes ensure a hash intended as a node can't be interpreted as a leaf (and vice versa) in protocols."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson's construction, what happens when a level has an odd number of nodes?",
+      "options": [
+        "The last node is duplicated and hashed with itself to form a parent",
+        "The last node is dropped to keep the level even",
+        "A random node is added so the tree becomes balanced",
+        "The algorithm switches to a ternary (3-ary) tree for that level"
+      ],
+      "correct": 0,
+      "explanation": "The duplicate-last rule makes the tree shape deterministic for non-power-of-two leaf counts."
+    },
+    {
+      "stage": "post",
+      "question": "What does a verifier do with a Merkle inclusion proof?",
+      "options": [
+        "Start from the leaf hash, combine with siblings up the tree, and compare to the known root",
+        "Decrypt the root using the proof and recover the original leaf",
+        "Check that each sibling hash is prime to ensure integrity",
+        "Ask the tree builder for the full dataset and recompute everything"
+      ],
+      "correct": 0,
+      "explanation": "Verification is purely recomputation: hashing upward until you get a candidate root and checking it equals the expected root."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the order (left vs right) matter when hashing internal nodes?",
+      "options": [
+        "Because NodeHash(left, right) is not commutative, so swapping changes the parent hash",
+        "Because SHA-256 only accepts inputs where left < right lexicographically",
+        "Because Merkle trees require sorted leaves to be secure",
+        "Because duplicating the last node forces the order to be irrelevant"
+      ],
+      "correct": 0,
+      "explanation": "Parent hashes are computed from an ordered concatenation; swapping siblings produces a different digest and breaks the proof."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: if a protocol does not domain-separate leaves and nodes, what type of bug can appear?",
+      "options": [
+        "A structural confusion where an internal node hash can be presented as a leaf value",
+        "A guaranteed SHA-256 collision for any two leaves",
+        "A way to invert SHA-256 and recover the entire dataset",
+        "A proof that verifies for every possible root"
+      ],
+      "correct": 0,
+      "explanation": "Without domain separation, different tree structures can sometimes be interpreted as the same hashed bytes, enabling proof/structure confusion bugs."
+    },
+    {
+      "stage": "post",
+      "question": "What must be fixed and agreed upon for a Merkle root to be meaningful across implementations?",
+      "options": [
+        "Leaf encoding, the hashing rules, and the tree shape convention",
+        "Only the hash function name (e.g., 'SHA-256')",
+        "Only the leaf index of the item being proven",
+        "Only the number of leaves in the dataset"
+      ],
+      "correct": 0,
+      "explanation": "A root commits to bytes under a specific encoding and a specific tree-building rule; changing either changes the meaning of the root."
+    }
+  ]
 }
+

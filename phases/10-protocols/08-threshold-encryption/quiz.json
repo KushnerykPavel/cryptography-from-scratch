@@ -1,4 +1,101 @@
 {
   "title": "Threshold Encryption",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In Shamir secret sharing over a prime field, a (t,n) threshold scheme uses a random polynomial of what degree?",
+      "options": [
+        "Degree t",
+        "Degree t-1",
+        "Degree n",
+        "Degree n-1"
+      ],
+      "correct": 1,
+      "explanation": "A threshold t scheme uses a polynomial of degree t-1 so that any t points uniquely determine it, but fewer than t do not."
+    },
+    {
+      "stage": "pre",
+      "question": "Which statement best describes threshold encryption (as opposed to “splitting a backup key”)?",
+      "options": [
+        "Anyone can decrypt with the public key as long as they have t shares",
+        "A ciphertext is encrypted under one public key, and decryption requires cooperation of at least t parties without reconstructing the full secret key",
+        "The plaintext is split into n pieces and any t pieces reveal it",
+        "The private key is stored on a single server and unlocked by t passwords"
+      ],
+      "correct": 1,
+      "explanation": "Threshold encryption keeps decryption distributed: parties output partial decryptions that are recombined, without ever rebuilding the full secret key."
+    },
+    {
+      "stage": "post",
+      "question": "In threshold ElGamal-style decryption, what is a typical partial decryption share for party i (with share s_i) given ciphertext component c1?",
+      "options": [
+        "d_i = c1^{s_i} mod p",
+        "d_i = c2^{s_i} mod p",
+        "d_i = g^{s_i} mod p",
+        "d_i = (c1 * c2)^{s_i} mod p"
+      ],
+      "correct": 0,
+      "explanation": "Each party exponentiates the ciphertext’s DH component by its secret share, producing a value that can be recombined in the exponent."
+    },
+    {
+      "stage": "post",
+      "question": "Why do threshold schemes typically insist on a prime-order group (or prime-order subgroup) for the decryption math?",
+      "options": [
+        "Because encryption is faster in prime-order groups",
+        "Because Lagrange interpolation needs inverses, which are guaranteed to exist in a field like Z_q for prime q",
+        "Because hashes only work on prime moduli",
+        "Because prime-order groups automatically provide IND-CCA security"
+      ],
+      "correct": 1,
+      "explanation": "Recombination uses Lagrange coefficients computed modulo q; you want a field so denominators are invertible and the algebra is well-defined."
+    },
+    {
+      "stage": "post",
+      "question": "What does the combiner do with partial decryptions {d_i} from a subset S of parties?",
+      "options": [
+        "Adds them: shared = sum(d_i) mod p",
+        "Multiplies them with Lagrange exponents: shared = Π d_i^{λ_i(0)} mod p",
+        "Decrypts each share separately and takes the majority vote",
+        "Computes discrete logs of each d_i and averages them"
+      ],
+      "correct": 1,
+      "explanation": "The combiner raises each decryption share to the subset’s Lagrange coefficient and multiplies the results to recover the shared secret element."
+    },
+    {
+      "stage": "post",
+      "question": "A system accepts decryption shares from parties but does not require any proof that a share was computed correctly. What is a realistic failure mode?",
+      "options": [
+        "Nothing can go wrong because the math is deterministic",
+        "A malicious party can submit a bogus share, causing decryption failure or corrupted plaintext unless shares are verifiable",
+        "The public key becomes invalid and cannot be used for encryption anymore",
+        "The system becomes IND-CCA secure automatically"
+      ],
+      "correct": 1,
+      "explanation": "Without verifiable decryption shares, malicious participants can DoS decryption or cause garbage outputs; real systems use proofs (e.g., Chaum–Pedersen/DLEQ)."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it dangerous to skip subgroup membership checks on ciphertext components (like c1) in discrete-log based schemes?",
+      "options": [
+        "It only affects performance, not security",
+        "It can enable small-subgroup / invalid-element attacks that leak information about secret exponents",
+        "It makes the ciphertext larger than necessary",
+        "It forces you to use symmetric encryption"
+      ],
+      "correct": 1,
+      "explanation": "If an attacker can make you exponentiate elements outside the intended subgroup, the result may leak information about secret exponents or break assumptions."
+    },
+    {
+      "stage": "post",
+      "question": "Which setup best matches the goal “no single party ever knows the full private key x”?",
+      "options": [
+        "A trusted dealer samples x, Shamir-splits it, and keeps a backup of x",
+        "A distributed key generation (DKG) protocol that outputs only shares and a public key",
+        "Any scheme where n is large enough",
+        "Any scheme that uses XOR instead of AEAD"
+      ],
+      "correct": 1,
+      "explanation": "DKG is designed so no one learns x in full; parties end up with shares that are jointly consistent with the published public key."
+    }
+  ]
 }

@@ -1,1 +1,23 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal vectors derived from closed-form definitions: advantage_bernoulli = |p0-p1|, advantage_uniform_vs_biased = delta*(n-1)/n, negligible_bound = 1/n^d, estimate_advantage from deterministic sample lists.",
+  "vectors": [
+    {"op": "advantage_bernoulli", "p0": 0.5, "p1": 0.9, "expected": 0.4},
+    {"op": "advantage_bernoulli", "p0": 0.5, "p1": 0.5, "expected": 0.0},
+    {"op": "advantage_bernoulli", "p0": 0.0, "p1": 1.0, "expected": 1.0},
+    {"op": "advantage_bernoulli", "p0": 0.25, "p1": 0.75, "expected": 0.5},
+    {"op": "advantage_bernoulli", "p0": 0.1, "p1": 0.9, "expected": 0.8},
+    {"op": "negligible_bound", "n": 100, "d": 1, "expected": 0.01},
+    {"op": "negligible_bound", "n": 100, "d": 2, "expected": 0.0001},
+    {"op": "negligible_bound", "n": 10,  "d": 3, "expected": 0.001},
+    {"op": "is_negligible", "epsilon": 0.001, "n": 100, "d": 1, "expected": true},
+    {"op": "is_negligible", "epsilon": 0.1,   "n": 100, "d": 1, "expected": false},
+    {"op": "is_negligible", "epsilon": 0.001, "n": 100, "d": 2, "expected": false},
+    {"op": "is_negligible", "epsilon": 1e-8,  "n": 100, "d": 2, "expected": true},
+    {"op": "advantage_uniform_vs_biased", "n": 2,   "delta": 0.4, "expected": 0.2},
+    {"op": "advantage_uniform_vs_biased", "n": 256, "delta": 0.0, "expected": 0.0},
+    {"op": "advantage_uniform_vs_biased", "n": 4,   "delta": 1.0, "expected": 0.75},
+    {"op": "estimate_advantage_deterministic", "samples_0": [0,0,0,0], "samples_1": [1,1,1,1], "distinguisher": "identity", "expected": 1.0},
+    {"op": "estimate_advantage_deterministic", "samples_0": [0,1,0,1], "samples_1": [0,1,0,1], "distinguisher": "identity", "expected": 0.0},
+    {"op": "estimate_advantage_deterministic", "samples_0": [0,0,1,1], "samples_1": [1,1,1,1], "distinguisher": "identity", "expected": 0.5}
+  ]
+}

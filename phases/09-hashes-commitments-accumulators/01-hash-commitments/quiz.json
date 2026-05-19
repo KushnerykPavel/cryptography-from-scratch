@@ -1,4 +1,101 @@
 {
-  "title": "Hash-Based Commitments",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What two properties does a commitment scheme aim to provide?",
+      "options": [
+        "Hiding the message and binding the committer to it",
+        "Encrypting the message and signing it for authenticity",
+        "Compressing the message and error-correcting it",
+        "Hashing the message and making it shorter to store"
+      ],
+      "correct": 0,
+      "explanation": "A commitment should hide the message until reveal, and it should be hard to open the same commitment to two different messages."
+    },
+    {
+      "stage": "pre",
+      "question": "If you publish c = SHA256(m) where m is a low-entropy value, what is the main risk?",
+      "options": [
+        "An attacker can guess m by hashing likely candidates",
+        "An attacker can compute m directly by inverting SHA-256",
+        "An attacker can change m after publishing c without notice",
+        "An attacker can recover the SHA-256 internal state from c"
+      ],
+      "correct": 0,
+      "explanation": "When m comes from a small set, the attacker can try all candidates and compare their hashes to c."
+    },
+    {
+      "stage": "post",
+      "question": "In a hash commitment c = H(encode(m, r)), which value must stay secret until opening to get hiding?",
+      "options": [
+        "The randomness r (nonce/salt) used during commit",
+        "The hash function H used to compute the commitment",
+        "The commitment value c that is published publicly",
+        "The encoding function encode used to format inputs"
+      ],
+      "correct": 0,
+      "explanation": "If r is secret and long enough, attackers cannot efficiently test guesses for m using only c."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson length-prefix both m and r before hashing?",
+      "options": [
+        "To prevent ambiguous (m, r) boundaries under concatenation",
+        "To make SHA-256 run faster by aligning to word sizes",
+        "To guarantee that the commitment output becomes longer",
+        "To make the scheme information-theoretically binding"
+      ],
+      "correct": 0,
+      "explanation": "Without lengths, different pairs like (b'a', b'bc') and (b'ab', b'c') can yield the same concatenated bytes."
+    },
+    {
+      "stage": "post",
+      "question": "What does it mean for a commitment scheme to be binding?",
+      "options": [
+        "After publishing c, it is hard to open it to a different m'",
+        "After publishing c, everyone immediately learns the message m",
+        "The commitment output c is always unique for every message m",
+        "The commitment can be verified without any opening data"
+      ],
+      "correct": 0,
+      "explanation": "Binding means the committer cannot feasibly find two different openings that both verify against the same commitment."
+    },
+    {
+      "stage": "post",
+      "question": "You see c = SHA256(m) and m is one of 1,000 likely strings. What is the standard attack?",
+      "options": [
+        "Compute SHA256 for each candidate and compare to c",
+        "Factor c into primes to recover the original message m",
+        "Use a chosen-ciphertext oracle to decrypt c back to m",
+        "Exploit timing leaks in SHA-256 to read m over the network"
+      ],
+      "correct": 0,
+      "explanation": "This is an offline dictionary attack: hash each candidate and match against the published commitment."
+    },
+    {
+      "stage": "post",
+      "question": "If the same nonce r is reused for multiple commitments, what can go wrong after one opening reveals r?",
+      "options": [
+        "Other commitments using r become guessable by brute force over m",
+        "SHA-256 collisions become easy to compute for arbitrary inputs",
+        "All past commitments become perfectly hiding for any message space",
+        "Anyone can open any commitment without knowing any message m"
+      ],
+      "correct": 0,
+      "explanation": "Once r is known, any other commitment that reused it can be checked against guessed messages from a small space."
+    },
+    {
+      "stage": "post",
+      "question": "Why include a domain separation prefix in encode(m, r)?",
+      "options": [
+        "To avoid cross-protocol confusion when reusing the same hash",
+        "To increase the output length beyond 256 bits automatically",
+        "To make the scheme perfectly hiding without any randomness r",
+        "To ensure the commitment can be opened without revealing r"
+      ],
+      "correct": 0,
+      "explanation": "A domain tag makes commitments from different contexts distinct even if the same inputs appear elsewhere."
+    }
+  ]
 }
+

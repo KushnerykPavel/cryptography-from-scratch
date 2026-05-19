@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Identify the full set of secp256k1 domain parameters `(p, a, b, G, n, h)` and explain what each component contributes to the group structure
+- Compute a public key `Q = k·G` from a private scalar using affine short-Weierstrass point arithmetic over the secp256k1 field
+- Implement SEC1 compressed and uncompressed public-key serialization and parsing, including the square-root-mod-p lift using the `p ≡ 3 (mod 4)` shortcut
+- Distinguish valid from invalid compressed-key encodings and explain why rejecting invalid encodings prevents subtle interoperability and security bugs
+- Apply a toy double-and-add side-channel trace to recover scalar bits, motivating why constant-time scalar multiplication is required for production key material
+
 ## The Problem
 
 If you touch Bitcoin, Ethereum, or any ecosystem that inherited Bitcoin’s cryptography choices, you will meet `secp256k1`.
@@ -150,6 +158,12 @@ from main import recover_bits_from_trace, trace_double_and_add
 trace = trace_double_and_add(37)
 print(trace)
 print(recover_bits_from_trace(trace))  # LSB-first bits
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

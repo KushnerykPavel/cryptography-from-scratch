@@ -1,4 +1,101 @@
 {
   "title": "Key Encapsulation vs Key Agreement",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does a key encapsulation mechanism (KEM) usually output to the sender?",
+      "options": [
+        "A ciphertext plus a shared secret",
+        "A signature plus a verification key",
+        "A plaintext plus an authentication tag",
+        "A public key plus a private key"
+      ],
+      "correct": 0,
+      "explanation": "In a KEM, the sender runs Encaps(pkR) and gets (ciphertext, shared_secret). The ciphertext is sent to the receiver."
+    },
+    {
+      "stage": "pre",
+      "question": "In an unauthenticated Diffie-Hellman exchange, what is the main risk?",
+      "options": [
+        "A man-in-the-middle can establish two different shared secrets",
+        "The shared secret is always the all-zero value",
+        "The public keys cannot be transmitted over the network",
+        "HKDF cannot be applied to the shared secret"
+      ],
+      "correct": 0,
+      "explanation": "Key agreement alone does not authenticate peers. A MITM can negotiate separate secrets with each side unless the exchange is authenticated."
+    },
+    {
+      "stage": "post",
+      "question": "Which API shape most clearly indicates you are using a KEM (not a symmetric key agreement API)?",
+      "options": [
+        "Encaps(pkR) returns (ct, ss) and Decaps(skR, ct) returns ss",
+        "Agree(skA, pkB) returns Z and Agree(skB, pkA) returns Z",
+        "Sign(sk, msg) returns sig and Verify(pk, msg, sig) returns bool",
+        "Hash(msg) returns digest and HMAC(key, msg) returns tag"
+      ],
+      "correct": 0,
+      "explanation": "KEMs are defined around KeyGen/Encaps/Decaps with a ciphertext and shared secret. Key agreement is usually expressed as a symmetric Agree(sk, pk) primitive."
+    },
+    {
+      "stage": "post",
+      "question": "Why should a protocol derive session keys from a KA/KEM shared secret using a KDF with transcript/context binding?",
+      "options": [
+        "To bind keys to the negotiated parameters and avoid cross-protocol confusion",
+        "To make the shared secret longer than the public key",
+        "To avoid ever sending any public values on the wire",
+        "To convert asymmetric primitives into symmetric encryption directly"
+      ],
+      "correct": 0,
+      "explanation": "Binding the derived keys to a transcript/suite id ensures the same mathematical secret cannot be reused safely across different contexts. It also commits the keys to what was actually negotiated."
+    },
+    {
+      "stage": "post",
+      "question": "You change only the application info/context string given to HKDF, keeping the underlying DH shared value the same. What should happen to the derived session key?",
+      "options": [
+        "It should change",
+        "It should stay identical",
+        "It should become all zeros",
+        "It should become the DH public key"
+      ],
+      "correct": 0,
+      "explanation": "The HKDF info/context is meant to provide domain separation and context binding. Changing it should change the derived key even if the shared secret is unchanged."
+    },
+    {
+      "stage": "post",
+      "question": "Does using a KEM automatically authenticate the peer you derived a shared secret with?",
+      "options": [
+        "No, authentication still requires signatures, PSKs, certificates, or another mechanism",
+        "Yes, because the ciphertext proves the sender’s identity",
+        "Yes, because the shared secret is always unique per sender",
+        "No, but only for elliptic-curve KEMs (not post-quantum KEMs)"
+      ],
+      "correct": 0,
+      "explanation": "KEMs establish a shared secret with a public key, but do not identify who the sender is. Authentication must be provided separately and bound into the protocol transcript."
+    },
+    {
+      "stage": "post",
+      "question": "In a hybrid classical+post-quantum handshake, what is the safest high-level way to combine multiple shared secrets into one session key schedule?",
+      "options": [
+        "Mix them with an explicit KDF construction that includes context and labels",
+        "Concatenate them and use the first 32 bytes as the session key",
+        "XOR them together without any additional context",
+        "Hash the public keys only and ignore the shared secrets"
+      ],
+      "correct": 0,
+      "explanation": "Hybrid designs typically use a KDF to combine secrets with clear domain separation and transcript binding. Ad hoc concatenation/XOR rules are easy to misuse and hard to analyze."
+    },
+    {
+      "stage": "post",
+      "question": "A server publishes a static public key ahead of time. A client sends one message containing an ephemeral public value and immediately derives a shared secret. Which description fits best?",
+      "options": [
+        "A KEM-like flow built from DH (sender encapsulates to the receiver’s public key)",
+        "A 2-message key agreement where both sides must send a public value first",
+        "A digital signature scheme used for authentication",
+        "A symmetric-key encryption scheme with a fixed nonce"
+      ],
+      "correct": 0,
+      "explanation": "If the receiver public key is known in advance, the sender can do a one-way encapsulation-style message (often an ephemeral public key) and both sides derive the same secret."
+    }
+  ]
 }

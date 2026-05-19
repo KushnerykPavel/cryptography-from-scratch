@@ -141,8 +141,11 @@ If user says yes:
 3. If any check fails, surface the failure. Do not write.
 4. Write `quiz.json` only after all checks pass.
 
-**Rendering** (after `questions` populated): one question at a time via
-`AskUserQuestion`. Show pre questions before walking the doc; show post
+**Rendering** (after `questions` populated): one question at a time. Use
+`AskUserQuestion` when the runtime exposes it; in opencode (tools limited
+to `bash, edit, glob, grep, read, skill, task, todowrite, webfetch,
+websearch, write`), render the question as a plain chat message and wait
+for the user's reply. Show pre questions before walking the doc; show post
 questions after Build/Use/Attack/Ship complete. Score post-questions 0–6
 for grading; pre-questions inform pacing but don't count.
 

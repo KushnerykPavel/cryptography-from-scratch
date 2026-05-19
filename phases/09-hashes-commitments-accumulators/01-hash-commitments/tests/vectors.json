@@ -1,1 +1,74 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "SHA-256 digests computed with Python stdlib `hashlib.sha256` (FIPS 180-4). Commitment encoding is `domain || u32be(len(m)) || m || u32be(len(r)) || r` with domain `CFSC-HASH-COMMIT-v1`.",
+  "vectors": [
+    {
+      "op": "sha256_hex",
+      "inputs": { "data_hex": "616263" },
+      "expected_hex": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    {
+      "op": "encode_commit_input_hex",
+      "inputs": { "message_hex": "68656c6c6f", "nonce_hex": "00000000" },
+      "expected_hex": "434653432d484153482d434f4d4d49542d76310000000568656c6c6f0000000400000000"
+    },
+    {
+      "op": "commit_hex",
+      "inputs": {
+        "message_hex": "68656c6c6f",
+        "nonce_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expected_hex": "f26da63d8ea7fa9ad7918acf8c1f2db204a50bbca8111f737d0f3cc910cde7d2"
+    },
+    {
+      "op": "commit_hex",
+      "inputs": {
+        "message_hex": "68656c6c6f",
+        "nonce_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+      },
+      "expected_hex": "7da6785e17aea959837403c8b29e3ab21faafb21f3dbed7af615a0f04379263f"
+    },
+    {
+      "op": "commit_hex",
+      "inputs": { "message_hex": "", "nonce_hex": "" },
+      "expected_hex": "e958cfdc1415abf5b8dd8d166f6f5f19fa0d6d3171912d1c2c8a75cc54d7a875"
+    },
+    {
+      "op": "naive_commit_hex",
+      "inputs": { "message_hex": "61", "nonce_hex": "6263" },
+      "expected_hex": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    {
+      "op": "naive_commit_hex",
+      "inputs": { "message_hex": "6162", "nonce_hex": "63" },
+      "expected_hex": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    {
+      "op": "commit_hex",
+      "inputs": { "message_hex": "61", "nonce_hex": "6263" },
+      "expected_hex": "41bf31bc74c24ac921fae60dab1c14b3b2d2c536d7624f374d964e0a85b05c06"
+    },
+    {
+      "op": "commit_hex",
+      "inputs": { "message_hex": "6162", "nonce_hex": "63" },
+      "expected_hex": "29a5ae35f8b6e0d453703bb4972555e1d7512f5268c11028624bee0bdb496610"
+    },
+    {
+      "op": "verify_bool",
+      "inputs": {
+        "commitment_hex": "ba3db3544be16b657f245f58e4c435f2b01669c7229d9c13c0124671b766321e",
+        "message_hex": "6c61756e63682061742030363a3030",
+        "nonce_hex": "02020202020202020202020202020202"
+      },
+      "expected": true
+    },
+    {
+      "op": "verify_bool",
+      "inputs": {
+        "commitment_hex": "ba3db3544be16b657f245f58e4c435f2b01669c7229d9c13c0124671b766321e",
+        "message_hex": "6c61756e63682061742030373a3030",
+        "nonce_hex": "02020202020202020202020202020202"
+      },
+      "expected": false
+    }
+  ]
+}

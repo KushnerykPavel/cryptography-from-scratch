@@ -1,1 +1,23 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal toy Schnorr parameters p=23, q=11, g=2. Expected values cross-checked via Python pow(..., mod) and SHA-256 transcript hashing as implemented in code/main.py.",
+  "vectors": [
+    {"op": "mod_inverse", "a": 7, "n": 11, "expected": 8},
+    {"op": "mod_inverse", "a": 0, "n": 11, "expected_error": "not invertible modulo n"},
+
+    {"op": "schnorr_commit", "p": 23, "q": 11, "g": 2, "r": 4, "expected": 16},
+    {"op": "schnorr_response", "p": 23, "q": 11, "g": 2, "r": 4, "c": 9, "x": 7, "expected": 1},
+
+    {"op": "schnorr_verify", "p": 23, "q": 11, "g": 2, "y": 13, "t": 16, "c": 3, "s": 3, "expected": true},
+    {"op": "schnorr_verify", "p": 23, "q": 11, "g": 2, "y": 13, "t": 16, "c": 3, "s": 4, "expected": false},
+
+    {"op": "fiat_shamir_challenge", "p": 23, "q": 11, "g": 2, "y": 13, "t": 16, "message": "hello", "expected": 9},
+
+    {"op": "fs_verify", "p": 23, "q": 11, "g": 2, "y": 13, "message": "hello", "proof": {"t": 16, "s": 1}, "expected": true},
+    {"op": "fs_verify", "p": 23, "q": 11, "g": 2, "y": 13, "message": "bye", "proof": {"t": 16, "s": 1}, "expected": false},
+
+    {"op": "weak_fiat_shamir_challenge_without_message", "p": 23, "q": 11, "g": 2, "y": 13, "t": 16, "expected": 2},
+    {"op": "weak_fs_verify_without_message", "p": 23, "q": 11, "g": 2, "y": 13, "proof": {"t": 16, "s": 7}, "expected": true},
+
+    {"op": "forge_fs_proof_by_grinding", "p": 23, "q": 11, "g": 2, "y": 13, "message": "hello", "expected": {"t": 13, "s": 7}}
+  ]
+}

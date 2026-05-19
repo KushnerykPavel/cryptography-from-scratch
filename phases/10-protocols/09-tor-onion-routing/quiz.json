@@ -1,4 +1,100 @@
 {
-  "title": "Tor & Onion Routing",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a 3-hop onion-routing circuit (guard -> middle -> exit), which relay connects to the destination server?",
+      "options": [
+        "The guard relay (entry hop)",
+        "The middle relay (transit hop)",
+        "The exit relay (outbound hop)",
+        "No relay connects directly"
+      ],
+      "correct": 2,
+      "explanation": "The exit relay is the hop that makes the outbound connection to the destination."
+    },
+    {
+      "stage": "pre",
+      "question": "What does onion routing provide by itself for the payload contents between exit and destination?",
+      "options": [
+        "No confidentiality unless an app-layer protocol provides it",
+        "End-to-end encryption for all traffic automatically",
+        "Perfect secrecy even against the destination server",
+        "A signature that authenticates the destination server"
+      ],
+      "correct": 0,
+      "explanation": "Onion routing is about routing metadata; you still need HTTPS/TLS or similar to protect contents on the exit-to-destination leg."
+    },
+    {
+      "stage": "post",
+      "question": "After a relay decrypts exactly one onion layer, what should it learn in the basic model?",
+      "options": [
+        "The next hop and the remaining onion bytes",
+        "The client identity and the destination",
+        "The plaintext application message immediately",
+        "The full list of relays in the circuit"
+      ],
+      "correct": 0,
+      "explanation": "Each hop peels one layer to learn only where to forward next and what bytes to forward."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson's toy onion layer include an authentication tag (MAC) in addition to encryption?",
+      "options": [
+        "To stop undetected edits to next-hop and inner bytes",
+        "To make ciphertext look random on the wire to observers",
+        "To let relays recover keys from packets later",
+        "To ensure repeated plaintext yields repeated ciphertext"
+      ],
+      "correct": 0,
+      "explanation": "Without integrity, an attacker can flip bits to change routing metadata or create oracles via error behavior."
+    },
+    {
+      "stage": "post",
+      "question": "What is a catastrophic failure mode for stream-cipher-like encryption if a (key, nonce) pair is reused?",
+      "options": [
+        "XOR of ciphertexts reveals XOR of plaintexts",
+        "MAC verification becomes faster on average",
+        "Ciphertexts become smaller than plaintexts",
+        "Decryption works even with the wrong key"
+      ],
+      "correct": 0,
+      "explanation": "Reusing a keystream lets an attacker combine ciphertexts to cancel the keystream and learn relationships between plaintexts."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best distinguishes routing privacy from content privacy in onion routing?",
+      "options": [
+        "Onion layers hide per-hop routing; HTTPS/TLS hides content",
+        "Onion layers alone hide content end-to-end without HTTPS/TLS",
+        "HTTPS/TLS alone hides routing path from relays without onion layers",
+        "Routing privacy and content privacy are the same thing"
+      ],
+      "correct": 0,
+      "explanation": "Onion layers aim to limit what each relay learns about the route; content confidentiality still depends on the application-layer protocol."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what can a global passive adversary often do even if onion-layer cryptography is correct?",
+      "options": [
+        "Correlate sender and receiver using timing/volume patterns",
+        "Break HMAC-SHA256 and decrypt all layers immediately",
+        "Compute private keys from public keys by brute force",
+        "Force relays to reveal the full circuit on demand"
+      ],
+      "correct": 0,
+      "explanation": "Traffic analysis can correlate flows across hops without breaking the cryptography, especially without padding/batching defenses."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy implementation, what purpose does binding a layer to hop-specific AAD serve?",
+      "options": [
+        "It stops cut-and-paste of a layer across hops or circuits",
+        "It makes encryption deterministic so packets can be cached",
+        "It lets relays skip tag verification for performance",
+        "It lets the exit decrypt all layers with one key"
+      ],
+      "correct": 0,
+      "explanation": "AAD binds ciphertext to context; changing the hop name (or circuit metadata) causes tag verification to fail."
+    }
+  ]
 }

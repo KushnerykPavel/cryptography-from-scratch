@@ -1,1 +1,92 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic toy vectors computed with CPython `pow(.,.,.)` on N=101*113 (not cryptographically sized). Hash-to-prime outputs are fixed by the implementation in `code/main.py` (domain=`rsa-accum`, bits=32).",
+  "vectors": [
+    {
+      "op": "hash_to_prime",
+      "inputs": { "message": "alice", "domain": "rsa-accum", "bits": 32 },
+      "expected": 3716316691
+    },
+    {
+      "op": "hash_to_prime",
+      "inputs": { "message": "bob", "domain": "rsa-accum", "bits": 32 },
+      "expected": 2224831957
+    },
+    {
+      "op": "hash_to_prime",
+      "inputs": { "message": "carol", "domain": "rsa-accum", "bits": 32 },
+      "expected": 3158497087
+    },
+    {
+      "op": "qr_base",
+      "inputs": { "modulus": 11413, "seed": "demo-base" },
+      "expected": 2516
+    },
+    {
+      "op": "rsa_accumulate",
+      "inputs": { "prime_reps": [3, 5, 7], "modulus": 11413, "base": 1369 },
+      "expected": 3824
+    },
+    {
+      "op": "rsa_membership_witness",
+      "inputs": {
+        "all_prime_reps": [3, 5, 7],
+        "member_prime_rep": 5,
+        "modulus": 11413,
+        "base": 1369
+      },
+      "expected": 1713
+    },
+    {
+      "op": "rsa_verify_membership",
+      "inputs": {
+        "acc_value": 3824,
+        "witness": 1713,
+        "member_prime_rep": 5,
+        "modulus": 11413
+      },
+      "expected": true
+    },
+    {
+      "op": "rsa_add",
+      "inputs": { "acc_value": 3824, "prime_rep": 11, "modulus": 11413 },
+      "expected": 1400
+    },
+    {
+      "op": "rsa_update_witness_on_add",
+      "inputs": { "witness": 1713, "added_prime_rep": 11, "modulus": 11413 },
+      "expected": 8205
+    },
+    {
+      "op": "rsa_verify_membership",
+      "inputs": {
+        "acc_value": 1400,
+        "witness": 8205,
+        "member_prime_rep": 5,
+        "modulus": 11413
+      },
+      "expected": true
+    },
+    {
+      "op": "rsa_nonmembership_proof",
+      "inputs": {
+        "all_prime_reps": [3, 5, 7],
+        "nonmember_prime_rep": 11,
+        "modulus": 11413,
+        "base": 1369
+      },
+      "expected": [2, 9922]
+    },
+    {
+      "op": "rsa_verify_nonmembership",
+      "inputs": {
+        "acc_value": 3824,
+        "nonmember_prime_rep": 11,
+        "proof_a": 2,
+        "proof_d": 9922,
+        "modulus": 11413,
+        "base": 1369
+      },
+      "expected": true
+    }
+  ]
+}

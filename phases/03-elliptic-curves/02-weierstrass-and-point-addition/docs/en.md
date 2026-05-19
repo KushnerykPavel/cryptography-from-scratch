@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain the four edge cases (identity, inverse, vertical line, doubling with `y = 0`) that every correct short-Weierstrass point-addition implementation must handle
+- Compute the slope `λ` using the chord formula for distinct points and the tangent formula for doubling, both modulo `p`
+- Implement curve validation using the discriminant condition `4a³ + 27b² ≠ 0 (mod p)` to detect singular curves
+- Distinguish valid on-curve points from attacker-supplied points of small order and explain the resulting small-subgroup information leak
+- Verify point-addition results by checking that the output satisfies the curve equation mod `p`
+
 ## The Problem
 
 ECC codebases look deceptively simple: a point is two integers, and “adding points” is a few modular multiplications and one modular inverse.
@@ -241,6 +249,12 @@ def scalar_mul(curve: Curve, k: int, p: ECPoint) -> ECPoint:
         k >>= 1
 
     return acc
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

@@ -1,4 +1,100 @@
 {
-  "title": "Poseidon \u2014 ZK-Friendly Hash",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why is Poseidon typically cheaper than SHA-256 inside SNARK circuits?",
+      "options": [
+        "It is built from field additions/multiplications that map directly to circuit constraints",
+        "It is computed with fewer CPU instructions than SHA-256 on all platforms",
+        "It is a keyed hash so it avoids preimage attacks automatically",
+        "It outputs fewer bits so it is always faster to verify"
+      ],
+      "correct": 0,
+      "explanation": "SNARKs work natively over a field, so arithmetic operations are much cheaper than bit-level emulation of SHA-256."
+    },
+    {
+      "stage": "pre",
+      "question": "In a sponge hash, what is the main purpose of the capacity part of the state?",
+      "options": [
+        "It provides a hidden buffer that contributes to security against collisions/preimages",
+        "It stores the final output so the rate can be reused for absorbing",
+        "It makes the hash deterministic by holding the random seed",
+        "It ensures the hash output is always uniformly distributed in bytes"
+      ],
+      "correct": 0,
+      "explanation": "Capacity is the part not directly overwritten by input; it drives the sponge’s security level."
+    },
+    {
+      "stage": "post",
+      "question": "What is the defining difference between full rounds and partial rounds in Poseidon?",
+      "options": [
+        "Full rounds apply the S-box to every state word; partial rounds apply it to only one word",
+        "Full rounds use an MDS matrix; partial rounds do not mix the state at all",
+        "Full rounds use exponentiation; partial rounds use only additions",
+        "Full rounds are optional and can be skipped if inputs are small"
+      ],
+      "correct": 0,
+      "explanation": "Partial rounds keep the linear mixing but reduce S-box applications to one word per round to save constraints."
+    },
+    {
+      "stage": "post",
+      "question": "Why should the S-box exponent \u03b1 satisfy gcd(\u03b1, p\u22121) = 1 in a prime field F_p?",
+      "options": [
+        "So the map x \u21a6 x^\u03b1 is a permutation of the field (invertible nonlinearity)",
+        "So x \u21a6 x^\u03b1 becomes linear and easier to analyze for security",
+        "So the MDS matrix is guaranteed to be invertible",
+        "So the round constants do not need to be generated from a seed"
+      ],
+      "correct": 0,
+      "explanation": "If \u03b1 is coprime to p\u22121, exponentiation is bijective on nonzero elements (and 0 maps to 0), making it invertible."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main role of the MDS matrix in Poseidon?",
+      "options": [
+        "Diffusion: make each output word depend on all input words after a few rounds",
+        "Nonlinearity: provide the only source of confusion in the permutation",
+        "Authentication: prevent an attacker from modifying inputs undetected",
+        "Compression: reduce the number of field elements in the state"
+      ],
+      "correct": 0,
+      "explanation": "The MDS layer is linear but ensures changes spread quickly across the entire state."
+    },
+    {
+      "stage": "post",
+      "question": "What can go wrong if you hash variable-length inputs with implicit zero padding and no length separation?",
+      "options": [
+        "Trivial collisions like hash([x]) == hash([x, 0]) for many x",
+        "The hash becomes keyed without you noticing",
+        "The MDS matrix stops being invertible",
+        "The field modulus p changes during hashing"
+      ],
+      "correct": 0,
+      "explanation": "If missing inputs are treated as zeros, multiple different-length inputs can absorb to the same state before permutation."
+    },
+    {
+      "stage": "post",
+      "question": "What is domain separation used for in hash-based protocols?",
+      "options": [
+        "To ensure hashes of different object types (leaf vs node, commitment vs nullifier) cannot collide across types",
+        "To increase the output size so collisions become impossible",
+        "To allow hashing of integers without reducing mod p",
+        "To avoid having to choose round constants for Poseidon"
+      ],
+      "correct": 0,
+      "explanation": "A domain tag effectively creates independent hash functions for different contexts using the same primitive."
+    },
+    {
+      "stage": "post",
+      "question": "Two systems use the same field and round counts but different round constants. What happens?",
+      "options": [
+        "They compute different hashes; interoperability breaks (proofs/roots won\u2019t match)",
+        "They compute the same hashes because the MDS matrix dominates the result",
+        "They become vulnerable only to length-extension attacks, but outputs still match",
+        "They can be made compatible by swapping endianness of inputs"
+      ],
+      "correct": 0,
+      "explanation": "Round constants are part of the hash definition. Different constants mean a different permutation and different outputs."
+    }
+  ]
 }

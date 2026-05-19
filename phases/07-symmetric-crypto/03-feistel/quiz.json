@@ -1,4 +1,100 @@
 {
-  "title": "Block Ciphers \u2014 Feistel Networks",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Conceptually, what is a block cipher (for a fixed key)?",
+      "options": [
+        "A keyed permutation over fixed-size blocks",
+        "A public hash function that compresses data",
+        "A stream of random bits that you XOR with plaintext",
+        "A lossy compression algorithm that hides patterns"
+      ],
+      "correct": 0,
+      "explanation": "A block cipher is (ideally) a pseudorandom permutation: it maps each block to a unique block and is invertible under the same key."
+    },
+    {
+      "stage": "pre",
+      "question": "In a Feistel network, what must be true about the round function F for the whole construction to be invertible?",
+      "options": [
+        "F does not need to be invertible",
+        "F must be bijective on the half-block",
+        "F must be a cryptographic hash function",
+        "F must output the full block size"
+      ],
+      "correct": 0,
+      "explanation": "Feistel's trick is that invertibility comes from the swap + XOR structure; you only need to be able to recompute F during decryption."
+    },
+    {
+      "stage": "post",
+      "question": "A Feistel round is defined as L1 = R0 and R1 = L0 XOR F(K1, R0). If L0=0x12, R0=0x34, and F(K1, R0)=0xAA (all 8-bit), what are (L1, R1)?",
+      "options": [
+        "(0x34, 0xB8)",
+        "(0x12, 0x9E)",
+        "(0x9E, 0x12)",
+        "(0xB8, 0x34)"
+      ],
+      "correct": 0,
+      "explanation": "L1 is the previous right half (0x34). R1 = 0x12 XOR 0xAA = 0xB8."
+    },
+    {
+      "stage": "post",
+      "question": "Given a single Feistel round output (L1, R1) and the key K1, which expression correctly recovers the previous left half L0?",
+      "options": [
+        "L0 = R1 XOR F(K1, L1)",
+        "L0 = L1 XOR F(K1, R1)",
+        "L0 = R1 XOR F(K1, R1)",
+        "L0 = L1 XOR F(K1, L1)"
+      ],
+      "correct": 0,
+      "explanation": "Because R0 = L1, you recompute F(K1, R0) as F(K1, L1), then undo the XOR: L0 = R1 XOR F(K1, L1)."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best distinguishes Feistel networks from substitution–permutation networks (SPNs) like AES?",
+      "options": [
+        "Feistel can be invertible even if its round function F is not; SPNs require each round to be built from invertible components",
+        "Feistel uses only public-key operations; SPNs use only symmetric-key operations",
+        "Feistel requires a nonce for decryption; SPNs do not",
+        "Feistel is always secure with 2 rounds; SPNs require 10+ rounds"
+      ],
+      "correct": 0,
+      "explanation": "Feistel invertibility comes from the swap + XOR structure, while SPNs rely on invertible S-boxes and permutations to make the overall mapping invertible."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-focused: if you build a Feistel cipher with a weak round function like F(K, R)=0 for every input, what does one round of encryption do?",
+      "options": [
+        "It just swaps the halves: (L0, R0) -> (R0, L0)",
+        "It hashes the block and outputs the hash",
+        "It produces a random block independent of (L0, R0)",
+        "It becomes a secure block cipher as long as the key is secret"
+      ],
+      "correct": 0,
+      "explanation": "With F=0, R1 = L0 XOR 0 = L0 and L1 = R0, so the round is only a swap — easy to distinguish and not secure."
+    },
+    {
+      "stage": "post",
+      "question": "Why should a key schedule include the round index when deriving per-round keys from a master key?",
+      "options": [
+        "To ensure different rounds use different keys (domain separation)",
+        "To allow safe nonce reuse across messages",
+        "To reduce the block size automatically",
+        "To make encryption non-deterministic"
+      ],
+      "correct": 0,
+      "explanation": "Including the round index prevents accidentally repeating or correlating round keys, which can create structural weaknesses."
+    },
+    {
+      "stage": "post",
+      "question": "You flip one plaintext bit and, even after many rounds, only 1–2 ciphertext bits change. What is the most likely explanation?",
+      "options": [
+        "A bug or mismatch in bit sizes / truncation / wiring, causing poor diffusion",
+        "A sign that the cipher is information-theoretically secure",
+        "A sign that fewer rounds always increases security",
+        "A sign that the key is too long"
+      ],
+      "correct": 0,
+      "explanation": "Persistent low Hamming distance is a strong indicator of incorrect wiring (wrong halves, wrong XOR direction), wrong output sizing, or a very weak F."
+    }
+  ]
 }

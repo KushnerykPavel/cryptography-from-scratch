@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why discrete Gaussians are the standard noise distribution in LWE and trapdoor constructions rather than uniform small integers
+- Compute the probability weights P[x] ∝ exp(-x²/(2σ²)) over a truncated integer window and normalize them into a CDF table
+- Implement a CDF-table sampler using a SHA-256 counter-mode RNG for deterministic, reproducible test output
+- Identify the two failure modes of incorrect sampling: predictable randomness that reverses noise, and biased tails that enable distinguishing attacks
+- Distinguish how tail-cut parameter choice affects statistical distance from the true Gaussian distribution
+
 ## The Problem
 
 Most lattice cryptosystems hide secrets behind *noise*:
@@ -74,6 +82,12 @@ u in [cdf_ends[0], cdf_ends[1]) -> values[1]
 ```python
 sampler = build_discrete_gaussian_cdf(sigma="2.0", center="0", tail=16)
 sampler.sample(rng)
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

@@ -1,4 +1,101 @@
 {
   "title": "OPAQUE \u2014 Asymmetric PAKE",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why is a database leak of salted password hashes still dangerous?",
+      "options": [
+        "Attackers can try password guesses offline until one matches.",
+        "Attackers can decrypt past TLS traffic without the server key.",
+        "Attackers can recover the server\u2019s private key from the hash.",
+        "Attackers can sign tokens as the server without any guessing."
+      ],
+      "correct": 0,
+      "explanation": "A stored verifier that can be checked offline enables high-speed guessing after compromise."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the core security goal of an OPRF in password protocols like OPAQUE?",
+      "options": [
+        "Let the client learn F_k(password) without revealing the password to the server.",
+        "Let the server learn the password without revealing k to the client.",
+        "Let both parties agree on a public salt with no secrets involved.",
+        "Let the client encrypt the password so the server can decrypt it later."
+      ],
+      "correct": 0,
+      "explanation": "The client gets a deterministic, random-looking output keyed by the server, while the password stays client-side."
+    },
+    {
+      "stage": "post",
+      "question": "In OPAQUE, what does the client derive from the OPRF output to drive the rest of the protocol?",
+      "options": [
+        "A hardened randomized_password used as KDF input for envelope and AKE keys.",
+        "A server-side password hash stored in the credential database.",
+        "A long-term shared session key reused across all logins.",
+        "A public key that anyone can use to authenticate as the client."
+      ],
+      "correct": 0,
+      "explanation": "OPAQUE hardens the OPRF output and uses it as a secret input to derive multiple labeled keys."
+    },
+    {
+      "stage": "post",
+      "question": "What is the envelope\u2019s role in OPAQUE (high level)?",
+      "options": [
+        "Let the client recover its AKE key material only if it knows the correct password-derived secret.",
+        "Let the server store a reusable password verifier that can be replayed to log in.",
+        "Let the server decrypt the client\u2019s password during authentication.",
+        "Let the client skip key exchange and authenticate with a static MAC."
+      ],
+      "correct": 0,
+      "explanation": "The envelope is server-stored data that the client can validate/recover only by recomputing the right keys."
+    },
+    {
+      "stage": "post",
+      "question": "Which input validation is essential when implementing OPAQUE over group-based cryptography?",
+      "options": [
+        "Validate received group elements (range and subgroup membership) before using them.",
+        "Only validate that received elements are odd numbers.",
+        "Skip validation because MACs will catch malformed points anyway.",
+        "Validate only on registration; login can skip checks for speed."
+      ],
+      "correct": 0,
+      "explanation": "Invalid-element attacks often exploit missing subgroup checks or unsafe deserialization."
+    },
+    {
+      "stage": "post",
+      "question": "What is a common real-world attack if a server replies differently for \u201cunknown user\u201d vs \u201cwrong password\u201d in a password protocol?",
+      "options": [
+        "User enumeration (learning which accounts exist).",
+        "Meet-in-the-middle on the hash function.",
+        "Padding oracle on the AEAD ciphertext.",
+        "Key extraction via polynomial-time discrete log."
+      ],
+      "correct": 0,
+      "explanation": "Observable differences in responses or timing can reveal whether an identifier exists."
+    },
+    {
+      "stage": "post",
+      "question": "Why do OPAQUE-style AKEs MAC a transcript/preamble that includes identities and handshake messages?",
+      "options": [
+        "To bind the derived keys to the exact handshake and prevent message splicing/UKS issues.",
+        "To reduce the number of Diffie-Hellman computations required.",
+        "To allow the server to learn the client\u2019s password safely.",
+        "To make the session key independent of all DH outputs."
+      ],
+      "correct": 0,
+      "explanation": "Transcript binding ensures both sides authenticate the same context and messages, not just some DH values."
+    },
+    {
+      "stage": "post",
+      "question": "When is it safe for an application to use OPAQUE\u2019s export_key (or keys derived from it)?",
+      "options": [
+        "Only after the login completes and peer authentication checks pass.",
+        "Immediately after receiving the server\u2019s first message (KE2).",
+        "Any time, because export_key is unrelated to authentication.",
+        "Only during registration; it must not be used during login."
+      ],
+      "correct": 0,
+      "explanation": "Using keys before authentication can create oracle behavior or let attackers misuse unauthenticated key material."
+    }
+  ]
 }

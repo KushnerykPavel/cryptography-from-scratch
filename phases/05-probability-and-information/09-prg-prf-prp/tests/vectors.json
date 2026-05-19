@@ -1,1 +1,24 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal vectors. PRG: SHA-256(seed||counter) blocks. PRF: HMAC-SHA256(key, x). PRP: 4-round balanced Feistel using SHA-256 as round function. All keys/seeds are zero-bytes unless noted.",
+  "vectors": [
+    {"op": "toy_prg", "seed_hex": "00000000000000000000000000000000", "output_bytes": 16, "expected_hex": "9d908ecfb6b256def8b49a7c504e6c88"},
+    {"op": "toy_prg", "seed_hex": "00000000000000000000000000000000", "output_bytes": 32, "expected_hex": "9d908ecfb6b256def8b49a7c504e6c889c4b0e41fe6ce3e01863dd7b61a20aa0"},
+    {"op": "toy_prf", "key_hex": "0000000000000000000000000000000000000000000000000000000000000000", "x_hex": "00000000", "expected_hex": "aa7855e13839dd767cd5da7c1ff5036540c9264b7a803029315e55375287b4af"},
+    {"op": "toy_prf", "key_hex": "0000000000000000000000000000000000000000000000000000000000000000", "x_hex": "01010101", "expected_hex": "4b8965d4cceaa351d882ecdf5fc2b4132b72c7ada8837cad070a6e3c0d7de809"},
+    {"op": "toy_prf", "key_hex": "0000000000000000000000000000000000000000000000000000000000000000", "x_hex": "ffffffff", "expected_hex": "e4ec6ab1a32803e163c454f8677e7129f1a79d82de14db6cd25822004c220c77"},
+    {"op": "toy_prf_n", "key_hex": "0000000000000000000000000000000000000000000000000000000000000000", "x_hex": "00000000", "output_bits": 8,  "expected": 170},
+    {"op": "toy_prf_n", "key_hex": "0000000000000000000000000000000000000000000000000000000000000000", "x_hex": "00000000", "output_bits": 32, "expected": 2860013025},
+    {"op": "toy_prp_encrypt", "key_hex": "0000000000000000000000000000000000000000000000000000000000000000", "pt_hex": "0000000000000000", "expected_hex": "ba1f0b0f97b619ff"},
+    {"op": "toy_prp_encrypt", "key_hex": "0000000000000000000000000000000000000000000000000000000000000000", "pt_hex": "0101010101010101", "expected_hex": "de86c2b5e5f00960"},
+    {"op": "toy_prp_roundtrip", "key_hex": "0000000000000000000000000000000000000000000000000000000000000000", "pt_hex": "0000000000000000", "expected": true},
+    {"op": "toy_prp_roundtrip", "key_hex": "0000000000000000000000000000000000000000000000000000000000000000", "pt_hex": "deadbeefcafebabe", "expected": true},
+    {"op": "ctr_encrypt", "key_hex": "0000000000000000000000000000000000000000000000000000000000000000", "nonce": 0, "pt_hex": "68656c6c6f", "expected_hex": "ed59186ffc"},
+    {"op": "prp_prf_switching", "q": 0,    "block_bits": 128, "expected": 0.0},
+    {"op": "prp_prf_switching", "q": 1,    "block_bits": 128, "expected": 0.0},
+    {"op": "prp_prf_switching", "q": 2,    "block_bits": 128, "expected": 2.938735877055719e-39},
+    {"op": "prp_prf_switching", "q": 1024, "block_bits": 128, "expected": 1.5392393227407362e-33},
+    {"op": "prg_stretch",       "seed_bits": 128, "output_bits": 256, "expected": 128},
+    {"op": "prg_security_bits", "seed_bits": 128, "expected": 128},
+    {"op": "prg_security_bits", "seed_bits": 256, "expected": 256}
+  ]
+}

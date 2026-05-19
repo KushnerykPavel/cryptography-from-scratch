@@ -1,4 +1,100 @@
 {
-  "title": "Asymmetric Lab \u2014 Build a Mini Signing Service",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why can signatures fail to verify if the signer and verifier both \"sign the same JSON object\"?",
+      "options": [
+        "Because a JSON object can be serialized into different byte strings (key order, whitespace, Unicode), and signatures cover bytes.",
+        "Because SHA-256 outputs different digests depending on the CPU architecture (x86 vs ARM).",
+        "Because RSA signatures require the verifier to know the private key to reconstruct the message.",
+        "Because base64url encoding changes the signature bytes before verification."
+      ],
+      "correct": 0,
+      "explanation": "Signatures are computed over exact bytes. If signer and verifier serialize differently, they hash different bytes and verification fails."
+    },
+    {
+      "stage": "pre",
+      "question": "In a signed-request protocol, what is the primary purpose of a nonce?",
+      "options": [
+        "Prevent replay by making each signed request unique (and reject duplicates).",
+        "Make RSA key generation faster by adding extra randomness to primes.",
+        "Hide the public key so attackers cannot identify which key was used.",
+        "Enable the verifier to skip hashing the payload."
+      ],
+      "correct": 0,
+      "explanation": "A nonce is used once. If the verifier remembers seen nonces (per key), it can detect replay of an otherwise valid signature."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson's signature base string include the HTTP method and path?",
+      "options": [
+        "To prevent a valid signature from being replayed on a different endpoint or with different semantics.",
+        "To make SHA-256 collision-resistant even if the payload is empty.",
+        "To shorten the signature so it fits into an HTTP header.",
+        "To allow the verifier to recover the payload without sending it."
+      ],
+      "correct": 0,
+      "explanation": "Binding method/path provides domain separation: a signature for one endpoint should not verify for another."
+    },
+    {
+      "stage": "post",
+      "question": "Why include both a timestamp and a nonce in a signed request?",
+      "options": [
+        "Timestamp enables an expiry window; nonce enables unique-within-window replay rejection.",
+        "Timestamp makes RSA constant-time; nonce makes SHA-256 constant-time.",
+        "Timestamp prevents key compromise; nonce prevents factoring n.",
+        "Timestamp replaces canonicalization; nonce replaces hashing."
+      ],
+      "correct": 0,
+      "explanation": "A skew window alone still allows replays inside the window. A nonce cache closes that gap."
+    },
+    {
+      "stage": "post",
+      "question": "In RSASSA-PKCS1-v1_5 verification, what does the verifier fundamentally check?",
+      "options": [
+        "That the recovered encoded message (EM) equals the expected EMSA-PKCS1-v1_5 encoding of the message hash.",
+        "That the signature integer is prime and smaller than n.",
+        "That the message can be recovered by computing sig^d mod n.",
+        "That the signer included the public key inside the signature."
+      ],
+      "correct": 0,
+      "explanation": "Verification raises sig^e mod n to recover EM, then compares it to the expected encoding of the message hash."
+    },
+    {
+      "stage": "post",
+      "question": "If you sign a JSON payload without canonicalization, which practical problem is most likely?",
+      "options": [
+        "The verifier and signer may hash different bytes for equivalent payloads, causing intermittent verification failures.",
+        "Attackers can factor RSA moduli in polynomial time by reordering JSON keys.",
+        "SHA-256 becomes reversible because JSON is human-readable.",
+        "Nonce reuse becomes safe because the payload is structured."
+      ],
+      "correct": 0,
+      "explanation": "Most real failures are serialization mismatches, not broken math: signatures cover bytes, not abstract objects."
+    },
+    {
+      "stage": "post",
+      "question": "What is the security risk of exposing a signing service that will sign attacker-chosen messages with a powerful key?",
+      "options": [
+        "It can act as a signing oracle, letting attackers obtain valid signatures for messages/protocols you did not intend to authorize.",
+        "It makes base64url decoding ambiguous, so signatures cannot be parsed reliably.",
+        "It forces RSA to use e=3, which makes signatures unverifiable.",
+        "It prevents key rotation because signatures become non-deterministic."
+      ],
+      "correct": 0,
+      "explanation": "A signing API must be narrowly scoped. Otherwise, an attacker can get signatures over arbitrary statements and reuse them elsewhere."
+    },
+    {
+      "stage": "post",
+      "question": "Which verifier-side mechanism in this lesson actually detects replays of an otherwise valid signed request?",
+      "options": [
+        "A cache/set of seen (kid, nonce) pairs that rejects duplicates.",
+        "A larger RSA modulus (e.g., 4096-bit instead of 2048-bit).",
+        "Switching from SHA-256 to SHA-512.",
+        "Sorting JSON keys before signing, but not storing any state."
+      ],
+      "correct": 0,
+      "explanation": "Freshness requires policy and state: remember seen nonces (per key) and reject duplicates."
+    }
+  ]
 }

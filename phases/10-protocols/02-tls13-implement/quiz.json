@@ -1,4 +1,101 @@
 {
   "title": "TLS 1.3 \u2014 Implement the Handshake from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In HKDF (RFC 5869), what is the output of HKDF-Extract(salt, IKM) called and what does it represent?",
+      "options": [
+        "PRK; a pseudorandom key derived via HMAC keyed by the salt",
+        "OKM; the final variable-length output bytes produced by HKDF-Expand",
+        "Transcript hash; the hash of all handshake messages so far",
+        "Traffic key; the AEAD encryption key used to protect records"
+      ],
+      "correct": 0,
+      "explanation": "HKDF-Extract outputs a PRK (pseudorandom key), computed as HMAC(salt, IKM), which is then used by HKDF-Expand."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the transcript hash used for in the TLS 1.3 key schedule?",
+      "options": [
+        "To bind derived secrets to the exact handshake messages exchanged so far",
+        "To compress the TLS record header so records are smaller on the wire",
+        "To replace certificate signatures (Finished makes signatures unnecessary)",
+        "To generate the server's long-term private key deterministically"
+      ],
+      "correct": 0,
+      "explanation": "TLS 1.3 uses Transcript-Hash(messages) as context in Derive-Secret so derived secrets depend on the exact handshake transcript."
+    },
+    {
+      "stage": "post",
+      "question": "TLS 1.3 HKDF-Expand-Label encodes an HkdfLabel as: uint16(L) || uint8(label_len) || label || uint8(context_len) || context. In the RFC 8448 example info bytes for deriving a 16-byte key begin with: 00 10 09 74 6c 73 31 33 20 6b 65 79 00. What does the 0x09 represent?",
+      "options": [
+        "The length of the ASCII string \"tls13 key\" in bytes",
+        "The length of the derived key (16) modulo 256",
+        "The TLS version number encoded as a single byte",
+        "The number of handshake messages hashed so far"
+      ],
+      "correct": 0,
+      "explanation": "00 10 is the output length (16). 09 is the label length in bytes, and the label bytes are the ASCII string \"tls13 key\"."
+    },
+    {
+      "stage": "post",
+      "question": "How is the Finished key computed in TLS 1.3 for a given handshake traffic secret?",
+      "options": [
+        "finished_key = HKDF-Expand-Label(traffic_secret, \"finished\", \"\", HashLen)",
+        "finished_key = HKDF-Extract(traffic_secret, Transcript-Hash(messages))",
+        "finished_key = SHA-256(traffic_secret || Transcript-Hash(messages))",
+        "finished_key = HKDF-Expand-Label(traffic_secret, \"key\", Transcript-Hash(messages), key_length)"
+      ],
+      "correct": 0,
+      "explanation": "The Finished key is derived from the sender's handshake traffic secret using the fixed label \"finished\" and an empty context."
+    },
+    {
+      "stage": "post",
+      "question": "For the client's Finished verify_data, which handshake messages are included in the Transcript-Hash input?",
+      "options": [
+        "All handshake messages up to (but not including) the client's Finished, including the server's Finished",
+        "Only ClientHello and ServerHello (everything else is encrypted, so it can't be hashed)",
+        "Only the messages sent by the client (client-only transcript)",
+        "All handshake messages including the client's Finished (so it authenticates itself)"
+      ],
+      "correct": 0,
+      "explanation": "Finished authenticates the transcript up to that point; the client's Finished includes the server's Finished in the transcript hash, but not itself."
+    },
+    {
+      "stage": "post",
+      "question": "When deriving the handshake traffic key and IV from a traffic secret in TLS 1.3, what context is passed to HKDF-Expand-Label for the labels \"key\" and \"iv\"?",
+      "options": [
+        "An empty byte string (zero-length context)",
+        "The transcript hash up to ServerHello",
+        "The full transcript bytes (concatenated messages)",
+        "The record sequence number encoded as bytes"
+      ],
+      "correct": 0,
+      "explanation": "Traffic key calculation uses HKDF-Expand-Label with labels \"key\" and \"iv\" and a zero-length context; the transcript binding happens at the traffic-secret level."
+    },
+    {
+      "stage": "post",
+      "question": "An active attacker flips one bit in the server's Certificate message in flight. Assuming signatures and hashes are secure, what should happen in TLS 1.3?",
+      "options": [
+        "The client detects the change because Finished verify_data won't verify (transcript hash changes)",
+        "The client decrypts the rest of the handshake but silently ignores the certificate corruption",
+        "The handshake still succeeds because traffic secrets are derived only from DH",
+        "Only application data is affected; the handshake is not authenticated"
+      ],
+      "correct": 0,
+      "explanation": "Finished is a MAC over the transcript hash under a key derived from the handshake traffic secret, so transcript modifications are detected."
+    },
+    {
+      "stage": "post",
+      "question": "In HKDF-Extract, what does \"salt not provided\" mean in RFC 5869 / TLS-style usage?",
+      "options": [
+        "Use HashLen bytes of zeros as the salt",
+        "Use the IKM as the salt and also as the message",
+        "Skip Extract and run Expand directly on the IKM",
+        "Use a random salt generated per call"
+      ],
+      "correct": 0,
+      "explanation": "RFC 5869 defines that if salt is not provided, it is treated as a string of HashLen zeros."
+    }
+  ]
 }

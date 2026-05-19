@@ -1,1 +1,65 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors derived from the lesson implementation (code/main.py) using the fixed DEMO_RSA_PRIVATE_KEY. RSA padding follows RFC 8017 (RSASSA-PKCS1-v1_5 with SHA-256 DigestInfo).",
+  "vectors": [
+    {
+      "op": "canonical_json_utf8",
+      "inputs": {
+        "obj": { "amount": 1250, "to": "acct_123", "memo": "rent May" }
+      },
+      "expected": {
+        "utf8": "{\"amount\":1250,\"memo\":\"rent May\",\"to\":\"acct_123\"}"
+      }
+    },
+    {
+      "op": "sha256_hex_utf8",
+      "inputs": {
+        "utf8": "{\"amount\":1250,\"memo\":\"rent May\",\"to\":\"acct_123\"}"
+      },
+      "expected": {
+        "hex": "5f422a143d77316e8ead8e66d97a37c15697ee3a0482034dcf71e60269d26712"
+      }
+    },
+    {
+      "op": "signature_base_string_utf8",
+      "inputs": {
+        "method": "POST",
+        "path": "/v1/sign",
+        "ts": 1716050000,
+        "nonce": "n-0001",
+        "payload": { "amount": 1250, "to": "acct_123", "memo": "rent May" }
+      },
+      "expected": {
+        "utf8": "POST\n/v1/sign\n1716050000\nn-0001\n5f422a143d77316e8ead8e66d97a37c15697ee3a0482034dcf71e60269d26712"
+      }
+    },
+    {
+      "op": "rsa_sign_b64url",
+      "inputs": {
+        "message_utf8": "POST\n/v1/sign\n1716050000\nn-0001\n5f422a143d77316e8ead8e66d97a37c15697ee3a0482034dcf71e60269d26712"
+      },
+      "expected": {
+        "sig_b64url": "Wpav4xzEPk_JLHZuxD8GImg0-fMrxtoZ2ejyTqyOqLfeDGIg9J_liIIVGpDRgNp2S9xwcNNUgemgBBURXnrSZHM2xXLK1GTeSRkVUGjMmVIWgSuspmpyfHmLF-MZQ9ZFY1QMFUG0KuQ5CsCl7-ZgCfrHh9rM2pHqvstEWaRi9js"
+      }
+    },
+    {
+      "op": "rsa_verify_bool",
+      "inputs": {
+        "message_utf8": "POST\n/v1/sign\n1716050000\nn-0001\n5f422a143d77316e8ead8e66d97a37c15697ee3a0482034dcf71e60269d26712",
+        "sig_b64url": "Wpav4xzEPk_JLHZuxD8GImg0-fMrxtoZ2ejyTqyOqLfeDGIg9J_liIIVGpDRgNp2S9xwcNNUgemgBBURXnrSZHM2xXLK1GTeSRkVUGjMmVIWgSuspmpyfHmLF-MZQ9ZFY1QMFUG0KuQ5CsCl7-ZgCfrHh9rM2pHqvstEWaRi9js"
+      },
+      "expected": {
+        "ok": true
+      }
+    },
+    {
+      "op": "rsa_verify_bool",
+      "inputs": {
+        "message_utf8": "POST\n/v1/sign\n1716050000\nn-0001\n5f422a143d77316e8ead8e66d97a37c15697ee3a0482034dcf71e60269d26712 ",
+        "sig_b64url": "Wpav4xzEPk_JLHZuxD8GImg0-fMrxtoZ2ejyTqyOqLfeDGIg9J_liIIVGpDRgNp2S9xwcNNUgemgBBURXnrSZHM2xXLK1GTeSRkVUGjMmVIWgSuspmpyfHmLF-MZQ9ZFY1QMFUG0KuQ5CsCl7-ZgCfrHh9rM2pHqvstEWaRi9js"
+      },
+      "expected": {
+        "ok": false
+      }
+    }
+  ]
+}

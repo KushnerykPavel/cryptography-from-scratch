@@ -1,4 +1,101 @@
 {
-  "title": "Signal Protocol \u2014 X3DH & Double Ratchet",
-  "questions": []
+  "title": "Signal Protocol — X3DH & Double Ratchet (Educational)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main purpose of HKDF-Extract (vs HKDF-Expand)?",
+      "options": [
+        "Turn a potentially non-uniform secret into a pseudorandom key (PRK)",
+        "Encrypt a message with associated data (AEAD)",
+        "Generate an elliptic curve public key from a private scalar",
+        "Provide forward secrecy by deleting old chain keys"
+      ],
+      "correct": 0,
+      "explanation": "HKDF-Extract uses HMAC with a salt to produce a pseudorandom key (PRK) even if the input secret isn't perfectly uniform."
+    },
+    {
+      "stage": "pre",
+      "question": "In an asynchronous messaging setting, what problem do “prekeys” primarily solve?",
+      "options": [
+        "Let Alice establish a shared key with Bob while Bob is offline",
+        "Let Bob decrypt messages without any private keys stored",
+        "Hide message sizes from the network",
+        "Prevent spam by rate-limiting the server"
+      ],
+      "correct": 0,
+      "explanation": "Prekeys are published ahead of time so an initiator can run a key agreement and send an initial encrypted message even if the recipient is offline."
+    },
+    {
+      "stage": "post",
+      "question": "In X3DH without a one-time prekey, which DH values are KDFed to produce SK?",
+      "options": [
+        "DH(IK_A, SPK_B) || DH(EK_A, IK_B) || DH(EK_A, SPK_B)",
+        "DH(IK_A, IK_B) || DH(SPK_A, SPK_B) || DH(EK_A, EK_B)",
+        "DH(IK_A, OPK_B) || DH(EK_A, OPK_B) || DH(EK_A, IK_B)",
+        "DH(SPK_A, IK_B) || DH(IK_A, IK_B) || DH(EK_A, IK_B)"
+      ],
+      "correct": 0,
+      "explanation": "The basic X3DH run uses three DH computations (DH1..DH3) and optionally adds DH4 if an OPK is present."
+    },
+    {
+      "stage": "post",
+      "question": "What is the role of AD (associated data) in the X3DH + Double Ratchet flow?",
+      "options": [
+        "Bind identity information to AEAD so it is authenticated even if not encrypted",
+        "Provide randomness so X25519 outputs are never all-zero",
+        "Replace the need for a root key RK in the ratchet",
+        "Derive message keys MK directly without chain keys"
+      ],
+      "correct": 0,
+      "explanation": "AD is authenticated by the AEAD (often concatenated with the header), helping bind the session to the intended identities."
+    },
+    {
+      "stage": "post",
+      "question": "In the Double Ratchet, which action triggers a DH ratchet step?",
+      "options": [
+        "Receiving a message whose header contains a new DH ratchet public key",
+        "Sending a message number N that is larger than 255",
+        "Any time HKDF-Expand is called with a different info string",
+        "Failing to decrypt a ciphertext due to a bad MAC"
+      ],
+      "correct": 0,
+      "explanation": "A DH ratchet step occurs when a party receives a previously unseen DH ratchet public key from the other side."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the Double Ratchet derive a new message key for every message (via KDF_CK)?",
+      "options": [
+        "So old message keys can be deleted to provide forward secrecy for past messages",
+        "So ciphertexts are shorter on the wire",
+        "So the server can verify integrity without client secrets",
+        "So the same message can be decrypted by multiple unrelated sessions"
+      ],
+      "correct": 0,
+      "explanation": "A one-way chain creates single-use message keys; deleting old keys prevents recovering past keys after a compromise."
+    },
+    {
+      "stage": "post",
+      "question": "How do skipped message keys (MKSKIPPED) help with out-of-order delivery?",
+      "options": [
+        "The receiver can advance the receiving chain to N and cache keys for missing messages",
+        "The sender can reuse a message key until the receiver acknowledges it",
+        "The receiver can decrypt without tracking message numbers",
+        "The protocol becomes secure even without AEAD authentication"
+      ],
+      "correct": 0,
+      "explanation": "If messages arrive out of order, the receiver derives and stores the intervening message keys so late messages can still be decrypted."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what can go wrong if Alice does not verify the signature on Bob’s signed prekey (SPK_B)?",
+      "options": [
+        "A malicious server can substitute SPK_B and perform a man-in-the-middle on the initial session",
+        "Bob can never rotate prekeys without losing all messages",
+        "X25519 stops working and always outputs an all-zero shared secret",
+        "The Double Ratchet cannot handle out-of-order messages anymore"
+      ],
+      "correct": 0,
+      "explanation": "If SPK_B isn't authenticated (signed by IK_B), the server can replace it and trick Alice into establishing a session with the attacker."
+    }
+  ]
 }

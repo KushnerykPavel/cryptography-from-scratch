@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Implement the four field operations (add, subtract, multiply, divide) in `GF(p)` with a prime-modulus guard on every function
+- Explain why a composite modulus produces zero divisors that make division undefined for certain nonzero elements
+- Compute the multiplicative order of an element and identify which elements are generators of `F_p*`
+- Apply Lagrange interpolation over `GF(p)` to reconstruct a polynomial from field-valued points, connecting to Shamir secret sharing
+- Distinguish the `Fp` value type from a raw integer and explain how carrying the field with the value prevents cross-field arithmetic bugs
+
 ## The Problem
 
 Elliptic curves, Schnorr signatures, Reed-Solomon codes, Shamir secret sharing, and ZK circuits all do arithmetic in finite fields. The most common base case is `GF(p)`, also written `F_p`: integers modulo a prime.
@@ -294,6 +302,12 @@ This is the core arithmetic in Shamir secret sharing:
 secret = f(0)
 shares = (x_i, f(x_i))
 recover secret by interpolating at x = 0
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

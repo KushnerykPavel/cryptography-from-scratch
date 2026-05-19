@@ -1,4 +1,101 @@
 {
-  "title": "Sparse Merkle Trees & Verkle Trees",
-  "questions": []
+  "title": "Sparse Merkle Trees & Verkle Trees (Toy)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a Sparse Merkle Tree used as a key→value map, what determines a key’s leaf position?",
+      "options": [
+        "The insertion order of keys into the tree",
+        "A deterministic function of the key (typically a hash) and the fixed tree depth",
+        "The hash of the value stored at that key",
+        "The current root hash of the tree"
+      ],
+      "correct": 1,
+      "explanation": "SMTs map each key to a fixed leaf index derived from the key (often via hashing), independent of insertion order."
+    },
+    {
+      "stage": "pre",
+      "question": "For a binary Merkle proof of one leaf, what information is typically needed to recompute the root?",
+      "options": [
+        "Only the root hash and the leaf value",
+        "All other leaves in the dataset",
+        "A list of sibling hashes along the path from the leaf to the root",
+        "A digital signature over the leaf value"
+      ],
+      "correct": 2,
+      "explanation": "A Merkle proof supplies the sibling hashes needed to hash upward and reconstruct the committed root."
+    },
+    {
+      "stage": "post",
+      "question": "Why do we domain-separate leaf hashing from internal-node hashing in Merkle-style trees?",
+      "options": [
+        "To make SHA-256 run faster on short inputs",
+        "To prevent treating an internal node hash as a valid leaf encoding (a second-preimage style confusion)",
+        "To ensure the tree can only store UTF-8 values",
+        "To reduce the number of hashes needed in a proof"
+      ],
+      "correct": 1,
+      "explanation": "Without domain separation, an attacker may be able to present an internal-node hash as if it were a leaf, confusing verification."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s SMT, how is the empty tree root computed for depth d?",
+      "options": [
+        "It is always 32 bytes of zeros, regardless of hashing rules",
+        "It is the hash of the string \"empty\"",
+        "It is computed by repeatedly hashing the default leaf hash with itself up to level d",
+        "It is undefined until at least one key is inserted"
+      ],
+      "correct": 2,
+      "explanation": "We precompute default/empty hashes bottom-up: default[0]=empty leaf, default[i+1]=H(default[i],default[i])."
+    },
+    {
+      "stage": "post",
+      "question": "How does an SMT non-inclusion proof work in this lesson’s model?",
+      "options": [
+        "The prover signs a statement that the key is missing",
+        "The prover shows a Merkle path where the leaf value is the default empty value",
+        "The prover reveals all keys currently present in the tree",
+        "Non-inclusion proofs are impossible with Merkle trees"
+      ],
+      "correct": 1,
+      "explanation": "Non-inclusion is proven by showing the leaf at the key’s deterministic index is the canonical empty value, with a normal proof path."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy RSA-accumulator-style vector commitment, which check verifies an opening at index i?",
+      "options": [
+        "H(value) == commitment",
+        "witness^p_i mod n == commitment, where p_i is the prime derived from (i,value)",
+        "witness + p_i == commitment",
+        "commitment^p_i mod n == witness"
+      ],
+      "correct": 1,
+      "explanation": "The witness is g^(product of all primes except p_i); raising it to p_i reconstructs the full commitment."
+    },
+    {
+      "stage": "post",
+      "question": "What replaces the 'sibling hash list' in a Verkle-style proof path?",
+      "options": [
+        "A signature from a trusted third party for each level",
+        "A short opening (witness) that the chosen child value is at the correct index in the parent’s committed vector",
+        "A full copy of the parent node’s entire child vector",
+        "A random nonce that the verifier later reveals"
+      ],
+      "correct": 1,
+      "explanation": "Verkle-style trees use vector commitments so the prover can open one child position without sending all siblings."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main depth/width tradeoff behind using a high branching factor (e.g., 256) in Verkle-style designs?",
+      "options": [
+        "Higher width increases depth but makes hashing faster",
+        "Higher width reduces depth, so fewer levels must be proven, at the cost of more expensive per-node commitments/openings",
+        "Width does not affect proof size or computation",
+        "Higher width eliminates the need for hashing entirely"
+      ],
+      "correct": 1,
+      "explanation": "A wider tree has fewer levels for the same key space, but each node handles a larger vector commitment and related operations."
+    }
+  ]
 }

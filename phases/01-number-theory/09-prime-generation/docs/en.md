@@ -238,6 +238,12 @@ def generate_prime_by_trial(bits: int, randbits=secrets.randbits) -> tuple[int, 
 
 This is educational, not practical for large cryptographic bit lengths. But it captures the control flow that real key generation uses.
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 For prime enumeration in Python, `sympy.primerange(a, b)` and `sympy.randprime(a, b)` expose the same high-level tasks you just built: list primes in a range and pick a random prime from an interval. For actual key generation, libraries such as PyCryptodome do not rely on pure trial division for full-size candidates. They combine quick sieving with stronger primality tests and carefully designed randomness.

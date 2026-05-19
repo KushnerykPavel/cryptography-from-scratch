@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how the NTRU relation f·h ≡ g (mod q) translates polynomial multiplication into a short-vector problem in a 2n-dimensional lattice
+- Compute the circulant matrix Rot(h) that encodes "multiplication by h" as a linear map on coefficient vectors
+- Implement cyclic convolution mod q, toy NTRU key generation (h ≡ g·f⁻¹ mod q), and the explicit NTRU lattice basis B = [I | Rot(h); 0 | qI]
+- Verify that the secret key pair (f, g) is a short vector inside the public NTRU lattice
+- Apply LLL to the public lattice basis and recover a short vector satisfying the NTRU relation for toy parameters
+
 ## The Problem
 
 NTRU is often described as “polynomials modulo `x^n - 1`”, which can feel far away from the lattice algorithms you actually use in attacks and tooling (LLL/BKZ, shortest vectors, nearest plane).
@@ -143,6 +151,12 @@ from main import recover_ntru_secret_via_lll
 
 rec = recover_ntru_secret_via_lll(pk=pk, q=params.q)
 assert ntru_secret_is_in_lattice(rec, pk, params.q)
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

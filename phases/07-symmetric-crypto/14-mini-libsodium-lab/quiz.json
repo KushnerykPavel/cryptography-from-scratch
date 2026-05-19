@@ -1,4 +1,101 @@
 {
-  "title": "Symmetric Lab \u2014 Build a Mini libsodium",
-  "questions": []
+  "title": "Symmetric Lab — Build a Mini libsodium",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does libsodium's `crypto_secretbox_easy` return?",
+      "options": [
+        "Only the ciphertext — the caller stores the nonce separately",
+        "The MAC tag alone — encryption is done by a separate call",
+        "A combined blob containing nonce, authentication tag, and ciphertext",
+        "Only the nonce — the caller must XOR it with the plaintext"
+      ],
+      "correct": 2,
+      "explanation": "secretbox_easy returns a self-contained blob: nonce (or MAC) prepended to ciphertext, so the receiver needs only this one value to decrypt and verify."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is HKDF not a suitable replacement for PBKDF2 when hashing passwords?",
+      "options": [
+        "HKDF uses SHA-256 which is too weak for passwords",
+        "HKDF is designed to be fast; password KDFs must be slow to deter guessing",
+        "HKDF does not accept a salt parameter",
+        "HKDF output length is fixed at 32 bytes"
+      ],
+      "correct": 1,
+      "explanation": "HKDF is designed for speed — it expands high-entropy keys quickly. Password KDFs (PBKDF2, scrypt, Argon2) are deliberately slow so that offline guessing attacks are expensive. Using HKDF on a password gives attackers a fast offline oracle."
+    },
+    {
+      "stage": "post",
+      "question": "In the mini-libsodium secretbox, what is the format of the returned `box` blob?",
+      "options": [
+        "ciphertext || tag (nonce stored separately)",
+        "tag || ciphertext (nonce stored separately)",
+        "nonce || tag || ciphertext (self-contained)",
+        "nonce || ciphertext (tag implicit)"
+      ],
+      "correct": 2,
+      "explanation": "The box is nonce (12 bytes) || tag (16 bytes) || ciphertext. Prepending the nonce makes the blob self-contained — the receiver extracts all three fields without needing a separate channel for the nonce."
+    },
+    {
+      "stage": "post",
+      "question": "In `kdf_derive_from_key(subkey_len, subkey_id, ctx, key)`, what is the role of `ctx`?",
+      "options": [
+        "It is the salt fed into HKDF Extract, randomizing the PRK",
+        "It labels the domain so different application modules derive independent subkeys even with the same master key and subkey_id",
+        "It sets the output length of the derived subkey",
+        "It is the counter that ensures each call produces a different key"
+      ],
+      "correct": 1,
+      "explanation": "The `ctx` (context) is a domain-separation label. Two modules using different `ctx` values with the same master key and subkey_id will derive completely unrelated subkeys. It is encoded into HKDF's `info` field alongside the subkey_id."
+    },
+    {
+      "stage": "post",
+      "question": "In `secretstream`, how does the receiver detect a replayed chunk?",
+      "options": [
+        "It checks a sequence number field embedded in each chunk",
+        "The nonce is nonce_base || counter; a replayed chunk has the wrong counter and fails Poly1305 authentication",
+        "Each chunk includes a timestamp that the receiver validates",
+        "The receiver maintains a list of all chunk hashes and rejects duplicates"
+      ],
+      "correct": 1,
+      "explanation": "Each chunk's 12-byte nonce is nonce_base (8 B) || counter (4 B). A replayed chunk encrypted at counter i will be decrypted with counter j ≠ i, producing the wrong one-time Poly1305 key and a tag verification failure."
+    },
+    {
+      "stage": "post",
+      "question": "Why does `auth_verify` use `hmac.compare_digest` instead of `==`?",
+      "options": [
+        "Because `==` raises TypeError on bytes",
+        "To prevent short-circuit evaluation from leaking how many bytes match, which attackers can use to forge tags",
+        "Because `hmac.compare_digest` is faster for 32-byte values",
+        "To support comparing tags of different lengths without padding"
+      ],
+      "correct": 1,
+      "explanation": "`==` on bytes exits early as soon as a byte differs, leaking timing information about how many bytes matched. An attacker can exploit this to forge a valid tag one byte at a time. `hmac.compare_digest` always compares all bytes in constant time."
+    },
+    {
+      "stage": "post",
+      "question": "What happens if you call `secretstream_push` and `secretstream_pull` with the same key and header but then replay chunk 0 as chunk 2 on the pull side?",
+      "options": [
+        "Pull silently decrypts it because the key is the same",
+        "Pull raises ValueError because chunk 0's tag was computed with counter=0, not counter=2",
+        "Pull succeeds but returns corrupted plaintext",
+        "Pull skips the chunk and continues to chunk 3"
+      ],
+      "correct": 1,
+      "explanation": "The pull counter is at 2, so it computes a nonce using counter=2. Chunk 0 was encrypted with counter=0, so the Poly1305 one-time key differs, the tag check fails, and ValueError is raised."
+    },
+    {
+      "stage": "post",
+      "question": "Which of the following is NOT a design goal of the mini-libsodium API?",
+      "options": [
+        "Nonce generation is automatic so callers cannot accidentally reuse a nonce",
+        "Key separation is enforced by requiring a distinct `ctx` and `subkey_id` per use",
+        "The caller chooses the encryption algorithm (AES-GCM or ChaCha20) at runtime",
+        "Authentication failures raise an exception rather than returning a sentinel value"
+      ],
+      "correct": 2,
+      "explanation": "libsodium deliberately hides algorithm choice. The goal is an opinionated API where the algorithm is pre-selected (ChaCha20-Poly1305) and callers cannot accidentally choose a weaker option. Flexibility in algorithm choice is a footgun, not a feature."
+    }
+  ]
 }

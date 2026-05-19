@@ -1,4 +1,100 @@
 {
-  "title": "Mix Networks",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What privacy problem are mix networks primarily designed to mitigate?",
+      "options": [
+        "Metadata correlation (linking senders to recipients via timing/volume/size)",
+        "Recovering plaintext from ciphertext without the key",
+        "Detecting message tampering on an authenticated channel",
+        "Reducing network latency by choosing the shortest path"
+      ],
+      "correct": 0,
+      "explanation": "Mixnets target traffic analysis: even with strong encryption, an observer can often link who talks to whom using metadata. Mixnets try to break those links with batching, shuffling, and delay."
+    },
+    {
+      "stage": "pre",
+      "question": "If a mix takes a batch of size B and outputs a uniformly random permutation, how many input↔output matchings are possible (ignoring side channels)?",
+      "options": [
+        "B",
+        "B^2",
+        "B!",
+        "2^B"
+      ],
+      "correct": 2,
+      "explanation": "A shuffle chooses one of B! permutations. Real systems still leak via timing and size, but B! captures the combinatorics of the mapping alone."
+    },
+    {
+      "stage": "post",
+      "question": "Why do mixnets push hard for fixed-size packets (cells)?",
+      "options": [
+        "To make encryption faster by using shorter keys",
+        "To prevent trivial linking by message length/shape",
+        "To guarantee HMAC verification succeeds",
+        "To ensure packets always take the same route"
+      ],
+      "correct": 1,
+      "explanation": "If packet sizes differ, an observer can often match inputs and outputs by length even after shuffling. Fixed-size cells remove an easy side-channel."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s toy onion packet, why does each layer include an HMAC over (nonce || ciphertext)?",
+      "options": [
+        "To compress ciphertext so batches are smaller",
+        "To detect tampering and reject modified packets",
+        "To allow the receiver to recover the nonce from ciphertext",
+        "To make decryption constant-time automatically"
+      ],
+      "correct": 1,
+      "explanation": "Without an integrity check, an attacker can flip bits or inject crafted packets that may leak information or break processing. HMAC lets the hop reject invalid packets early."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best distinguishes onion routing (Tor-like) from mixnets?",
+      "options": [
+        "Onion routing encrypts content; mixnets do not encrypt content",
+        "Onion routing aims for low latency; mixnets trade latency for stronger metadata mixing",
+        "Onion routing uses public keys; mixnets use only symmetric keys",
+        "Onion routing prevents global observers; mixnets only work against local observers"
+      ],
+      "correct": 1,
+      "explanation": "Both can use layered encryption, but onion routing is typically low-latency and forwards immediately. Mixnets batch and often delay to disrupt timing correlation."
+    },
+    {
+      "stage": "post",
+      "question": "What is the most direct consequence of using very small or irregular batches in a mix network?",
+      "options": [
+        "The anonymity set shrinks, making correlation attacks easier",
+        "Ciphertexts stop decrypting because the HMAC key changes",
+        "Packets become larger because padding becomes impossible",
+        "Key derivation stops working because SHA-256 requires batches"
+      ],
+      "correct": 0,
+      "explanation": "Shuffling only helps when multiple plausible mappings exist. Small batches give attackers far fewer possibilities and make timing analysis much more effective."
+    },
+    {
+      "stage": "post",
+      "question": "A classic active attack on naive mix systems is to replay or duplicate messages and watch which outputs repeat. What missing defense does this exploit?",
+      "options": [
+        "Lack of replay/duplicate detection at mixes",
+        "Use of fixed-size cells instead of variable-size packets",
+        "Use of batching instead of single-message forwarding",
+        "Use of multiple hops instead of a single hop"
+      ],
+      "correct": 0,
+      "explanation": "If mixes accept duplicates, an attacker can tag traffic by repetition and shrink the anonymity set. Production mixnets include replay protection and other tagging defenses."
+    },
+    {
+      "stage": "post",
+      "question": "Why do multiple mix hops (multiple independent shuffles) generally increase unlinkability compared to a single hop?",
+      "options": [
+        "Because the attacker must account for a composition of unknown permutations (and often delays), not just one",
+        "Because HMAC becomes stronger when applied three times",
+        "Because SHA-256 outputs become uniformly random only after three rounds",
+        "Because packet padding is unnecessary when you have multiple hops"
+      ],
+      "correct": 0,
+      "explanation": "With multiple hops, the observed mapping is the composition of several hidden shuffles (and any timing noise). This makes correlation harder unless the attacker can observe and model everything perfectly."
+    }
+  ]
 }

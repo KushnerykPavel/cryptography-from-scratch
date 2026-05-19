@@ -1,1 +1,82 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors generated from this lesson's reference implementation (toy stream cipher = SHA-256(key||nonce||counter), authentication = HMAC-SHA256(key, nonce||ciphertext)). Keys/nonces are fixed byte patterns.",
+  "vectors": [
+    {
+      "op": "encrypt_then_mac",
+      "inputs": {
+        "key_hex": "4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b",
+        "nonce_hex": "4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e",
+        "plaintext_hex": "68656c6c6f"
+      },
+      "expected": {
+        "packet_hex": "4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e84da4ea1025abea3efc7c0d49dbd69cf3d0423da2819086c64390534f4708b925a85a6f1cb"
+      }
+    },
+    {
+      "op": "decrypt_then_verify",
+      "inputs": {
+        "key_hex": "4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b",
+        "packet_hex": "4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e84da4ea1025abea3efc7c0d49dbd69cf3d0423da2819086c64390534f4708b925a85a6f1cb"
+      },
+      "expected": {
+        "plaintext_hex": "68656c6c6f"
+      }
+    },
+    {
+      "op": "onion_encrypt",
+      "inputs": {
+        "plaintext_hex": "68656c6c6f206d69786e6574",
+        "keys_hex": [
+          "0101010101010101010101010101010101010101010101010101010101010101",
+          "0202020202020202020202020202020202020202020202020202020202020202",
+          "0303030303030303030303030303030303030303030303030303030303030303"
+        ],
+        "nonces_hex": [
+          "09090909090909090909090909090909",
+          "08080808080808080808080808080808",
+          "07070707070707070707070707070707"
+        ]
+      },
+      "expected": {
+        "packet_hex": "09090909090909090909090909090909f4af372c103b297c5f5992d7d2209ce30a5c0e719b084ba79183f0094449f242515f15005d112d72c39c2e92a2de89b764e8d6d574f999272eca4182658053fe9e67c9efd53c171002df775d233948033a113a20079da7f31e7650453b583d19f9d6144b2d6274b678b8d6cf40fa40b2bda68752d3ca055ff9da48e42b34e10d25b36d29434aaeb90b2d6dba"
+      }
+    },
+    {
+      "op": "peel_all",
+      "inputs": {
+        "packet_hex": "09090909090909090909090909090909f4af372c103b297c5f5992d7d2209ce30a5c0e719b084ba79183f0094449f242515f15005d112d72c39c2e92a2de89b764e8d6d574f999272eca4182658053fe9e67c9efd53c171002df775d233948033a113a20079da7f31e7650453b583d19f9d6144b2d6274b678b8d6cf40fa40b2bda68752d3ca055ff9da48e42b34e10d25b36d29434aaeb90b2d6dba",
+        "keys_hex": [
+          "0101010101010101010101010101010101010101010101010101010101010101",
+          "0202020202020202020202020202020202020202020202020202020202020202",
+          "0303030303030303030303030303030303030303030303030303030303030303"
+        ]
+      },
+      "expected": {
+        "plaintext_hex": "68656c6c6f206d69786e6574"
+      }
+    },
+    {
+      "op": "mix_round",
+      "inputs": {
+        "packets_hex": [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa521d14ea7b0e0fb7ffe75635f646f309d54b391880a67a21949704f821b97c2ba5e8a43dfd45763be9e6de17dea06ab551997c66",
+          "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb27dbedf213ab1729b1724aac84195952cf889a5bf6adf78012e42277f085109cc8f252cd6643f2e876f7ba4f7eac383fd7380aa4",
+          "ccccccccccccccccccccccccccccccccceeb8f358188a3f3aafa8fa53617fd07405cd81e094328f33ecce3477801efefbb9e718e57d4c853868b4745033cc925a67cb1ff"
+        ],
+        "hop_key_hex": "0404040404040404040404040404040404040404040404040404040404040404",
+        "permutation": [
+          2,
+          0,
+          1
+        ]
+      },
+      "expected": {
+        "out_packets_hex": [
+          "6363636363636363636363636363636363636363",
+          "6161616161616161616161616161616161616161",
+          "6262626262626262626262626262626262626262"
+        ]
+      }
+    }
+  ]
+}

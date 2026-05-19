@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why the lattice determinant is a volume invariant that stays constant under unimodular basis changes
+- Compute the determinant of an integer basis matrix using exact Bareiss fraction-free elimination
+- Distinguish between the determinant (covolume) and the successive minima as separate geometric properties of a lattice
+- Identify cases where two lattices share the same determinant but have wildly different first successive minima
+- Verify that brute-force enumeration of λ1 and λ2 in small dimensions is basis-independent
+
 ## The Problem
 
 Lattice cryptography is full of “geometry words”: *volume*, *short vectors*, *density*, *reduction*. If you don’t know which quantities are actually lattice invariants, it’s easy to reason from the wrong thing.
@@ -110,6 +118,12 @@ For `n=2` (and tiny coefficient windows), we can brute-force vectors `v = Bz` fo
 - `λ2` as the smallest radius that contains two independent vectors
 
 This is *not* an SVP solver. It’s a way to see that changing the basis changes which short vectors are “visible” in a small coefficient window, even though the lattice itself is the same.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

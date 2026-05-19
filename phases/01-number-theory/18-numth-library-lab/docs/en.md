@@ -271,6 +271,12 @@ all_mod_sqrt(9, 43) = (3, 40)
 
 Returning the canonical smaller root keeps tests deterministic. `all_mod_sqrt` exposes both roots when the caller needs them.
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 For real work, use a maintained math or cryptography library:

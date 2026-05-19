@@ -1,1 +1,21 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal vectors derived from definitions: hybrid_advantage_bound = sum of per-hop advantages, negligible_sum = n_hops * epsilon, reduction_advantage = total_adv / n_hops, is_poly_sum_negligible = n*eps < 1/n^d.",
+  "vectors": [
+    {"op": "hybrid_advantage_bound", "per_hop": [0.1, 0.2, 0.1], "expected": 0.4},
+    {"op": "hybrid_advantage_bound", "per_hop": [], "expected": 0.0},
+    {"op": "hybrid_advantage_bound", "per_hop": [0.5], "expected": 0.5},
+    {"op": "hybrid_advantage_bound", "per_hop": [0.0, 0.0, 0.0], "expected": 0.0},
+    {"op": "hybrid_advantage_bound", "per_hop": [0.01, 0.01, 0.01, 0.01], "expected": 0.04},
+    {"op": "negligible_sum", "epsilon": 0.001, "k": 100, "expected": 0.1},
+    {"op": "negligible_sum", "epsilon": 0.0,   "k": 50,  "expected": 0.0},
+    {"op": "negligible_sum", "epsilon": 0.5,   "k": 2,   "expected": 1.0},
+    {"op": "negligible_sum", "epsilon": 1e-10, "k": 1000,"expected": 1e-07},
+    {"op": "reduction_advantage", "total_adv": 0.09, "k": 3,  "expected": 0.03},
+    {"op": "reduction_advantage", "total_adv": 0.5,  "k": 10, "expected": 0.05},
+    {"op": "reduction_advantage", "total_adv": 0.0,  "k": 5,  "expected": 0.0},
+    {"op": "is_poly_sum_negligible", "epsilon": 1e-6, "k": 100, "n": 100, "d": 1, "expected": true},
+    {"op": "is_poly_sum_negligible", "epsilon": 0.1,  "k": 10,  "n": 100, "d": 1, "expected": false},
+    {"op": "is_poly_sum_negligible", "epsilon": 1e-8, "k": 100, "n": 100, "d": 2, "expected": true},
+    {"op": "is_poly_sum_negligible", "epsilon": 1e-3, "k": 200, "n": 100, "d": 2, "expected": false}
+  ]
+}

@@ -1,4 +1,100 @@
 {
-  "title": "Schnorr Signatures",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In Schnorr-like signature schemes, what is the most dangerous mistake involving the per-signature nonce k?",
+      "options": [
+        "Reusing the same k for two different signatures under the same key",
+        "Using a hash function with a 256-bit output",
+        "Encoding the signature as two integers instead of one",
+        "Verifying signatures with the public key rather than the private key"
+      ],
+      "correct": 0,
+      "explanation": "If k is reused, the signature equations often become solvable for the private key with basic modular algebra."
+    },
+    {
+      "stage": "pre",
+      "question": "In a finite-field Schnorr construction, what is the public key corresponding to a private key x and generator g?",
+      "options": [
+        "y = g^x mod p",
+        "y = x^g mod p",
+        "y = g·x mod p",
+        "y = x mod q"
+      ],
+      "correct": 0,
+      "explanation": "The public key is the group element you get by exponentiating the generator by the secret scalar."
+    },
+    {
+      "stage": "post",
+      "question": "In the Schnorr variant used in this lesson, which equation defines the response s?",
+      "options": [
+        "s = k + e·x (mod q)",
+        "s = k^{-1} (e + x) (mod q)",
+        "s = k - e·x (mod p)",
+        "s = e + x (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "The response is linear in both the nonce and the secret key: s = k + e·x modulo the group order q."
+    },
+    {
+      "stage": "post",
+      "question": "What does the verifier compute to reconstruct the commitment r' from (e, s) and the public key y?",
+      "options": [
+        "r' = g^s · y^{-e} (mod p)",
+        "r' = g^e · y^{-s} (mod p)",
+        "r' = g^{s·e} · y (mod p)",
+        "r' = (g^s + y^e) (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "Rearranging s = k + e·x shows g^s = g^k · (g^x)^e, so multiplying by y^{-e} recovers g^k."
+    },
+    {
+      "stage": "post",
+      "question": "If two signatures (e1, s1) and (e2, s2) under the same key reuse the same nonce k, how can x be recovered (mod q)?",
+      "options": [
+        "x = (s1 - s2) · (e1 - e2)^{-1} (mod q)",
+        "x = (e1 - e2) · (s1 - s2)^{-1} (mod q)",
+        "x = (s1 + s2) · (e1 + e2)^{-1} (mod q)",
+        "x = (e1 + e2) · (s1 + s2)^{-1} (mod q)"
+      ],
+      "correct": 0,
+      "explanation": "Subtracting the two s equations cancels k, leaving (s1 - s2) = (e1 - e2)·x, which can be solved with one modular inverse."
+    },
+    {
+      "stage": "post",
+      "question": "Why do modern signature implementations often use deterministic nonce generation?",
+      "options": [
+        "To avoid relying on external RNG quality for nonce safety",
+        "To make signatures shorter on the wire",
+        "To make verification faster than signing",
+        "To allow the verifier to recompute the private key"
+      ],
+      "correct": 0,
+      "explanation": "Deterministic nonces prevent catastrophic failures caused by broken randomness while keeping k unpredictable to attackers."
+    },
+    {
+      "stage": "post",
+      "question": "What is domain separation in the context of hashing inside signature schemes?",
+      "options": [
+        "Adding an explicit context string so different hash uses cannot collide",
+        "Using a longer hash output to reduce collision probability",
+        "Encoding integers in little-endian instead of big-endian",
+        "Replacing hashes with modular exponentiation"
+      ],
+      "correct": 0,
+      "explanation": "A context tag (like a prefix) ensures the same bytes are not interpreted as the same hash input across different protocol purposes."
+    },
+    {
+      "stage": "post",
+      "question": "Which validation is essential before attempting Schnorr verification?",
+      "options": [
+        "Reject signatures where e or s are outside the expected scalar range",
+        "Reject messages longer than the hash output size",
+        "Reject signatures where e equals the message hash directly",
+        "Reject public keys unless they are equal to the generator g"
+      ],
+      "correct": 0,
+      "explanation": "Range checks prevent edge cases and invalid inputs from reaching modular inversions or group operations."
+    }
+  ]
 }

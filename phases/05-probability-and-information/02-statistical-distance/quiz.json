@@ -1,4 +1,101 @@
 {
   "title": "Statistical Distance & Total Variation",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which formula defines the statistical distance (total variation) between PMFs P and Q?",
+      "options": [
+        "`SD(P,Q) = (1/2) · Σ_x |P(x) - Q(x)|`",
+        "`SD(P,Q) = Σ_x P(x) · Q(x)`",
+        "`SD(P,Q) = max_x |P(x) - Q(x)|`",
+        "`SD(P,Q) = Σ_x (P(x) - Q(x))^2`"
+      ],
+      "correct": 0,
+      "explanation": "Statistical distance is one-half the L1 distance between the PMFs. The 1/2 aligns it with max_E |P(E) - Q(E)|."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the range of `SD(P, Q)`?",
+      "options": [
+        "[0, 1]",
+        "[0, 2]",
+        "[-1, 1]",
+        "[0, ∞)"
+      ],
+      "correct": 0,
+      "explanation": "SD ∈ [0, 1]. It is 0 iff P = Q and 1 iff their supports are disjoint."
+    },
+    {
+      "stage": "post",
+      "question": "Which equivalent characterization of SD makes its operational meaning explicit?",
+      "options": [
+        "`SD(P,Q) = max_{E} |P(E) - Q(E)|`",
+        "`SD(P,Q) = E[P(X) - Q(X)]`",
+        "`SD(P,Q) = Var(P) + Var(Q)`",
+        "`SD(P,Q) = Σ_x P(x) log(P(x)/Q(x))`"
+      ],
+      "correct": 0,
+      "explanation": "SD equals the maximum, over all events E, of |P(E) - Q(E)|. This is exactly the best distinguishing advantage of an unbounded adversary."
+    },
+    {
+      "stage": "post",
+      "question": "If `SD(P, Q) ≤ ε`, what does this say about any distinguisher D?",
+      "options": [
+        "Its advantage |Pr[D=1|P] - Pr[D=1|Q]| is at most ε",
+        "Its runtime is at most ε",
+        "It outputs the correct distribution with probability at least 1-ε",
+        "Its advantage is exactly ε for the optimal D"
+      ],
+      "correct": 0,
+      "explanation": "SD upper-bounds every distinguisher's advantage, regardless of computational power. The optimal unbounded D achieves advantage equal to SD."
+    },
+    {
+      "stage": "post",
+      "question": "What is `SD(Bern(1/2 + ε), Bern(1/2))` for ε ∈ [-1/2, 1/2]?",
+      "options": [
+        "|ε|",
+        "ε^2",
+        "2|ε|",
+        "1/2 - |ε|"
+      ],
+      "correct": 0,
+      "explanation": "The biased and fair bits differ by |ε| on each outcome; halving the L1 sum gives SD = |ε|."
+    },
+    {
+      "stage": "post",
+      "question": "Which property of SD makes hybrid arguments possible?",
+      "options": [
+        "Triangle inequality: SD(P, Q) ≤ SD(P, R) + SD(R, Q)",
+        "Monotonicity: SD(P, Q) ≥ SD(P, R) for any R",
+        "Multiplicativity: SD(P × P', Q × Q') = SD(P, Q) · SD(P', Q')",
+        "Linearity: SD(αP + (1-α)Q, R) = α · SD(P, R) + (1-α) · SD(Q, R)"
+      ],
+      "correct": 0,
+      "explanation": "The triangle inequality lets us chain distances across intermediate hybrids H_0, H_1, ..., H_k and sum the per-hop SDs."
+    },
+    {
+      "stage": "post",
+      "question": "Why does SD only bound *unbounded* distinguishers, not all practical attacks on PRGs?",
+      "options": [
+        "PRGs have large statistical distance from uniform but small computational distance",
+        "PRGs are deterministic, so SD does not apply",
+        "SD only works on finite distributions",
+        "PRGs use cryptographic hashes, which break statistical analysis"
+      ],
+      "correct": 0,
+      "explanation": "A PRG's image is a tiny subset of {0,1}^n, so SD(PRG output, uniform) is essentially 1. PRG security is computational, not statistical."
+    },
+    {
+      "stage": "post",
+      "question": "Which event E maximises `|P(E) - Q(E)|` and witnesses SD(P, Q)?",
+      "options": [
+        "`E* = {x : P(x) > Q(x)}`",
+        "`E* = {x : P(x) = Q(x)}`",
+        "`E* = support(P) ∩ support(Q)`",
+        "`E* = {x : P(x) · Q(x) > 0}`"
+      ],
+      "correct": 0,
+      "explanation": "The optimal distinguisher accepts exactly the outcomes where P puts more mass than Q. The resulting advantage equals SD."
+    }
+  ]
 }

@@ -1,1 +1,132 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors computed from toy parameters (p=23, q=11) and the code in code/main.py. Fiat–Shamir challenges use SHA-256 over a 'key=value' context string, and prover nonces use DeterministicRNG(seed=b'lesson-seed').",
+  "vectors": [
+    {
+      "op": "mod_inv",
+      "inputs": { "a": 3, "mod": 23 },
+      "expected": 8
+    },
+    {
+      "op": "mod_inv",
+      "inputs": { "a": 7, "mod": 11 },
+      "expected": 8
+    },
+    {
+      "op": "schnorr_public_key",
+      "inputs": { "p": 23, "q": 11, "g": 2, "x": 7 },
+      "expected": 13
+    },
+    {
+      "op": "schnorr_prove",
+      "inputs": { "p": 23, "q": 11, "g": 2, "x": 7, "c": 5, "rng_seed_hex": "6c6573736f6e2d73656564" },
+      "expected": { "commitment": 8, "challenge": 5, "response": 5 }
+    },
+    {
+      "op": "schnorr_verify",
+      "inputs": { "p": 23, "q": 11, "g": 2, "y": 13, "a": 8, "c": 5, "s": 5 },
+      "expected": true
+    },
+    {
+      "op": "schnorr_simulate_hvz",
+      "inputs": { "p": 23, "q": 11, "g": 2, "y": 13, "c": 5, "s": 5 },
+      "expected": { "commitment": 8, "challenge": 5, "response": 5 }
+    },
+    {
+      "op": "schnorr_extract_witness",
+      "inputs": { "q": 11, "c1": 5, "s1": 5, "c2": 2, "s2": 6 },
+      "expected": 7
+    },
+    {
+      "op": "fiat_shamir_challenge",
+      "inputs": {
+        "q": 11,
+        "domain_sep": "sigma-library-lab-v1",
+        "items": [["y", 13], ["a", 8]]
+      },
+      "expected": 9
+    },
+    {
+      "op": "schnorr_prove_fs",
+      "inputs": {
+        "p": 23,
+        "q": 11,
+        "g": 2,
+        "x": 7,
+        "y": 13,
+        "domain_sep": "sigma-library-lab-v1",
+        "rng_seed_hex": "6c6573736f6e2d73656564"
+      },
+      "expected": { "commitment": 8, "challenge": 9, "response": 0 }
+    },
+    {
+      "op": "dleq_prove",
+      "inputs": {
+        "p": 23,
+        "q": 11,
+        "g": 2,
+        "g1": 2,
+        "g2": 6,
+        "x": 7,
+        "c": 5,
+        "rng_seed_hex": "6c6573736f6e2d73656564"
+      },
+      "expected": { "commitment": [8, 9], "challenge": 5, "response": 5 }
+    },
+    {
+      "op": "dleq_verify",
+      "inputs": {
+        "p": 23,
+        "q": 11,
+        "g": 2,
+        "g1": 2,
+        "g2": 6,
+        "y1": 13,
+        "y2": 3,
+        "a": [8, 9],
+        "c": 5,
+        "s": 5
+      },
+      "expected": true
+    },
+    {
+      "op": "dleq_simulate_hvz",
+      "inputs": {
+        "p": 23,
+        "q": 11,
+        "g": 2,
+        "g1": 2,
+        "g2": 6,
+        "y1": 13,
+        "y2": 3,
+        "c": 5,
+        "s": 5
+      },
+      "expected": { "commitment": [8, 9], "challenge": 5, "response": 5 }
+    },
+    {
+      "op": "fiat_shamir_challenge",
+      "inputs": {
+        "q": 11,
+        "domain_sep": "sigma-library-lab-v1",
+        "items": [["g1", 2], ["g2", 6], ["y1", 13], ["y2", 3], ["a1", 8], ["a2", 9]]
+      },
+      "expected": 7
+    },
+    {
+      "op": "dleq_prove_fs",
+      "inputs": {
+        "p": 23,
+        "q": 11,
+        "g": 2,
+        "g1": 2,
+        "g2": 6,
+        "x": 7,
+        "y1": 13,
+        "y2": 3,
+        "domain_sep": "sigma-library-lab-v1",
+        "rng_seed_hex": "6c6573736f6e2d73656564"
+      },
+      "expected": { "commitment": [8, 9], "challenge": 7, "response": 8 }
+    }
+  ]
+}

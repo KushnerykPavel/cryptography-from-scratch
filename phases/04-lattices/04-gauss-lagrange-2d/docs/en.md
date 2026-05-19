@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain how Gauss/Lagrange reduction is the Euclidean algorithm in disguise applied to 2D lattice bases
+- Compute the size-reduction step by choosing the nearest-integer multiple of b1 to subtract from b2
+- Implement the full Gauss/Lagrange reduction loop including the swap-on-shorter condition and stopping criteria
+- Verify the two conditions of a reduced 2D basis: shorter vector first, and projection coefficient bounded by 1/2
+- Apply the reduced basis to solve 2D SVP exactly, recovering a shortest non-zero lattice vector
+
 ## The Problem
 
 In lattice crypto, you’re given a basis `B` (two vectors in this lesson). The attacker’s “hard problem” is usually stated in terms of the *lattice* (the set of all integer combinations), but the input is a *basis* (a coordinate system).
@@ -121,6 +129,12 @@ In 2D, the first vector of a reduced basis is a shortest non-zero lattice vector
 Implement:
 
 - `shortest_vector_gauss_2d(basis)` → returns that first vector.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

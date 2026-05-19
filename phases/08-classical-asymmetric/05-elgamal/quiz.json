@@ -1,4 +1,100 @@
 {
-  "title": "ElGamal Encryption",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What hard problem underpins classic ElGamal encryption modulo a prime p?",
+      "options": [
+        "Discrete logarithm in a finite group",
+        "Factoring a large composite modulus",
+        "Finding collisions in a hash function",
+        "Solving shortest vectors in a lattice"
+      ],
+      "correct": 0,
+      "explanation": "ElGamal’s security is based on the hardness of discrete log / Diffie–Hellman-style problems in the chosen group."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the purpose of the ephemeral exponent k in ElGamal encryption?",
+      "options": [
+        "Create a one-time shared secret mask",
+        "Make the public key y publicly verifiable",
+        "Make decryption faster than encryption",
+        "Allow decryption without knowing the secret x"
+      ],
+      "correct": 0,
+      "explanation": "k is fresh randomness per encryption that produces a one-time DH shared secret y^k used to mask the message."
+    },
+    {
+      "stage": "post",
+      "question": "Given public key (p, g, y) and message m, which pair matches textbook ElGamal ciphertext?",
+      "options": [
+        "(g^k mod p, m*y^k mod p)",
+        "(m^k mod p, g*y^k mod p)",
+        "(y^k mod p, m*g^k mod p)",
+        "(g^x mod p, m*g^x mod p)"
+      ],
+      "correct": 0,
+      "explanation": "ElGamal encryption computes c1=g^k and c2=m·y^k (both modulo p)."
+    },
+    {
+      "stage": "post",
+      "question": "During decryption, why is s computed as s = c1^x mod p?",
+      "options": [
+        "It equals y^k, matching encryption",
+        "It equals g^k, which is just c1",
+        "It avoids computing the shared secret",
+        "It reveals the random k from c1"
+      ],
+      "correct": 0,
+      "explanation": "Since c1=g^k and y=g^x, we have c1^x=(g^k)^x=g^{kx}=(g^x)^k=y^k."
+    },
+    {
+      "stage": "post",
+      "question": "If you encrypt the same message m twice with different k values, what should you observe?",
+      "options": [
+        "Ciphertexts differ but decrypt to same m",
+        "Ciphertexts repeat because y is fixed",
+        "Ciphertexts differ but decryption fails",
+        "Public key y must change for every message"
+      ],
+      "correct": 0,
+      "explanation": "ElGamal is probabilistic: fresh randomness changes the ciphertext while decryption still recovers the same plaintext."
+    },
+    {
+      "stage": "post",
+      "question": "Rerandomizing a ciphertext (c1, c2) with fresh r produces which new ciphertext?",
+      "options": [
+        "(c1*g^r mod p, c2*y^r mod p)",
+        "(c1^r mod p, c2^r mod p)",
+        "(c1*g^r mod p, c2*g^r mod p)",
+        "(c1*y^r mod p, c2*g^r mod p)"
+      ],
+      "correct": 0,
+      "explanation": "Multiplying by an encryption of 1 (using r) refreshes the randomness without changing the underlying message."
+    },
+    {
+      "stage": "post",
+      "question": "Why is raw ElGamal encryption not secure against chosen-ciphertext attacks (IND-CCA)?",
+      "options": [
+        "Ciphertexts are malleable without detection",
+        "It is deterministic for a fixed public key",
+        "It requires factoring p-1 to decrypt",
+        "It leaks the private key x directly"
+      ],
+      "correct": 0,
+      "explanation": "An attacker can transform a ciphertext into another valid ciphertext for a related plaintext, so a decryption oracle breaks security."
+    },
+    {
+      "stage": "post",
+      "question": "If the same ephemeral k is reused to encrypt m1 and m2, what can an attacker learn from the ciphertexts?",
+      "options": [
+        "A relation like m1 * m2^{-1} mod p",
+        "The discrete log of the public key y",
+        "Whether m1 equals m2 modulo p",
+        "The factorization of the prime p"
+      ],
+      "correct": 0,
+      "explanation": "With the same k, the shared secret y^k is the same, so ratios of c2 components reveal ratios of plaintexts modulo p."
+    }
+  ]
 }

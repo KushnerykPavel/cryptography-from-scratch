@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why multiplication by a non-zero element permutes all non-zero residues modulo a prime, forcing a^(p-1) ≡ 1
+- Compute large modular exponentiations efficiently by reducing the exponent modulo p-1 or phi(n) before calling mod_pow
+- Implement fermat_holds and euler_holds helpers that encode the coprimality precondition directly in code
+- Distinguish Fermat's Little Theorem (prime modulus) from Euler's generalization (any modulus with gcd(a, n) = 1)
+- Identify Carmichael numbers as composites that satisfy a^(n-1) ≡ 1 for every coprime base, defeating naive Fermat primality tests
+
 ## The Problem
 
 Lesson 03 gave us fast exponentiation, which makes `a^k mod n` computable. But computable is not the same as understandable. If you stare at `2^100 mod 13` or `m^(ed) mod n` in RSA without a theorem about how exponents cycle, you are reduced to blind calculation.
@@ -201,6 +209,12 @@ These are the practical payoffs:
 
 - prime modulus: reduce exponent mod `p - 1`
 - general modulus with `gcd(base, n) = 1`: reduce exponent mod `phi(n)`
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

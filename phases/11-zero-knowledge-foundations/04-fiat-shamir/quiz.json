@@ -1,4 +1,100 @@
 {
-  "title": "Fiat-Shamir Heuristic",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a 3-move public-coin Sigma protocol (commit → challenge → response), who must choose the challenge c for soundness?",
+      "options": [
+        "The verifier, uniformly at random from the challenge space",
+        "The prover, based on their secret witness",
+        "Both parties jointly, by averaging their random coins",
+        "A third-party judge, after seeing the response"
+      ],
+      "correct": 0,
+      "explanation": "Soundness relies on the challenge being fresh and unpredictable to the prover; in the interactive protocol the verifier provides that randomness."
+    },
+    {
+      "stage": "pre",
+      "question": "What is domain separation in hashing used for?",
+      "options": [
+        "Preventing the same hash input format from being reused across protocols or contexts",
+        "Making hashes reversible when you know a secret key",
+        "Ensuring SHA-256 outputs exactly q bits for modular reduction",
+        "Reducing the number of hash calls needed to derive challenges"
+      ],
+      "correct": 0,
+      "explanation": "Domain separation adds a context-specific tag so that transcripts from different protocols cannot be mixed or collide accidentally."
+    },
+    {
+      "stage": "post",
+      "question": "What does the Fiat–Shamir heuristic replace in an interactive Sigma protocol?",
+      "options": [
+        "The verifier’s random challenge c, by setting c = H(transcript) mod q",
+        "The prover’s commitment t, by setting t = H(message)",
+        "The prover’s response s, by setting s = H(secret)",
+        "The public statement y, by setting y = H(parameters)"
+      ],
+      "correct": 0,
+      "explanation": "Fiat–Shamir replaces the verifier’s randomness with a hash-derived challenge computed from the transcript so far."
+    },
+    {
+      "stage": "post",
+      "question": "In Schnorr, which verification equation should hold for an accepting transcript (t, c, s) with public key y = g^x?",
+      "options": [
+        "g^s ≡ t · y^c (mod p)",
+        "g^s ≡ t + y + c (mod p)",
+        "s ≡ t · c (mod q)",
+        "y^s ≡ g^(t+c) (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "Schnorr verification checks that the response s is consistent with the commitment t and public key y under the challenge c."
+    },
+    {
+      "stage": "post",
+      "question": "Why do transcript encodings typically use fixed-length fields or explicit length prefixes?",
+      "options": [
+        "To prevent ambiguous concatenations that could make different transcripts hash to the same bytes",
+        "To make the hash output uniformly random even with a weak hash function",
+        "To guarantee constant-time verification in high-level languages",
+        "To avoid needing modular arithmetic in the verifier"
+      ],
+      "correct": 0,
+      "explanation": "Without unambiguous encoding, different sequences of values can map to the same byte string, breaking the intended binding of the transcript."
+    },
+    {
+      "stage": "post",
+      "question": "What is a concrete consequence of a 'weak Fiat–Shamir' that omits the message from the hash transcript?",
+      "options": [
+        "The resulting proof is transferable and cannot serve as a signature bound to a specific message",
+        "Verification becomes interactive again because the verifier must send the message",
+        "The prover must reveal the secret x to compute the hash",
+        "The proof becomes information-theoretically secure in the standard model"
+      ],
+      "correct": 0,
+      "explanation": "If the message is not hashed, the proof is not tied to any message: the same proof can be presented alongside any message."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the challenge space size matter especially for Fiat–Shamir proofs?",
+      "options": [
+        "A small challenge space makes 'grinding' and brute-force fixed-point searches practical",
+        "A small challenge space prevents honest provers from finding any valid proofs",
+        "A small challenge space makes modular inverses undefined",
+        "A small challenge space forces the verifier to store the whole transcript forever"
+      ],
+      "correct": 0,
+      "explanation": "With Fiat–Shamir, the prover can try many nonces/transcripts offline; if challenges are small, trying until a favorable hash output appears can be feasible."
+    },
+    {
+      "stage": "post",
+      "question": "Which set of values is the safest default to bind into a Fiat–Shamir challenge for a Sigma protocol proof?",
+      "options": [
+        "A domain separator plus all public inputs/parameters, the prover’s commitments so far, and the message/context being proved about",
+        "Only the prover’s response s, because it already encodes everything",
+        "Only the public key y, because it identifies the statement",
+        "Only the message, because the proof should be message-dependent"
+      ],
+      "correct": 0,
+      "explanation": "The challenge should be a hash of everything the verifier would conceptually have seen before choosing c, plus a domain tag and the context/message."
+    }
+  ]
 }

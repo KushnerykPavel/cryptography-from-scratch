@@ -235,6 +235,12 @@ log_g(504) = 123
 log_g(967) = 400
 ```
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 For real finite-field discrete logs, use SageMath, PARI/GP, Magma, or specialist tools. Real attacks use much more sophisticated relation collection, large-prime variants, sparse linear algebra, descent trees, and for large prime fields the Number Field Sieve for discrete logarithms.

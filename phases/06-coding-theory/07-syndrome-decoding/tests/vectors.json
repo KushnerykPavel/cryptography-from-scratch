@@ -1,1 +1,50 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Vectors are derived from the standard Hamming(7,4) parity-check matrix H whose columns are the non-zero 3-bit binary representations of positions 1..7 (syndrome bits ordered [1,2,4] least-significant first). Expected syndromes come from s = H·r^T (mod 2). Syndrome decoding vectors use a syndrome table built by enumerating all error patterns up to a stated max_weight and choosing the first (lowest-weight) pattern for each syndrome.",
+  "vectors": [
+    {
+      "op": "hamming74_parity_check_matrix",
+      "expected": [
+        [1, 0, 1, 0, 1, 0, 1],
+        [0, 1, 1, 0, 0, 1, 1],
+        [0, 0, 0, 1, 1, 1, 1]
+      ]
+    },
+    {
+      "op": "syndrome",
+      "received": [0, 1, 1, 0, 0, 1, 1],
+      "expected": [0, 0, 0]
+    },
+    {
+      "op": "syndrome",
+      "received": [0, 1, 1, 0, 1, 1, 1],
+      "expected": [1, 0, 1]
+    },
+    {
+      "op": "syndrome_to_int",
+      "syndrome": [1, 0, 1],
+      "expected": 5
+    },
+    {
+      "op": "error_pattern",
+      "n": 7,
+      "ones_at": [4],
+      "expected": [0, 0, 0, 0, 1, 0, 0]
+    },
+    {
+      "op": "build_syndrome_table_lookup",
+      "max_weight": 1,
+      "syndrome": [1, 1, 1],
+      "expected": [0, 0, 0, 0, 0, 0, 1]
+    },
+    {
+      "op": "syndrome_decode_hamming74",
+      "max_weight": 1,
+      "received": [0, 1, 1, 0, 1, 1, 1],
+      "expected": {
+        "corrected": [0, 1, 1, 0, 0, 1, 1],
+        "estimated_error": [0, 0, 0, 0, 1, 0, 0],
+        "syndrome": [1, 0, 1]
+      }
+    }
+  ]
+}

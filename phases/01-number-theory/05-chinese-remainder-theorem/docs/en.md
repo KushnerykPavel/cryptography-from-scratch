@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why pairwise-coprime moduli are required for the isomorphism Z/(n1·…·nk)Z ↔ Z/n1Z × … × Z/nkZ
+- Compute CRT reconstruction by hand using partial products Ni and their inverses modulo ni
+- Implement both the textbook CRT formula and Garner's incremental mixed-radix algorithm
+- Apply RSA-CRT decryption by computing m mod p and m mod q separately then recombining
+- Distinguish Hastad's broadcast attack (offensive CRT) from the Bellcore fault attack (faulty CRT recombination leaks a factor)
+
 ## The Problem
 
 One congruence is usually easy. Many congruences at once look messy. Suppose you know a value leaves remainder `2` mod `3`, remainder `3` mod `5`, and remainder `2` mod `7`. Brute force works for toy numbers, but it does not scale. In cryptography, the toy version becomes "compute mod `p` and mod `q`, then reconstruct mod `n = p*q`" where `p` and `q` are hundreds or thousands of bits long.
@@ -194,6 +202,12 @@ def rsa_crt_decrypt(ciphertext: int, d: int, p: int, q: int) -> int:
 ```
 
 That is the performance win: two half-size exponentiations plus one recombination.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

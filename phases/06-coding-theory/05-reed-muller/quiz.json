@@ -1,4 +1,91 @@
 {
   "title": "Reed-Muller Codes",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "For RM(r,m), what is the codeword length n?",
+      "options": ["n = 2^m", "n = m^2", "n = 2^r", "n = r + m"],
+      "correct": 0,
+      "explanation": "A Reed-Muller codeword lists the polynomial’s output on every input x ∈ {0,1}^m, so there are 2^m positions."
+    },
+    {
+      "stage": "pre",
+      "question": "What does a generator matrix G do for a linear code?",
+      "options": [
+        "Maps message bits to codewords by linear combination of rows (over the code’s field)",
+        "Computes the Hamming distance between two codewords",
+        "Finds the minimum distance d directly from a single codeword",
+        "Encrypts a message using a secret key"
+      ],
+      "correct": 0,
+      "explanation": "In a linear code, every codeword is a linear combination of generator rows; encoding is message · G (mod the field)."
+    },
+    {
+      "stage": "post",
+      "question": "For RM(r,m), what is the dimension k (number of message bits) in terms of binomial coefficients?",
+      "options": [
+        "k = sum_{i=0..r} C(m,i)",
+        "k = C(r,m)",
+        "k = 2^(m-r)",
+        "k = m + r"
+      ],
+      "correct": 0,
+      "explanation": "There is one coefficient per monomial of degree ≤ r, and there are C(m,i) monomials of degree i."
+    },
+    {
+      "stage": "post",
+      "question": "In the monomial-truth-table view, what is a row of the RM(r,m) generator matrix?",
+      "options": [
+        "The monomial’s value evaluated on all points x = 0..2^m-1",
+        "A random binary vector chosen for good distance",
+        "The received word after channel noise",
+        "The parity-check equations written as columns"
+      ],
+      "correct": 0,
+      "explanation": "Each monomial defines a Boolean function; evaluating it on every input gives a length-n basis codeword (a generator row)."
+    },
+    {
+      "stage": "post",
+      "question": "What special class of functions does RM(1,m) represent?",
+      "options": [
+        "Affine functions f(x) = a0 + sum_i ai x_i (mod 2)",
+        "All Boolean functions on m variables",
+        "Only constant functions",
+        "Only quadratic polynomials"
+      ],
+      "correct": 0,
+      "explanation": "Degree ≤ 1 means “constant + linear terms”, which is exactly an affine Boolean function."
+    },
+    {
+      "stage": "post",
+      "question": "In Walsh-Hadamard decoding for RM(1,m), what does the index of the maximum-magnitude transform coefficient identify?",
+      "options": [
+        "The linear coefficient vector (a1..am) of the decoded affine function",
+        "The number of errors that occurred in the channel",
+        "The parity-check matrix for RM(1,m)",
+        "The constant term a0 directly, without any sign information"
+      ],
+      "correct": 0,
+      "explanation": "The transform computes correlations with all linear functions; the best-matching linear term vector is the argmax index."
+    },
+    {
+      "stage": "post",
+      "question": "For RM(1,m), the minimum distance is d = 2^(m-1). What is the unique hard-decision correction radius t?",
+      "options": ["t = 2^(m-2) - 1", "t = 2^(m-1) - 1", "t = 2^(m-2)", "t = m - 1"],
+      "correct": 0,
+      "explanation": "Unique correction radius is floor((d-1)/2); with d = 2^(m-1), this is 2^(m-2) - 1."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it dangerous to always return a decoded RM(1,m) message even when the error rate is beyond the correction radius?",
+      "options": [
+        "Because the decoder can miscorrect and silently output the wrong message",
+        "Because RM(1,m) codewords are not linear",
+        "Because Walsh-Hadamard transforms require floating point",
+        "Because it makes the code rate larger than 1"
+      ],
+      "correct": 0,
+      "explanation": "Beyond the unique decoding radius, multiple codewords may be similarly close; choosing one can produce undetected corruption unless you add an outer integrity check."
+    }
+  ]
 }

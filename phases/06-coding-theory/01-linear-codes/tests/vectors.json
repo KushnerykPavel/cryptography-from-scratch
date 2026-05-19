@@ -1,1 +1,85 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-constructed vectors for a systematic Hamming(7,4) code. Matrices follow the standard form G=[I|P], H=[P^T|I] over GF(2).",
+  "vectors": [
+    {
+      "op": "hamming_weight",
+      "inputs": { "v": [1, 0, 1, 1] },
+      "expected": 3
+    },
+    {
+      "op": "hamming_distance",
+      "inputs": { "a": [1, 0, 1], "b": [1, 1, 0] },
+      "expected": 2
+    },
+    {
+      "op": "mul_vec_mat_mod2",
+      "inputs": {
+        "v": [1, 0, 1, 1],
+        "m": [
+          [1, 0, 0, 0, 1, 0, 1],
+          [0, 1, 0, 0, 1, 1, 1],
+          [0, 0, 1, 0, 1, 1, 0],
+          [0, 0, 0, 1, 0, 1, 1]
+        ]
+      },
+      "expected": [1, 0, 1, 1, 0, 0, 0]
+    },
+    {
+      "op": "parity_check_matrix_from_systematic_g",
+      "inputs": {
+        "g": [
+          [1, 0, 0, 0, 1, 0, 1],
+          [0, 1, 0, 0, 1, 1, 1],
+          [0, 0, 1, 0, 1, 1, 0],
+          [0, 0, 0, 1, 0, 1, 1]
+        ]
+      },
+      "expected": [
+        [1, 1, 1, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0, 1, 0],
+        [1, 1, 0, 1, 0, 0, 1]
+      ]
+    },
+    {
+      "op": "syndrome",
+      "inputs": {
+        "received": [1, 0, 1, 1, 0, 0, 0],
+        "h": [
+          [1, 1, 1, 0, 1, 0, 0],
+          [0, 1, 1, 1, 0, 1, 0],
+          [1, 1, 0, 1, 0, 0, 1]
+        ]
+      },
+      "expected": [0, 0, 0]
+    },
+    {
+      "op": "syndrome",
+      "inputs": {
+        "received": [1, 0, 0, 1, 0, 0, 0],
+        "h": [
+          [1, 1, 1, 0, 1, 0, 0],
+          [0, 1, 1, 1, 0, 1, 0],
+          [1, 1, 0, 1, 0, 0, 1]
+        ]
+      },
+      "expected": [1, 1, 0]
+    },
+    {
+      "op": "correct_single_bit_error",
+      "inputs": {
+        "received": [1, 0, 0, 1, 0, 0, 0],
+        "h": [
+          [1, 1, 1, 0, 1, 0, 0],
+          [0, 1, 1, 1, 0, 1, 0],
+          [1, 1, 0, 1, 0, 0, 1]
+        ]
+      },
+      "expected": { "corrected": [1, 0, 1, 1, 0, 0, 0], "flipped": 2 }
+    },
+    {
+      "op": "decode_hamming74",
+      "inputs": { "received": [1, 0, 0, 1, 0, 0, 0] },
+      "expected": { "message": [1, 0, 1, 1], "corrected": [1, 0, 1, 1, 0, 0, 0], "flipped": 2 }
+    }
+  ]
+}

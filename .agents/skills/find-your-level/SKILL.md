@@ -29,12 +29,17 @@ Each question worth 1 point. Each area scores 0–2. Total ranges 0–10.
 ## Administering the Quiz
 
 Greet briefly, then jump into Round 1. Use **AskUserQuestion** for every
-question. After each round, announce area score (e.g. "Number Theory: 2/2").
-Keep commentary short. Do not explain answers until the end.
+question when the runtime exposes it. If `AskUserQuestion` is unavailable
+(e.g. opencode — only `bash, edit, glob, grep, read, skill, task,
+todowrite, webfetch, websearch, write` are exposed), render each question
+as a plain chat message and wait for the user's reply. After each round,
+announce area score (e.g. "Number Theory: 2/2"). Keep commentary short.
+Do not explain answers until the end.
 
 ### Rendering rules (critical — do not leak answers)
 
-When building `AskUserQuestion` options, follow these rules strictly:
+When building options (for `AskUserQuestion` or plain chat fallback),
+follow these rules strictly:
 
 - **Option label** = the bare answer text from the markdown below
   (e.g. `"2"`, `"Completeness, soundness, zero-knowledge"`). Do NOT add

@@ -1,4 +1,101 @@
 {
   "title": "RSA & Class Group Accumulators",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In an RSA accumulator, what equation should a correct membership witness w for element x satisfy (using p(x) as x's prime representative)?",
+      "options": [
+        "w^p(x) mod N = A",
+        "p(x)^w mod N = A",
+        "w mod p(x) = A",
+        "A^p(x) mod N = w"
+      ],
+      "correct": 0,
+      "explanation": "Membership verification checks that raising the witness to the element's prime representative reproduces the accumulator value."
+    },
+    {
+      "stage": "pre",
+      "question": "Why do accumulator schemes usually map elements to prime representatives (hash-to-prime) instead of using raw integers as exponents?",
+      "options": [
+        "To avoid collisions and ensure clean divisibility structure for witnesses/proofs",
+        "To make modular exponentiation faster on CPUs",
+        "To guarantee that the accumulator value is a generator",
+        "To remove the need for a modulus N entirely"
+      ],
+      "correct": 0,
+      "explanation": "Prime representatives reduce ambiguity: each element contributes an independent prime factor to the exponent, preventing easy collisions or malleability."
+    },
+    {
+      "stage": "post",
+      "question": "If you add a new element z with prime representative p(z), how do you update an existing membership witness w_x for an old element x (append-only set)?",
+      "options": [
+        "w_x' = w_x^{p(z)} mod N",
+        "w_x' = w_x * p(z) mod N",
+        "w_x' = w_x + p(z) mod N",
+        "w_x' stays the same"
+      ],
+      "correct": 0,
+      "explanation": "Witnesses represent the exponent product of all elements except x. Adding z multiplies that product by p(z), which corresponds to exponentiating the witness by p(z)."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best captures the main setup difference between RSA accumulators and class group accumulators?",
+      "options": [
+        "RSA accumulators typically require a modulus N whose factorization is unknown (trusted setup), while class group accumulators aim to avoid a hidden-factorization setup",
+        "RSA accumulators have constant-size proofs but class group accumulators do not",
+        "Class group accumulators only work for non-membership and RSA only for membership",
+        "Class group accumulators require pairings but RSA accumulators do not"
+      ],
+      "correct": 0,
+      "explanation": "Both are unknown-order-group based, but RSA's unknown order comes from hiding φ(N) (factoring), while class groups aim for unknown order without generating N=p·q."
+    },
+    {
+      "stage": "post",
+      "question": "Attack intuition: if an adversary learns the trapdoor (e.g., φ(N) or the factorization of N) for an RSA accumulator, what becomes feasible in many designs?",
+      "options": [
+        "Computing p(x)-th roots mod N, which can enable forging witnesses for elements that were never accumulated",
+        "Breaking SHA-256 preimage resistance",
+        "Making membership verification slower than Merkle verification",
+        "Converting membership proofs into Schnorr signatures"
+      ],
+      "correct": 0,
+      "explanation": "Knowing the group order lets you take modular roots by exponentiating with an inverse modulo the order, undermining soundness assumptions that rely on unknown order."
+    },
+    {
+      "stage": "post",
+      "question": "In the non-membership proof sketched in this lesson, what condition must hold for x's prime representative relative to s = Π p(y) (product over the set)?",
+      "options": [
+        "gcd(s, p(x)) = 1",
+        "p(x) divides s",
+        "p(x) is even",
+        "s must be prime"
+      ],
+      "correct": 0,
+      "explanation": "Bezout coefficients exist for integers s and p(x) only when they are coprime; this is the starting point for the RSA non-membership relation."
+    },
+    {
+      "stage": "post",
+      "question": "Which verification check corresponds to the RSA non-membership proof structure shown (with accumulator A = g^s)?",
+      "options": [
+        "A^a * d^{p(x)} mod N = g",
+        "A^{p(x)} * d^a mod N = g",
+        "A + a + d + p(x) = g",
+        "d^{p(x)} mod N = A"
+      ],
+      "correct": 0,
+      "explanation": "The proof uses integers a,b such that a·s + b·p(x) = 1. With d = g^b, the verifier checks A^a · d^{p(x)} = g."
+    },
+    {
+      "stage": "post",
+      "question": "When should you prefer a Merkle tree over an accumulator for membership proofs?",
+      "options": [
+        "When you want a widely deployed, easy-to-audit construction and can accept logarithmic proof size",
+        "When you need constant-size proofs and accept more complex setup/assumptions",
+        "When you require an unknown-order group specifically",
+        "When you want to avoid hashing entirely"
+      ],
+      "correct": 0,
+      "explanation": "Merkle trees trade constant-size proofs for simplicity and standardization: proofs scale as O(log n) but updates and audits are straightforward."
+    }
+  ]
 }

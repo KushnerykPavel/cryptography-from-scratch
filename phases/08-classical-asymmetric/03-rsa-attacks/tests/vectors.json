@@ -1,1 +1,42 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Classic RSA attacks (textbook RSA): Common modulus (HAC 8.2.2), Håstad broadcast (HAC 8.2.3), Wiener 1990 short secret exponent attack. Toy values are project-internal and verified by Python modular arithmetic.",
+  "vectors": [
+    {"op": "modinv", "a": 17, "n": 3120, "expected": 2753},
+    {"op": "modinv", "a": 6, "n": 12, "expected_error": "inverse does not exist"},
+
+    {"op": "crt_combine", "pairs": [[2, 3], [3, 5]], "expected": [8, 15]},
+
+    {"op": "integer_nth_root_floor", "x": 28, "n": 3, "expected": 3},
+    {"op": "is_perfect_nth_power", "x": 27, "n": 3, "expected": 3},
+    {"op": "is_perfect_nth_power", "x": 28, "n": 3, "expected": null},
+
+    {
+      "op": "common_modulus_attack",
+      "n": 11413,
+      "e1": 17,
+      "e2": 13,
+      "c1": 8065,
+      "c2": 3777,
+      "expected": 42
+    },
+    {
+      "op": "common_modulus_attack",
+      "n": 11413,
+      "e1": 6,
+      "e2": 15,
+      "c1": 1,
+      "c2": 1,
+      "expected_error": "e1 and e2 must be coprime"
+    },
+
+    {
+      "op": "hastad_broadcast_attack",
+      "e": 3,
+      "ns": [10807, 14803, 20413],
+      "cs": [2972, 2887, 3015],
+      "expected": 1234
+    },
+
+    {"op": "wiener_attack_recover_key", "e": 7067, "n": 10807, "expected": [101, 107, 3]}
+  ]
+}

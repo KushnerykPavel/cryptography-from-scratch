@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain the difference between the Shortest Vector Problem (SVP) and the Closest Vector Problem (CVP) as geometric problems on lattice point sets
+- Distinguish between exact and approximate variants of SVP/CVP and explain what an approximation factor α means
+- Implement brute-force SVP and CVP solvers by searching integer coefficient vectors in a bounded window
+- Identify why brute-force scales as (2k+1)^n and why dimension is the primary security parameter in lattice cryptography
+- Apply the brute-force microscope to confirm that the shortest lattice vector is basis-independent even when basis vectors are long
+
 ## The Problem
 
 Lattice cryptography’s security story is basically: “breaking this scheme would let you solve a hard lattice problem.”
@@ -119,6 +127,12 @@ The number of candidates is:
 ```
 
 That is the “brute force is doomed” message in one line.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

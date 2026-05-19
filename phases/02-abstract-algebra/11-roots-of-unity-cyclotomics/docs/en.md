@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why a primitive `n`-th root of unity in `F_p` exists if and only if `n` divides `p - 1`, and why this is the essential NTT parameter check
+- Compute the primitive `n`-th root `omega = g^((p-1)/n)` from a primitive root `g` and verify its order using prime-factor divisibility tests
+- Distinguish all `n`-th roots of unity from the primitive ones by their multiplicative order, and enumerate both sets for small finite fields
+- Apply the recursive product identity `x^n - 1 = product of Phi_d(x)` to compute cyclotomic polynomials from divisors
+- Identify the connection between the degree of `Phi_n` and Euler's totient, and use it to predict the count of primitive `n`-th roots in `F_p`
+
 ## The Problem
 
 The Number Theoretic Transform — the backbone of fast polynomial multiplication in lattice cryptography and ZK proof systems — needs one special number: a primitive `n`-th root of unity in `F_p`.
@@ -248,6 +256,12 @@ cyclotomic_poly(6, 7)   # [1, 6, 1]  →  x^2 + 6x + 1
 ```
 
 (since `-1 mod 7 = 6`)
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

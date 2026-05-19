@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain the three defining properties of a pairing (`e : G1 × G2 → GT`) — bilinearity, non-degeneracy, and efficiency — and why each matters for protocols like BLS signatures
+- Implement arithmetic in the quadratic extension field `Fp2 = Fp[i]/(i² + 1)` and use it to perform point operations on the toy supersingular curve over `F_{p²}`
+- Compute the reduced Tate pairing via Miller's algorithm (the line-evaluation loop) followed by final exponentiation to force the output into the `r`-th roots of unity
+- Distinguish the Weil pairing from the reduced Tate pairing in terms of their Miller-loop structure and why final exponentiation is needed for Tate but not Weil
+- Apply the MOV reduction to recover a discrete logarithm on the toy curve, and explain what embedding degree and subgroup order properties prevent this attack on production pairing-friendly curves
+
 ## The Problem
 
 Pairings are the missing primitive behind a huge chunk of modern cryptography:
@@ -163,6 +171,12 @@ Q = distortion_map(P)
 
 e = weil_pairing(TOY_CURVE, TOY_R, P, Q)
 print(fp2_to_json(e))
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

@@ -1,1 +1,51 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Vectors generated on 2026-05-19 from phases/10-protocols/08-threshold-encryption/code/main.py using the demo group (p=467, q=233, g=4) and fixed inputs (x=123, coeffs=[77,9], k=42, plaintext='hello').",
+  "vectors": [
+    {
+      "op": "modinv",
+      "inputs": { "a": 3, "modulus": 11 },
+      "expected": 4
+    },
+    {
+      "op": "poly_eval",
+      "inputs": { "coeffs": [123, 77, 9], "x": 4, "modulus": 233 },
+      "expected": 109
+    },
+    {
+      "op": "lagrange_coefficients_at_zero",
+      "inputs": { "x_coords": [1, 3, 4], "modulus": 233 },
+      "expected": { "1": 2, "3": 231, "4": 1 }
+    },
+    {
+      "op": "shamir_make_shares",
+      "inputs": { "secret": 123, "threshold": 3, "num_shares": 5, "modulus": 233, "coeffs": [77, 9] },
+      "expected": { "shares": [[1, 209], [2, 80], [3, 202], [4, 109], [5, 34]] }
+    },
+    {
+      "op": "shamir_recover_secret",
+      "inputs": { "shares": [[1, 209], [3, 202], [4, 109]], "modulus": 233 },
+      "expected": 123
+    },
+    {
+      "op": "threshold_encrypt",
+      "inputs": {
+        "secret_x": 123,
+        "threshold": 3,
+        "num_shares": 5,
+        "coeffs": [77, 9],
+        "k": 42,
+        "label_utf8": "threshold-kem",
+        "plaintext_hex": "68656c6c6f"
+      },
+      "expected": { "y": 214, "c1": 100, "masked_hex": "cfffc6f13f" }
+    },
+    {
+      "op": "combine_partial_decryptions",
+      "inputs": {
+        "partials": [[1, 221], [3, 280], [4, 334]],
+        "x_coords": [1, 3, 4]
+      },
+      "expected": 123
+    }
+  ]
+}

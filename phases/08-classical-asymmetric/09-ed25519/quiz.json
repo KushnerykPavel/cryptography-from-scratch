@@ -1,4 +1,100 @@
 {
-  "title": "Ed25519 from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In standard Ed25519 (RFC 8032), what is the length and structure of a signature?",
+      "options": [
+        "64 bytes: R (32) || s (32)",
+        "32 bytes: only s",
+        "96 bytes: R (64) || s (32)",
+        "65 bytes: R (32) || s (32) || v (1)"
+      ],
+      "correct": 0,
+      "explanation": "An Ed25519 signature is 64 bytes: a compressed curve point R followed by a 32-byte scalar s."
+    },
+    {
+      "stage": "pre",
+      "question": "Ed25519 is deterministic: what primarily determines the per-message nonce r?",
+      "options": [
+        "SHA-512(prefix || message) reduced mod L",
+        "A fresh random number sampled uniformly mod L",
+        "The public key encoded as a scalar",
+        "The curve parameter d"
+      ],
+      "correct": 0,
+      "explanation": "Ed25519 derives r from a secret prefix (from hashing the seed) and the message, then reduces mod the group order L."
+    },
+    {
+      "stage": "post",
+      "question": "What is the purpose of 'clamping' in Ed25519 key expansion?",
+      "options": [
+        "Force the secret scalar into a safe form for the subgroup",
+        "Make signatures shorter by truncating the scalar",
+        "Make verification faster by precomputing inverses",
+        "Ensure the public key encodes x instead of y"
+      ],
+      "correct": 0,
+      "explanation": "Clamping clears/sets specific bits of the hashed seed so the scalar has the right structure for safe scalar multiplication."
+    },
+    {
+      "stage": "post",
+      "question": "Which equation does Ed25519 verification check (conceptually)?",
+      "options": [
+        "s·B = R + H(R, A, M)·A",
+        "s·B = H(M)·A",
+        "R·B = s + H(A, M)",
+        "A = H(R, M)·B"
+      ],
+      "correct": 0,
+      "explanation": "Verification recomputes the challenge hash H(R, A, M) and checks the curve relation sB = R + kA."
+    },
+    {
+      "stage": "post",
+      "question": "In Ed25519 point compression, what is stored directly in the 32-byte encoding?",
+      "options": [
+        "The y-coordinate plus one bit of x",
+        "The x-coordinate plus one bit of y",
+        "Both x and y in full",
+        "Only an x-coordinate (Montgomery u)"
+      ],
+      "correct": 0,
+      "explanation": "Ed25519 encodes y (255 bits, little-endian) and stores the parity of x in the high bit."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what happens if two different messages are signed with the same nonce r in an EdDSA/Schnorr-style scheme?",
+      "options": [
+        "The private key can be recovered from the two signatures",
+        "Only one of the two signatures will verify",
+        "The public key becomes invalid and decoding fails",
+        "Nothing serious; nonce reuse is harmless in EdDSA"
+      ],
+      "correct": 0,
+      "explanation": "Nonce reuse makes the equations share r, which lets an attacker solve for the secret scalar using basic algebra."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it important to bind a context / domain separation string into what you sign at the protocol layer?",
+      "options": [
+        "It prevents cross-protocol replay of valid signatures",
+        "It makes signatures probabilistic instead of deterministic",
+        "It prevents all timing side channels in software",
+        "It removes the need to validate public keys"
+      ],
+      "correct": 0,
+      "explanation": "Domain separation ensures a signature intended for one protocol message can't be reused as a valid signature for a different protocol message."
+    },
+    {
+      "stage": "post",
+      "question": "Why must an implementation reject signatures where s is not in the canonical range (s >= L)?",
+      "options": [
+        "To avoid accepting alternative encodings of the same signature",
+        "Because s would otherwise overflow 32 bytes",
+        "Because R decoding requires s < L",
+        "Because the curve equation changes when s is large"
+      ],
+      "correct": 0,
+      "explanation": "Rejecting non-canonical s avoids signature malleability via multiple encodings representing the same group element."
+    }
+  ]
 }

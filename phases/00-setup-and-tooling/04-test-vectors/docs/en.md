@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain the difference between known-answer tests (KATs) and negative tests, and why both are required for cryptographic correctness
+- Apply the `vectors.json` format to encode RFC/NIST test inputs, expected outputs, and expected rejection cases in a human-reviewable structure
+- Implement a dispatch-based test harness that validates both happy-path outputs and mandatory error conditions
+- Identify failure modes that KAT-only test suites miss, such as non-canonical encoding acceptance and missing rejection of malformed inputs
+- Verify that byte inputs are encoded as `*_hex` fields and decoded before use, preventing the "hash the string instead of the bytes" class of bugs
+
 ## The Problem
 
 Cryptography code lives or dies on **interoperability**: your SHA-256 must hash the same bytes as everyone else, your AES must encrypt the same blocks, your signature verifier must reject the same malformed encodings.
@@ -120,6 +128,12 @@ Make your vector set hostile. Add vectors that a naive-but-wrong implementation 
 - ambiguous encodings (both `*_ascii` and `*_hex` present)
 
 If a spec has “MUST reject” language, encode that as vectors.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

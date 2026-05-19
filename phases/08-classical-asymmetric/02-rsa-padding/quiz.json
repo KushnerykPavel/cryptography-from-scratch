@@ -1,4 +1,100 @@
 {
-  "title": "RSA Padding \u2014 PKCS#1 v1.5, OAEP, PSS",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the core problem with textbook RSA encryption (c = m^e mod n) used directly on message integers?",
+      "options": [
+        "It is deterministic and malleable, so it lacks semantic security and integrity.",
+        "It is too slow, so attackers can brute-force the private key by timing it.",
+        "It produces ciphertexts longer than the modulus, so decryption fails randomly.",
+        "It only works for prime moduli, so it breaks for composite n."
+      ],
+      "correct": 0,
+      "explanation": "Without a padding scheme, RSA is a deterministic algebraic function and attackers can test equality or transform ciphertexts into related ciphertexts."
+    },
+    {
+      "stage": "pre",
+      "question": "What does MGF1 do in OAEP and PSS?",
+      "options": [
+        "Expands a seed into a pseudorandom mask of a requested length using a hash function.",
+        "Generates RSA primes by repeatedly hashing random bytes until a prime appears.",
+        "Makes RSA exponentiation constant-time by blinding the base and exponent.",
+        "Compresses long messages so they fit into a single RSA block."
+      ],
+      "correct": 0,
+      "explanation": "MGF1 is a hash-based expander: it deterministically turns a seed into as many mask bytes as you need."
+    },
+    {
+      "stage": "post",
+      "question": "OAEP message length limit: for modulus length k bytes and hash output length hLen bytes, what is the maximum message length OAEP can encode?",
+      "options": [
+        "k - 2*hLen - 2 bytes",
+        "k - hLen - 2 bytes",
+        "k - 2*hLen bytes",
+        "k - 11 bytes"
+      ],
+      "correct": 0,
+      "explanation": "OAEP requires space for lHash (hLen), seed (hLen), separators, and structure: mLen <= k - 2*hLen - 2."
+    },
+    {
+      "stage": "post",
+      "question": "In OAEP decoding, what must be checked to reject malformed blocks (beyond “it decrypts”)?",
+      "options": [
+        "The lHash matches Hash(label), then a 0x01 separator appears after only zero bytes.",
+        "The ciphertext is odd and ends with 0xbc, otherwise it is invalid.",
+        "The decrypted integer is divisible by e, otherwise it is invalid.",
+        "The message starts with ASCII and contains no zero bytes."
+      ],
+      "correct": 0,
+      "explanation": "OAEP defines a strict byte structure; decoding re-derives masks, unmasks, and validates lHash and the 0x01 separator placement."
+    },
+    {
+      "stage": "post",
+      "question": "Why does RSASSA-PSS use emBits = nBits - 1 instead of nBits when building the encoded message EM?",
+      "options": [
+        "To guarantee OS2IP(EM) is in range (< n) without relying on chance.",
+        "Because RSA can only sign odd integers and emBits enforces oddness.",
+        "To make signatures one byte shorter for bandwidth savings.",
+        "Because the final byte 0xbc consumes one bit of capacity."
+      ],
+      "correct": 0,
+      "explanation": "PSS clears the leftmost bits so the encoded message representative is safely below n; the spec defines emBits = nBits - 1."
+    },
+    {
+      "stage": "post",
+      "question": "You are using RSAES-OAEP with SHA-256. Which MGF1 choice is the right default unless an interop spec says otherwise?",
+      "options": [
+        "MGF1 with SHA-256 (same hash as OAEP)",
+        "MGF1 with SHA-1 (legacy default, always safe)",
+        "MGF1 with SHA-512 (stronger, so always better)",
+        "No MGF1: replace it with raw random bytes"
+      ],
+      "correct": 0,
+      "explanation": "OAEP security and interop depend on parameter coupling; the standard default is to use the same hash for Hash and MGF1."
+    },
+    {
+      "stage": "post",
+      "question": "Why is PKCS#1 v1.5 encryption (RSAES-PKCS1-v1_5) considered dangerous in many protocols even though it is randomized?",
+      "options": [
+        "Padding validity can leak via error behavior (padding oracles), enabling chosen-ciphertext attacks.",
+        "It always reuses the same padding bytes, so ciphertexts repeat.",
+        "It requires a secret label value that many systems accidentally log.",
+        "It cannot be implemented with big integers, so it overflows."
+      ],
+      "correct": 0,
+      "explanation": "Bleichenbacher-style attacks exploit differences in how implementations report or handle malformed v1.5 padding."
+    },
+    {
+      "stage": "post",
+      "question": "What is the correct high-level flow for verifying an RSA-PSS signature?",
+      "options": [
+        "Compute mHash = Hash(message), recover EM = S^e mod n, then run PSS verification on EM against mHash.",
+        "Decrypt the signature with the private key, then compare to the message bytes directly.",
+        "Hash the signature and compare it to Hash(message) to avoid expensive RSA.",
+        "Verify the signature by checking whether it is a prime number."
+      ],
+      "correct": 0,
+      "explanation": "Verification uses the public exponent to recover the encoded message EM and then checks the PSS structure against Hash(message)."
+    }
+  ]
 }

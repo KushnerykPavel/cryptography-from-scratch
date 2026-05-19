@@ -1,1 +1,56 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "RFC 7748 (X25519) + RFC 5869 (HKDF). X3DH/Double Ratchet vectors are computed from the Signal X3DH and Double Ratchet specifications using this lesson's constants (X3DH_INFO/DR_*_INFO) to provide deterministic regression tests.",
+  "vectors": [
+    {
+      "op": "x25519_public",
+      "private_hex": "77076d0a7318a57d3c16c17251b26645df4c2f87ebc0992ab177fba51db92c2a",
+      "expected_public_hex": "8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a"
+    },
+    {
+      "op": "x25519_public",
+      "private_hex": "5dab087e624a8a4b79e17f8b83800ee66f3bb1292618b6fd1c2f8b27ff88e0eb",
+      "expected_public_hex": "de9edb7d7b7dc1b4d35b61c2ece435373f8343c85b78674dadfc7e146f882b4f"
+    },
+    {
+      "op": "x25519_dh",
+      "private_hex": "77076d0a7318a57d3c16c17251b26645df4c2f87ebc0992ab177fba51db92c2a",
+      "peer_public_hex": "de9edb7d7b7dc1b4d35b61c2ece435373f8343c85b78674dadfc7e146f882b4f",
+      "expected_shared_hex": "4a5d9d5ba4ce2de1728e3bf480350f25e07e21c947d19e3376f09b3c1e161742"
+    },
+    {
+      "op": "hkdf_sha256",
+      "salt_hex": "000102030405060708090a0b0c",
+      "ikm_hex": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+      "info_hex": "f0f1f2f3f4f5f6f7f8f9",
+      "length": 42,
+      "expected_okm_hex": "3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf34007208d5b887185865"
+    },
+    {
+      "op": "x3dh_no_opk",
+      "ik_a_priv_hex": "a83e76632ce59da3054521ce3c4b705332bf7a7cd4f98913f3e60bf8bf1f6376",
+      "ek_a_priv_hex": "40e99f600ff749821edef18b3ed8c23f3055d5a4d08adcfdf6ae86bc5baa2c6d",
+      "ik_b_priv_hex": "207fd1afa987dc63e80e86121f2f2210d855abbf0587e42f40275b07ceb60a44",
+      "spk_b_priv_hex": "48d3141a45faba3eac6e767f36b07aa4e97d9457422300bdcac7650e8161a442",
+      "expected_sk_hex": "1faeda7d8ca91efb858565c4ebde630132a503c22387d1282211198747c91357",
+      "expected_ad_hex": "5610884fc8ae02ba4c5083c9229b54d4d056fa5ee51e7c3aaee4fb2a78b1896b466449b9682370dde0f4f0973dcd10e7f789df9ffe711c83cbfcd06d2e101071"
+    },
+    {
+      "op": "kdf_ck",
+      "ck_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "expected_next_ck_hex": "2cc7b5c291cd48fe3f875bc8098b22485256f5ed0503bfbcc793d720aec2ed54",
+      "expected_mk_hex": "830fafa1c3b6b124f691e9791d84e59ff3fe358eab546c26715531fc88c4cf27"
+    },
+    {
+      "op": "double_ratchet_encrypt_once",
+      "sk_hex": "1faeda7d8ca91efb858565c4ebde630132a503c22387d1282211198747c91357",
+      "bob_ratchet_priv_hex": "48d3141a45faba3eac6e767f36b07aa4e97d9457422300bdcac7650e8161a442",
+      "alice_seed_hex": "416c69636520445220444830",
+      "bob_seed_hex": "426f6220445220444831",
+      "ad_hex": "5610884fc8ae02ba4c5083c9229b54d4d056fa5ee51e7c3aaee4fb2a78b1896b466449b9682370dde0f4f0973dcd10e7f789df9ffe711c83cbfcd06d2e101071",
+      "plaintext_hex": "68656c6c6f",
+      "expected_header_hex": "35c2fdf01d6f75f39137cc442fbe8a9d6d131a5ea30dd54ff4777483fb1397410000000000000000",
+      "expected_ciphertext_hex": "6c28a6d050",
+      "expected_tag_hex": "452cdb5fc92dc3d4fdd86c2fe0bedd8e"
+    }
+  ]
+}

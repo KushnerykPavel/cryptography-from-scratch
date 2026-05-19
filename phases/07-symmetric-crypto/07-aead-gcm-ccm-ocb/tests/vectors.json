@@ -1,1 +1,41 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "AES block vector from NIST FIPS 197 (Appendix C.1). AES-GCM vector from NIST 'GCM Mode for Authentication and Confidentiality' examples (aes_gcm.pdf), Example #5 (Encrypt-Generate).",
+  "vectors": [
+    {
+      "op": "aes_encrypt_block",
+      "inputs": {
+        "key_hex": "000102030405060708090a0b0c0d0e0f",
+        "block_hex": "00112233445566778899aabbccddeeff"
+      },
+      "expected": {
+        "cipher_hex": "69c4e0d86a7b0430d8cdb78070b4c55a"
+      }
+    },
+    {
+      "op": "gcm_encrypt",
+      "inputs": {
+        "key_hex": "feffe9928665731c6d6a8f9467308308",
+        "nonce_hex": "cafebabefacedbaddecaf888",
+        "aad_hex": "3ad77bb40d7a3660a89ecaf32466ef97f5d3d585",
+        "plaintext_hex": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39"
+      },
+      "expected": {
+        "ciphertext_hex": "42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e091",
+        "tag_hex": "f07c2528eea2fca1211f905e1b6a881b"
+      }
+    },
+    {
+      "op": "gcm_decrypt",
+      "inputs": {
+        "key_hex": "feffe9928665731c6d6a8f9467308308",
+        "nonce_hex": "cafebabefacedbaddecaf888",
+        "aad_hex": "3ad77bb40d7a3660a89ecaf32466ef97f5d3d585",
+        "ciphertext_hex": "42831ec2217774244b7221b784d0d49ce3aa212f2c02a4e035c17e2329aca12e21d514b25466931c7d8f6a5aac84aa051ba30b396a0aac973d58e091",
+        "tag_hex": "f07c2528eea2fca1211f905e1b6a881b"
+      },
+      "expected": {
+        "plaintext_hex": "d9313225f88406e5a55909c5aff5269a86a7a9531534f7da2e4c303d8a318a721c3c0c95956809532fcf0e2449a6b525b16aedf5aa0de657ba637b39"
+      }
+    }
+  ]
+}

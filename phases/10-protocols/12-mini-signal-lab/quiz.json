@@ -1,4 +1,101 @@
 {
   "title": "Protocol Lab \u2014 Build a Mini Signal",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What problem does HKDF primarily solve in protocols?",
+      "options": [
+        "It generates prime numbers for Diffie-Hellman groups.",
+        "It turns messy input key material into uniformly distributed keys with context labels.",
+        "It compresses ciphertext so messages are smaller.",
+        "It guarantees authenticity without needing MACs or signatures."
+      ],
+      "correct": 1,
+      "explanation": "Protocols often get non-uniform secrets (e.g., DH outputs) and need multiple independent keys; HKDF helps extract uniform key material and separate purposes via an info label."
+    },
+    {
+      "stage": "pre",
+      "question": "In AEAD, what is \"associated data\" (AD) used for?",
+      "options": [
+        "It is encrypted but not authenticated.",
+        "It is authenticated but not encrypted.",
+        "It is neither encrypted nor authenticated.",
+        "It is encrypted twice for extra safety."
+      ],
+      "correct": 1,
+      "explanation": "Associated data is not hidden, but it is covered by authentication so tampering is detected."
+    },
+    {
+      "stage": "post",
+      "question": "Why does an X3DH-style setup combine multiple DH outputs before running a KDF?",
+      "options": [
+        "To make the handshake interactive and require both parties to be online.",
+        "To increase security by mixing long-term and ephemeral contributions into one session secret.",
+        "To avoid needing any identity keys at all.",
+        "To ensure messages can be decrypted even if authentication fails."
+      ],
+      "correct": 1,
+      "explanation": "Mixing several DH values lets the session secret depend on both parties' long-term keys and fresh ephemeral keys, improving authentication/binding and forward secrecy properties."
+    },
+    {
+      "stage": "post",
+      "question": "Which choice best describes what should be bound into AD for \"who am I talking to?\" security?",
+      "options": [
+        "Only the server's hostname, because the server is trusted.",
+        "Both parties' identity public keys (or authenticated identifiers) in a deterministic encoding.",
+        "Only the current chain key, because that changes every message.",
+        "Only the ciphertext length, because parsers need it."
+      ],
+      "correct": 1,
+      "explanation": "AD is where you bind stable identity information so a MitM can't swap keys without causing authentication failure (or at least a safety-number change)."
+    },
+    {
+      "stage": "post",
+      "question": "In the Double Ratchet, which key typically advances once per message to produce per-message keys?",
+      "options": [
+        "The identity key (IK).",
+        "The root key (RK).",
+        "The chain key (CK).",
+        "The public prekey bundle."
+      ],
+      "correct": 2,
+      "explanation": "The symmetric ratchet advances the chain key each message to derive a one-time message key."
+    },
+    {
+      "stage": "post",
+      "question": "What is the purpose of a MAX_SKIP limit when handling out-of-order messages?",
+      "options": [
+        "It makes encryption faster by skipping authentication checks.",
+        "It prevents memory/CPU DoS by bounding how many skipped message keys you derive/store.",
+        "It guarantees that messages are delivered in order by the server.",
+        "It ensures the same message key is reused for a whole conversation."
+      ],
+      "correct": 1,
+      "explanation": "Without a bound, an attacker can force you to derive/store huge numbers of skipped keys by sending a message with a very large index."
+    },
+    {
+      "stage": "post",
+      "question": "Your client detects that a peer's identity key changed unexpectedly. What is the safest next step?",
+      "options": [
+        "Continue automatically; identity changes are always harmless.",
+        "Silently accept the new identity key and overwrite the old one.",
+        "Stop and require re-verification (e.g., safety number comparison) before trusting the new key.",
+        "Disable authentication and only encrypt the plaintext."
+      ],
+      "correct": 2,
+      "explanation": "Unexpected identity key changes are a primary MitM signal; you should treat it as a trust event and require re-verification."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement is true about a malicious or compromised prekey server in a Signal-like design?",
+      "options": [
+        "It cannot cause trouble because the Double Ratchet alone prevents MitM.",
+        "It can attempt a MitM by swapping identity keys unless users verify identity keys out-of-band.",
+        "It can always decrypt messages because it stores prekey bundles.",
+        "It can modify ciphertext and still pass authentication because AD is optional."
+      ],
+      "correct": 1,
+      "explanation": "If users never verify identity keys, a server can substitute keys and sit in the middle (two encrypted links). Identity verification (safety numbers, QR codes, transparency) addresses this."
+    }
+  ]
 }

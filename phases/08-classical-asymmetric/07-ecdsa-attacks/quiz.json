@@ -1,4 +1,101 @@
 {
-  "title": "Attacking ECDSA \u2014 Reused Nonces, Bias, Lattice Recovery",
-  "questions": []
+  "title": "Attacking ECDSA — Nonce Reuse and Weak RNG",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In ECDSA, the per-signature nonce k should be:",
+      "options": [
+        "Secret, unique per signature, and (ideally) uniformly random",
+        "Public so verifiers can check the signature faster",
+        "Constant per key so signatures are reproducible",
+        "Random-looking, but reuse is fine if the message changes"
+      ],
+      "correct": 0,
+      "explanation": "If k is reused, leaked, or guessable, the private key d can often be recovered algebraically."
+    },
+    {
+      "stage": "pre",
+      "question": "Two ECDSA signatures on different messages have the same r value (over the same curve). What is the most likely explanation?",
+      "options": [
+        "They reused the same nonce k (or produced the same k by accident)",
+        "The hash function collided, so r must match",
+        "The public key is invalid, so r becomes constant",
+        "This is normal; r repeats frequently by design"
+      ],
+      "correct": 0,
+      "explanation": "For a fixed curve and base point, r is derived from k·G. Same r strongly indicates the same k."
+    },
+    {
+      "stage": "post",
+      "question": "Given one ECDSA signature (r, s) on message m, and you learn the nonce k used for that signature, which expression recovers the private key d (mod n)?",
+      "options": [
+        "d ≡ (s·k − z) · r^{-1} (mod n)",
+        "d ≡ (z − s) · k^{-1} (mod n)",
+        "d ≡ (r − z) · s^{-1} (mod n)",
+        "d ≡ (s − r) · z^{-1} (mod n)"
+      ],
+      "correct": 0,
+      "explanation": "From s·k ≡ z + r·d (mod n), rearrange to r·d ≡ s·k − z and multiply by r^{-1}."
+    },
+    {
+      "stage": "post",
+      "question": "Two signatures (r, s1) on m1 and (r, s2) on m2 reused the same nonce. Which formula recovers k (mod n)?",
+      "options": [
+        "k ≡ (z1 − z2) · (s1 − s2)^{-1} (mod n)",
+        "k ≡ (s1 − s2) · (z1 − z2)^{-1} (mod n)",
+        "k ≡ (r1 − r2) · (s1 − s2)^{-1} (mod n)",
+        "k ≡ (z1 + z2) · (s1 + s2)^{-1} (mod n)"
+      ],
+      "correct": 0,
+      "explanation": "Subtract the two equations s1·k ≡ z1 + r·d and s2·k ≡ z2 + r·d to eliminate d."
+    },
+    {
+      "stage": "post",
+      "question": "Why does drawing k from a small range (e.g., 1..65536) break ECDSA even if k is never reused?",
+      "options": [
+        "An attacker can brute-force k by matching r = (k·G)_x mod n, then recover d",
+        "Small k makes SHA-256 weaker, which breaks the message hash",
+        "Small k makes r equal to k, so the nonce is directly visible",
+        "Small k only breaks performance, not security"
+      ],
+      "correct": 0,
+      "explanation": "If k is guessable, you can treat it as ‘known nonce’ and compute d using a single modular inverse."
+    },
+    {
+      "stage": "post",
+      "question": "Which mitigation specifically targets RNG failures that would otherwise cause nonce reuse in ECDSA?",
+      "options": [
+        "Deterministic nonces (RFC6979-style) derived from (d, H(m))",
+        "Using a longer hash function output for z",
+        "Encoding signatures in DER instead of raw bytes",
+        "Verifying signatures with a larger window size"
+      ],
+      "correct": 0,
+      "explanation": "RFC6979 replaces ‘random k’ with a deterministic HMAC-based derivation so k won’t repeat due to RNG state reuse."
+    },
+    {
+      "stage": "post",
+      "question": "Which validation check is a minimum requirement to prevent obvious malformed-signature cases in ECDSA verification?",
+      "options": [
+        "Reject signatures where r or s are not in the range 1..n-1",
+        "Accept any r and s; invalid ones will fail naturally",
+        "Only check that r != s",
+        "Only check that the message hash z is non-zero"
+      ],
+      "correct": 0,
+      "explanation": "ECDSA requires 1 ≤ r,s < n. Skipping this can turn edge cases into vulnerabilities or inconsistent behavior across implementations."
+    },
+    {
+      "stage": "post",
+      "question": "A system uses RFC6979 deterministic nonces for ECDSA. Which statement is true?",
+      "options": [
+        "It prevents RNG-based nonce reuse, but side-channel leaks of k (or k bits) can still recover d",
+        "It makes ECDSA signatures unforgeable even if k is leaked once",
+        "It guarantees constant-time signing without extra work",
+        "It makes ECDSA equivalent to Ed25519 security-wise"
+      ],
+      "correct": 0,
+      "explanation": "Deterministic nonces remove one major failure mode (bad randomness), but leaking k (or enough of it) is still fatal."
+    }
+  ]
 }

@@ -1,1 +1,110 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Curve params: SEC 2 (secp256k1). ECDSA equations: SEC 1. Deterministic nonce derivation: RFC 6979 (HMAC-SHA256). Signature/attack vectors below are computed deterministically with this lesson's `code/main.py` implementation over secp256k1.",
+  "vectors": [
+    {
+      "op": "mod_inv",
+      "inputs": { "a": 2, "m": 13 },
+      "expected": 7
+    },
+    {
+      "op": "ecdsa_pubkey",
+      "inputs": { "priv": 1 },
+      "expected": {
+        "x": "0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+        "y": "0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8"
+      }
+    },
+    {
+      "op": "ecdsa_sign_with_k",
+      "inputs": { "msg_utf8": "hello", "priv": 1, "k": 2 },
+      "expected": {
+        "r": "0xc6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+        "s": "0xf97b66a750cf103dab96bdccadbd2fba991e44c72def8fa0ef414dd460193c25"
+      }
+    },
+    {
+      "op": "ecdsa_verify",
+      "inputs": {
+        "msg_utf8": "hello",
+        "pub": {
+          "x": "0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+          "y": "0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8"
+        },
+        "sig": {
+          "r": "0xc6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+          "s": "0xf97b66a750cf103dab96bdccadbd2fba991e44c72def8fa0ef414dd460193c25"
+        }
+      },
+      "expected": true
+    },
+    {
+      "op": "recover_k_from_reused_nonce",
+      "inputs": {
+        "msg1_utf8": "msg1",
+        "sig1": {
+          "r": "0xc6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+          "s": "0xf7516885110cfafcaec4b6b68bcb9d6e257f963830bb6a23b49162beecbb627d"
+        },
+        "msg2_utf8": "msg2",
+        "sig2": {
+          "r": "0xc6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+          "s": "0xb6c4d0bc691b1a2701d70a351cec3c7c91e5f85f33f4daa826900341e478e110"
+        }
+      },
+      "expected": 2
+    },
+    {
+      "op": "recover_privkey_from_reused_nonce",
+      "inputs": {
+        "msg1_utf8": "msg1",
+        "sig1": {
+          "r": "0xc6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+          "s": "0xf7516885110cfafcaec4b6b68bcb9d6e257f963830bb6a23b49162beecbb627d"
+        },
+        "msg2_utf8": "msg2",
+        "sig2": {
+          "r": "0xc6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+          "s": "0xb6c4d0bc691b1a2701d70a351cec3c7c91e5f85f33f4daa826900341e478e110"
+        }
+      },
+      "expected": { "priv": 1, "k": 2 }
+    },
+    {
+      "op": "recover_privkey_from_known_nonce",
+      "inputs": {
+        "msg_utf8": "leak",
+        "sig": {
+          "r": "0xfd36a0a17d8af5e97e75083e9607dee24f03356908077b1987270a20aa3eea62",
+          "s": "0x6ee0b373a5a4ac1cee346ed3651703fdc966ff528c68ec94a94ed37a9a49611b"
+        },
+        "k": "0xcafe"
+      },
+      "expected": "0xbeef"
+    },
+    {
+      "op": "brute_force_k_from_small_range",
+      "inputs": {
+        "r": "0xdb0c51cc634a4096374b0b895584a3ca2fb3bea4fd0ee2361f8db63a650fcee6",
+        "max_k": 5000
+      },
+      "expected": 1337
+    },
+    {
+      "op": "recover_privkey_from_known_nonce",
+      "inputs": {
+        "msg_utf8": "weak",
+        "sig": {
+          "r": "0xdb0c51cc634a4096374b0b895584a3ca2fb3bea4fd0ee2361f8db63a650fcee6",
+          "s": "0x1d5b9a54d0a9d86cd5adc619eef79769f72ebe0b7c6fae4a876db3002d746a0a"
+        },
+        "k": 1337
+      },
+      "expected": "0x12345"
+    },
+    {
+      "op": "rfc6979_nonce_sha256",
+      "inputs": { "msg_utf8": "deterministic", "priv": "0x4242" },
+      "expected": "0x585db73331df51fc9ce4dd057081e25bf36e5ed7a31da1ed3a7c104a7e283342"
+    }
+  ]
+}

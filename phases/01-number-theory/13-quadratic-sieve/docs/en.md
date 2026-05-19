@@ -370,6 +370,12 @@ Example output from `code/main.py`:
 10403: (101, 103)
 ```
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 In practice, you would use PARI/GP, SageMath, Magma, msieve, CADO-NFS, or a vetted computer-algebra package rather than this code. Those tools combine trial division, Pollard methods, ECM, QS variants, and NFS, then choose the method based on the size and shape of `n`.

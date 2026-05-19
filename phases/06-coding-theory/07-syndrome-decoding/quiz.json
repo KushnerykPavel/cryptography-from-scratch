@@ -1,4 +1,101 @@
 {
-  "title": "Syndrome Decoding & NP-Hardness",
-  "questions": []
+  "title": "Syndrome Decoding (and why it gets hard fast)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "For a linear code with parity-check matrix H, what does syndrome(r) = H·r^T (mod 2) = 0 mean?",
+      "options": [
+        "r satisfies all parity checks (it is a valid codeword)",
+        "r is the all-zero vector",
+        "r contains no bit flips compared to what was sent",
+        "r has minimum Hamming weight among all received words"
+      ],
+      "correct": 0,
+      "explanation": "Zero syndrome means r satisfies the parity equations H·r^T=0, i.e., r is in the code. It does not guarantee the channel had no errors (miscorrection is possible with some decoders)."
+    },
+    {
+      "stage": "pre",
+      "question": "On a binary symmetric channel where each bit flips independently with small probability p, which error pattern is usually most likely for a given syndrome?",
+      "options": [
+        "The lowest-Hamming-weight error pattern consistent with the syndrome",
+        "The highest-Hamming-weight error pattern consistent with the syndrome",
+        "A uniformly random error pattern consistent with the syndrome",
+        "Any error pattern that makes the corrected word a codeword"
+      ],
+      "correct": 0,
+      "explanation": "With small p, weight-1 errors are far more likely than weight-2, etc., so minimum-weight is a maximum-likelihood rule under this model."
+    },
+    {
+      "stage": "post",
+      "question": "If r = c ⊕ e where c is a valid codeword (H·c^T=0), what is the syndrome of r?",
+      "options": [
+        "H·e^T (mod 2)",
+        "H·c^T (mod 2)",
+        "H·(c ⊕ e)^T (mod 2) simplifies to c ⊕ e",
+        "Always the all-zero vector"
+      ],
+      "correct": 0,
+      "explanation": "By linearity in GF(2): H·r^T = H·(c ⊕ e)^T = H·c^T ⊕ H·e^T = 0 ⊕ H·e^T."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson's Hamming(7,4) convention, syndrome bits are ordered [1,2,4] least-significant first. What position does syndrome [1,0,1] indicate?",
+      "options": [
+        "Position 5",
+        "Position 3",
+        "Position 6",
+        "Position 7"
+      ],
+      "correct": 0,
+      "explanation": "Interpreting [s0,s1,s2] as s0 + 2·s1 + 4·s2 gives 1 + 0 + 4 = 5."
+    },
+    {
+      "stage": "post",
+      "question": "You build a syndrome table with max_weight = 1, but the true channel error has weight 2. What can happen?",
+      "options": [
+        "The decoder can output a valid-but-wrong codeword (miscorrection)",
+        "The decoder must always detect the mismatch and refuse to decode",
+        "The syndrome becomes undefined, so decoding is impossible",
+        "The decoder will still recover the original codeword for any code"
+      ],
+      "correct": 0,
+      "explanation": "A weight-2 error can share a syndrome with some weight-1 error, so a t=1 table may 'explain' the syndrome incorrectly and flip the wrong bit."
+    },
+    {
+      "stage": "post",
+      "question": "How many binary error patterns have Hamming weight ≤ 2 when n = 7?",
+      "options": [
+        "29",
+        "21",
+        "15",
+        "49"
+      ],
+      "correct": 0,
+      "explanation": "It is C(7,0)+C(7,1)+C(7,2)=1+7+21=29."
+    },
+    {
+      "stage": "post",
+      "question": "What is the core computational task in general (minimum-weight) syndrome decoding for an arbitrary linear code?",
+      "options": [
+        "Find the lowest-weight e such that H·e^T equals the observed syndrome",
+        "Compute a generator matrix G from H by matrix inversion over the reals",
+        "Sort all codewords by Hamming weight and pick the smallest one",
+        "Compute a hash of r and compare it to a checksum"
+      ],
+      "correct": 0,
+      "explanation": "General decoding reduces to finding a minimum-weight error vector satisfying a linear constraint, which is NP-hard for arbitrary linear codes."
+    },
+    {
+      "stage": "post",
+      "question": "Which mistake most directly breaks syndrome-table decoding even if all math is 'mod 2'?",
+      "options": [
+        "Using inconsistent conventions for s = H·r^T vs s = r·H^T or changing bit order between encoding and decoding",
+        "Using XOR for addition and AND for multiplication",
+        "Checking that syndrome(codeword)=0 before decoding",
+        "Representing vectors as Python lists instead of tuples"
+      ],
+      "correct": 0,
+      "explanation": "Syndrome tables are convention-sensitive: if you change row/column orientation or bit ordering, the same received word maps to a different syndrome key."
+    }
+  ]
 }

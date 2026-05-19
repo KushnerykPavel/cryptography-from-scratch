@@ -1,4 +1,96 @@
 {
   "title": "Hamming Distance & Minimum Distance",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Hamming distance is defined between which pair of objects?",
+      "options": [
+        "Two equal-length words/vectors by counting positions that differ",
+        "Any two strings by counting insertions/deletions/substitutions",
+        "Two integers by subtracting their values",
+        "Any two byte strings by aligning them at their starts, even if lengths differ"
+      ],
+      "correct": 0,
+      "explanation": "Hamming distance compares aligned positions and requires equal length; edit distance is a different concept."
+    },
+    {
+      "stage": "pre",
+      "question": "For binary vectors a and b, why is d(a,b) = weight(a XOR b) useful?",
+      "options": [
+        "XOR marks exactly the positions where bits differ",
+        "XOR compresses the vectors into a shorter one",
+        "XOR sorts bits so distance is order-independent",
+        "XOR removes noise from a received word"
+      ],
+      "correct": 0,
+      "explanation": "In a XOR b, a 1 means the bits differed at that position, so counting 1s gives the distance."
+    },
+    {
+      "stage": "post",
+      "question": "What is the Hamming distance between a=101101 and b=110100?",
+      "options": ["3", "2", "4", "1"],
+      "correct": 0,
+      "explanation": "They differ in three positions (bits 2, 3, and 6)."
+    },
+    {
+      "stage": "post",
+      "question": "A common way to compute bit-level Hamming distance between equal-length byte strings is:",
+      "options": [
+        "Sum popcount(x XOR y) for each pair of bytes",
+        "Count how many bytes differ (ignoring bit differences inside a byte)",
+        "Compute Levenshtein distance on their hex strings",
+        "Convert to integers and subtract, then take absolute value"
+      ],
+      "correct": 0,
+      "explanation": "XOR highlights differing bits and popcount counts them; summing over bytes gives total bit distance."
+    },
+    {
+      "stage": "post",
+      "question": "The minimum distance d_min(C) of a block code C is:",
+      "options": [
+        "The minimum Hamming distance between any two distinct codewords in C",
+        "The maximum Hamming distance between any two codewords in C",
+        "The average Hamming distance between codewords in C",
+        "The distance from the all-zero word to the nearest codeword"
+      ],
+      "correct": 0,
+      "explanation": "d_min looks at the closest pair of distinct valid codewords; it controls detect/correct guarantees."
+    },
+    {
+      "stage": "post",
+      "question": "If a code has minimum distance d_min = d, what are the standard guarantees?",
+      "options": [
+        "Detect up to d-1 errors; uniquely correct up to floor((d-1)/2) errors",
+        "Detect up to d errors; uniquely correct up to d-1 errors",
+        "Detect up to floor((d-1)/2) errors; uniquely correct up to d-1 errors",
+        "Detect and correct exactly d errors"
+      ],
+      "correct": 0,
+      "explanation": "Detection uses the fact that < d flips can't reach another codeword; unique correction needs non-overlapping radius-t balls."
+    },
+    {
+      "stage": "post",
+      "question": "In nearest-neighbor decoding, what does it mean if there is a tie for the closest codeword?",
+      "options": [
+        "Unique decoding is not possible for that received word",
+        "The code is guaranteed to correct the error anyway",
+        "The received word must already be a valid codeword",
+        "You can safely pick either codeword without changing the message"
+      ],
+      "correct": 0,
+      "explanation": "A tie means the received word lies on a decision boundary; choosing one arbitrarily can produce the wrong message."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: if a system 'corrects' by breaking ties arbitrarily (e.g., first codeword wins), what can an attacker do?",
+      "options": [
+        "Craft an ambiguous received word that forces a chosen decoded message (silent miscorrection)",
+        "Force the decoder to always output the all-zero codeword",
+        "Guarantee that every error will be detected and rejected",
+        "Prevent any decoding from happening at all, even for valid codewords"
+      ],
+      "correct": 0,
+      "explanation": "If tie-breaking is predictable, an attacker can steer decoding outcomes by pushing words onto decision boundaries."
+    }
+  ]
 }

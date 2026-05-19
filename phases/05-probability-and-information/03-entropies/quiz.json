@@ -1,4 +1,101 @@
 {
   "title": "Min-Entropy, Shannon Entropy, Renyi Entropy",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which entropy is the right quantity for one-shot guessing security of a key?",
+      "options": [
+        "min-entropy H_∞ = -log2 max_x p(x)",
+        "Shannon entropy H = -Σ p(x) log2 p(x)",
+        "collision entropy H_2 = -log2 Σ p(x)^2",
+        "max-entropy H_0 = log2 |support|"
+      ],
+      "correct": 0,
+      "explanation": "An adversary's best one-shot guess succeeds with probability max_x p(x). Min-entropy directly encodes that worst case; Shannon averages over the distribution and can overstate security."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the Shannon entropy of a fair coin (in bits)?",
+      "options": [
+        "1",
+        "0",
+        "log2(3)",
+        "1/2"
+      ],
+      "correct": 0,
+      "explanation": "H = -(0.5 log2 0.5 + 0.5 log2 0.5) = 1 bit."
+    },
+    {
+      "stage": "post",
+      "question": "How does the Rényi entropy H_α(X) behave as a function of α ≥ 0?",
+      "options": [
+        "Monotone non-increasing in α: H_0 ≥ H_1 ≥ H_2 ≥ H_∞",
+        "Monotone non-decreasing in α",
+        "Convex but not monotone in α",
+        "Constant in α for any fixed distribution"
+      ],
+      "correct": 0,
+      "explanation": "Rényi entropy decreases as α grows. So min-entropy (α = ∞) is always the smallest of the named entropies."
+    },
+    {
+      "stage": "post",
+      "question": "For the distribution `{a: 0.5, b: 0.25, c: 0.125, d: 0.125}`, what is the min-entropy?",
+      "options": [
+        "1 bit",
+        "log2(4) = 2 bits",
+        "1.75 bits",
+        "1.5 bits"
+      ],
+      "correct": 0,
+      "explanation": "H_∞ = -log2(max p) = -log2(0.5) = 1 bit. (Shannon would give 1.75 — much more optimistic.)"
+    },
+    {
+      "stage": "post",
+      "question": "Which statement about KL divergence D(P || Q) is correct?",
+      "options": [
+        "It is non-negative, asymmetric, and can be +∞ when Q(x)=0 < P(x) for some x",
+        "It is a metric satisfying D(P,Q) = D(Q,P) and the triangle inequality",
+        "It is bounded above by 1 for all P, Q",
+        "It equals the statistical distance between P and Q"
+      ],
+      "correct": 0,
+      "explanation": "KL is non-negative (Gibbs) but asymmetric and unbounded; it is not a metric. It is connected to SD via Pinsker's inequality, not equal to it."
+    },
+    {
+      "stage": "post",
+      "question": "Which formula correctly relates mutual information and entropy?",
+      "options": [
+        "I(X; Y) = H(X) + H(Y) - H(X, Y)",
+        "I(X; Y) = H(X) · H(Y)",
+        "I(X; Y) = H(X | Y) + H(Y | X)",
+        "I(X; Y) = H(X, Y) - H(X) - H(Y)"
+      ],
+      "correct": 0,
+      "explanation": "Mutual information is the gap between the joint entropy and the sum of marginal entropies; it equals 0 iff X and Y are independent."
+    },
+    {
+      "stage": "post",
+      "question": "Leftover Hash Lemma rule of thumb: to extract L uniform bits at statistical security 2^-s from a source with min-entropy k, you need roughly:",
+      "options": [
+        "k ≥ L + 2s",
+        "k ≥ L",
+        "k ≥ L · s",
+        "k ≥ 2^L · s"
+      ],
+      "correct": 0,
+      "explanation": "The LHL says L ≤ k - 2 log2(1/ε) with ε = 2^-s, giving k ≥ L + 2s. The factor 2 is why high-quality extractors lose entropy."
+    },
+    {
+      "stage": "post",
+      "question": "A TRNG outputs each bit independently with Pr[bit = 0] = 0.9. What is the per-bit min-entropy?",
+      "options": [
+        "-log2(0.9) ≈ 0.152 bits",
+        "1 bit (since the bit is unpredictable)",
+        "0.469 bits (Shannon entropy)",
+        "0 bits (because outputs are biased)"
+      ],
+      "correct": 0,
+      "explanation": "Min-entropy is -log2 max p = -log2 0.9 ≈ 0.152. Shannon (0.469) is the wrong quantity for guessing security."
+    }
+  ]
 }

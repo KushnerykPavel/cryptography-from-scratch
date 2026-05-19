@@ -1,1 +1,20 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal vectors derived from: preimage_bound = q/2^n, collision_bound = q*(q-1)/(2*2^n), birthday_queries = sqrt(2*ln(1/(1-p))*2^n), rom_security_bits = n - log2(q).",
+  "vectors": [
+    {"op": "preimage_advantage_bound", "q": 0,    "n": 256, "expected": 0.0},
+    {"op": "preimage_advantage_bound", "q": 1,    "n": 10,  "expected": 0.0009765625},
+    {"op": "preimage_advantage_bound", "q": 1024, "n": 10,  "expected": 1.0},
+    {"op": "preimage_advantage_bound", "q": 1,    "n": 128, "expected": 2.938735877055719e-39},
+    {"op": "collision_advantage_bound", "q": 0, "n": 128, "expected": 0.0},
+    {"op": "collision_advantage_bound", "q": 1, "n": 128, "expected": 0.0},
+    {"op": "collision_advantage_bound", "q": 2, "n": 10,  "expected": 0.0009765625},
+    {"op": "collision_advantage_bound", "q": 3, "n": 10,  "expected": 0.0029296875},
+    {"op": "rom_security_bits", "q": 1,    "n": 256, "expected": 256.0},
+    {"op": "rom_security_bits", "q": 1024, "n": 256, "expected": 246.0},
+    {"op": "rom_security_bits", "q": 1,    "n": 128, "expected": 128.0},
+    {"op": "rom_security_bits", "q": 1024, "n": 128, "expected": 118.0},
+    {"op": "birthday_queries", "n": 10, "p": 0.5,  "expected": 37.67712072049519},
+    {"op": "birthday_queries", "n": 16, "p": 0.5,  "expected": 301.4169657639615},
+    {"op": "birthday_queries", "n": 10, "p": 0.01, "expected": 4.536858806263545}
+  ]
+}

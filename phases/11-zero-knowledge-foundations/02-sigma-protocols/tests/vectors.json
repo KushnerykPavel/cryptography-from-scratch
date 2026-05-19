@@ -1,1 +1,50 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors for toy Schnorr Σ-protocol. Group: p=23, q=11, g=2 generates the subgroup of order q. Statement: y=g^x mod p. Real proof: a=g^r, s=(r+c*x) mod q. Verify: g^s == a*y^c mod p. HVZK simulation: choose (c,s), set a=g^s * (y^c)^(-1) mod p. Extraction: x=(s1-s2)/(c1-c2) mod q.",
+  "vectors": [
+    { "op": "mod_inv", "a": 16, "mod": 23, "expected": 13 },
+    { "op": "mod_inv", "a": 8, "mod": 11, "expected": 7 },
+    { "op": "mod_inv", "a": 0, "mod": 23, "expected_error": "0 has no inverse modulo mod" },
+    { "op": "mod_inv", "a": 6, "mod": 15, "expected_error": "a and mod are not coprime" },
+
+    { "op": "schnorr_public_key", "p": 23, "q": 11, "g": 2, "x": 3, "expected": 8 },
+    { "op": "schnorr_commit", "p": 23, "q": 11, "g": 2, "r": 4, "expected": 16 },
+    { "op": "schnorr_response", "q": 11, "r": 4, "c": 5, "x": 3, "expected": 8 },
+
+    {
+      "op": "schnorr_verify",
+      "p": 23,
+      "q": 11,
+      "g": 2,
+      "y": 8,
+      "a": 16,
+      "c": 5,
+      "s": 8,
+      "expected": true
+    },
+    {
+      "op": "schnorr_verify",
+      "p": 23,
+      "q": 11,
+      "g": 2,
+      "y": 8,
+      "a": 16,
+      "c": 5,
+      "s": 9,
+      "expected": false
+    },
+
+    {
+      "op": "schnorr_simulate_hvz",
+      "p": 23,
+      "q": 11,
+      "g": 2,
+      "y": 8,
+      "c": 2,
+      "s": 7,
+      "expected": { "commitment": 2, "challenge": 2, "response": 7 }
+    },
+
+    { "op": "schnorr_extract_witness", "q": 11, "c1": 2, "s1": 10, "c2": 5, "s2": 8, "expected": 3 },
+    { "op": "schnorr_extract_witness", "q": 11, "c1": 2, "s1": 10, "c2": 2, "s2": 10, "expected_error": "need two different challenges to extract" }
+  ]
+}

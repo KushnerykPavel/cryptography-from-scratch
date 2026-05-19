@@ -1,1 +1,32 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors computed by phases/09-hashes-commitments-accumulators/06-kzg/code/main.py using toy parameters (q=1019, p=2039, g=4) and setup secret s=17.",
+  "vectors": [
+    {
+      "op": "poly_eval",
+      "inputs": { "mod": 1019, "coeffs": [3, 5, 7, 11], "x": 9 },
+      "expected": { "y": 482 }
+    },
+    {
+      "op": "poly_divmod_x_minus_z",
+      "inputs": { "mod": 1019, "coeffs": [3, 5, 7, 11], "z": 9 },
+      "expected": { "quotient": [959, 106, 11], "remainder": 482 }
+    },
+    {
+      "op": "kzg_open_verify",
+      "inputs": { "max_degree": 8, "s": 17, "coeffs": [3, 5, 7, 11], "z": 9 },
+      "expected": {
+        "commitment_scalar": 109,
+        "commitment_value": "0x363",
+        "y": 482,
+        "proof_scalar": 845,
+        "proof_value": "0xf2",
+        "verifies": true
+      }
+    },
+    {
+      "op": "kzg_verify_rejects_wrong_y",
+      "inputs": { "max_degree": 8, "s": 17, "coeffs": [3, 5, 7, 11], "z": 9, "y": 483 },
+      "expected": { "verifies": false }
+    }
+  ]
+}

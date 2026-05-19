@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why X25519 operates on only the u-coordinate (x-only) instead of full `(x, y)` points and how the Montgomery ladder maintains this invariant using projective `(X:Z)` pairs
+- Implement scalar clamping for Curve25519 by clearing the lowest 3 bits, clearing the highest bit, and setting bit 254, and explain the security rationale for each step
+- Compute the RFC 7748 X25519 function end-to-end: decode 32-byte inputs, clamp the scalar, run the ladder, and encode the 32-byte output
+- Identify the all-zero output check, explain when it triggers (small-order input points), and describe how to implement the check in a side-channel-resistant way
+- Distinguish Montgomery curve arithmetic from short Weierstrass point addition and explain which features make Curve25519 well-suited for high-performance, low-footgun ECDH
+
 ## The Problem
 
 You’ll see X25519 everywhere: TLS 1.3, Signal-style protocols, WireGuard, modern SSH, and more. In many systems it’s the default ECDH choice because it’s fast, widely implemented, and designed to reduce footguns.
@@ -113,6 +121,12 @@ The important mental model is:
 ### Step 4: X25519 as a function
 
 Now wrap it into `x25519(scalar32, u32) -> out32` and add a helper for basepoint multiplication `x25519_basepoint(scalar32)`.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

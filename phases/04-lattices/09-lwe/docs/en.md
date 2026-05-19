@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why adding a small error vector to a linear system b = A·s + e mod q makes recovering the secret computationally hard
+- Distinguish Search-LWE (recover s) from Decision-LWE (distinguish LWE samples from uniform) and explain why both matter
+- Implement LWE key generation, Regev-style bit encryption, and decryption using modular linear algebra and center-lift rounding
+- Identify the role of each parameter (n, m, q, error bound) and explain how dimension n is the primary hardness knob
+- Apply a brute-force attack on toy LWE by enumerating ternary secrets and verifying error bounds, confirming why real schemes need large n
+
 ## The Problem
 
 Modern post-quantum cryptography is built on problems that look deceptively simple: systems of linear equations. The trick is that the equations are **noisy**.
@@ -100,6 +108,12 @@ from main import lwe_encrypt_bit, lwe_decrypt_bit
 
 ct = lwe_encrypt_bit(rng, params, pk, 1)
 mu_hat = lwe_decrypt_bit(params, sk, ct)
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

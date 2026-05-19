@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why every common divisor of a and b also divides every remainder in the Euclidean algorithm
+- Compute gcd(a, b) step-by-step using the remainder chain and identify the last non-zero remainder
+- Implement the Extended Euclidean Algorithm with coefficient tracking to produce Bezout triples
+- Verify the identity s·a + t·b = gcd(a, b) as the correctness contract for any EEA implementation
+- Apply the coprimality gate gcd(e, phi(n)) = 1 to diagnose RSA key-generation failures
+
 ## The Problem
 
 In lesson 01, modular arithmetic worked because we could reduce numbers and keep computing inside `Z/nZ`. But the moment you ask a harder question such as "does `a` have an inverse mod `n`?" or "can these two congruences be recombined?" reduction alone is not enough. You need a way to measure how tightly two integers are entangled.
@@ -157,6 +165,12 @@ assert s * (-240) + t * 46 == 2
 ```
 
 That is the real contract. The coefficients are not unique, but the identity must hold.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

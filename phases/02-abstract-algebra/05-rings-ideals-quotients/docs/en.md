@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain the ring axioms and distinguish units from zero divisors in `Z/nZ` for both prime and composite moduli
+- Identify whether a subset of a ring is an ideal by verifying the absorption property in addition to additive subgroup conditions
+- Construct principal ideals from a single generator and enumerate the resulting cosets in the quotient ring `R/I`
+- Verify that quotient ring operations are well-defined by confirming that the ideal's absorption rule makes coset representatives interchangeable
+- Apply the ring/ideal/quotient framework to recognize why structures like `Z_q[X]/(X^256 + 1)` in Kyber and `F_2[x]/(x^8 + x^4 + x^3 + x + 1)` in AES are the same algebraic recipe with different ingredients
+
 ## The Problem
 
 Groups carry one operation. Cryptography wants two.
@@ -348,6 +356,12 @@ def quotient_is_ring(elements, ideal, add, mul):
 ```
 
 The well-definedness of `quotient_mul` is *exactly* the absorption rule for `I`. Without absorption, picking a different representative would give a different coset.
+
+Run it:
+
+```
+python3 code/main.py
+```
 
 ## Use It
 

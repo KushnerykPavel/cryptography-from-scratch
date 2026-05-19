@@ -1,4 +1,100 @@
 {
-  "title": "Chaum-Pedersen Equality of Discrete Logs",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does a Chaum–Pedersen (DLEQ) proof aim to show?",
+      "options": [
+        "That log_g(y1) equals log_h(y2) without revealing the shared exponent",
+        "That y1 and y2 are uniformly random elements of the group",
+        "That the prover can compute discrete logs for arbitrary group elements",
+        "That the verifier learns the secret exponent x as part of verification"
+      ],
+      "correct": 0,
+      "explanation": "A DLEQ proof shows both public values use the same secret exponent x, while keeping x hidden."
+    },
+    {
+      "stage": "pre",
+      "question": "In the Chaum–Pedersen protocol, what are the prover’s commitments a1 and a2?",
+      "options": [
+        "a1 = g^r and a2 = h^r for a fresh random nonce r",
+        "a1 = y1^r and a2 = y2^r for a fresh random nonce r",
+        "a1 = g^x and a2 = h^x where x is the witness being proved",
+        "a1 = g^c and a2 = h^c where c is the verifier’s challenge"
+      ],
+      "correct": 0,
+      "explanation": "The prover commits with the same nonce r under both bases: a1=g^r and a2=h^r."
+    },
+    {
+      "stage": "post",
+      "question": "Which verification checks define Chaum–Pedersen for y1=g^x and y2=h^x?",
+      "options": [
+        "Check g^s == a1·y1^c and h^s == a2·y2^c (mod p)",
+        "Check g^c == a1·y1^s and h^c == a2·y2^s (mod p)",
+        "Check g^s == y1·a1^c and h^s == y2·a2^c (mod p)",
+        "Check g^x == a1·y1^c and h^x == a2·y2^c (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "Verification checks the response s is consistent with both commitments and both statement elements under the same challenge c."
+    },
+    {
+      "stage": "post",
+      "question": "How does the special HVZK simulator produce an accepting transcript without knowing x?",
+      "options": [
+        "Choose (c, s) first and compute a1, a2 so the verification equations hold",
+        "Choose x first and then set y1 and y2 to match the commitments exactly",
+        "Choose (a1, a2) first and then solve for a challenge c that makes them verify",
+        "Choose a challenge c first and then ask the verifier to reveal the nonce r"
+      ],
+      "correct": 0,
+      "explanation": "The simulator picks c and s, then back-computes commitments so the verifier’s checks pass without any witness."
+    },
+    {
+      "stage": "post",
+      "question": "Two accepting transcripts reuse the same commitments (a1, a2) but have c1 != c2 and responses s1, s2. What is x (mod q)?",
+      "options": [
+        "x = (s1 - s2) · (c1 - c2)^{-1} (mod q)",
+        "x = (c1 - c2) · (s1 - s2)^{-1} (mod q)",
+        "x = (s1 + s2) · (c1 + c2)^{-1} (mod q)",
+        "x = (c1 + c2) · (s1 + s2)^{-1} (mod q)"
+      ],
+      "correct": 0,
+      "explanation": "Subtract the two response equations to eliminate the nonce and solve for x using a modular inverse."
+    },
+    {
+      "stage": "post",
+      "question": "What catastrophic failure occurs if the prover ever reuses the same nonce r in Chaum–Pedersen?",
+      "options": [
+        "Anyone can extract the witness x from two proofs with different challenges",
+        "The verifier can no longer compute the challenge c correctly",
+        "The protocol becomes perfectly binding but no longer zero-knowledge",
+        "The prover becomes unable to compute commitments a1 and a2 consistently"
+      ],
+      "correct": 0,
+      "explanation": "Nonce reuse repeats the commitments, and special soundness lets an attacker recover x from two accepting transcripts."
+    },
+    {
+      "stage": "post",
+      "question": "For Fiat–Shamir Chaum–Pedersen, what must the hash-based challenge c bind to?",
+      "options": [
+        "A domain tag plus all statement and commitment elements in the transcript",
+        "Only the commitments (a1, a2), so the statement can be swapped later",
+        "Only the statement (y1, y2), so commitments can be recomputed freely",
+        "Only the group parameters (p, q, g, h), since they define the protocol"
+      ],
+      "correct": 0,
+      "explanation": "The challenge must bind the exact context, statement, and commitments; otherwise proofs can be replayed or transplanted."
+    },
+    {
+      "stage": "post",
+      "question": "Why is domain separation (a protocol/version tag) important in Fiat–Shamir transcripts?",
+      "options": [
+        "It prevents the same proof bytes from being valid in a different protocol context",
+        "It makes the hash output larger so challenges are automatically stronger",
+        "It ensures the prover’s nonce r is uniform even if the RNG is biased",
+        "It allows the verifier to skip subgroup checks for performance reasons"
+      ],
+      "correct": 0,
+      "explanation": "A domain tag makes the challenge protocol-specific, reducing cross-protocol replay and transcript-confusion risks."
+    }
+  ]
 }

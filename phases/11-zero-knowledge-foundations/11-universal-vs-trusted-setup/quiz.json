@@ -1,4 +1,101 @@
 {
   "title": "Universal vs Trusted Setup",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a trusted-setup proving system, what does “toxic waste” mean?",
+      "options": [
+        "A secret trapdoor from setup that must be destroyed",
+        "The public proving key that must be kept private",
+        "The witness used by the prover that must be deleted",
+        "The transcript of the ceremony that must be hidden"
+      ],
+      "correct": 0,
+      "explanation": "Toxic waste is the secret randomness (trapdoor) used during setup; if it leaks, soundness can fail."
+    },
+    {
+      "stage": "pre",
+      "question": "What does “universal setup” mean in most SNARK/SRS discussions?",
+      "options": [
+        "One setup can support many circuits up to a size bound",
+        "The setup uses only public randomness so there is no secret",
+        "The prover never needs a proving key",
+        "The verifier must download the whole circuit each time"
+      ],
+      "correct": 0,
+      "explanation": "Universal means reusable across many circuits (within a bound). It does not necessarily mean transparent."
+    },
+    {
+      "stage": "post",
+      "question": "Why does leaking the setup trapdoor (e.g., τ) endanger soundness in KZG-like commitments?",
+      "options": [
+        "It lets an attacker forge openings/proofs for false evaluations",
+        "It only reveals the committed polynomial but proofs stay valid",
+        "It only increases prover time but does not change security",
+        "It forces the verifier to do linear work in the polynomial size"
+      ],
+      "correct": 0,
+      "explanation": "Knowing τ often lets an attacker compute proofs that satisfy the verification equation even when the claimed value is false."
+    },
+    {
+      "stage": "post",
+      "question": "If you have a universal SRS with degree bound D, what does trimming to a smaller bound d do?",
+      "options": [
+        "Keeps only the first d+1 powers and supports degree ≤ d polynomials",
+        "Re-runs a new trusted setup with a fresh secret τ",
+        "Turns the system into a transparent setup (no toxic waste)",
+        "Changes the field modulus used by the scheme"
+      ],
+      "correct": 0,
+      "explanation": "Trimming derives per-circuit parameters from the universal SRS without introducing new toxic waste."
+    },
+    {
+      "stage": "post",
+      "question": "In an updatable (multi-party) Powers-of-Tau-style ceremony, what is the key trust assumption?",
+      "options": [
+        "At least one contributor is honest and deletes their secret",
+        "Every contributor must be honest or soundness fails",
+        "The verifier must know the final τ to verify proofs",
+        "The proving key must be kept secret forever"
+      ],
+      "correct": 0,
+      "explanation": "Updatability aims for a 1-of-N trust model: one honest contribution is enough to keep τ unknown."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s toy code, which computation captures the toxic-waste forgery idea?",
+      "options": [
+        "Compute (C / g^y_fake)^(1/(τ - x)) to synthesize a proof",
+        "Hash the transcript to get a Fiat–Shamir challenge",
+        "Recompute the commitment by evaluating the polynomial at x",
+        "Encrypt the witness and send it to the verifier"
+      ],
+      "correct": 0,
+      "explanation": "If τ is known, you can algebraically solve for a proof that makes the pairing check pass for an arbitrary y_fake."
+    },
+    {
+      "stage": "post",
+      "question": "What is an operational drawback of circuit-specific setup?",
+      "options": [
+        "Any circuit change can require regenerating setup-derived keys",
+        "Proof verification becomes linear in circuit size by definition",
+        "The system becomes post-quantum secure automatically",
+        "It prevents any form of parameter versioning"
+      ],
+      "correct": 0,
+      "explanation": "Circuit-specific parameters are tied to one circuit; changing the circuit typically forces regeneration and careful migration."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement correctly distinguishes “universal” vs “transparent” setup?",
+      "options": [
+        "Universal is about reuse across circuits; transparent is about having no secret trapdoor",
+        "Universal means no secret trapdoor; transparent means reuse across circuits",
+        "Universal means smaller proofs; transparent means larger proofs",
+        "Universal means Groth16; transparent means PLONK"
+      ],
+      "correct": 0,
+      "explanation": "Universal concerns reusability (often still trusted). Transparent concerns parameter generation from public randomness (no toxic waste)."
+    }
+  ]
 }

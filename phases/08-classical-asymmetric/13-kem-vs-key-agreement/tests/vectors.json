@@ -1,1 +1,76 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "HKDF vector is RFC 5869 (Test Case 1, SHA-256). Remaining vectors are derived from the deterministic toy group implementation in code/main.py (p=23, g=5) and fixed inputs shown in the lesson.",
+  "vectors": [
+    {
+      "op": "hkdf_sha256",
+      "inputs": {
+        "ikm_hex": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+        "salt_hex": "000102030405060708090a0b0c",
+        "info_hex": "f0f1f2f3f4f5f6f7f8f9",
+        "length": 42
+      },
+      "expected_hex": "3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf34007208d5b887185865"
+    },
+    {
+      "op": "transcript_hash",
+      "inputs": { "parts_hex": ["6d736731", "6d736732", "6d736733"] },
+      "expected_hex": "ace018b4b7430e5c2b11d6611d52c112cf17050e25cde3eadc6cf74fde98e71d"
+    },
+    {
+      "op": "modexp",
+      "inputs": { "base": 5, "exponent": 117, "modulus": 19 },
+      "expected": 1
+    },
+    {
+      "op": "dh_public_key",
+      "inputs": { "private_key": 6 },
+      "expected": 8
+    },
+    {
+      "op": "dh_public_key",
+      "inputs": { "private_key": 15 },
+      "expected": 19
+    },
+    {
+      "op": "dh_shared_secret",
+      "inputs": { "private_key": 6, "peer_public_key": 19 },
+      "expected": 2
+    },
+    {
+      "op": "ka_2msg_session_key",
+      "inputs": { "alice_private": 6, "bob_private": 15, "info_hex": "64656d6f3a746f792d6b61" },
+      "expected": {
+        "session_key_hex": "1def63b056b3a689eef3a37a922cea5b5ab874fef68f97bfb9451271c8254c99",
+        "transcript_hex": "0c6cc57c52df1f26177f307e234a15cd0b0a4d304f9db4259b6efbf13cef1223"
+      }
+    },
+    {
+      "op": "dhkem_encap",
+      "inputs": {
+        "recipient_public_key": 19,
+        "sender_ephemeral_private": 6,
+        "info_hex": "64656d6f3a746f792d6b656d"
+      },
+      "expected": {
+        "enc_hex": "08",
+        "shared_secret_hex": "1393c0af1ec2de2bbff25ac744a6e5f6ab080592713b401f6712da7fe72a92de"
+      }
+    },
+    {
+      "op": "dhkem_decap",
+      "inputs": { "recipient_private_key": 15, "enc_hex": "08", "info_hex": "64656d6f3a746f792d6b656d" },
+      "expected_hex": "1393c0af1ec2de2bbff25ac744a6e5f6ab080592713b401f6712da7fe72a92de"
+    },
+    {
+      "op": "mix_secrets",
+      "inputs": {
+        "secrets_hex": [
+          "1def63b056b3a689eef3a37a922cea5b5ab874fef68f97bfb9451271c8254c99",
+          "1393c0af1ec2de2bbff25ac744a6e5f6ab080592713b401f6712da7fe72a92de"
+        ],
+        "context_hex": "64656d6f3a687962726964"
+      },
+      "expected_hex": "3904f6751650510e314d693977cc29c3ea60d46ab8f4c83357004af4b242d316"
+    }
+  ]
+}

@@ -266,6 +266,12 @@ Output:
 4, (3, 5)
 ```
 
+Run it:
+
+```
+python3 code/main.py
+```
+
 ## Use It
 
 For classical number theory experiments, SageMath, PARI/GP, and SymPy can factor integers, compute multiplicative orders, and solve small algebraic problems. They are useful for checking toy examples, not for claiming security.

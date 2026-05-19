@@ -1,1 +1,73 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors generated from this lesson's reference implementation (HMAC-SHA256-based Feistel). master_key=b'course-demo-key'.",
+  "vectors": [
+    {
+      "op": "split_block",
+      "inputs": {"block": 305419896, "block_bits": 32},
+      "expected": {"left": 4660, "right": 22136}
+    },
+    {
+      "op": "join_block",
+      "inputs": {"left": 4660, "right": 22136, "block_bits": 32},
+      "expected": 305419896
+    },
+    {
+      "op": "derive_round_keys",
+      "inputs": {"master_key_hex": "636f757273652d64656d6f2d6b6579", "rounds": 2},
+      "expected": {
+        "round_keys_hex": [
+          "2f199fd0a43c8b0367343bf9fde41588e7c572d0af0d3dcf036acd01eaa68b98",
+          "2119815727835055b98412274a33046e4b1e86abe262b347fc832b3ba612b3d2"
+        ]
+      }
+    },
+    {
+      "op": "round_function",
+      "inputs": {
+        "round_key_hex": "2f199fd0a43c8b0367343bf9fde41588e7c572d0af0d3dcf036acd01eaa68b98",
+        "round_index": 1,
+        "right": 22136,
+        "half_bits": 16
+      },
+      "expected": 63505
+    },
+    {
+      "op": "feistel_encrypt_block",
+      "inputs": {
+        "block": 305419896,
+        "block_bits": 32,
+        "master_key_hex": "636f757273652d64656d6f2d6b6579",
+        "rounds": 12
+      },
+      "expected": 3170255384
+    },
+    {
+      "op": "feistel_decrypt_block",
+      "inputs": {
+        "block": 3170255384,
+        "block_bits": 32,
+        "master_key_hex": "636f757273652d64656d6f2d6b6579",
+        "rounds": 12
+      },
+      "expected": 305419896
+    },
+    {
+      "op": "feistel_encrypt_bytes",
+      "inputs": {
+        "block_hex": "0123456789abcdef",
+        "master_key_hex": "636f757273652d64656d6f2d6b6579",
+        "rounds": 8
+      },
+      "expected": "263f9d16362835a0"
+    },
+    {
+      "op": "feistel_decrypt_bytes",
+      "inputs": {
+        "block_hex": "263f9d16362835a0",
+        "master_key_hex": "636f757273652d64656d6f2d6b6579",
+        "rounds": 8
+      },
+      "expected": "0123456789abcdef"
+    }
+  ]
+}

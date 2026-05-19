@@ -1,4 +1,101 @@
 {
   "title": "Sigma Protocols from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which message order defines a Σ-protocol transcript?",
+      "options": [
+        "Commitment (a) → Challenge (c) → Response (s)",
+        "Challenge (c) → Commitment (a) → Response (s)",
+        "Commitment (a) → Response (s) → Challenge (c)",
+        "Response (s) → Commitment (a) → Challenge (c)"
+      ],
+      "correct": 0,
+      "explanation": "A Σ-protocol is a 3-move public-coin protocol: prover commits, verifier challenges, prover responds."
+    },
+    {
+      "stage": "pre",
+      "question": "In the Schnorr Σ-protocol for proving knowledge of x where y = g^x, what does the verifier check?",
+      "options": [
+        "g^s == a · y^c (mod p)",
+        "g^a == s · y^c (mod p)",
+        "g^c == a · y^s (mod p)",
+        "g^y == a · s^c (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "Verification checks the response is consistent with the commitment and the statement: g^s equals a times y^c."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the special HVZK simulator choose (c, s) first in Schnorr?",
+      "options": [
+        "So it can compute a commitment a that makes the verification equation true without knowing x",
+        "Because the verifier must reveal the secret x to the simulator in advance",
+        "Because choosing a first would force c to be non-uniform and break soundness",
+        "So it can guess the prover nonce r and then derive x directly"
+      ],
+      "correct": 0,
+      "explanation": "The simulator picks (c, s) and back-computes a so that g^s == a·y^c holds, producing an accepting transcript without the witness."
+    },
+    {
+      "stage": "post",
+      "question": "Two accepting transcripts share the same commitment a but have different challenges c1 != c2 and responses s1, s2. What does special soundness give you?",
+      "options": [
+        "An efficient way to extract the witness x",
+        "A way to compress the transcript into one group element",
+        "A proof that the transcript reveals the witness directly to the verifier",
+        "A way to make the protocol non-interactive without hashing"
+      ],
+      "correct": 0,
+      "explanation": "Special soundness means an extractor can compute the witness from two accepting transcripts with the same first message and different challenges."
+    },
+    {
+      "stage": "post",
+      "question": "In Schnorr, which formula extracts x (mod q) from two accepting transcripts with the same commitment a?",
+      "options": [
+        "x = (s1 - s2) · (c1 - c2)^{-1} (mod q)",
+        "x = (c1 - c2) · (s1 - s2)^{-1} (mod q)",
+        "x = (s1 + s2) · (c1 + c2)^{-1} (mod q)",
+        "x = (c1 + c2) · (s1 + s2)^{-1} (mod q)"
+      ],
+      "correct": 0,
+      "explanation": "From s1 = r + c1·x and s2 = r + c2·x, subtract to remove r and solve for x using a modular inverse."
+    },
+    {
+      "stage": "post",
+      "question": "What catastrophic failure can happen if the prover reuses the same nonce r (same commitment a) across two different Schnorr challenges?",
+      "options": [
+        "Anyone can extract the witness x from the two transcripts",
+        "The verifier can no longer check the proof equation",
+        "The prover becomes unable to compute a response s at all",
+        "The protocol becomes perfectly hiding but no longer binding"
+      ],
+      "correct": 0,
+      "explanation": "Reusing r produces two responses with the same commitment, enabling the special-soundness extractor to recover x."
+    },
+    {
+      "stage": "post",
+      "question": "Why is validating that y lies in the intended subgroup (order q) an important verifier check?",
+      "options": [
+        "Without it, a malicious prover can feed values outside the group your security argument assumes",
+        "Because subgroup checks make modular inverses unnecessary",
+        "Because subgroup checks guarantee the prover's nonce r is uniformly random",
+        "Because subgroup checks prevent the verifier from learning the challenge c"
+      ],
+      "correct": 0,
+      "explanation": "Soundness and knowledge arguments assume y is in the right group. If not, verification may accept meaningless or exploitable statements."
+    },
+    {
+      "stage": "post",
+      "question": "If the challenge space has size |C|, what is the rough best-possible cheating success probability for a prover who does not know the witness in a Σ-protocol?",
+      "options": [
+        "About 1/|C| per repetition",
+        "About 1/2 regardless of |C|",
+        "About 1/|C|^2 per repetition",
+        "About |C|/2 per repetition"
+      ],
+      "correct": 0,
+      "explanation": "A Σ-protocol’s soundness error is roughly 1/|C|: a cheater can often only succeed if they guessed the verifier’s random challenge in advance."
+    }
+  ]
 }

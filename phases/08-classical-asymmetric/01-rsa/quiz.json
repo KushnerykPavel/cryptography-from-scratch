@@ -1,4 +1,100 @@
 {
-  "title": "RSA from Scratch \u2014 KeyGen, Encrypt, Decrypt",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does RSA rely on for its *practical* security today?",
+      "options": [
+        "That factoring n = p·q is computationally hard at large sizes",
+        "That discrete logarithms are hard in finite fields",
+        "That hash functions are collision-resistant",
+        "That symmetric ciphers are pseudorandom permutations"
+      ],
+      "correct": 0,
+      "explanation": "RSA’s security reduction is tied to the difficulty of factoring the RSA modulus (or closely related problems) when parameters are chosen correctly."
+    },
+    {
+      "stage": "pre",
+      "question": "In RSA key generation, what is the private exponent d?",
+      "options": [
+        "The modular inverse of e modulo φ(n)",
+        "A random prime number close to √n",
+        "The gcd of e and φ(n)",
+        "The ciphertext of a fixed test message"
+      ],
+      "correct": 0,
+      "explanation": "We choose d so that e·d ≡ 1 (mod φ(n)) (or λ(n) in many implementations)."
+    },
+    {
+      "stage": "post",
+      "question": "Given p and q, which value must you compute to find d from e in this lesson’s build?",
+      "options": [
+        "φ(n) = (p-1)(q-1)",
+        "n = p + q",
+        "g = gcd(p, q)",
+        "r = p mod q"
+      ],
+      "correct": 0,
+      "explanation": "With distinct primes, φ(n) = (p-1)(q-1). We then compute d = e^{-1} mod φ(n)."
+    },
+    {
+      "stage": "post",
+      "question": "Why must gcd(e, φ(n)) = 1 in RSA key generation?",
+      "options": [
+        "So that the modular inverse d = e^{-1} (mod φ(n)) exists",
+        "So that n is guaranteed to be prime",
+        "So that encryption becomes non-deterministic",
+        "So that decryption runs in constant time"
+      ],
+      "correct": 0,
+      "explanation": "If e and φ(n) share a factor, e has no inverse modulo φ(n), so you cannot define d correctly."
+    },
+    {
+      "stage": "post",
+      "question": "What is the biggest problem with textbook RSA encryption (no padding)?",
+      "options": [
+        "It is deterministic and malleable, so it leaks information and is easy to misuse",
+        "It cannot decrypt messages larger than 1 byte, even for large n",
+        "It is slower than symmetric encryption only for small keys",
+        "It fails because modular exponentiation is undefined for primes"
+      ],
+      "correct": 0,
+      "explanation": "Without padding (OAEP), RSA encryption is deterministic and malleable, so it lacks semantic security and has many textbook attacks."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-themed: if an attacker factors n into p and q, what can they do next?",
+      "options": [
+        "Compute φ(n), recover d, and decrypt/sign as the key owner",
+        "Compute e from d without any additional work",
+        "Recover the original random seed used by the primality test",
+        "Make n prime again by multiplying by e"
+      ],
+      "correct": 0,
+      "explanation": "Factoring n reveals p and q, which gives φ(n). With φ(n), the attacker can compute d = e^{-1} mod φ(n)."
+    },
+    {
+      "stage": "post",
+      "question": "What production-safe replacement should you reach for instead of textbook RSA encryption?",
+      "options": [
+        "RSA-OAEP for encryption (and RSA-PSS for signatures)",
+        "RSA with e = 3 because it is faster",
+        "RSA with no padding but a longer plaintext",
+        "RSA with p = q to simplify key generation"
+      ],
+      "correct": 0,
+      "explanation": "Modern guidance is OAEP for RSA encryption and PSS for signatures; both are standardized and implemented in audited libraries."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s implementation, why does rsa_encrypt_int reject m ≥ n?",
+      "options": [
+        "Because RSA operates on representatives in the range 0 ≤ m < n",
+        "Because m must always be prime to be encrypted",
+        "Because encryption requires m to be even",
+        "Because RSA only supports ASCII, not arbitrary bytes"
+      ],
+      "correct": 0,
+      "explanation": "Textbook RSA is defined over integers modulo n, so inputs must be reduced to a representative in [0, n)."
+    }
+  ]
 }

@@ -1,1 +1,62 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors for a toy Bulletproofs-style Inner Product Argument (IPA). We work in a prime field Z_q with q=101 and treat the additive group as integers mod q (so scalar-mul is just integer multiplication mod q). Generators G,H,Q are derived deterministically by SHA-256(seed || 0x00 || i32be(index)) reduced mod q (mapping 0 -> 1). Commitment: P' = <a,G> + <b,H> + <a,b>*Q. Proof: k=log2(n) rounds producing L_j and R_j commitments, with Fiat–Shamir challenges u_j derived from a transcript that commits to (dom-sep, n, P', Q) and then appends each (L,R) pair before hashing to u.",
+  "vectors": [
+    { "op": "inv_q", "x": 3, "q": 101, "expected": 34 },
+    { "op": "inv_q", "x": 7, "q": 101, "expected": 29 },
+    { "op": "inv_q", "x": 0, "q": 101, "expected_error": "0 has no inverse in Z_q" },
+
+    { "op": "inner_product", "q": 101, "a": [1, 2, 3, 4], "b": [4, 3, 2, 1], "expected": 20 },
+    {
+      "op": "inner_product",
+      "q": 101,
+      "a": [1, 2, 3],
+      "b": [1, 2],
+      "expected_error": "inner product requires equal-length vectors"
+    },
+
+    { "op": "derive_generators", "n": 4, "q": 101, "seed": "G", "expected": [49, 11, 99, 13] },
+    { "op": "derive_generators", "n": 4, "q": 101, "seed": "H", "expected": [36, 15, 4, 14] },
+    { "op": "derive_generators", "n": 1, "q": 101, "seed": "Q", "expected": [25] },
+
+    {
+      "op": "ipa_commit",
+      "q": 101,
+      "G": [49, 11, 99, 13],
+      "H": [36, 15, 4, 14],
+      "Q": 25,
+      "a": [1, 2, 3, 4],
+      "b": [4, 3, 2, 1],
+      "expected": 20
+    },
+    {
+      "op": "ipa_prove",
+      "q": 101,
+      "G": [49, 11, 99, 13],
+      "H": [36, 15, 4, 14],
+      "Q": 25,
+      "a": [1, 2, 3, 4],
+      "b": [4, 3, 2, 1],
+      "expected": { "P_prime": 20, "Ls": [9, 2], "Rs": [41, 15], "a_final": 81, "b_final": 81 }
+    },
+    {
+      "op": "ipa_verify",
+      "q": 101,
+      "G": [49, 11, 99, 13],
+      "H": [36, 15, 4, 14],
+      "Q": 25,
+      "P_prime": 20,
+      "proof": { "Ls": [9, 2], "Rs": [41, 15], "a": 81, "b": 81 },
+      "expected": true
+    },
+    {
+      "op": "ipa_verify",
+      "q": 101,
+      "G": [49, 11, 99, 13],
+      "H": [36, 15, 4, 14],
+      "Q": 25,
+      "P_prime": 20,
+      "proof": { "Ls": [9, 2], "Rs": [41, 15], "a": 82, "b": 81 },
+      "expected": false
+    }
+  ]
+}

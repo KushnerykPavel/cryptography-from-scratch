@@ -1,1 +1,130 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors computed from this lesson's reference implementation (toy group p=467, q=233, g=3, h=4). Fiat–Shamir challenges use SHA-256 with label/statement binding. Random choices use random.Random(seed=0) where applicable.",
+  "vectors": [
+    {
+      "op": "inv_mod",
+      "inputs": { "a": 17, "m": 467 },
+      "expected": 55
+    },
+    {
+      "op": "inv_mod",
+      "inputs": { "a": -3, "m": 467 },
+      "expected": 311
+    },
+    {
+      "op": "pedersen_commit",
+      "inputs": { "p": 467, "q": 233, "g": 3, "h": 4, "m": 13, "r": 7 },
+      "expected": 349
+    },
+    {
+      "op": "decompose_bits",
+      "inputs": { "value": 13, "n_bits": 4 },
+      "expected": [1, 0, 1, 1]
+    },
+    {
+      "op": "compose_bits",
+      "inputs": { "bits": [1, 0, 1, 1] },
+      "expected": 13
+    },
+    {
+      "op": "combine_bit_commitments",
+      "inputs": { "p": 467, "q": 233, "bit_commitments": [270, 39, 4, 64] },
+      "expected": 381
+    },
+    {
+      "op": "bit_commitment_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "h": 4,
+        "bit_commitment": 117,
+        "proof": { "t1": 273, "t2": 38, "c1": 216, "c2": 148, "s1": 98, "s2": 65 },
+        "label": "bit-demo"
+      },
+      "expected": true
+    },
+    {
+      "op": "bit_commitment_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "h": 4,
+        "bit_commitment": 117,
+        "proof": { "t1": 273, "t2": 38, "c1": 216, "c2": 148, "s1": 98, "s2": 66 },
+        "label": "bit-demo"
+      },
+      "expected": false
+    },
+    {
+      "op": "range_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "h": 4,
+        "commitment": 83,
+        "proof": {
+          "n_bits": 4,
+          "bit_commitments": [364, 161, 70, 394],
+          "bit_proofs": [
+            { "t1": 157, "t2": 58, "c1": 194, "c2": 110, "s1": 227, "s2": 169 },
+            { "t1": 389, "t2": 58, "c1": 5, "c2": 66, "s1": 174, "s2": 130 },
+            { "t1": 305, "t2": 448, "c1": 200, "c2": 127, "s1": 212, "s2": 110 },
+            { "t1": 331, "t2": 192, "c1": 91, "c2": 22, "s1": 149, "s2": 116 }
+          ],
+          "link_proof": { "t": 117, "c": 105, "s": 76 }
+        },
+        "label": "range-demo"
+      },
+      "expected": true
+    },
+    {
+      "op": "range_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "h": 4,
+        "commitment": 83,
+        "proof": {
+          "n_bits": 4,
+          "bit_commitments": [364, 161, 70, 394],
+          "bit_proofs": [
+            { "t1": 157, "t2": 58, "c1": 194, "c2": 110, "s1": 227, "s2": 169 },
+            { "t1": 389, "t2": 58, "c1": 5, "c2": 66, "s1": 174, "s2": 130 },
+            { "t1": 305, "t2": 448, "c1": 200, "c2": 127, "s1": 212, "s2": 110 },
+            { "t1": 331, "t2": 192, "c1": 91, "c2": 22, "s1": 149, "s2": 116 }
+          ],
+          "link_proof": { "t": 117, "c": 105, "s": 76 }
+        },
+        "label": "range-demo-wrong"
+      },
+      "expected": false
+    },
+    {
+      "op": "range_verify_nizk",
+      "inputs": {
+        "p": 467,
+        "q": 233,
+        "g": 3,
+        "h": 4,
+        "commitment": 83,
+        "proof": {
+          "n_bits": 4,
+          "bit_commitments": [364, 161, 70, 394],
+          "bit_proofs": [
+            { "t1": 157, "t2": 58, "c1": 194, "c2": 110, "s1": 227, "s2": 169 },
+            { "t1": 389, "t2": 58, "c1": 5, "c2": 66, "s1": 174, "s2": 130 },
+            { "t1": 305, "t2": 448, "c1": 200, "c2": 127, "s1": 212, "s2": 110 },
+            { "t1": 331, "t2": 192, "c1": 91, "c2": 22, "s1": 149, "s2": 117 }
+          ],
+          "link_proof": { "t": 117, "c": 105, "s": 76 }
+        },
+        "label": "range-demo"
+      },
+      "expected": false
+    }
+  ]
+}

@@ -9,6 +9,14 @@
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
+## Learning Objectives
+
+- Explain why double-and-add leaks scalar bits through its variable control flow and why this is fatal for ECDH private keys and per-signature nonces
+- Implement the Montgomery ladder using two accumulators (`R0`, `R1`) that perform exactly one addition and one doubling per scalar bit regardless of the bit value
+- Distinguish the operation trace of double-and-add from the fixed-pattern trace of the Montgomery ladder using the `trace_*` toy functions
+- Apply the toy `recover_bits_from_trace` function to demonstrate that double-and-add's trace is sufficient to reconstruct the scalar
+- Identify the remaining side-channel risks in a Python ladder implementation and explain what additional measures (constant-time field ops, `cswap`, complete formulas) real libraries use
+
 ## The Problem
 
 In the previous lesson you learned several fast ways to compute `k · P`. They were correct and efficient, but they had a fatal property: **their control flow depends on the scalar bits**.
@@ -96,6 +104,12 @@ t = trace_double_and_add(k)
 print(t)
 print(recover_bits_from_trace(t))
 print(trace_montgomery_ladder(k))
+```
+
+Run it:
+
+```
+python3 code/main.py
 ```
 
 ## Use It

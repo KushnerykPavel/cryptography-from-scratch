@@ -1,1 +1,67 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors for toy Chaum–Pedersen (DLEQ) Σ-protocol. Group: p=23, q=11, g=2 and h=6 generate the same subgroup of order q in Z_p*. Statement: y1=g^x mod p and y2=h^x mod p. Prover: pick r, send (a1=g^r, a2=h^r), receive challenge c, respond s=(r+c*x) mod q. Verify: g^s == a1*y1^c (mod p) and h^s == a2*y2^c (mod p). HVZK simulation: choose (c,s), set a1=g^s*(y1^c)^(-1) mod p and a2=h^s*(y2^c)^(-1) mod p. Extraction: x=(s1-s2)/(c1-c2) mod q.",
+  "vectors": [
+    { "op": "mod_inv", "a": 16, "mod": 23, "expected": 13 },
+    { "op": "mod_inv", "a": 8, "mod": 11, "expected": 7 },
+    { "op": "mod_inv", "a": 0, "mod": 23, "expected_error": "0 has no inverse modulo mod" },
+    { "op": "mod_inv", "a": 6, "mod": 15, "expected_error": "a and mod are not coprime" },
+
+    { "op": "cp_publics", "p": 23, "q": 11, "g": 2, "h": 6, "x": 7, "expected": { "y1": 13, "y2": 3 } },
+    { "op": "cp_commit", "p": 23, "q": 11, "g": 2, "h": 6, "r": 4, "expected": { "a1": 16, "a2": 8 } },
+    { "op": "cp_fiat_shamir_challenge", "q": 11, "domain": "CPv1", "ints": [23, 11, 2, 6, 13, 3, 16, 8], "expected": 3 },
+    { "op": "cp_response", "q": 11, "r": 4, "c": 3, "x": 7, "expected": 3 },
+
+    {
+      "op": "cp_verify",
+      "p": 23,
+      "q": 11,
+      "g": 2,
+      "h": 6,
+      "y1": 13,
+      "y2": 3,
+      "a1": 16,
+      "a2": 8,
+      "c": 3,
+      "s": 3,
+      "expected": true
+    },
+    {
+      "op": "cp_verify",
+      "p": 23,
+      "q": 11,
+      "g": 2,
+      "h": 6,
+      "y1": 13,
+      "y2": 3,
+      "a1": 16,
+      "a2": 8,
+      "c": 3,
+      "s": 4,
+      "expected": false
+    },
+
+    {
+      "op": "cp_simulate_hvz",
+      "p": 23,
+      "q": 11,
+      "g": 2,
+      "h": 6,
+      "y1": 8,
+      "y2": 9,
+      "c": 2,
+      "s": 7,
+      "expected": { "commitment_g": 2, "commitment_h": 6, "challenge": 2, "response": 7 }
+    },
+
+    { "op": "cp_extract_witness", "q": 11, "c1": 1, "s1": 9, "c2": 9, "s2": 5, "expected": 5 },
+    {
+      "op": "cp_extract_witness",
+      "q": 11,
+      "c1": 2,
+      "s1": 10,
+      "c2": 2,
+      "s2": 10,
+      "expected_error": "need two different challenges to extract"
+    }
+  ]
+}
