@@ -1,1 +1,68 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic reference values computed from phases/12-zk-proof-systems/12-fri/code/main.py using p=97, n=16. Folding formula matches the core FRI folding step (pair x and -x; combine with challenge beta; divide by 2).",
+  "vectors": [
+    {
+      "op": "find_primitive_root",
+      "inputs": { "p": 97 },
+      "expected": 5
+    },
+    {
+      "op": "get_root_of_unity",
+      "inputs": { "p": 97, "n": 16 },
+      "expected": 8
+    },
+    {
+      "op": "roots_of_unity_domain",
+      "inputs": { "p": 97, "n": 16 },
+      "expected": [1, 8, 64, 27, 22, 79, 50, 12, 96, 89, 33, 70, 75, 18, 47, 85]
+    },
+    {
+      "op": "mod_inv",
+      "inputs": { "a": 5, "p": 97 },
+      "expected": 39
+    },
+    {
+      "op": "mod_inv",
+      "inputs": { "a": 2, "p": 97 },
+      "expected": 49
+    },
+    {
+      "op": "poly_degree",
+      "inputs": { "coeffs": [3, 1, 4, 1, 5, 9] },
+      "expected": 5
+    },
+    {
+      "op": "poly_eval",
+      "inputs": { "coeffs": [3, 1, 4, 1, 5, 9], "x": 3, "p": 97 },
+      "expected": 42
+    },
+    {
+      "op": "poly_eval_all",
+      "inputs": {
+        "coeffs": [3, 1, 4, 1, 5, 9],
+        "xs": [1, 8, 64, 27, 22, 79, 50, 12, 96, 89, 33, 70, 75, 18, 47, 85],
+        "p": 97
+      },
+      "expected": [23, 48, 12, 4, 8, 46, 59, 27, 1, 11, 63, 85, 0, 56, 52, 38]
+    },
+    {
+      "op": "fri_fold_layer",
+      "inputs": {
+        "evals": [23, 48, 12, 4, 8, 46, 59, 27, 1, 11, 63, 85, 0, 56, 52, 38],
+        "beta": 7,
+        "p": 97
+      },
+      "expected": [15, 14, 81, 57, 4, 25, 66, 1]
+    },
+    {
+      "op": "challenges_from_seed",
+      "inputs": { "seed": "fri-demo-v1", "rounds": 4, "p": 97 },
+      "expected": [29, 57, 51, 88]
+    },
+    {
+      "op": "expected_degree_after_fri_rounds",
+      "inputs": { "initial_degree": 5, "rounds": 3 },
+      "expected": 0
+    }
+  ]
+}

@@ -1,4 +1,101 @@
 {
   "title": "Lookup Arguments \u2014 Plookup, Halo2 Lookups",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does it mean to treat a lookup as a multiset rather than a set?",
+      "options": [
+        "Duplicates matter: looking up the same value twice must be justified twice.",
+        "Order matters: the witness values must be in the same order as the table.",
+        "Only unique values are allowed in the witness.",
+        "The table must contain every field element exactly once."
+      ],
+      "correct": 0,
+      "explanation": "Lookup arguments typically enforce multiset inclusion: counts must match, not just membership."
+    },
+    {
+      "stage": "pre",
+      "question": "In a Fiat\u2013Shamir transform, where do verifier challenges come from in the non-interactive proof?",
+      "options": [
+        "They are derived by hashing a transcript of commitments and public inputs.",
+        "They are chosen uniformly at random by the prover and included in the proof.",
+        "They are fixed constants baked into the proving system.",
+        "They are computed by solving for the witness."
+      ],
+      "correct": 0,
+      "explanation": "Fiat\u2013Shamir replaces interaction with a hash-based transcript so both sides derive the same challenges."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson\u2019s toy lookup check, what identity is verified at the random point r?",
+      "options": [
+        "\u220f(r \u2212 t_i) = \u220f(r \u2212 w_j) \u00b7 \u220f(r \u2212 r_k), where T is the table, W the witness, and R the remainder multiset.",
+        "\u03a3 t_i = \u03a3 w_j + \u03a3 r_k, where T is the table, W the witness, and R the remainder multiset.",
+        "\u220f t_i = \u220f w_j \u00b7 \u220f r_k, independent of r.",
+        "The witness values equal the table values element-by-element."
+      ],
+      "correct": 0,
+      "explanation": "If W is a multiset subset of T, the table roots product factors into witness and remainder roots products."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the verifier need the table (or a table id/commitment) to be absorbed into the transcript before deriving challenges?",
+      "options": [
+        "To prevent the prover from adapting the table after seeing challenges (table-swap/transplant attacks).",
+        "To make the proof smaller by reducing the number of challenges.",
+        "To guarantee the witness values are uniformly random.",
+        "To ensure the field modulus is prime."
+      ],
+      "correct": 0,
+      "explanation": "If the table isn\u2019t bound, a prover can sometimes \u201cprove membership\u201d in a different table than intended."
+    },
+    {
+      "stage": "post",
+      "question": "What is the purpose of row compression using \u03b8 in multi-column lookups?",
+      "options": [
+        "To reduce row membership (a,b,c) to scalar membership by mapping rows to a + \u03b8\u00b7b + \u03b8\u00b2\u00b7c.",
+        "To sort the witness values so they match the table order.",
+        "To make the lookup perfectly hiding without commitments.",
+        "To remove the need for any challenges."
+      ],
+      "correct": 0,
+      "explanation": "With a random \u03b8, collisions are unlikely in a large field, so row lookups become scalar lookups."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-themed: what goes wrong if \u03b8 (row-compression challenge) is chosen by the prover instead of derived from the transcript?",
+      "options": [
+        "The prover can pick \u03b8 that creates collisions, letting invalid rows compress to valid table values.",
+        "Nothing: \u03b8 is only used for performance, not soundness.",
+        "The proof becomes larger but remains sound.",
+        "The verifier can no longer compute modular inverses."
+      ],
+      "correct": 0,
+      "explanation": "If the prover controls \u03b8, they may engineer compressions that hide invalid rows."
+    },
+    {
+      "stage": "post",
+      "question": "Why are polynomial commitments/opening proofs needed in real lookup arguments (but skipped in this lesson\u2019s toy version)?",
+      "options": [
+        "To bind the prover to polynomials/columns and prove claimed evaluations at r without revealing the full witness.",
+        "To make hashing faster than multiplication.",
+        "To avoid using a prime field.",
+        "To ensure the witness values are distinct."
+      ],
+      "correct": 0,
+      "explanation": "Real systems must show that the values/evaluations come from committed data while keeping witnesses hidden."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson emphasize domain separation (labels) in the transcript?",
+      "options": [
+        "So challenges for one lookup/table can\u2019t be reused to satisfy a different lookup/table context.",
+        "So the verifier can skip checking the remainder multiset.",
+        "So the prover can omit commitments from the transcript.",
+        "So the field modulus can change per proof."
+      ],
+      "correct": 0,
+      "explanation": "Domain separation prevents accidental or malicious reuse of transcript state across distinct arguments."
+    }
+  ]
 }

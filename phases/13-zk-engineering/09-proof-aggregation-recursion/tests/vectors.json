@@ -1,1 +1,116 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Generated from code/main.py using SHA-256, tagged_hash, and Merkle (0x00 leaf / 0x01 node) construction; frozen vectors for regression testing.",
+  "vectors": [
+    {
+      "op": "state_step",
+      "inputs": {
+        "start_state_hex": "aeebad4a796fcc2e15dc4c6061b45ed9b373f26adfc798ca7d2d8cc58182718e",
+        "message": "tx: alice->bob 3"
+      },
+      "expected": {
+        "end_state_hex": "87f1126921a2fb6508d56f6ff5ed16472dabcd2e7aa63867b6bf18278d422cce"
+      }
+    },
+    {
+      "op": "prove_step",
+      "inputs": {
+        "start_state_hex": "aeebad4a796fcc2e15dc4c6061b45ed9b373f26adfc798ca7d2d8cc58182718e",
+        "message": "tx: alice->bob 3"
+      },
+      "expected": {
+        "end_state_hex": "87f1126921a2fb6508d56f6ff5ed16472dabcd2e7aa63867b6bf18278d422cce",
+        "digest_hex": "029fe834e010b7ccba0ad402f08da69a3b495a289f7bbb8ec8e6209610bd2061"
+      }
+    },
+    {
+      "op": "merkle_root",
+      "inputs": {
+        "leaf_digest_hexes": [
+          "029fe834e010b7ccba0ad402f08da69a3b495a289f7bbb8ec8e6209610bd2061",
+          "3a0d65f9f96e23972e73c19358f4a2e0ed072632fd48c683f5c229607cf5782b",
+          "8c143c3e0264500c142966d88f42038451f2720d09f0e00b49a7151b9f8d0e2b",
+          "84cb8bc3f2047fe27a60fe72cb6a59fc49f190c9a9311f69ded09ed01ae90d72",
+          "9e03bd36dc2a39020ca853c2109d93ae9df339fd9ea8a3297be638b29e86f03e"
+        ]
+      },
+      "expected": {
+        "root_hex": "08389bc8905b712e6e041f55949a09528c0ee6f6ddecdf498fcbf17177ded6ca"
+      }
+    },
+    {
+      "op": "merkle_inclusion_proof",
+      "inputs": {
+        "leaf_digest_hexes": [
+          "029fe834e010b7ccba0ad402f08da69a3b495a289f7bbb8ec8e6209610bd2061",
+          "3a0d65f9f96e23972e73c19358f4a2e0ed072632fd48c683f5c229607cf5782b",
+          "8c143c3e0264500c142966d88f42038451f2720d09f0e00b49a7151b9f8d0e2b",
+          "84cb8bc3f2047fe27a60fe72cb6a59fc49f190c9a9311f69ded09ed01ae90d72",
+          "9e03bd36dc2a39020ca853c2109d93ae9df339fd9ea8a3297be638b29e86f03e"
+        ],
+        "index": 2
+      },
+      "expected": {
+        "path": [
+          {
+            "side": "R",
+            "hash_hex": "a575915f483ced18c8fc5e480e7dab57810c0d1c95193110abc2c8740e7fc3ac"
+          },
+          {
+            "side": "L",
+            "hash_hex": "58345eb44fa1652e7a53dbd43c1ed19a7557f455513027eff6a3add3c610dfa6"
+          },
+          {
+            "side": "R",
+            "hash_hex": "989bfd4c850a0b0133b03ee8a0f1653c71aaf45bfe9d7bf21b085ad14d497b06"
+          }
+        ],
+        "root_hex": "08389bc8905b712e6e041f55949a09528c0ee6f6ddecdf498fcbf17177ded6ca"
+      }
+    },
+    {
+      "op": "prove_segment",
+      "inputs": {
+        "start_state_hex": "aeebad4a796fcc2e15dc4c6061b45ed9b373f26adfc798ca7d2d8cc58182718e",
+        "messages": [
+          "tx: alice->bob 3",
+          "tx: bob->carol 1",
+          "tx: carol->dave 2",
+          "tx: dave->alice 1",
+          "tx: fee 1"
+        ]
+      },
+      "expected": {
+        "segment": {
+          "start_state_hex": "aeebad4a796fcc2e15dc4c6061b45ed9b373f26adfc798ca7d2d8cc58182718e",
+          "end_state_hex": "a2a3405792028c3e5b03105bb48c2e22c826712fc026bab56e400b0c3193d28b",
+          "step_count": 5,
+          "commitment_root_hex": "08389bc8905b712e6e041f55949a09528c0ee6f6ddecdf498fcbf17177ded6ca",
+          "digest_hex": "f6b72af6401748602a60583d101b1f4e0456a2a9a514d41199c66d2be0a1ee7a"
+        }
+      }
+    },
+    {
+      "op": "fold_segments_binary",
+      "inputs": {
+        "start_state_hex": "aeebad4a796fcc2e15dc4c6061b45ed9b373f26adfc798ca7d2d8cc58182718e",
+        "messages": [
+          "tx: alice->bob 3",
+          "tx: bob->carol 1",
+          "tx: carol->dave 2",
+          "tx: dave->alice 1",
+          "tx: fee 1"
+        ],
+        "chunk": 2
+      },
+      "expected": {
+        "final": {
+          "start_state_hex": "aeebad4a796fcc2e15dc4c6061b45ed9b373f26adfc798ca7d2d8cc58182718e",
+          "end_state_hex": "a2a3405792028c3e5b03105bb48c2e22c826712fc026bab56e400b0c3193d28b",
+          "step_count": 5,
+          "commitment_root_hex": "3e6c8c2ec3ccf9378976116114616979edba70205faafda04bcb481a08808101",
+          "digest_hex": "cc55f4f370b876eca18091386cbabbe0d96fb5f0d4e36263c4334a44c4ec9620"
+        }
+      }
+    }
+  ]
+}

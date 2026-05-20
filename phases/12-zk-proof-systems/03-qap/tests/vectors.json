@@ -1,1 +1,70 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-derived over F_101 from the lesson's worked example (R1CS for z = x*y + x, constraints evaluated at x ∈ {1,2}, witness x=3,y=4,w=12,z=15).",
+  "vectors": [
+    {
+      "op": "field_inv",
+      "p": 101,
+      "a": 3,
+      "expected": 34
+    },
+    {
+      "op": "poly_mul",
+      "p": 101,
+      "a": [1, 2],
+      "b": [3, 4, 5],
+      "expected": [3, 10, 13, 10]
+    },
+    {
+      "op": "lagrange_interpolate",
+      "p": 101,
+      "xs": [1, 2],
+      "ys": [0, 1],
+      "expected": [100, 1]
+    },
+    {
+      "op": "target_polynomial",
+      "p": 101,
+      "xs": [1, 2],
+      "expected": [2, 98, 1]
+    },
+    {
+      "op": "r1cs_to_qap",
+      "p": 101,
+      "xs": [1, 2],
+      "A": [
+        [0, 1, 0, 0, 0],
+        [0, 1, 0, 1, 0]
+      ],
+      "B": [
+        [0, 0, 1, 0, 0],
+        [1, 0, 0, 0, 0]
+      ],
+      "C": [
+        [0, 0, 0, 1, 0],
+        [0, 0, 0, 0, 1]
+      ],
+      "expected": {
+        "A_polys": [[0], [1], [0], [100, 1], [0]],
+        "B_polys": [[100, 1], [0], [2, 100], [0], [0]],
+        "C_polys": [[0], [0], [0], [2, 100], [100, 1]],
+        "t": [2, 98, 1]
+      }
+    },
+    {
+      "op": "qap_p_poly",
+      "p": 101,
+      "A_polys": [[0], [1], [0], [100, 1], [0]],
+      "B_polys": [[100, 1], [0], [2, 100], [0], [0]],
+      "C_polys": [[0], [0], [0], [2, 100], [100, 1]],
+      "witness": [1, 3, 4, 12, 15],
+      "expected": [29, 7, 65]
+    },
+    {
+      "op": "poly_divmod",
+      "p": 101,
+      "numer": [29, 7, 65],
+      "denom": [2, 98, 1],
+      "expected": { "q": [65], "r": [0] }
+    }
+  ]
+}

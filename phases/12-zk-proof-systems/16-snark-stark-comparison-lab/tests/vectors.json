@@ -1,1 +1,86 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-computed simulation for x=3, p=101. Values confirmed by running code/main.py.",
+  "vectors": [
+    {
+      "fn": "circuit_witness",
+      "input": {"x": 3, "p": 101},
+      "output": {"x": 3, "x2": 9, "x3": 27, "y": 35},
+      "note": "3^2=9, 3^3=27, 27+3+5=35 — all mod 101"
+    },
+    {
+      "fn": "circuit_check",
+      "input": {"w": {"x": 3, "x2": 9, "x3": 27, "y": 35}, "p": 101},
+      "output": true,
+      "note": "All 3 gate constraints satisfied"
+    },
+    {
+      "fn": "circuit_check",
+      "input": {"w": {"x": 3, "x2": 9, "x3": 27, "y": 36}, "p": 101},
+      "output": false,
+      "note": "Gate 3 fails: 27+3+5=35 ≠ 36"
+    },
+    {
+      "fn": "groth16_proof_elements",
+      "input": {"proof": {"A": 91, "B": 33, "C": 82}},
+      "output": 3,
+      "note": "Groth16 proof is always exactly 3 group elements"
+    },
+    {
+      "fn": "groth16_verify",
+      "input": {
+        "params": {"tau": 7, "alpha": 11, "beta": 13, "gamma": 17, "delta": 19, "n_gates": 3},
+        "proof": {"A": 91, "B": 33, "C": 82},
+        "y": 35,
+        "p": 101
+      },
+      "output": true,
+      "note": "A*B ≡ alpha*beta + y*gamma + C*delta (mod 101): 91*33=3003≡91, 11*13+35*17+82*19=143+595+1558=2296≡91 mod 101"
+    },
+    {
+      "fn": "plonk_proof_elements",
+      "input": {
+        "wire_coms_len": 3,
+        "perm_com": 1,
+        "quot_coms_len": 3,
+        "evaluations_len": 6,
+        "opening_proofs_len": 2
+      },
+      "output": 15,
+      "note": "3 wire coms + 1 perm com + 3 quot coms + 6 evaluations + 2 openings = 15"
+    },
+    {
+      "fn": "plonk_verify",
+      "input": {
+        "setup": {"tau": 7, "n_max": 8},
+        "proof_summary": {
+          "wire_coms": [34, 10, 42],
+          "perm_com": 71,
+          "quot_coms": [28, 22, 42],
+          "evaluations": {"a_z": 27, "b_z": 3, "c_z": 35, "s1_z": 29, "s2_z": 96, "z_zw": 56},
+          "opening_proofs": [67, 57]
+        },
+        "y": 35,
+        "p": 101
+      },
+      "output": true,
+      "note": "Gate identity a_z+b_z+5-c_z = 27+3+5-35 = 0 holds; opening proof consistent"
+    },
+    {
+      "fn": "stark_proof_elements",
+      "input": {
+        "trace_root_len": 1,
+        "constraint_root_len": 1,
+        "fri_layer_roots_len": 3,
+        "query_responses_len": 6
+      },
+      "output": 11,
+      "note": "1 trace root + 1 constraint root + 3 FRI layer roots + 6 query responses = 11 hash values"
+    },
+    {
+      "fn": "stark_verify",
+      "input": {"y": 35, "p": 101},
+      "output": true,
+      "note": "FRI chain hash consistency check passes for honest proof of x=3"
+    }
+  ]
+}

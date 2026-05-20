@@ -1,1 +1,81 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "hand-computed over F_101, verified by code/main.py",
+  "p": 101,
+  "r1cs": {
+    "A": [[1, 0]],
+    "B": [[1, 0]],
+    "C": [[0, 1]],
+    "description": "squaring gate: a*a = b, witness z = [a, b]"
+  },
+  "vectors": [
+    {
+      "id": "witness_a7",
+      "function": "r1cs_witness",
+      "input": {"a": 7},
+      "expected": [7, 49],
+      "note": "7^2 = 49"
+    },
+    {
+      "id": "check_valid_a7",
+      "function": "check_relaxed_r1cs",
+      "input": {"z": [7, 49], "u": 1, "E": [0]},
+      "expected": true,
+      "note": "fresh R1CS: 7*7 = 49, satisfies"
+    },
+    {
+      "id": "check_invalid_a7",
+      "function": "check_relaxed_r1cs",
+      "input": {"z": [7, 48], "u": 1, "E": [0]},
+      "expected": false,
+      "note": "7*7 != 48, must reject"
+    },
+    {
+      "id": "cross_term_3_5",
+      "function": "compute_cross_term",
+      "input": {
+        "z1": [3, 9], "u1": 1,
+        "z2": [5, 25], "u2": 1
+      },
+      "expected": [97],
+      "note": "-(3-5)^2 = -4 mod 101 = 97"
+    },
+    {
+      "id": "nova_fold_3_5_r17",
+      "function": "nova_fold",
+      "input": {
+        "z1": [3, 9],   "u1": 1, "E1": [0],
+        "z2": [5, 25],  "u2": 1, "E2": [0],
+        "r": 17
+      },
+      "expected": {
+        "z_fold": [88, 30],
+        "u_fold": 18,
+        "E_fold": [33],
+        "T": [97]
+      },
+      "note": "z_fold=[3+85,9+425%101]=[88,30]; u_fold=18; E_fold=17*97%101=33"
+    },
+    {
+      "id": "check_folded_3_5_r17",
+      "function": "check_relaxed_r1cs",
+      "input": {"z": [88, 30], "u": 18, "E": [33]},
+      "expected": true,
+      "note": "Az o Bz = [88*88%101]=[(7744)%101]=[72]; u*Cz+E=[18*30+33]%101=[573]%101=[72]. Checks out."
+    },
+    {
+      "id": "chain_fold_4_instances",
+      "function": "chain_nova_fold",
+      "input": {
+        "a_vals": [3, 5, 11, 17],
+        "r": 17
+      },
+      "expected": {
+        "z_fold": [59, 31],
+        "u_fold": 52,
+        "E_fold": [51],
+        "satisfies_relaxed_r1cs": true
+      },
+      "note": "fold([3,9],1,[0],[5,25],1,[0],17) -> ([88,30],18,[33]); then fold with [11,121%101=20],1,[0] -> ([73,67],35,[55]); then fold with [17,289%101=87],1,[0] -> ([59,31],52,[51])"
+    }
+  ]
+}

@@ -1,4 +1,101 @@
 {
-  "title": "ZK Proof Systems Lab \u2014 Compare Groth16 vs PLONK vs STARK",
-  "questions": []
+  "title": "ZK Proof Systems Lab — Groth16 vs PLONK vs STARK",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a 'trusted setup' in a SNARK proof system?",
+      "options": [
+        "A one-time MPC computation that produces public parameters containing a secret that must be discarded.",
+        "A process where the verifier trusts the prover without any cryptographic proof.",
+        "A public hash function agreed upon by all parties before proving.",
+        "A step where the circuit is compiled into a bytecode format."
+      ],
+      "correct": 0,
+      "explanation": "A trusted setup generates a structured reference string (SRS) from a secret 'toxic waste'. Security holds only if at least one participant discards their secret. Anyone who retains it can forge proofs."
+    },
+    {
+      "stage": "pre",
+      "question": "Why are pairing-based proof systems (Groth16, PLONK) considered not post-quantum safe?",
+      "options": [
+        "They rely on the hardness of discrete logarithm in elliptic curve groups, which Shor's algorithm solves in polynomial time on a quantum computer.",
+        "They use SHA-256 which can be broken by Grover's algorithm.",
+        "They require a trusted setup, which quantum computers can reverse-engineer.",
+        "Their proof sizes are too large for quantum-resistant protocols."
+      ],
+      "correct": 0,
+      "explanation": "Groth16 and PLONK security reduces to the discrete logarithm problem in elliptic curve groups. Shor's algorithm solves this in polynomial time on a quantum computer, making these systems insecure in a post-quantum world."
+    },
+    {
+      "stage": "post",
+      "question": "Why does Groth16 require a circuit-specific trusted setup while PLONK only requires a universal one?",
+      "options": [
+        "Groth16's SRS encodes the QAP polynomials for one specific circuit; changing any gate requires recomputing the SRS. PLONK encodes only the SRS degree bound and compiles circuit constraints at proof time.",
+        "Groth16 uses a larger SRS than PLONK, making it impossible to reuse across circuits.",
+        "PLONK does not use a trusted setup at all; it relies purely on hash functions.",
+        "Groth16 proofs are smaller, so the setup must be more specific to compensate."
+      ],
+      "correct": 0,
+      "explanation": "In Groth16, the setup computes circuit-specific values (QAP evaluations at tau) that are baked into the SRS. PLONK separates the SRS (just powers of tau) from circuit description (selector polynomials), so any circuit up to n_max gates can reuse the same SRS."
+    },
+    {
+      "stage": "post",
+      "question": "In the lab, the Groth16 verifier checks A*B ≡ alpha*beta + y*gamma + C*delta (mod p). What does each term represent conceptually?",
+      "options": [
+        "A*B is the prover's work; alpha*beta is the setup binding; y*gamma binds the public input; C*delta is the witness encoding.",
+        "A*B is the hash of the witness; alpha*beta is the circuit hash; y*gamma is the output; C*delta is a blinding factor.",
+        "All four terms are independent random challenges chosen by the verifier.",
+        "A*B encodes the circuit; alpha*beta, y*gamma, C*delta are all public inputs."
+      ],
+      "correct": 0,
+      "explanation": "In real Groth16 these are pairing equations: e(A,B) = e(alpha,beta)·e(IC,gamma)·e(C,delta). The alpha*beta term binds the setup, y*gamma binds the public statement, and C*delta binds the proof to the witness. The toy version simulates this with scalar multiplication in F_p."
+    },
+    {
+      "stage": "post",
+      "question": "The PLONK proof in this lab has 15 elements (3 wire coms + 1 perm com + 3 quot coms + 6 evaluations + 2 openings). Why are 6 evaluations needed rather than just 3 (one per wire)?",
+      "options": [
+        "PLONK's permutation argument requires evaluations of the permutation polynomial and its selectors at the challenge point, not just the wire values.",
+        "PLONK evaluates each wire polynomial at two challenge points for soundness amplification.",
+        "The 6 evaluations are needed to verify the 3 multiplication gates separately.",
+        "PLONK requires evaluating both the witness and the circuit description polynomials."
+      ],
+      "correct": 0,
+      "explanation": "In PLONK, the verifier needs: a(z), b(z), c(z) for the gate identity check, plus s1(z), s2(z) for the permutation argument selectors, plus z(z·ω) for the permutation accumulator at the next point. This totals 6 evaluations."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: Alice runs a Groth16 trusted setup ceremony alone and publishes the SRS. Bob wants to use this system. What is the security risk?",
+      "options": [
+        "Alice knows the toxic waste (tau, alpha, beta, gamma, delta) and can forge a proof for any false statement y without knowing a valid witness.",
+        "The SRS is too small for circuits with more than 3 gates, so the system is functionally broken.",
+        "Bob cannot verify proofs because the verifier key was not published.",
+        "The SRS leaks the witness values to anyone who reads it."
+      ],
+      "correct": 0,
+      "explanation": "Groth16 security requires at least one participant to have deleted their secret. If Alice alone ran the ceremony and kept tau, she can solve for C in A*B = alpha*beta + y_fake*gamma + C*delta for any fake y, forging a valid-looking proof. This is why real ceremonies involve hundreds of independent participants."
+    },
+    {
+      "stage": "post",
+      "question": "A STARK proof in this lab has 11 hash values (roots + query responses). Why does STARK proof size grow as O(log²n) rather than O(log n)?",
+      "options": [
+        "Each of the O(log n) FRI layers requires O(log n) Merkle authentication path hashes per query, so total hashes are O(log n × log n).",
+        "STARK uses two independent hash functions, doubling the proof size compared to a single-hash scheme.",
+        "The constraint polynomial has degree n², requiring twice as many FRI folding rounds.",
+        "STARK repeats the FRI protocol log n times for soundness amplification."
+      ],
+      "correct": 0,
+      "explanation": "FRI has O(log n) folding layers. At each layer, opening a query requires an O(log n)-deep Merkle path. With O(security_param) queries, total cost is O(security_param × log²n). The security parameter is typically 80–128 bits, making STARK proofs significantly larger than SNARKs for practical circuit sizes."
+    },
+    {
+      "stage": "post",
+      "question": "You are building a ZK rollup that must verify proofs on Ethereum (expensive gas), use circuits that change monthly, and support post-quantum migration in 5 years. Which system fits best today and why?",
+      "options": [
+        "PLONK: universal setup avoids monthly ceremonies, proof size is acceptable on-chain, and it can be replaced with a hash-based variant (e.g., Plonky2) when PQ migration is needed.",
+        "Groth16: smallest proof minimises gas, and the monthly ceremony is a minor inconvenience.",
+        "STARK: post-quantum safe now and no setup required, so it satisfies all three constraints immediately.",
+        "None: no single system satisfies all three constraints simultaneously."
+      ],
+      "correct": 0,
+      "explanation": "PLONK's universal setup avoids a new ceremony each month (ruling out Groth16). Its ~15-element proof is manageable on-chain (STARKs have much larger proofs, costing more gas). The PQ migration path exists via FRI-based PLONK variants (Plonky2, Halo2 with IPA). STARK's larger proof size would make on-chain verification significantly more expensive today."
+    }
+  ]
 }

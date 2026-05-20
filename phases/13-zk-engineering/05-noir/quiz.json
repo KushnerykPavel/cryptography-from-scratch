@@ -1,4 +1,100 @@
 {
-  "title": "Noir \u2014 Aztec's ZK Language",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a constraint-based ZK system, what is the witness?",
+      "options": [
+        "A full assignment to all circuit wires",
+        "A list of only the public inputs",
+        "The proving key used by the prover",
+        "A hash of the source program text"
+      ],
+      "correct": 0,
+      "explanation": "The witness is the complete set of values (inputs and intermediates) that makes all constraints true."
+    },
+    {
+      "stage": "pre",
+      "question": "Which shape matches a single R1CS constraint?",
+      "options": [
+        "linear(w) * linear(w) = linear(w)",
+        "any polynomial in w equals zero",
+        "a boolean clause over input bits",
+        "a matrix inverse equals identity"
+      ],
+      "correct": 0,
+      "explanation": "R1CS constraints multiply two linear combinations and equate them to a third linear combination."
+    },
+    {
+      "stage": "post",
+      "question": "Why do fixed-width integers like u32 need extra constraints compared to Field values?",
+      "options": [
+        "They must be range-checked to 32 bits",
+        "They require larger field moduli to work",
+        "They avoid any need for witness generation",
+        "They replace multiplication constraints entirely"
+      ],
+      "correct": 0,
+      "explanation": "A u32 is a field element plus constraints that force it to lie in the 0..2^32-1 range (and enforce overflow rules)."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson's model, what happens for a=2^32-1 and b=1 if you require s=a+b to be u32?",
+      "options": [
+        "The circuit becomes unsatisfied by the witness",
+        "The addition wraps around and stays satisfied",
+        "The verifier learns the private inputs directly",
+        "The compiler deletes the range check as dead code"
+      ],
+      "correct": 0,
+      "explanation": "The computed sum is 2^32, which fails the 32-bit range constraint, so the witness no longer satisfies the circuit."
+    },
+    {
+      "stage": "post",
+      "question": "Why does a compiler often introduce intermediate wires when lowering code to R1CS?",
+      "options": [
+        "Each constraint allows at most one multiplication",
+        "R1CS forbids using additions in constraints",
+        "R1CS requires every value to be public input",
+        "Each constraint must include exactly 64 terms"
+      ],
+      "correct": 0,
+      "explanation": "Complex expressions are decomposed into single-multiplication steps so they fit the rank-1 form."
+    },
+    {
+      "stage": "post",
+      "question": "What is the core risk of unconstrained computation if you forget to constrain its outputs later?",
+      "options": [
+        "A prover can pick any output and still pass",
+        "The proof system stops being zero-knowledge",
+        "The proving key can be recomputed from inputs",
+        "The circuit will always be overconstrained"
+      ],
+      "correct": 0,
+      "explanation": "If outputs are not tied to inputs by constraints, many different witnesses can satisfy the same circuit."
+    },
+    {
+      "stage": "post",
+      "question": "Which pattern correctly makes an unconstrained result safe to use in a proof?",
+      "options": [
+        "Compute outside, then assert a relation inside",
+        "Compute outside and return it without checks",
+        "Compute inside and avoid using assertions",
+        "Compute outside and mark everything as pub"
+      ],
+      "correct": 0,
+      "explanation": "You can do work unconstrained, but you must add constraints that verify the result matches the intended relation."
+    },
+    {
+      "stage": "post",
+      "question": "When a circuit is underconstrained, what can be true for the same public inputs?",
+      "options": [
+        "Multiple different witnesses can satisfy it",
+        "Exactly one witness always satisfies it",
+        "No witness can ever satisfy any constraint",
+        "Only the verifier can choose the witness"
+      ],
+      "correct": 0,
+      "explanation": "Underconstrained circuits admit multiple valid witnesses for the same instance, which can enable malicious proofs."
+    }
+  ]
 }

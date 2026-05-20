@@ -1,4 +1,101 @@
 {
   "title": "arkworks \u2014 Multi-Backend Proving",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "When you switch a ZK application from Groth16 to a Plonk-family SNARK, what should ideally remain unchanged?",
+      "options": [
+        "The proof system backend implementation",
+        "The relation/circuit (what is being proven)",
+        "The verifier's public-input ordering",
+        "The field/curve arithmetic used by the circuit"
+      ],
+      "correct": 1,
+      "explanation": "A good architecture keeps the relation stable and swaps only the proving backend and its parameters."
+    },
+    {
+      "stage": "pre",
+      "question": "In the common R1CS witness vector layout z = [1, public..., witness...], what is z[0]?",
+      "options": [
+        "A random blinding value",
+        "A constant wire fixed to 1",
+        "The first public input",
+        "The circuit output value"
+      ],
+      "correct": 1,
+      "explanation": "z[0] is the constant 1 wire used to encode constants inside linear combinations."
+    },
+    {
+      "stage": "post",
+      "question": "Which R1CS constraint shape encodes an addition gate c = a + b in this lesson's toy compiler?",
+      "options": [
+        "(a + b - c) * 1 = 0",
+        "a * b = c",
+        "(a - b) * (a - b) = 0",
+        "(a + b) * (a + b) = c"
+      ],
+      "correct": 0,
+      "explanation": "Addition is a linear relation; using the constant-1 wire turns it into the R1CS form A*B=C."
+    },
+    {
+      "stage": "post",
+      "question": "What does it mean if `first_unsatisfied(constraints, z, p)` returns `None`?",
+      "options": [
+        "The witness vector is missing some variables",
+        "All constraints are satisfied by z (mod p)",
+        "The circuit has no public inputs",
+        "The constraint system is underdetermined"
+      ],
+      "correct": 1,
+      "explanation": "Returning None means every constraint evaluated to zero, so the R1CS is satisfied."
+    },
+    {
+      "stage": "post",
+      "question": "Why is 'public input ordering drift' a real bug in ZK systems?",
+      "options": [
+        "It changes the cryptographic security level of the curve",
+        "It makes the prover slower but still correct",
+        "It binds the proof to a different statement than the verifier thinks",
+        "It only affects human-readable logs, not verification"
+      ],
+      "correct": 2,
+      "explanation": "Verifiers interpret public inputs as an ordered vector; reordering changes the statement being verified."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main risk if a circuit constant becomes an unconstrained witness variable?",
+      "options": [
+        "The verifier can no longer deserialize the proof",
+        "The prover can choose the 'constant' value to make false statements pass",
+        "The circuit becomes constant-time and safer",
+        "The constraint count necessarily decreases"
+      ],
+      "correct": 1,
+      "explanation": "An unconstrained 'constant' is effectively free choice, which can let the prover satisfy constraints for unintended statements."
+    },
+    {
+      "stage": "post",
+      "question": "You have both native witness generation code and an R1CS gadget for the same operation. What is the failure mode if they implement different specs?",
+      "options": [
+        "Everything still works because SNARKs are probabilistic",
+        "The prover may compute a witness that doesn't satisfy the constraints, so proving fails",
+        "The verifier becomes unable to check public inputs",
+        "The field modulus automatically adjusts to match"
+      ],
+      "correct": 1,
+      "explanation": "If native computation and constraints drift, you can generate values that look right but do not satisfy the constraint system."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: the circuit intends to enforce out = x^3 + x + 5, but the value '5' is allocated as a witness and never constrained. What can a malicious prover do?",
+      "options": [
+        "Nothing; the backend will treat it as a constant anyway",
+        "Choose the '5' witness to make any (x, out) pair satisfy the circuit",
+        "Force the verifier to accept without checking constraints",
+        "Recover the verifier's secret key from the proof"
+      ],
+      "correct": 1,
+      "explanation": "If the constant is free, the prover can set it to whatever makes the equality hold, changing the statement being proven."
+    }
+  ]
 }

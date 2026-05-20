@@ -1,1 +1,61 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, hand-checked examples over F_101. The cubic relation matches the arkworks r1cs example pattern: out = x^3 + x + 5.",
+  "vectors": [
+    {
+      "op": "inv_mod",
+      "p": 101,
+      "a": 42,
+      "expected": 89
+    },
+    {
+      "op": "cubic_output",
+      "p": 101,
+      "x": 3,
+      "k": 5,
+      "expected": 35
+    },
+    {
+      "op": "cubic_output",
+      "p": 101,
+      "x": 100,
+      "k": 5,
+      "expected": 3
+    },
+    {
+      "op": "compile_cubic_relation_stats",
+      "p": 101,
+      "x": 3,
+      "k": 5,
+      "expected": {
+        "num_public": 1,
+        "num_witness": 6,
+        "num_constraints": 6
+      }
+    },
+    {
+      "op": "compile_cubic_relation_witness",
+      "p": 101,
+      "x": 3,
+      "k": 5,
+      "expected": [1, 35, 3, 9, 27, 30, 5, 35]
+    },
+    {
+      "op": "compile_cubic_relation_first_constraint",
+      "p": 101,
+      "x": 3,
+      "k": 5,
+      "expected": {
+        "A": [[2, 1]],
+        "B": [[2, 1]],
+        "C": [[3, 1]]
+      }
+    },
+    {
+      "op": "first_unsatisfied_wrong_public_out",
+      "p": 101,
+      "x": 3,
+      "k": 5,
+      "expected": 5
+    }
+  ]
+}

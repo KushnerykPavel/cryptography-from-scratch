@@ -1,4 +1,100 @@
 {
-  "title": "PLONK \u2014 Universal SNARKs",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main role of an evaluation domain (like roots of unity) in polynomial-based SNARKs?",
+      "options": [
+        "It provides a fixed set of points where many columns can be represented as low-degree polynomials by interpolation",
+        "It ensures the prover’s runtime is always linear in the number of public inputs",
+        "It replaces the need for any cryptographic commitments by making polynomials public",
+        "It guarantees soundness even if the verifier uses no randomness"
+      ],
+      "correct": 0,
+      "explanation": "A fixed domain lets you treat each column as evaluations of a polynomial of bounded degree, enabling polynomial identity checks."
+    },
+    {
+      "stage": "pre",
+      "question": "In a constraint system, what does a copy constraint enforce?",
+      "options": [
+        "Two (or more) wire cells must hold the same value even if they appear in different rows/columns",
+        "Every row must use the same gate type (same selectors) across the entire circuit",
+        "The prover must commit to the witness using a hash function instead of a group commitment",
+        "The verifier must check every constraint at every point without using random sampling"
+      ],
+      "correct": 0,
+      "explanation": "Copy constraints connect the wiring: they say certain cells represent the same logical variable and must be equal."
+    },
+    {
+      "stage": "post",
+      "question": "In the standard PLONK gate equation qL·a + qR·b + qM·a·b + qO·c + qC = 0, what are the q* columns?",
+      "options": [
+        "Selector polynomials that choose which algebraic relation applies on each row",
+        "Random challenges sampled by the verifier to hide the witness",
+        "Public inputs that are appended to the witness table",
+        "Commitment keys that define the polynomial commitment scheme"
+      ],
+      "correct": 0,
+      "explanation": "Selectors are per-row coefficients that define the gate type(s) and make the system programmable with a fixed arity."
+    },
+    {
+      "stage": "post",
+      "question": "What does the permutation (sigma) argument in PLONK primarily prove?",
+      "options": [
+        "That all declared copy constraints are satisfied (the wiring is consistent)",
+        "That the prover used a cryptographically secure RNG for witness blinding",
+        "That the prover’s polynomials have degree exactly n−1, not just ≤ n−1",
+        "That the verifier can reconstruct the witness from the proof (extractability)"
+      ],
+      "correct": 0,
+      "explanation": "The permutation argument enforces equality across wire occurrences by showing the witness is consistent with a permutation describing the wiring."
+    },
+    {
+      "stage": "post",
+      "question": "Why do PLONK-style protocols introduce random challenges like β and γ into the permutation check?",
+      "options": [
+        "To make it unlikely that different wire assignments accidentally satisfy the same product identity (reduce to a random polynomial identity)",
+        "To reduce proof size by letting the prover omit the witness polynomials entirely",
+        "To avoid needing any setup by turning commitments into hashes",
+        "To ensure the protocol is secure even if the field modulus is composite"
+      ],
+      "correct": 0,
+      "explanation": "Random linear shifts make the check probabilistic: collisions become extremely unlikely, turning a combinatorial condition into a polynomial identity test."
+    },
+    {
+      "stage": "post",
+      "question": "In a polynomial-commitment-based SNARK, what is the commitment scheme (e.g., KZG, IPA, FRI) used for?",
+      "options": [
+        "Letting the prover bind to polynomials and later prove evaluations without revealing the full polynomials",
+        "Ensuring the circuit has no copy constraints by construction",
+        "Computing Lagrange interpolation coefficients faster than O(n^2)",
+        "Replacing Fiat–Shamir so the proof can stay interactive"
+      ],
+      "correct": 0,
+      "explanation": "Commitments let the prover commit once and then open evaluations succinctly, which is what turns polynomial identities into short proofs."
+    },
+    {
+      "stage": "post",
+      "question": "What does “universal setup” mean in the PLONK family (in contrast to circuit-specific setup like classic Groth16)?",
+      "options": [
+        "A single SRS can be reused across many circuits up to some size bound",
+        "No cryptographic assumptions are needed beyond collision-resistant hashing",
+        "The prover never needs to compute FFTs or evaluate polynomials",
+        "The verifier must download a separate proving key for each new circuit"
+      ],
+      "correct": 0,
+      "explanation": "A universal SRS is not tied to one circuit; it can be reused for many circuits (usually bounded by max degree/size)."
+    },
+    {
+      "stage": "post",
+      "question": "Which implementation bug most directly breaks soundness in a PLONK-style proof system?",
+      "options": [
+        "Forgetting to bind the public inputs into the transcript/challenges",
+        "Printing debug logs of selector polynomials during testing",
+        "Using a slightly larger evaluation domain than necessary",
+        "Normalizing polynomial coefficient lists by trimming trailing zeros"
+      ],
+      "correct": 0,
+      "explanation": "If challenges don’t commit to the statement/public inputs, a proof can verify for the wrong claim (proof malleability / statement substitution)."
+    }
+  ]
 }

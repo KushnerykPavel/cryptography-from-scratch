@@ -1,1 +1,109 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Generated from the reference implementation in code/main.py using stdlib SHA-256. Group parameters are the safe-prime subgroup p=2039, q=1019, g=4. These vectors are deterministic and are meant to catch transcript/encoding drift.",
+  "vectors": [
+    {
+      "op": "encode_int",
+      "inputs": { "n": 2039 },
+      "expected": { "hex": "000207f7" }
+    },
+    {
+      "op": "encode_bytes",
+      "inputs": { "text_utf8": "hello" },
+      "expected": { "hex": "000568656c6c6f" }
+    },
+    {
+      "op": "decode_int",
+      "inputs": { "hex": "000207f7" },
+      "expected": { "n": 2039, "next_offset": 4 }
+    },
+    {
+      "op": "decode_bytes",
+      "inputs": { "hex": "000568656c6c6f" },
+      "expected": { "text_utf8": "hello", "next_offset": 7 }
+    },
+    {
+      "op": "hash_to_scalar",
+      "inputs": {
+        "domain": "demo",
+        "parts_hex": ["000568656c6c6f"],
+        "q": 1019
+      },
+      "expected": { "scalar": 936 }
+    },
+    {
+      "op": "public_key",
+      "inputs": { "p": 2039, "q": 1019, "g": 4, "x": 123 },
+      "expected": { "pk": 572 }
+    },
+    {
+      "op": "make_login_message",
+      "inputs": { "user_id": "alice", "session_id": "session-123" },
+      "expected": { "message_utf8": "login|alice|session-123" }
+    },
+    {
+      "op": "schnorr_prove",
+      "inputs": {
+        "p": 2039,
+        "q": 1019,
+        "g": 4,
+        "x": 123,
+        "message_utf8": "login|alice|session-123",
+        "nonce": 456
+      },
+      "expected": { "R": 1777, "s": 257, "challenge": 686 }
+    },
+    {
+      "op": "schnorr_verify",
+      "inputs": {
+        "p": 2039,
+        "q": 1019,
+        "g": 4,
+        "pk": 572,
+        "message_utf8": "login|alice|session-123",
+        "proof": { "R": 1777, "s": 257 }
+      },
+      "expected": { "ok": true }
+    },
+    {
+      "op": "schnorr_verify",
+      "inputs": {
+        "p": 2039,
+        "q": 1019,
+        "g": 4,
+        "pk": 572,
+        "message_utf8": "login|alice|session-999",
+        "proof": { "R": 1777, "s": 257 }
+      },
+      "expected": { "ok": false }
+    },
+    {
+      "op": "server_verify_login",
+      "inputs": {
+        "p": 2039,
+        "q": 1019,
+        "g": 4,
+        "user_id": "alice",
+        "pk": 572,
+        "session_id": "session-123",
+        "proof": { "R": 1777, "s": 257 }
+      },
+      "expected": { "token": "5e4a10b83a4c24efff64bba0dabca9f8" }
+    },
+    {
+      "op": "recover_secret_from_nonce_reuse",
+      "inputs": {
+        "p": 2039,
+        "q": 1019,
+        "g": 4,
+        "pk": 572,
+        "x_expected": 123,
+        "message1_utf8": "login|alice|s1",
+        "message2_utf8": "login|alice|s2",
+        "nonce_reused": 777,
+        "proof1": { "R": 1590, "s": 332, "challenge": 684 },
+        "proof2": { "R": 1590, "s": 480, "challenge": 97 }
+      },
+      "expected": { "recovered_x": 123 }
+    }
+  ]
+}

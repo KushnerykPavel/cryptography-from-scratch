@@ -1,1 +1,69 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors for the stdlib-only toy zkVM in code/main.py. Values are derived from SHA-256 and the fixed demo program + inputs (generated 2026-05-20).",
+  "vectors": [
+    {
+      "op": "image_id",
+      "program": [
+        {"op": "PUSH_PRIVATE", "arg": 0},
+        {"op": "SHA256"},
+        {"op": "PUSH_PUBLIC", "arg": 0},
+        {"op": "EQ"},
+        {"op": "ASSERT"},
+        {"op": "PUSH_PUBLIC", "arg": 1},
+        {"op": "COMMIT"},
+        {"op": "HALT"}
+      ],
+      "expected": "78c6f8847fb3b8bc2beaa699919d732da800ec3a4f8fac7f8a9249cdd4de4ab1"
+    },
+    {
+      "op": "run_program_journal",
+      "program": [
+        {"op": "PUSH_PRIVATE", "arg": 0},
+        {"op": "SHA256"},
+        {"op": "PUSH_PUBLIC", "arg": 0},
+        {"op": "EQ"},
+        {"op": "ASSERT"},
+        {"op": "PUSH_PUBLIC", "arg": 1},
+        {"op": "COMMIT"},
+        {"op": "HALT"}
+      ],
+      "public_inputs_hex": [
+        "c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a",
+        "6f6b"
+      ],
+      "private_inputs_hex": [
+        "636f727265637420686f727365206261747465727920737461706c65"
+      ],
+      "expected_journal_hex": [
+        "6f6b"
+      ]
+    },
+    {
+      "op": "prove_execution",
+      "program": [
+        {"op": "PUSH_PRIVATE", "arg": 0},
+        {"op": "SHA256"},
+        {"op": "PUSH_PUBLIC", "arg": 0},
+        {"op": "EQ"},
+        {"op": "ASSERT"},
+        {"op": "PUSH_PUBLIC", "arg": 1},
+        {"op": "COMMIT"},
+        {"op": "HALT"}
+      ],
+      "public_inputs_hex": [
+        "c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a",
+        "6f6b"
+      ],
+      "private_inputs_hex": [
+        "636f727265637420686f727365206261747465727920737461706c65"
+      ],
+      "query_count": 6,
+      "expected_trace_root": "d715a675aef08e3cf019d8e9071410ea4bfee9d0f6ef094862028bb2a5d9eddf",
+      "expected_query_positions": [2, 0, 7, 3, 5, 6],
+      "expected_journal_hex": [
+        "6f6b"
+      ]
+    }
+  ]
+}
+

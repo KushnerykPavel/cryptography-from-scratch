@@ -1,4 +1,101 @@
 {
   "title": "Writing Circom Circuits",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a SNARK circuit workflow, what does the verifier actually check?",
+      "options": [
+        "That the witness generator program executed without errors",
+        "That the provided witness values satisfy the circuit constraints",
+        "That the prover used the same private inputs as the verifier",
+        "That all intermediate variables are zero"
+      ],
+      "correct": 1,
+      "explanation": "Verification is checking that constraints hold for some witness consistent with the public inputs."
+    },
+    {
+      "stage": "pre",
+      "question": "Why do circuits often need explicit range checks (e.g., Num2Bits) for values meant to be integers?",
+      "options": [
+        "Because field arithmetic is modulo p, so values can wrap unless constrained",
+        "Because witnesses cannot contain negative numbers unless range-checked",
+        "Because range checks make proofs smaller in all proof systems",
+        "Because verifiers cannot handle multiplication without range checks"
+      ],
+      "correct": 0,
+      "explanation": "Constraints are over a finite field; without range checks, a 'number' can be any field element."
+    },
+    {
+      "stage": "post",
+      "question": "In an R1CS constraint A(x)*B(x)=C(x), what are A, B, and C?",
+      "options": [
+        "Arbitrary nonlinear polynomials in the variables",
+        "Linear combinations of variables (plus a constant)",
+        "Hashes of the witness split into three parts",
+        "Three independent witnesses checked separately"
+      ],
+      "correct": 1,
+      "explanation": "R1CS uses products of linear combinations to express quadratic constraints."
+    },
+    {
+      "stage": "post",
+      "question": "What constraint enforces that a value b is boolean (0 or 1) in a field circuit?",
+      "options": [
+        "b + 1 = 0",
+        "b * (b - 1) = 0",
+        "b * b = 0",
+        "b - 2 = 0"
+      ],
+      "correct": 1,
+      "explanation": "Only b=0 or b=1 makes b(b-1)=0 in a field."
+    },
+    {
+      "stage": "post",
+      "question": "If a circuit computes out = a*b + c in witness code, what must be true for the prover to be forced to use the correct out?",
+      "options": [
+        "out must be declared as a signal so it is public",
+        "There must be a constraint tying out to a, b, and c",
+        "The circuit must include at least one multiplication gate",
+        "The prover must be honest because SNARKs assume honesty"
+      ],
+      "correct": 1,
+      "explanation": "Witness computations don't enforce correctness unless the circuit adds constraints that bind values."
+    },
+    {
+      "stage": "post",
+      "question": "A circuit uses out = b*x + (1-b)*y to select x or y. What additional constraint is required for soundness?",
+      "options": [
+        "b must be range-checked to 0..255",
+        "b must be constrained to be boolean",
+        "x must be constrained to be non-zero",
+        "y must be constrained to be non-zero"
+      ],
+      "correct": 1,
+      "explanation": "If b is not boolean, the prover can choose arbitrary b and make out a linear blend of x and y."
+    },
+    {
+      "stage": "post",
+      "question": "Which attack best matches the bug: 'the circuit forgot to range-check a value intended to be 32-bit'?",
+      "options": [
+        "The prover chooses a field element outside the intended integer range that still satisfies the constraints",
+        "The verifier can invert the witness and recover the secret input",
+        "The prover can brute-force the public inputs faster than expected",
+        "The circuit becomes constant-time and leaks no information"
+      ],
+      "correct": 0,
+      "explanation": "Missing range checks is a soundness bug: a proof can verify for a semantically invalid witness."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson's 4-bit range check, x is constrained by x = b0 + 2*b1 + 4*b2 + 8*b3. What else is necessary?",
+      "options": [
+        "The circuit must also constrain x to be public",
+        "Each bi must be constrained to be boolean",
+        "The circuit must forbid addition constraints",
+        "The circuit must use a prime p larger than 2^64"
+      ],
+      "correct": 1,
+      "explanation": "Without boolean constraints, bi could be any field elements and the decomposition wouldn't imply a bit-length bound."
+    }
+  ]
 }

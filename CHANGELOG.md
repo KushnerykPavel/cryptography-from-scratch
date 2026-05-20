@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.11.0] — 2026-05-20
+
+Phases 12 (ZK Proof Systems) and 13 (ZK Engineering) complete. 170/241 lessons implemented.
+
+### Added (Phase 12 — ZK Proof Systems)
+- All 16 lessons implemented: Arithmetic Circuits, R1CS, QAP, Pinocchio, Groth16, PLONK Overview, PLONK Implement, Lookup Arguments, PLONKish Arithmetization, Halo2, STARKs, FRI, DEEP-FRI, Recursive Proofs, Folding Schemes, SNARK/STARK Comparison Lab.
+- Each lesson: runnable `code/main.py`, `tests/vectors.json`, `tests/test_vectors.py`, `quiz.json`, `docs/en.md`.
+
+### Added (Phase 13 — ZK Engineering)
+- All 12 lessons implemented: Circom, snarkjs, Halo2 Rust, arkworks, Noir, RISC0 zkVM, SP1 & Jolt, On-Chain Verifiers, Proof Aggregation & Recursion, ZK Mixers, Semaphore, ZK App End-to-End Lab.
+- Each lesson: runnable `code/main.py`, `tests/vectors.json`, `tests/test_vectors.py`, `quiz.json`, `docs/en.md`.
+
 ## [0.2.0] — 2026-05-13
 
 Phase 1 (Number Theory) complete; Phase 2 (Abstract Algebra) lessons 01–05 complete.

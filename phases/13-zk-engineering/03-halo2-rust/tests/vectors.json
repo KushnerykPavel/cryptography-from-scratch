@@ -1,1 +1,22 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-crafted vectors for the toy field mod 97 and toy constraint system in code/main.py (not from RFC/NIST).",
+  "vectors": [
+    {"op": "mul_residual", "a": 7, "b": 11, "c": 77, "expected": 0},
+    {"op": "mul_residual", "a": 7, "b": 11, "c": 78, "expected": 96},
+    {
+      "op": "vanishing_product",
+      "x": 13,
+      "allowed": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      "expected": 0
+    },
+    {
+      "op": "vanishing_product",
+      "x": 42,
+      "allowed": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      "expected": 44
+    },
+    {"op": "mul_circuit_ok", "a": 9, "b": 9, "expected": true},
+    {"op": "range_circuit_ok", "x": 13, "expected": true},
+    {"op": "range_circuit_ok", "x": 42, "expected": false}
+  ]
+}

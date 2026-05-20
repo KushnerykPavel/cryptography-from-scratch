@@ -1,4 +1,101 @@
 {
-  "title": "Halo2 \u2014 IPA-Based PLONKish",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a PLONKish circuit, what is the main purpose of a selector column?",
+      "options": [
+        "Enable a gate on specific rows of the table",
+        "Store private witness values in advice columns",
+        "Provide public inputs to the verifier as instances",
+        "Choose random challenges for the prover transcript"
+      ],
+      "correct": 0,
+      "explanation": "Selectors are fixed 0/1 values that multiply constraints so gates apply only on chosen rows."
+    },
+    {
+      "stage": "pre",
+      "question": "Conceptually, what does a copy constraint enforce?",
+      "options": [
+        "Two specific cells must have equal values",
+        "All advice cells must be distinct values",
+        "A fixed column must be public to the verifier",
+        "The circuit must use only linear constraints"
+      ],
+      "correct": 0,
+      "explanation": "A copy constraint ties two cells together so they represent the same logical variable across the table."
+    },
+    {
+      "stage": "post",
+      "question": "Why do we multiply each gate constraint by the selector value in MockProver?",
+      "options": [
+        "To disable the constraint when the selector is 0",
+        "To replace division constraints with multiplication",
+        "To convert fixed columns into advice columns",
+        "To force every constraint to hold on all rows"
+      ],
+      "correct": 0,
+      "explanation": "Multiplying by a 0/1 selector makes constraints vacuously true when the gate is turned off."
+    },
+    {
+      "stage": "post",
+      "question": "If a witness value is assigned but never referenced by any gate or copy constraint, what is it?",
+      "options": [
+        "An unconstrained value (a free variable)",
+        "A public input value fixed by the verifier",
+        "A fixed constant value baked into circuit",
+        "A selector value used to enable a gate"
+      ],
+      "correct": 0,
+      "explanation": "Unreferenced advice is unconstrained, so the prover can choose it arbitrarily without affecting satisfiability."
+    },
+    {
+      "stage": "post",
+      "question": "In the 3-bit decomposition gate, which constraint forces d0 to be a bit?",
+      "options": [
+        "d0 * (d0 - 1) == 0",
+        "d0 + d1 + d2 == a",
+        "d0 * d1 * d2 == 0",
+        "d0 + 2*d1 + 4*d2 == 0"
+      ],
+      "correct": 0,
+      "explanation": "Over a field, x(x-1)=0 forces x to be either 0 or 1."
+    },
+    {
+      "stage": "post",
+      "question": "Which soundness bug can an attacker exploit if a circuit forgets a needed copy constraint?",
+      "options": [
+        "Use different values in two places that should match",
+        "Recover the field modulus from the public transcript",
+        "Compute prover randomness from the instance column",
+        "Replace a multiplication gate with an addition gate"
+      ],
+      "correct": 0,
+      "explanation": "Without the equality, the prover can pick unrelated values for the two cells and still satisfy the remaining constraints."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best describes an instance column?",
+      "options": [
+        "It holds public values that the verifier fixes",
+        "It stores intermediate witness values for gates",
+        "It is a selector column that turns gates on",
+        "It is a fixed lookup table used for range checks"
+      ],
+      "correct": 0,
+      "explanation": "Instance columns represent public inputs/outputs: the verifier fixes them, and the prover must match them."
+    },
+    {
+      "stage": "post",
+      "question": "In the witness layout, why do we add copy constraints between a@row0 and a@row2 (and similarly for b)?",
+      "options": [
+        "To ensure the same logical variable is reused across rows",
+        "To make the field modulus smaller for faster proofs",
+        "To encode the addition gate using only constants",
+        "To prevent selector columns from ever being zero"
+      ],
+      "correct": 0,
+      "explanation": "Copy constraints tie together cells that should represent the same value even if they appear in different rows."
+    }
+  ]
 }
+

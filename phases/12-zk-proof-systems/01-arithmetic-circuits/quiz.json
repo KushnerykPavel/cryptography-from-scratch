@@ -1,4 +1,101 @@
 {
   "title": "Arithmetic Circuits \u2014 The Universal Computer",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In SNARK/STARK-style systems, what do we usually mean by an “arithmetic circuit”?",
+      "options": [
+        "A network of +/* gates over a finite field, wired to compute a function",
+        "A Boolean circuit with AND/OR/XOR over bits only",
+        "A CPU instruction trace (load/store/jump) over integers",
+        "A neural network graph with floating-point ops"
+      ],
+      "correct": 0,
+      "explanation": "In proof systems, arithmetic circuits usually mean addition/multiplication gates over a field, not bitwise logic or floating-point graphs."
+    },
+    {
+      "stage": "pre",
+      "question": "Why do ZK proof systems typically run circuit arithmetic modulo a prime p (i.e., in F_p)?",
+      "options": [
+        "So every nonzero element has a multiplicative inverse (division is well-defined)",
+        "So the prover can use floating-point for speed",
+        "So addition never wraps around",
+        "So the circuit can use XOR gates directly"
+      ],
+      "correct": 0,
+      "explanation": "Prime fields avoid zero divisors and ensure every nonzero value is invertible, which many algebraic reductions rely on."
+    },
+    {
+      "stage": "post",
+      "question": "What is a “wire assignment” (often called a witness) for an arithmetic circuit?",
+      "options": [
+        "Values for every wire (inputs + intermediates + outputs) that satisfy every gate equation",
+        "Only the public input values (statement)",
+        "Only the circuit output value",
+        "The list of gates in topological order"
+      ],
+      "correct": 0,
+      "explanation": "A witness assigns field elements to all wires so that each gate’s output equals the prescribed operation on its inputs."
+    },
+    {
+      "stage": "post",
+      "question": "Suppose a gate is labeled “mul” with input wires a,b and output wire c over F_p. What constraint does it enforce?",
+      "options": [
+        "c ≡ a · b (mod p)",
+        "c = a / b (over integers)",
+        "c ≡ a ⊕ b (bitwise XOR)",
+        "c = max(a, b)"
+      ],
+      "correct": 0,
+      "explanation": "Multiplication gates enforce equality in the field: c is the product of its inputs modulo p."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson’s example circuit for f(x) = x^3 + x + 5 over F_97, which statement is true?",
+      "options": [
+        "If you change the output wire value without changing intermediates, the witness should fail verification",
+        "Any output value is accepted as long as inputs are correct",
+        "Only the input wire needs to be checked; intermediates do not matter",
+        "The circuit is evaluated over integers, not modulo 97"
+      ],
+      "correct": 0,
+      "explanation": "A correct checker validates every gate; tampering with the output (or any intermediate) breaks at least one gate constraint."
+    },
+    {
+      "stage": "post",
+      "question": "Which bug class is a common “attack” on ZK circuits (even if the crypto is correct)?",
+      "options": [
+        "Underconstrained circuit: missing constraints allow bogus witnesses to pass",
+        "Using too small a terminal font",
+        "Choosing a prime modulus instead of a composite modulus",
+        "Using addition and multiplication gates instead of XOR gates"
+      ],
+      "correct": 0,
+      "explanation": "If the circuit fails to constrain an intended property, a prover can exploit the slack and produce an invalid-but-accepting witness."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key difference between “evaluating a circuit” and “checking a witness”?",
+      "options": [
+        "Evaluation computes wire values from inputs; checking verifies a proposed wire assignment satisfies every constraint",
+        "Evaluation proves zero-knowledge; checking proves soundness",
+        "Evaluation uses real numbers; checking uses integers",
+        "There is no difference; they are the same step"
+      ],
+      "correct": 0,
+      "explanation": "Evaluation is forward execution; checking is constraint satisfaction on a provided assignment (which might be wrong or malicious)."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it dangerous to mix values from two different moduli (e.g., treat an F_97 value as if it were in F_101) when building circuits?",
+      "options": [
+        "The same integer represents different field elements, so constraints can silently describe a different computation",
+        "It makes addition commutative",
+        "It prevents multiplication from working at all in any field",
+        "It guarantees the circuit becomes constant-time"
+      ],
+      "correct": 0,
+      "explanation": "Arithmetic is defined by the modulus; mixing fields is like mixing units. The verifier checks equations in one field, not “integers in general”."
+    }
+  ]
 }

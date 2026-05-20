@@ -1,4 +1,101 @@
 {
   "title": "snarkjs \u2014 Trusted Setup, Prove, Verify",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a snarkjs Groth16 workflow, which artifact is circuit-specific and comes out of the trusted setup phase?",
+      "options": [
+        "proof.json",
+        "public.json",
+        "circuit_final.zkey",
+        "input.json"
+      ],
+      "correct": 2,
+      "explanation": "The final .zkey is tied to the circuit and setup; proofs/public signals vary per input."
+    },
+    {
+      "stage": "pre",
+      "question": "In verification_key.json, what does the IC array represent (conceptually)?",
+      "options": [
+        "The proving key needed to create proofs",
+        "A list of G1 points used to build the public-input commitment vk_x",
+        "The list of R1CS constraints",
+        "The witness values for one proof"
+      ],
+      "correct": 1,
+      "explanation": "IC is used to form a linear combination with the public inputs (plus a constant term)."
+    },
+    {
+      "stage": "post",
+      "question": "If verification_key.json has nPublic = 3, what should len(IC) be?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "It can be any length"
+      ],
+      "correct": 1,
+      "explanation": "IC includes an extra constant slot, so it should be nPublic + 1."
+    },
+    {
+      "stage": "post",
+      "question": "Why is canonical JSON hashing (sorted keys, stable separators) useful for ZK artifact pipelines?",
+      "options": [
+        "It makes Groth16 verification faster",
+        "It produces stable digests independent of pretty-printing and key order",
+        "It prevents toxic waste from leaking",
+        "It compresses proof.json significantly"
+      ],
+      "correct": 1,
+      "explanation": "Stable hashing lets you pin and review exact artifacts even if formatting changes."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main risk if you do not document and enforce the public signal ordering between prover and verifier?",
+      "options": [
+        "Only slower proving time",
+        "You may verify a different statement than you intended",
+        "No risk: Groth16 ignores ordering",
+        "It only affects witness.wtns files"
+      ],
+      "correct": 1,
+      "explanation": "Verification binds to a vector of public inputs; swapping semantics can validate the wrong claim."
+    },
+    {
+      "stage": "post",
+      "question": "Which cross-file consistency check is a cheap way to catch many mismatches before doing expensive cryptographic verification?",
+      "options": [
+        "Check that public.json length equals nPublic and IC length equals public+1",
+        "Check that proof.json is under 1 KB",
+        "Check that verification_key.json has indentation = 2 spaces",
+        "Check that pi_b has exactly 2 rows"
+      ],
+      "correct": 0,
+      "explanation": "Length checks catch wrong keys, wrong circuits, and wrong public input vectors early."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: your backend accepts proof.json/public.json from clients but does NOT verify curve/protocol fields or artifact provenance. What can go wrong?",
+      "options": [
+        "Nothing: a proof is universal across curves and protocols",
+        "You can be tricked into using the wrong verifier/key, potentially bypassing intended checks",
+        "Only logging output changes; security is unaffected",
+        "It only changes performance, not correctness"
+      ],
+      "correct": 1,
+      "explanation": "If you mix curves/keys/circuits, you can end up verifying something different than your application intends."
+    },
+    {
+      "stage": "post",
+      "question": "You have verification_key.json, public.json, proof.json, and a verifier. What is the correct first step in a review/audit workflow?",
+      "options": [
+        "Deploy the verifier on-chain and test later",
+        "Run structural + consistency checks (protocol/curve match, nPublic, IC length, public length)",
+        "Skip checks and trust the snarkjs CLI output",
+        "Convert everything to base64 and re-upload"
+      ],
+      "correct": 1,
+      "explanation": "Cheap sanity checks find mismatches early and prevent chasing false failures."
+    }
+  ]
 }

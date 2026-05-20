@@ -1,1 +1,102 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "SHA-256 is defined in NIST FIPS 180-4. This lesson models Semaphore's identity commitments, Merkle group roots, and (external) nullifier hashing using domain-separated SHA-256 plus an explicit length-prefix encoding for strings/bytes. Merkle hashing uses 0x00 for leaf domain and 0x01 for internal node domain with a deterministic duplicate-last rule for odd node counts. Expected values were computed from this repository's reference implementation (phases/13-zk-engineering/11-semaphore/code/main.py) to lock behavior.",
+  "vectors": [
+    {
+      "op": "sha256_hex",
+      "inputs": { "data_hex": "616263" },
+      "expected_hex": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    {
+      "op": "identity_commitment_hex",
+      "inputs": {
+        "trapdoor_hex": "0000000000000000000000000000000000000000000000000000000000000001",
+        "nullifier_hex": "0000000000000000000000000000000000000000000000000000000000000002"
+      },
+      "expected_hex": "9f670441796164aabef1d78fa5f408e24898183323c155bbc593fe67a24c40a7"
+    },
+    {
+      "op": "identity_commitment_hex",
+      "inputs": {
+        "trapdoor_hex": "0000000000000000000000000000000000000000000000000000000000000003",
+        "nullifier_hex": "0000000000000000000000000000000000000000000000000000000000000004"
+      },
+      "expected_hex": "4d2aca90711ee9e6b799d213201681c4769cb49cbec2ba93b7a56dd55945efe1"
+    },
+    {
+      "op": "identity_commitment_hex",
+      "inputs": {
+        "trapdoor_hex": "0000000000000000000000000000000000000000000000000000000000000005",
+        "nullifier_hex": "0000000000000000000000000000000000000000000000000000000000000006"
+      },
+      "expected_hex": "9dee26386eba34ae0467f3cb9d171166220864ecd39c9a859e848908c228a692"
+    },
+    {
+      "op": "external_nullifier_hash_hex",
+      "inputs": { "external_nullifier": "vote:proposal-42" },
+      "expected_hex": "872b49411fcc356759953062da704fc7294b0113fc9aef6d7c353226c60ce1cb"
+    },
+    {
+      "op": "nullifier_hash_hex",
+      "inputs": {
+        "nullifier_hex": "0000000000000000000000000000000000000000000000000000000000000002",
+        "external_nullifier": "vote:proposal-42"
+      },
+      "expected_hex": "2cb703c767c947096f60234ce513b103fb429410dc81dae3e16a0c56c38514b7"
+    },
+    {
+      "op": "signal_hash_hex",
+      "inputs": { "signal": "YES" },
+      "expected_hex": "59184b36e93ca88d2e868616f849e223cbe775b2d37bac43b08656e56a93b2fe"
+    },
+    {
+      "op": "merkle_root_hex",
+      "inputs": {
+        "leaves_hex": [
+          "9f670441796164aabef1d78fa5f408e24898183323c155bbc593fe67a24c40a7",
+          "4d2aca90711ee9e6b799d213201681c4769cb49cbec2ba93b7a56dd55945efe1",
+          "9dee26386eba34ae0467f3cb9d171166220864ecd39c9a859e848908c228a692"
+        ]
+      },
+      "expected_hex": "8c90b84764fe18bb161b7242d97c26b1b8a7dec1fe029105a32b58fd2957650a"
+    },
+    {
+      "op": "merkle_proof",
+      "inputs": {
+        "leaves_hex": [
+          "9f670441796164aabef1d78fa5f408e24898183323c155bbc593fe67a24c40a7",
+          "4d2aca90711ee9e6b799d213201681c4769cb49cbec2ba93b7a56dd55945efe1",
+          "9dee26386eba34ae0467f3cb9d171166220864ecd39c9a859e848908c228a692"
+        ],
+        "index": 1
+      },
+      "expected": [
+        { "side": "left", "sibling_hex": "e84ab023f0d39c4d3cc6613fd35c6cad59321c8ae82bbde6811cf47d13f97292" },
+        { "side": "right", "sibling_hex": "cf201ccea9a6501bf4f65f8321d9d5627d4ef5e9d364084f13f5b552e8e1005d" }
+      ]
+    },
+    {
+      "op": "verify_merkle_proof_bool",
+      "inputs": {
+        "leaf_hex": "4d2aca90711ee9e6b799d213201681c4769cb49cbec2ba93b7a56dd55945efe1",
+        "proof": [
+          { "side": "left", "sibling_hex": "e84ab023f0d39c4d3cc6613fd35c6cad59321c8ae82bbde6811cf47d13f97292" },
+          { "side": "right", "sibling_hex": "cf201ccea9a6501bf4f65f8321d9d5627d4ef5e9d364084f13f5b552e8e1005d" }
+        ],
+        "root_hex": "8c90b84764fe18bb161b7242d97c26b1b8a7dec1fe029105a32b58fd2957650a"
+      },
+      "expected": true
+    },
+    {
+      "op": "verify_merkle_proof_bool",
+      "inputs": {
+        "leaf_hex": "9f670441796164aabef1d78fa5f408e24898183323c155bbc593fe67a24c40a7",
+        "proof": [
+          { "side": "left", "sibling_hex": "e84ab023f0d39c4d3cc6613fd35c6cad59321c8ae82bbde6811cf47d13f97292" },
+          { "side": "right", "sibling_hex": "cf201ccea9a6501bf4f65f8321d9d5627d4ef5e9d364084f13f5b552e8e1005d" }
+        ],
+        "root_hex": "8c90b84764fe18bb161b7242d97c26b1b8a7dec1fe029105a32b58fd2957650a"
+      },
+      "expected": false
+    }
+  ]
+}

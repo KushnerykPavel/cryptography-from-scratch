@@ -1,1 +1,60 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors for a toy DEEP-FRI implementation (field p=12289) derived from the protocol definitions in BBHR (FRI, ICALP 2018) and Ben-Sasson et al. (DEEP-FRI, ePrint 2019/336).",
+  "vectors": [
+    {
+      "op": "f_inv",
+      "p": 12289,
+      "a": 3,
+      "expected": 8193
+    },
+    {
+      "op": "poly_eval",
+      "p": 12289,
+      "coeffs": [3, 5, 7],
+      "x": 10,
+      "expected": 753
+    },
+    {
+      "op": "deep_quotient_values",
+      "p": 12289,
+      "domain": [1, 8246, 1479, 5146, 12288, 4043, 10810, 7143],
+      "values": [39, 9867, 3424, 7761, 7, 10819, 8883, 8380],
+      "z": 10122,
+      "fz": 7040,
+      "expected": [6351, 6726, 8513, 10039, 2930, 7281, 2807, 8844]
+    },
+    {
+      "op": "fri_fold_layer",
+      "p": 12289,
+      "beta": 8737,
+      "domain": [1, 8246, 1479, 5146, 12288, 4043, 10810, 7143],
+      "values": [6351, 6726, 8513, 10039, 2930, 7281, 2807, 8844],
+      "expected": {
+        "domain": [1, 1479, 12288, 10810],
+        "values": [5855, 907, 7059, 12007]
+      }
+    },
+    {
+      "op": "merkle_root",
+      "values": [1, 2, 3, 4],
+      "expected_root_hex": "45f385494f9f6116ec5530e7e9e24e2fdf6388c47d72e29657ce7b860c1484c3"
+    },
+    {
+      "op": "merkle_proof_verify",
+      "values": [1, 2, 3, 4],
+      "index": 2,
+      "expected_root_hex": "45f385494f9f6116ec5530e7e9e24e2fdf6388c47d72e29657ce7b860c1484c3",
+      "proof": [
+        {
+          "hash_hex": "82f02cf2ac0074619e6d747c35e08b29431a16943ddf81cfd9065c004ee6364a",
+          "sib_on_left": false
+        },
+        {
+          "hash_hex": "0971c8a1ce81287ccbc95aa4f171a5f807fb13ea2118f56b99769459a64906ad",
+          "sib_on_left": true
+        }
+      ],
+      "expected": true
+    }
+  ]
+}

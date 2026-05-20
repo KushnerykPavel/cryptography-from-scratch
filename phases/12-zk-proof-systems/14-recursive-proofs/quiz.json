@@ -1,4 +1,101 @@
 {
-  "title": "Recursive Proofs",
-  "questions": []
+  "title": "Recursive Proofs — IVC",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does IVC stand for, and what is its defining property?",
+      "options": [
+        "Incrementally Verifiable Computation — a proof of n steps stays O(1) in size.",
+        "Iterative Verification Circuit — a circuit that reruns every step during verification.",
+        "Interactive Verification Contract — a multi-round protocol between prover and verifier.",
+        "Incremental Value Commitment — a hash chain used for data integrity only."
+      ],
+      "correct": 0,
+      "explanation": "IVC (Incrementally Verifiable Computation) lets you add steps one at a time while keeping the proof size constant — the defining O(1) size property."
+    },
+    {
+      "stage": "pre",
+      "question": "Why can't you just concatenate all step proofs to verify a long computation?",
+      "options": [
+        "The proof size and verifier work grow linearly with the number of steps, defeating the purpose of a succinct proof.",
+        "Concatenated proofs are always invalid because proofs cannot be composed.",
+        "You would need a trusted setup for each step separately.",
+        "Hash functions are not associative, so the final hash would be wrong."
+      ],
+      "correct": 0,
+      "explanation": "Concatenating proofs gives O(n) size and O(n) verification — a succinct proof system requires O(1) size regardless of n."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson's IVC scheme, what three fields does the proof tuple contain?",
+      "options": [
+        "(n, z_n, acc_n) — step count, current state, and hash accumulator.",
+        "(z_0, z_n, n) — initial state, final state, and step count.",
+        "(acc_n, F, p) — accumulator, step function, and field prime.",
+        "(hash_0, hash_n, delta) — first hash, last hash, and their difference."
+      ],
+      "correct": 0,
+      "explanation": "The proof tuple is always (n, z_n, acc_n): the step index, the current state after n applications of F, and the hash accumulator binding the full history."
+    },
+    {
+      "stage": "post",
+      "question": "What does ivc_verify_step check, and what is its time complexity?",
+      "options": [
+        "It checks that z_{n+1} = F(z_n), n incremented by 1, and acc_{n+1} = H(n+1, z_{n+1}, acc_n) — all in O(1).",
+        "It replays the entire chain from z_0 to verify the current state — O(n).",
+        "It checks only that the step counter is correct — O(1) but incomplete.",
+        "It verifies the zero-knowledge property of the accumulator — O(log n)."
+      ],
+      "correct": 0,
+      "explanation": "ivc_verify_step performs exactly three constant-time checks — step count, correct application of F, and correct accumulator update — giving O(1) verification of a single transition."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the step counter n be included in every fhash call?",
+      "options": [
+        "Without n, a prover can skip steps — jumping from step k to k+5 while producing a valid accumulator that passes local checks.",
+        "Including n makes the hash collision-resistant; without it SHA-256 becomes invertible.",
+        "The step counter is needed so the verifier knows how many bytes to allocate.",
+        "Without n the proof tuple would have only two fields and be too small to encode."
+      ],
+      "correct": 0,
+      "explanation": "The step counter binds the accumulator to a specific position in the chain. Omitting it lets a prover skip or reorder steps while keeping accumulators locally consistent."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: a prover submits proof (8, z_8, acc_8) claiming 8 honest steps, but silently used z'_3 ≠ z_3 at step 3. Which verification catches this and which does not?",
+      "options": [
+        "ivc_verify_full catches it (replays from z_0 and finds the mismatch); ivc_verify_step on adjacent honest pairs does not.",
+        "ivc_verify_step on the step-3 pair catches it; ivc_verify_full does not because it only checks the final accumulator.",
+        "Neither catches it — hash accumulators cannot detect mid-chain tampering.",
+        "Both catch it with equal probability because SHA-256 is collision-resistant."
+      ],
+      "correct": 0,
+      "explanation": "ivc_verify_full replays the entire chain from z_0, so it detects any deviation. ivc_verify_step only checks two adjacent states; if both neighbors are consistent with the tampered value it will pass."
+    },
+    {
+      "stage": "post",
+      "question": "What is the role of the 'cycle of curves' (e.g., Pallas/Vesta) in production recursive proofs?",
+      "options": [
+        "It allows a proof verifier circuit to be expressed natively in the scalar field of one curve, while the proof it verifies uses the base field of the paired curve — enabling efficient recursive composition.",
+        "It doubles the proof size so that both the current and previous proof can be stored together.",
+        "It removes the need for a hash accumulator entirely by using elliptic curve discrete log.",
+        "It ensures that all field arithmetic is done over a prime field of exactly 64 bits."
+      ],
+      "correct": 0,
+      "explanation": "A cycle of curves pairs two curves so each curve's scalar field equals the other's base field. This lets you verify one curve's proof inside a circuit over the other curve, enabling recursive composition without expensive field embedding."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the toy hash accumulator NOT provide zero-knowledge, and what would a real IVC system use instead?",
+      "options": [
+        "SHA-256 mod p leaks n and z_n directly in the proof tuple; real systems use Pedersen commitments or inner-product accumulators that hide intermediate states.",
+        "SHA-256 is too slow for zero-knowledge; real systems use XOR as the accumulator.",
+        "The hash reveals the step function coefficients a, b, c; real systems keep those secret.",
+        "There is no difference — any collision-resistant hash provides zero-knowledge."
+      ],
+      "correct": 0,
+      "explanation": "The proof tuple (n, z_n, acc_n) exposes n and z_n in the clear. Zero-knowledge IVC replaces these with hiding commitments (e.g., Pedersen) so the verifier learns nothing about intermediate states beyond what is intended."
+    }
+  ]
 }

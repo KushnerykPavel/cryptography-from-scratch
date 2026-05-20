@@ -1,4 +1,101 @@
 {
   "title": "Groth16 from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What property of a pairing e(·,·) makes Groth16 verification possible with a single equation?",
+      "options": [
+        "Bilinearity: e(aP, bQ) = e(P, Q)^(ab)",
+        "Commutativity: e(P, Q) = e(Q, P)",
+        "Non-invertibility: given e(P, Q) it's hard to find P or Q",
+        "Hash-compatibility: e(P, Q) can be efficiently hashed to scalars"
+      ],
+      "correct": 0,
+      "explanation": "Groth16 relies on bilinearity so linear combinations in G1/G2 turn into products in the target group."
+    },
+    {
+      "stage": "pre",
+      "question": "In an R1CS constraint (A·w) * (B·w) = (C·w), what is w?",
+      "options": [
+        "A witness vector containing 1, public inputs, private witness, and intermediates",
+        "A matrix of constraints that defines the circuit",
+        "A randomizer chosen by the verifier to hide inputs",
+        "A hash of the proving key used to bind the statement"
+      ],
+      "correct": 0,
+      "explanation": "R1CS evaluates linear forms against a witness vector w that includes the constant 1 slot and all variables."
+    },
+    {
+      "stage": "post",
+      "question": "In Groth16 verification, what is vk_x (sometimes called IC·public_inputs)?",
+      "options": [
+        "A G1 linear combination of precomputed IC points with the public inputs (including the constant 1 slot)",
+        "A random scalar sampled by the verifier to ensure soundness",
+        "The prover's secret trapdoor value tau used to evaluate polynomials",
+        "The quotient polynomial h(x) evaluated at tau"
+      ],
+      "correct": 0,
+      "explanation": "vk_x is computed as IC[0] + input[0]*IC[1] + ... in G1 and depends only on public inputs."
+    },
+    {
+      "stage": "post",
+      "question": "What does the QAP divisibility condition A(x)B(x) - C(x) = h(x)t(x) guarantee?",
+      "options": [
+        "The witness satisfies all R1CS constraints over the chosen domain points",
+        "The prover has revealed the witness in the clear",
+        "The verifier can reconstruct tau from public inputs",
+        "The proving key is universal (reusable for any circuit)"
+      ],
+      "correct": 0,
+      "explanation": "If the remainder is zero when dividing by t(x), then the R1CS constraints hold at every domain point."
+    },
+    {
+      "stage": "post",
+      "question": "Why does Groth16 include separate parameters gamma and delta in the setup?",
+      "options": [
+        "To separate how public-input terms and private-witness terms contribute to the pairing equation",
+        "To allow the verifier to learn the witness with an extractor",
+        "To remove the need for any trusted setup ceremony",
+        "To make the proof size grow with the number of constraints"
+      ],
+      "correct": 0,
+      "explanation": "Gamma and delta are used to isolate the public-input linear combination from the private/witness and h(x)t(x) terms."
+    },
+    {
+      "stage": "post",
+      "question": "In Groth16's circuit-specific trusted setup, what is the 'toxic waste' the ceremony must destroy?",
+      "options": [
+        "Secret scalars like tau, alpha, beta, gamma, delta (or enough to derive them)",
+        "The public verification key (it must be kept secret forever)",
+        "The circuit itself (it must be hidden for privacy)",
+        "The quotient polynomial h(x) (it must never be computed)"
+      ],
+      "correct": 0,
+      "explanation": "If the trapdoor values are known, an attacker can potentially create fake proofs for false statements."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: if a verifier is deployed with gamma_g2 equal to delta_g2, what breaks?",
+      "options": [
+        "The public-input term and the C term collapse onto the same G2 point, enabling proof forgery in some settings",
+        "The prover can no longer compute A and B, so proofs always fail",
+        "The proof becomes larger, but security is unchanged",
+        "Only zero-knowledge breaks; soundness still holds"
+      ],
+      "correct": 0,
+      "explanation": "If gamma and delta aren't independent, the verifier's pairing equation can lose binding between public inputs and the rest of the proof."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson's toy pairing e(g^a, g^b) = g^(ab), what does bilinearity mean operationally?",
+      "options": [
+        "e(g^(a1+a2), g^b) = e(g^a1, g^b) * e(g^a2, g^b) and similarly in the other argument",
+        "e(g^a, g^b) = g^(a+b)",
+        "e(g^a, g^b) = e(g^b, g^a) always",
+        "e(g^a, g^b) can be computed without knowing a or b"
+      ],
+      "correct": 0,
+      "explanation": "Bilinearity turns additions in the source groups into multiplications in the target group."
+    }
+  ]
 }

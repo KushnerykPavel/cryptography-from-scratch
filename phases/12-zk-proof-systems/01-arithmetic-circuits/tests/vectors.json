@@ -1,1 +1,59 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors for an arithmetic circuit over F_97. Circuit computes f(x) = x^3 + x + 5 (mod 97) using only add/mul gates. Witness vectors are full wire assignments produced by evaluating the circuit in code/main.py.",
+  "vectors": [
+    { "op": "is_prime", "n": 97, "expected": true },
+    { "op": "is_prime", "n": 1, "expected": false },
+    { "op": "is_prime", "n": 91, "expected": false },
+
+    { "op": "mod_inv", "a": 45, "mod": 97, "expected": 69 },
+    { "op": "mod_inv", "a": 0, "mod": 97, "expected_error": "0 has no inverse modulo mod" },
+    { "op": "mod_inv", "a": 6, "mod": 15, "expected_error": "a and mod are not coprime" },
+
+    { "op": "field_add", "mod": 97, "a": 45, "b": 80, "expected": 28 },
+    { "op": "field_mul", "mod": 97, "a": 45, "b": 80, "expected": 11 },
+    { "op": "field_pow", "mod": 97, "a": 3, "e": 3, "expected": 27 },
+
+    {
+      "op": "eval_x3_plus_x_plus_5",
+      "mod": 97,
+      "x": 3,
+      "expected": { "output": 35, "witness": [3, 5, 9, 27, 30, 35] }
+    },
+    {
+      "op": "eval_x3_plus_x_plus_5",
+      "mod": 97,
+      "x": 0,
+      "expected": { "output": 5, "witness": [0, 5, 0, 0, 0, 5] }
+    },
+    {
+      "op": "eval_x3_plus_x_plus_5",
+      "mod": 97,
+      "x": 96,
+      "expected": { "output": 3, "witness": [96, 5, 1, 96, 95, 3] }
+    },
+
+    {
+      "op": "check_witness",
+      "mod": 97,
+      "x": 3,
+      "witness": [3, 5, 9, 27, 30, 35],
+      "expected": true
+    },
+    {
+      "op": "check_witness",
+      "mod": 97,
+      "x": 3,
+      "witness": [3, 6, 9, 27, 30, 35],
+      "expected": false
+    },
+    {
+      "op": "check_witness",
+      "mod": 97,
+      "x": 3,
+      "witness": [3, 5, 9, 27, 30, 36],
+      "expected": false
+    },
+
+    { "op": "PrimeField", "mod": 15, "expected_error": "field modulus must be prime" }
+  ]
+}

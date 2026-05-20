@@ -1,4 +1,100 @@
 {
-  "title": "Halo2 in Rust \u2014 A Working Circuit",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a PLONKish/Halo2-style circuit, what does it mean for a gate constraint to be satisfied on a row?",
+      "options": [
+        "Its expression evaluates to 0 in the circuit’s finite field on that row",
+        "Its expression evaluates to a positive integer on that row",
+        "The prover assigns the same value to every advice cell on that row",
+        "The verifier recomputes the witness values from the public inputs"
+      ],
+      "correct": 0,
+      "explanation": "Gates are algebraic identities over a field; they are satisfied when the evaluated expression is 0."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the primary purpose of a selector in Halo2?",
+      "options": [
+        "Conditionally enable a gate on specific rows by multiplying the gate by 0/1",
+        "Encrypt the witness values before committing to them",
+        "Turn private inputs into public inputs",
+        "Reduce the number of columns by hashing them together"
+      ],
+      "correct": 0,
+      "explanation": "Selectors act like per-row on/off switches for constraints: q(row) * t(row) = 0."
+    },
+    {
+      "stage": "post",
+      "question": "Why do many Halo2 gates use the pattern q(row) * t(row) = 0 instead of just t(row) = 0 everywhere?",
+      "options": [
+        "So the same columns can be reused for multiple gadgets, with constraints enabled only where needed",
+        "So the prover can choose whether to satisfy the constraint",
+        "So the verifier does not need to know the field modulus",
+        "So constraints can refer to unlimited numbers of rows at once"
+      ],
+      "correct": 0,
+      "explanation": "Selectors let you reuse the same columns while only enforcing a gate on the rows where that gadget is laid out."
+    },
+    {
+      "stage": "post",
+      "question": "What does an equality (copy) constraint enforce in a Halo2 circuit?",
+      "options": [
+        "Two specified cells must contain the same field element value",
+        "Two columns must have the same number of assigned rows",
+        "Two different gates must have identical polynomials",
+        "The witness must be unique for a given set of public inputs"
+      ],
+      "correct": 0,
+      "explanation": "Copy constraints tie cells together so that the proof enforces they stay equal."
+    },
+    {
+      "stage": "post",
+      "question": "If you assign the same integer to two cells but never add an equality constraint between them, what is true in the proof system?",
+      "options": [
+        "They are not logically linked; the prover could change one without affecting the other as long as all enabled gates still pass",
+        "They are automatically linked because they were assigned the same integer",
+        "They are linked only if they are in the same column",
+        "They are linked only if they are in the same row"
+      ],
+      "correct": 0,
+      "explanation": "Assignments are just witness values; only constraints (like equality constraints) make relationships provable."
+    },
+    {
+      "stage": "post",
+      "question": "Consider the vanishing-product range check ∏_{v in allowed} (x - v) = 0. When does it hold?",
+      "options": [
+        "Exactly when x equals one of the allowed values (in the field)",
+        "Exactly when x is not in the allowed set",
+        "Only when x equals the last allowed value",
+        "Only when the allowed set is empty"
+      ],
+      "correct": 0,
+      "explanation": "The product is zero iff one factor is zero, which happens when x matches some allowed value."
+    },
+    {
+      "stage": "post",
+      "question": "In Halo2 terms, which pairing best matches configure vs synthesize?",
+      "options": [
+        "Configure declares columns + constraints; synthesize assigns witness values and enables selectors",
+        "Configure assigns witness values; synthesize generates the proving key",
+        "Configure verifies the proof; synthesize creates the transcript",
+        "Configure chooses the curve; synthesize picks the hash function"
+      ],
+      "correct": 0,
+      "explanation": "Configuration sets up the constraint system; synthesis fills the table with concrete witness assignments."
+    },
+    {
+      "stage": "post",
+      "question": "Attack mindset: what can go wrong if a required selector is never enabled on any row?",
+      "options": [
+        "The intended constraint is never enforced, so a prover may produce a proof for an invalid statement",
+        "The circuit becomes constant-time, which breaks soundness",
+        "The field modulus becomes public, which breaks zero knowledge",
+        "The prover is forced to reveal the witness values"
+      ],
+      "correct": 0,
+      "explanation": "If q(row)=0 everywhere, then q(row)*t(row)=0 holds trivially, so the gate provides no soundness."
+    }
+  ]
 }

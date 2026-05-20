@@ -1,4 +1,101 @@
 {
   "title": "PLONKish Arithmetization",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does 'arithmetization' mean in the context of PLONKish proof systems?",
+      "options": [
+        "Encoding row-by-row constraints as low-degree polynomials so one identity replaces all row checks.",
+        "Verifying each row of the constraint table one at a time.",
+        "Hashing witness values to produce a compact digest.",
+        "Converting a Boolean circuit to arithmetic gates."
+      ],
+      "correct": 0,
+      "explanation": "Arithmetization is the step that transforms a table of row constraints into polynomial identities, enabling succinct verification."
+    },
+    {
+      "stage": "pre",
+      "question": "Why must the evaluation domain H consist of roots of unity rather than arbitrary points?",
+      "options": [
+        "Because the vanishing polynomial simplifies to X^n - 1 on a roots-of-unity domain, enabling efficient FFT-based operations.",
+        "Because arbitrary points cannot be represented in a finite field.",
+        "Because roots of unity guarantee the witness values are non-zero.",
+        "Because random domain points would expose the witness to the verifier."
+      ],
+      "correct": 0,
+      "explanation": "On H = {1, ω, ω², …, ω^{n-1}}, the vanishing polynomial Z_H(X) = X^n − 1 has a simple closed form, which is critical for efficient proof construction."
+    },
+    {
+      "stage": "post",
+      "question": "In the PLONK generic gate equation ql*a + qr*b + qm*(a*b) + qo*c + qc = 0, how do you encode the multiplication gate a*b = c?",
+      "options": [
+        "Set ql=0, qr=0, qm=1, qo=-1, qc=0.",
+        "Set ql=1, qr=1, qm=0, qo=-1, qc=0.",
+        "Set ql=0, qr=0, qm=0, qo=1, qc=0.",
+        "Set ql=1, qr=0, qm=1, qo=-1, qc=0."
+      ],
+      "correct": 0,
+      "explanation": "With qm=1 and qo=-1, the gate equation becomes a*b - c = 0, i.e. a*b = c."
+    },
+    {
+      "stage": "post",
+      "question": "If every row constraint holds, what algebraic property must the composition polynomial F(X) satisfy?",
+      "options": [
+        "F(X) is divisible by the vanishing polynomial Z_H(X) = X^n - 1 with zero remainder.",
+        "F(X) equals the vanishing polynomial Z_H(X).",
+        "F(X) has degree exactly n-1.",
+        "F(X) evaluates to 1 at every domain point."
+      ],
+      "correct": 0,
+      "explanation": "If all row constraints hold then F(ω^i)=0 for all i, so every domain point is a root of F, making Z_H(X) a factor."
+    },
+    {
+      "stage": "post",
+      "question": "Why is checking F(ζ) = Z_H(ζ)*Q(ζ) at a single random verifier-chosen point ζ sound?",
+      "options": [
+        "Because the polynomials are degree-bounded, so equality at one random point implies equality as polynomials except with negligible probability.",
+        "Because the prover commits to all n evaluations before ζ is chosen.",
+        "Because Z_H(ζ) is always non-zero for any ζ.",
+        "Because the prover cannot compute F without knowing ζ in advance."
+      ],
+      "correct": 0,
+      "explanation": "By the Schwartz-Zippel lemma, two distinct polynomials of bounded degree agree on a random point with probability at most deg/|F|, which is negligible for large fields."
+    },
+    {
+      "stage": "post",
+      "question": "What happens to the degree of F(X) = QL(X)*A(X) + QR(X)*B(X) + QM(X)*A(X)*B(X) + QO(X)*C(X) + QC(X) relative to the individual column polynomials?",
+      "options": [
+        "The QM*(A*B) term doubles the degree: if witness and selector polynomials have degree n-1, the composition has degree up to 2(n-1).",
+        "F(X) always has the same degree as the individual column polynomials.",
+        "F(X) has degree n because it must vanish on all n domain points.",
+        "F(X) has degree exactly 1 because selectors are constants."
+      ],
+      "correct": 0,
+      "explanation": "Multiplying two degree-(n-1) polynomials yields degree 2(n-2), which is why real protocols split the quotient Q into multiple pieces to fit commitment degree bounds."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-themed: what goes wrong if the prover uses a different evaluation domain for witness columns versus selector columns?",
+      "options": [
+        "The composition polynomial F(X) evaluates to non-zero on the intended domain, so the divisibility check fails or a cheating prover can forge a fake quotient.",
+        "The proof becomes larger but remains sound.",
+        "The vanishing polynomial changes, making Z_H(X) harder to compute.",
+        "Only the verifier is affected; the prover can still produce a valid proof."
+      ],
+      "correct": 0,
+      "explanation": "Selector and witness polynomials must agree on the same domain points. A domain mismatch causes the identity F=Z_H*Q to break silently, creating subtle forgery opportunities."
+    },
+    {
+      "stage": "post",
+      "question": "What does the vanishing_polynomial function return for n=4 over the Goldilocks prime p?",
+      "options": [
+        "[p-1, 0, 0, 0, 1], representing X^4 - 1.",
+        "[0, 0, 0, 0, 1], representing X^4.",
+        "[1, 0, 0, 0, p-1], representing 1 - X^4.",
+        "[p-1, 1], representing X - 1."
+      ],
+      "correct": 0,
+      "explanation": "vanishing_polynomial(n) returns [(p-1)] + [0]*(n-1) + [1], which is the coefficient list for -1 + X^n = X^n - 1."
+    }
+  ]
 }

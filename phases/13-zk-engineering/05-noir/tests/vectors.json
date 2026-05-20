@@ -1,1 +1,60 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-derived vectors for the lesson's pure-Python Noir-inspired model (field modulus 2^61-1; integer ranges as in range_check_bits).",
+  "vectors": [
+    {
+      "op": "field_add",
+      "inputs": { "a": 5, "b": 7 },
+      "expected": 12
+    },
+    {
+      "op": "field_add",
+      "inputs": { "a": 2305843009213693950, "b": 1 },
+      "expected": 0
+    },
+    {
+      "op": "field_sub",
+      "inputs": { "a": 0, "b": 1 },
+      "expected": 2305843009213693950
+    },
+    {
+      "op": "field_mul",
+      "inputs": { "a": 12, "b": 13 },
+      "expected": 156
+    },
+    {
+      "op": "range_check_bits",
+      "inputs": { "value": 255, "bits": 8 },
+      "expected": true
+    },
+    {
+      "op": "range_check_bits",
+      "inputs": { "value": 256, "bits": 8 },
+      "expected": false
+    },
+    {
+      "op": "circuit_satisfied",
+      "inputs": { "program": "linear_and_mul", "x": 7, "y": 11 },
+      "expected": true
+    },
+    {
+      "op": "circuit_satisfied",
+      "inputs": { "program": "u32_add", "a": 4294967295, "b": 0 },
+      "expected": true
+    },
+    {
+      "op": "circuit_satisfied",
+      "inputs": { "program": "u32_add", "a": 4294967295, "b": 1 },
+      "expected": false
+    },
+    {
+      "op": "unconstrained_accepts_malicious",
+      "inputs": { "x": 9, "y": 13, "malicious_out": 123456 },
+      "expected": true
+    },
+    {
+      "op": "constrained_rejects_malicious",
+      "inputs": { "x": 9, "y": 13, "malicious_out": 123456 },
+      "expected": false
+    }
+  ]
+}

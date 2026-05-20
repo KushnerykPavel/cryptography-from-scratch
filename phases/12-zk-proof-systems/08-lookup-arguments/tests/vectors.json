@@ -1,1 +1,79 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-constructed small examples + deterministic Fiat–Shamir transcript (SHA-256) implemented in code/main.py.",
+  "vectors": [
+    {
+      "op": "inv_mod",
+      "inputs": { "a": 7, "p": 2305843009213693951 },
+      "expected": 1976436865040309101
+    },
+    {
+      "op": "multiset_difference",
+      "inputs": { "table": [2, 3, 3, 5, 8, 13, 21], "witness": [3, 5, 3] },
+      "expected": [2, 8, 13, 21]
+    },
+    {
+      "op": "poly_product_at",
+      "inputs": { "roots": [3, 5, 3], "x": 10, "p": 2305843009213693951 },
+      "expected": 245
+    },
+    {
+      "op": "compress_row",
+      "inputs": { "row": [2, 4], "theta": 5, "p": 2305843009213693951 },
+      "expected": 22
+    },
+    {
+      "op": "prove_lookup_membership",
+      "inputs": {
+        "table": [2, 3, 3, 5, 8, 13, 21],
+        "witness": [3, 5, 3],
+        "p": 2305843009213693951,
+        "label": "toy-lookup-v1"
+      },
+      "expected": {
+        "witness": [3, 5, 3],
+        "remainder": [2, 8, 13, 21],
+        "r": 75137299601496275,
+        "eval_witness": 1875762427041555582,
+        "eval_remainder": 309456273812817661,
+        "commit_witness": "b75021c1c34fb9f57b3c7a1eccb74dcd37df18c0c362ec08823a61f7930679f0",
+        "commit_remainder": "c7257d95dfe544f570c6d44bf1f4212298ff18cfc87c97953a23c0a346fdbafc"
+      }
+    },
+    {
+      "op": "verify_lookup_membership",
+      "inputs": {
+        "table": [2, 3, 3, 5, 8, 13, 21],
+        "proof": {
+          "witness": [3, 5, 3],
+          "remainder": [2, 8, 13, 21],
+          "r": 75137299601496275,
+          "eval_witness": 1875762427041555582,
+          "eval_remainder": 309456273812817661,
+          "commit_witness": "b75021c1c34fb9f57b3c7a1eccb74dcd37df18c0c362ec08823a61f7930679f0",
+          "commit_remainder": "c7257d95dfe544f570c6d44bf1f4212298ff18cfc87c97953a23c0a346fdbafc"
+        },
+        "p": 2305843009213693951,
+        "label": "toy-lookup-v1"
+      },
+      "expected": true
+    },
+    {
+      "op": "verify_lookup_membership",
+      "inputs": {
+        "table": [2, 3, 3, 5, 8, 13, 21],
+        "proof": {
+          "witness": [3, 5, 3],
+          "remainder": [2, 8, 13, 21],
+          "r": 75137299601496275,
+          "eval_witness": 1875762427041555583,
+          "eval_remainder": 309456273812817661,
+          "commit_witness": "b75021c1c34fb9f57b3c7a1eccb74dcd37df18c0c362ec08823a61f7930679f0",
+          "commit_remainder": "c7257d95dfe544f570c6d44bf1f4212298ff18cfc87c97953a23c0a346fdbafc"
+        },
+        "p": 2305843009213693951,
+        "label": "toy-lookup-v1"
+      },
+      "expected": false
+    }
+  ]
+}

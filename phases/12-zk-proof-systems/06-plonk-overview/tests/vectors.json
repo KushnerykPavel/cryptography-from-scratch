@@ -1,1 +1,36 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal toy PLONK instance over F_p with p=97 and n=4. omega=22 is a primitive 4th root of unity mod 97. Witness uses x=3, so z=x^2=9 and y=z+x+5=17. Expected values are computed by the same arithmetic as `phases/12-zk-proof-systems/06-plonk-overview/code/main.py`.",
+  "vectors": [
+    {"op": "inv_mod", "a": 7, "p": 97, "expected": 14},
+    {"op": "inv_mod", "a": 0, "p": 97, "expected_error": "not invertible modulo p"},
+
+    {"op": "find_primitive_root_of_unity", "p": 97, "n": 4, "expected": 22},
+    {"op": "evaluation_domain", "p": 97, "n": 4, "omega": 22, "expected": [1, 22, 96, 75]},
+
+    {"op": "lagrange_interpolate", "p": 97, "xs": [1, 22, 96, 75], "ys": [3, 9, 0, 0], "expected": [3, 24, 47, 26]},
+
+    {
+      "op": "gate_constraint_values_toy",
+      "p": 97,
+      "expected": [0, 0, 0, 0]
+    },
+
+    {
+      "op": "permutation_sigma_columns_toy",
+      "p": 97,
+      "expected": {
+        "sigma_a": [2, 3, 96, 75],
+        "sigma_b": [44, 1, 95, 53],
+        "sigma_c": [22, 66, 94, 31]
+      }
+    },
+
+    {
+      "op": "compute_grand_product_z_toy",
+      "p": 97,
+      "beta": 7,
+      "gamma": 9,
+      "expected": [1, 37, 1, 1, 1]
+    }
+  ]
+}

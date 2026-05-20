@@ -1,1 +1,100 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-computed over F_101 using IVC accumulator pattern (a=2, b=3, c=7, z0=5). All values verified by running code/main.py with p=101.",
+  "vectors": [
+    {
+      "op": "fhash",
+      "description": "fhash(0, 5, 0) — initial accumulator for ivc_init(z0=5)",
+      "p": 101,
+      "vals": [0, 5, 0],
+      "expected": 35
+    },
+    {
+      "op": "fhash",
+      "description": "fhash(1, 72, 35) — accumulator after first step",
+      "p": 101,
+      "vals": [1, 72, 35],
+      "expected": 29
+    },
+    {
+      "op": "step_fn",
+      "description": "F(5) = 2*5^2 + 3*5 + 7 = 72 mod 101",
+      "p": 101,
+      "z": 5,
+      "a": 2,
+      "b": 3,
+      "c": 7,
+      "expected": 72
+    },
+    {
+      "op": "step_fn",
+      "description": "F(72) = 2*72^2 + 3*72 + 7 mod 101 = 87",
+      "p": 101,
+      "z": 72,
+      "a": 2,
+      "b": 3,
+      "c": 7,
+      "expected": 87
+    },
+    {
+      "op": "ivc_init",
+      "description": "Initial proof state for z0=5",
+      "p": 101,
+      "z0": 5,
+      "expected": [0, 5, 35]
+    },
+    {
+      "op": "ivc_extend",
+      "description": "Extend from init state (0, 5, 35) by one F step",
+      "p": 101,
+      "proof": [0, 5, 35],
+      "a": 2,
+      "b": 3,
+      "c": 7,
+      "expected": [1, 72, 29]
+    },
+    {
+      "op": "ivc_verify_step",
+      "description": "Valid transition: (0,5,35) -> (1,72,29)",
+      "p": 101,
+      "prev": [0, 5, 35],
+      "curr": [1, 72, 29],
+      "a": 2,
+      "b": 3,
+      "c": 7,
+      "expected": true
+    },
+    {
+      "op": "ivc_verify_step",
+      "description": "Invalid transition: zn tampered from 72 to 73",
+      "p": 101,
+      "prev": [0, 5, 35],
+      "curr": [1, 73, 29],
+      "a": 2,
+      "b": 3,
+      "c": 7,
+      "expected": false
+    },
+    {
+      "op": "ivc_verify_full",
+      "description": "3-step chain: z0=5 -> 72 -> 87 -> 54, proof=(3,54,78)",
+      "p": 101,
+      "z0": 5,
+      "proof": [3, 54, 78],
+      "a": 2,
+      "b": 3,
+      "c": 7,
+      "expected": true
+    },
+    {
+      "op": "ivc_verify_full",
+      "description": "3-step chain with tampered zn: proof=(3,55,78) — must reject",
+      "p": 101,
+      "z0": 5,
+      "proof": [3, 55, 78],
+      "a": 2,
+      "b": 3,
+      "c": 7,
+      "expected": false
+    }
+  ]
+}

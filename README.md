@@ -2,13 +2,13 @@
 
 > *From modular arithmetic to post-quantum and zero-knowledge. Build every primitive yourself, then ship reusable tools.*
 
-![status](https://img.shields.io/badge/status-v0.9.0--phases--0--11--complete-yellow) ![license](https://img.shields.io/badge/license-MIT-blue) ![phases](https://img.shields.io/badge/phases-21-green) ![lessons](https://img.shields.io/badge/lessons-241-green) ![implemented](https://img.shields.io/badge/implemented-142%2F241-brightgreen) ![hours](https://img.shields.io/badge/hours-~300-green)
+![status](https://img.shields.io/badge/status-v0.11.0--phases--0--13--complete-yellow) ![license](https://img.shields.io/badge/license-MIT-blue) ![phases](https://img.shields.io/badge/phases-21-green) ![lessons](https://img.shields.io/badge/lessons-241-green) ![implemented](https://img.shields.io/badge/implemented-170%2F241-brightgreen) ![hours](https://img.shields.io/badge/hours-~300-green)
 
 **241 lessons. 21 phases. ~300 hours.**
 
 You don't just read about RSA, Kyber, or Groth16. You implement them. From scratch. Then you compare against real libraries (arkworks, liboqs, RustCrypto, libsodium) and ship usable artifacts: prompts, skills, MCP servers, and CLI tools.
 
-> ⚠️ **v0.9.0 — Phases 00–11 complete (142/241 lessons).** All 21 phases and 241 lesson dirs are scaffolded. **Phases fully implemented:** 00 Setup (8/8), 01 Number Theory (18/18), 02 Abstract Algebra (14/14), 03 Elliptic Curves (12/12), 04 Lattices (12/12), 05 Probability & Information (10/10), 06 Coding Theory (8/8), 07 Symmetric Crypto (14/14), 08 Classical Asymmetric (14/14), 09 Hashes, Commitments & Accumulators (8/8), 10 Protocols (12/12), 11 ZK Foundations (12/12). Phases 12–20 are template scaffolds awaiting content. Contributions welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+> ⚠️ **v0.11.0 — Phases 00–13 complete (170/241 lessons).** All 21 phases and 241 lesson dirs are scaffolded. **Phases fully implemented:** 00 Setup (8/8), 01 Number Theory (18/18), 02 Abstract Algebra (14/14), 03 Elliptic Curves (12/12), 04 Lattices (12/12), 05 Probability & Information (10/10), 06 Coding Theory (8/8), 07 Symmetric Crypto (14/14), 08 Classical Asymmetric (14/14), 09 Hashes, Commitments & Accumulators (8/8), 10 Protocols (12/12), 11 ZK Foundations (12/12), 12 ZK Proof Systems (16/16), 13 ZK Engineering (12/12). Phases 14–20 are template scaffolds awaiting content. Contributions welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 > ⚠️ **Educational use only.** Code is written for clarity, not for production. Real cryptography requires constant-time implementations, audited libraries, and threat modeling beyond the scope of any course. Never deploy from-scratch primitives without expert review.
 

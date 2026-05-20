@@ -1,4 +1,101 @@
 {
-  "title": "ZK Privacy \u2014 Tornado-Style Mixers",
-  "questions": []
+  "title": "ZK Privacy — Tornado-Style Mixers",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a Tornado-style mixer, what is the primary purpose of the Merkle root?",
+      "options": [
+        "Commit to the set of deposit commitments so withdrawals can prove membership",
+        "Encrypt the recipient address so it can be revealed later",
+        "Generate randomness for the prover to build a witness",
+        "Store a list of nullifiers to prevent double spends"
+      ],
+      "correct": 0,
+      "explanation": "The root is a compact commitment to all deposited commitments; a withdrawal proves its commitment is included in a tree with that root."
+    },
+    {
+      "stage": "pre",
+      "question": "What does a nullifier (via its public nullifier hash) prevent in a mixer?",
+      "options": [
+        "Double spending the same note in two withdrawals",
+        "Reorgs from changing the Merkle root history",
+        "Front-running of deposits by copying calldata",
+        "Users from withdrawing too quickly after depositing"
+      ],
+      "correct": 0,
+      "explanation": "A nullifier hash is a one-time tag derived from a note; once spent, the contract rejects any second spend of the same note."
+    },
+    {
+      "stage": "post",
+      "question": "Which items must be public inputs to the verifier for a mixer withdrawal?",
+      "options": [
+        "Merkle root, nullifier hash, and recipient/relayer/fee",
+        "Secret, nullifier, and Merkle path sibling hashes",
+        "Leaf index and Merkle path directions only",
+        "Deposit commitment preimage (secret || nullifier)"
+      ],
+      "correct": 0,
+      "explanation": "The verifier checks a statement bound to public values: which root is claimed, which nullifier is being spent, and who gets paid (plus relayer/fee if supported)."
+    },
+    {
+      "stage": "post",
+      "question": "In a real ZK mixer, which data should remain private witness (not revealed on-chain)?",
+      "options": [
+        "Leaf index and Merkle inclusion path (siblings/directions)",
+        "Merkle root and nullifier hash",
+        "Recipient and relayer addresses",
+        "Fee amount paid to the relayer"
+      ],
+      "correct": 0,
+      "explanation": "ZK hides *which* deposit was spent by keeping the leaf index and path private while still proving membership against a public root."
+    },
+    {
+      "stage": "post",
+      "question": "What breaks if the proof statement does NOT bind the recipient address?",
+      "options": [
+        "A mempool observer can copy the proof and redirect funds (proof theft)",
+        "The Merkle tree can no longer be updated with new deposits",
+        "The nullifier hash stops preventing double spends",
+        "Withdrawals become linkable because the root becomes private"
+      ],
+      "correct": 0,
+      "explanation": "If recipient isn’t part of the proven statement, an attacker can replay the same proof with a different recipient and steal the withdrawal."
+    },
+    {
+      "stage": "post",
+      "question": "Why is a mixer deposit typically a fixed denomination (e.g., exactly 1 ETH) per pool?",
+      "options": [
+        "So amounts don’t trivially link deposits to withdrawals by value",
+        "Because Merkle trees cannot store variable-length leaves",
+        "Because SNARK verifiers can only handle one amount value",
+        "So the nullifier hash has a consistent size"
+      ],
+      "correct": 0,
+      "explanation": "If amounts vary, observers can match unique values or patterns; fixed denominations keep the anonymity set meaningful."
+    },
+    {
+      "stage": "post",
+      "question": "Which of the following is an operational privacy leak even if the ZK proof is sound?",
+      "options": [
+        "Withdrawing immediately after depositing with a unique gas-price pattern",
+        "Using domain-separated hashes for commitments",
+        "Checking nullifier hashes on-chain before accepting a withdrawal",
+        "Binding recipient/relayer/fee inside the proof statement"
+      ],
+      "correct": 0,
+      "explanation": "Timing and transaction metadata can link actions in practice; cryptographic soundness does not guarantee privacy under chain analysis."
+    },
+    {
+      "stage": "post",
+      "question": "A contract stores (1) deposit commitments and (2) spent nullifier hashes. What is the minimal additional thing it needs to verify withdrawals?",
+      "options": [
+        "A way to validate a proof against an accepted Merkle root (a root registry or incremental tree)",
+        "A reversible encryption scheme for the commitment preimage",
+        "A per-user balance table for depositors",
+        "A trusted oracle that reveals which deposit index was used"
+      ],
+      "correct": 0,
+      "explanation": "The verifier must know which roots are valid (either by maintaining the tree on-chain or accepting a set of recent roots) to check membership proofs."
+    }
+  ]
 }

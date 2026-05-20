@@ -1,4 +1,100 @@
 {
-  "title": "ZK Identity \u2014 Semaphore",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a Merkle root used for in most protocols?",
+      "options": [
+        "Committing to a whole set of leaves with one hash",
+        "Encrypting a whole set of leaves with one secret key",
+        "Compressing a whole set of leaves into fewer bytes",
+        "Signing a whole set of leaves without a private key"
+      ],
+      "correct": 0,
+      "explanation": "A Merkle root is a compact commitment to all leaves under fixed hashing and tree-shape rules."
+    },
+    {
+      "stage": "pre",
+      "question": "In ZK systems, what is a nullifier typically used for?",
+      "options": [
+        "Preventing a secret from being used twice without revealing the secret",
+        "Generating a new random key pair for every signature",
+        "Making hashes reversible so verifiers can recover the message",
+        "Encrypting the Merkle root so membership is hidden"
+      ],
+      "correct": 0,
+      "explanation": "A nullifier is a publicly storable tag derived from a secret that lets verifiers detect reuse (double-spend / double-vote)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the role of the external nullifier (scope) in Semaphore-style signaling?",
+      "options": [
+        "It binds a proof to a specific context so the same identity can signal once per context",
+        "It rotates the group Merkle root every time a user signals",
+        "It lets the verifier recover the signer's identity from the proof",
+        "It is a private value that must never be shared with verifiers"
+      ],
+      "correct": 0,
+      "explanation": "The external nullifier defines the action context (e.g., a specific vote), so nullifier hashes are per-scope."
+    },
+    {
+      "stage": "post",
+      "question": "If the same identity signals twice with the same external nullifier, what should happen to the nullifier hash?",
+      "options": [
+        "It should be identical both times, enabling the verifier to detect a repeat",
+        "It should be different both times, so signals stay unlinkable inside a scope",
+        "It should equal the Merkle root, so the proof can be replayed safely",
+        "It should equal the identity commitment, so the verifier can blacklist the user"
+      ],
+      "correct": 0,
+      "explanation": "The nullifier hash is deterministic for identity+scope, so repeats produce the same value and can be rejected."
+    },
+    {
+      "stage": "post",
+      "question": "Which failure mode becomes possible if a verifier checks membership but does NOT record seen nullifier hashes?",
+      "options": [
+        "A member can double-signal (e.g., vote twice) in the same scope",
+        "Non-members can generate valid membership proofs without a Merkle path",
+        "A verifier can reconstruct the user's secrets from the Merkle root",
+        "The Merkle tree becomes balanced automatically"
+      ],
+      "correct": 0,
+      "explanation": "Without nullifier storage, the verifier has no memory of prior signals, so replay/double-vote is possible."
+    },
+    {
+      "stage": "post",
+      "question": "Why do production Semaphore systems need a clear policy about which Merkle roots are accepted?",
+      "options": [
+        "Because users may generate proofs against a slightly stale root, and verifiers need a consistent acceptance rule",
+        "Because accepting more roots makes SHA-256 collision-resistant",
+        "Because the external nullifier must match the latest root to be valid",
+        "Because Merkle roots are secret and must be rotated often"
+      ],
+      "correct": 0,
+      "explanation": "Group membership is a moving target; accepting only the latest root can cause races, while accepting too many roots can weaken removal semantics."
+    },
+    {
+      "stage": "post",
+      "question": "What privacy property does a zk-SNARK proof add compared to the transparent proof used in this lesson?",
+      "options": [
+        "It proves membership and correct nullifier computation without revealing the identity secrets or leaf index",
+        "It makes the nullifier hash unpredictable even for the same identity+scope",
+        "It removes the need for a Merkle tree entirely",
+        "It lets verifiers decrypt the signal message without a key"
+      ],
+      "correct": 0,
+      "explanation": "The ZK proof ties the public inputs to private witnesses while hiding which member produced the proof."
+    },
+    {
+      "stage": "post",
+      "question": "Which integration mistake most commonly causes 'proof verifies locally but fails in production' in Semaphore-like systems?",
+      "options": [
+        "Client/circuit/verifier disagree on encoding or domain separation for hashes",
+        "Using a longer Merkle proof than necessary",
+        "Using UTF-8 for strings instead of ASCII",
+        "Storing too many nullifier hashes in the registry"
+      ],
+      "correct": 0,
+      "explanation": "If any component hashes different bytes (or uses different domains), public inputs won't match and verification fails."
+    }
+  ]
 }

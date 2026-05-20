@@ -1,68 +1,301 @@
-# FRI — Fast Reed-Solomon IOP
+# FRI — Fast Reed–Solomon IOP
+> Shrink “a huge table of values” into “one value” without losing the ability to catch lies.
 
-> [One-line motto. The core idea that sticks.]
-
-**Type:** Build
-**Languages:** Python
-**Prerequisites:** [prior lessons]
+**Type:** Build  
+**Languages:** Python  
+**Prerequisites:** Phase 2 · 07 (Finite Fields GF(p)), Phase 2 · 12 (NTT), Phase 12 · 11 (STARKs)  
 **Time:** ~120 minutes
 
 > ⚠️ Educational implementation. Not constant-time. Not production-safe.
 
-## The Problem
+## Learning Objectives
+- **Explain** what FRI is testing (low-degree-ness of a function over a domain).
+- **Compute** a power-of-two roots-of-unity domain and the pairing `x` with `-x`.
+- **Implement** the core FRI folding step over a prime field.
+- **Distinguish** “a low-degree polynomial” from “an arbitrary table of values” in the STARK pipeline.
+- **Apply** folding rounds to see how a single tampered value propagates to a wrong final claim.
 
-[2-3 paragraphs. What can't a learner do without this? Make it concrete.]
+## The Problem
+In STARK-style proof systems, you don’t commit to a small set of polynomial coefficients — you commit to a **big table of evaluations**: trace values, composition polynomial values, constraints evaluated on a large domain, etc. The verifier’s job is to believe two things at once:
+
+1) The prover isn’t making up arbitrary numbers (the table has the right algebraic structure), and  
+2) The verifier shouldn’t have to read the whole table.
+
+FRI is the “bridge” that turns a claim like “this huge function is actually the evaluation of a low-degree polynomial” into a **small interactive proof** with random spot-checks. Without FRI (or something equivalent), a STARK verifier either becomes linear-time (reads everything) or becomes unsound (can’t rule out cheating tables).
 
 ## The Concept
+FRI is a *low-degree test* over a finite field.
 
-[Intuition first. Diagrams, tables, mental models. No code yet.]
+Think of an evaluation table as a function:
+
+- You have a domain `D = {1, ω, ω², …, ω^(n-1)}` where `ω` is an `n`-th root of unity (and `n` is a power of 2).
+- You have values `f(1), f(ω), …, f(ω^(n-1))`.
+
+The prover claims: “These values come from evaluating a polynomial `f(x)` of degree ≤ `d`.”
+
+If the prover is lying, the values are just an arbitrary table. FRI catches this by repeatedly **folding** the table:
+
+- Pair points `x` and `-x` (in a roots-of-unity domain, that pairing is `ω^i` with `ω^(i+n/2)`).
+- Combine each pair with a random field element `β`:
+
+  `g(x²) = (f(x) + β · f(-x)) / 2`
+
+After one fold, the domain size halves. After `log2(n)` folds, you are down to a single value.
+
+If the table really came from a low-degree polynomial, these folds correspond to transforming one low-degree polynomial into another with roughly half the degree each round. If the table is fake, random folding plus random spot-checks (in the full protocol) makes consistent cheating hard.
 
 ## Build It
 
-### Step 1: [name]
-
-[explanation]
-
+### Step 1: A tiny field and a roots-of-unity domain
 ```python
-# code here
+from __future__ import annotations
+
+import hashlib
+import math
+from dataclasses import dataclass
+from typing import List, Sequence, Tuple
+
+
+def mod_inv(a: int, p: int) -> int:
+    a %= p
+    if a == 0:
+        raise ZeroDivisionError("no inverse for 0 mod p")
+    t0, t1 = 0, 1
+    r0, r1 = p, a
+    while r1 != 0:
+        q = r0 // r1
+        r0, r1 = r1, r0 - q * r1
+        t0, t1 = t1, t0 - q * t1
+    if r0 != 1:
+        raise ZeroDivisionError("a is not invertible mod p")
+    return t0 % p
+
+
+def _prime_factors(n: int) -> List[int]:
+    out: List[int] = []
+    d = 2
+    while d * d <= n:
+        while n % d == 0:
+            out.append(d)
+            n //= d
+        d += 1
+    if n > 1:
+        out.append(n)
+    return out
+
+
+def find_primitive_root(p: int) -> int:
+    if p < 3:
+        raise ValueError("p must be an odd prime >= 3")
+    phi = p - 1
+    factors = sorted(set(_prime_factors(phi)))
+    for g in range(2, p):
+        ok = True
+        for q in factors:
+            if pow(g, phi // q, p) == 1:
+                ok = False
+                break
+        if ok:
+            return g
+    raise ValueError("no primitive root found (is p prime?)")
+
+
+def is_power_of_two(n: int) -> bool:
+    return n > 0 and (n & (n - 1)) == 0
+
+
+def get_root_of_unity(p: int, n: int) -> int:
+    if n <= 1 or not is_power_of_two(n):
+        raise ValueError("n must be a power of two >= 2")
+    if (p - 1) % n != 0:
+        raise ValueError("n must divide p-1")
+    g = find_primitive_root(p)
+    omega = pow(g, (p - 1) // n, p)
+    if pow(omega, n, p) != 1:
+        raise ValueError("constructed element is not an n-th root of unity")
+    if pow(omega, n // 2, p) != p - 1:
+        raise ValueError("omega^(n/2) must be -1 for power-of-two domain")
+    return omega
+
+
+def roots_of_unity_domain(p: int, n: int) -> List[int]:
+    omega = get_root_of_unity(p, n)
+    xs = [1]
+    for _ in range(1, n):
+        xs.append((xs[-1] * omega) % p)
+    return xs
 ```
+This builds the smallest “playground” needed for FRI: arithmetic mod a prime `p`, and a power-of-two multiplicative subgroup domain `D` generated by an `n`-th root of unity `ω`. The `ω^(n/2) = -1` check is what makes pairing `x` with `-x` line up perfectly as “the second half of the list”.
 
-### Step 2: [name]
-
-[explanation]
-
+### Step 2: Evaluate a polynomial on the domain
 ```python
-# code here
+def poly_degree(coeffs: Sequence[int]) -> int:
+    d = -1
+    for i, c in enumerate(coeffs):
+        if c != 0:
+            d = i
+    return d
+
+
+def poly_eval(coeffs: Sequence[int], x: int, p: int) -> int:
+    acc = 0
+    for c in reversed(coeffs):
+        acc = (acc * x + c) % p
+    return acc
+
+
+def poly_eval_all(coeffs: Sequence[int], xs: Sequence[int], p: int) -> List[int]:
+    return [poly_eval(coeffs, x, p) for x in xs]
+```
+This turns a coefficient representation into an evaluation table: `evals[i] = f(ω^i)`. In real STARKs you often start from a trace (already “values on a domain”), but it’s useful to generate honest low-degree data from coefficients so you can compare “honest” vs “tampered”.
+
+### Step 3: Fold evaluations (the heart of FRI)
+```python
+def fri_fold_layer(evals: Sequence[int], beta: int, p: int) -> List[int]:
+    n = len(evals)
+    if n <= 1 or (n % 2) != 0:
+        raise ValueError("layer length must be even and >= 2")
+    beta %= p
+    half = n // 2
+    inv2 = mod_inv(2, p)
+    out: List[int] = []
+    for i in range(half):
+        a = evals[i] % p
+        b = evals[i + half] % p
+        out.append(((a + beta * b) % p) * inv2 % p)
+    return out
+
+
+def fri_fold_rounds(evals: Sequence[int], betas: Sequence[int], p: int) -> List[List[int]]:
+    layers: List[List[int]] = [list(evals)]
+    cur = list(evals)
+    for beta in betas:
+        cur = fri_fold_layer(cur, beta, p)
+        layers.append(cur)
+    return layers
+
+
+def expected_degree_after_fri_rounds(initial_degree: int, rounds: int) -> int:
+    if initial_degree < 0:
+        return -1
+    return initial_degree // (2**rounds)
+
+
+def challenges_from_seed(seed: str, rounds: int, p: int) -> List[int]:
+    if rounds < 0:
+        raise ValueError("rounds must be >= 0")
+    out: List[int] = []
+    state = seed.encode("utf-8")
+    for i in range(rounds):
+        h = hashlib.sha256(state + i.to_bytes(4, "big")).digest()
+        beta = int.from_bytes(h, "big") % p
+        if beta == 0:
+            beta = 1
+        out.append(beta)
+        state = h
+    return out
+```
+`fri_fold_layer` is the key move: pair the first half of the evaluation list with the second half (which corresponds to `x` with `-x`) and collapse each pair into a single field element using a random `β`. Repeating this makes the table smaller each round. In the full protocol, the prover commits to each layer (Merkle) and the verifier forces openings on randomly chosen indices so the prover can’t “adapt” after seeing `β`.
+
+### Step 4: Show how tampering is detected (in the full protocol)
+```python
+@dataclass(frozen=True)
+class FriDemoParams:
+    p: int
+    n: int
+    coeffs: Tuple[int, ...]
+    seed: str
+
+
+def run_demo(params: FriDemoParams) -> None:
+    p, n = params.p, params.n
+    if not is_power_of_two(n):
+        raise ValueError("n must be a power of two")
+
+    omega = get_root_of_unity(p, n)
+    domain = roots_of_unity_domain(p, n)
+    degree = poly_degree(params.coeffs)
+    evals = poly_eval_all(params.coeffs, domain, p)
+
+    print("=== Step 1: A tiny field and a roots-of-unity domain ===")
+    print(f"p = {p}")
+    print(f"n = {n}")
+    print(f"primitive n-th root of unity omega = {omega}")
+    print(f"domain[0..7] = {domain[:8]}")
+    print()
+
+    print("=== Step 2: Evaluate a polynomial on the domain ===")
+    print(f"coeffs (low -> high) = {list(params.coeffs)}")
+    print(f"degree = {degree}")
+    print(f"evals[0..7] = {evals[:8]}")
+    print()
+
+    rounds = int(math.log2(n))
+    betas = challenges_from_seed(params.seed, rounds=rounds, p=p)
+    print("=== Step 3: Fold evaluations (the heart of FRI) ===")
+    print(f"betas = {betas}")
+    layers = fri_fold_rounds(evals, betas, p)
+    for r in range(1, len(layers)):
+        expected_deg = expected_degree_after_fri_rounds(degree, r)
+        print(f"round {r}: len={len(layers[r])}, expected_degree_bound={expected_deg}, head={layers[r][:8]}")
+    print()
+
+    print("=== Step 4: Show how tampering is detected (in the full protocol) ===")
+    tampered = list(evals)
+    tampered[3] = (tampered[3] + 1) % p
+    honest_final = layers[-1][0]
+    tampered_final = fri_fold_rounds(tampered, betas, p)[-1][0]
+    print(f"honest final value = {honest_final}")
+    print(f"tampered final value = {tampered_final}")
+    print("In a real FRI-based scheme, Merkle commitments + random queries force a prover")
+    print("to open consistent pairs across rounds, making this kind of tampering unlikely to pass.")
+```
+This is a *demonstration*, not a verifier: it shows that if you flip a single value in the evaluation table, the final folded value changes. In the real protocol, the verifier doesn’t see every intermediate layer — it challenges random indices and checks local consistency with the committed layers.
+
+Run it:
+
+```bash
+python3 code/main.py
 ```
 
 ## Use It
+Where FRI lives in real systems:
 
-[How a real library solves the same thing. Compare your version.]
+| System | Where FRI appears | Notes |
+|--------|-------------------|------|
+| STARK provers | Low-degree testing of trace/constraint evaluations | Usually “FRI + Merkle” over a large evaluation domain. |
+| Plonky3 / STARK-ish toolkits | Proof composition and recursion layers | FRI variants and optimizations show up in performance-critical code. |
+| zkVMs (transparent) | Proving execution traces at scale | FRI dominates proof size/time trade-offs. |
 
-## Attack It
+Production reality: you won’t implement FRI from scratch in an app. You will use a STARK/FRI library whose implementation details (hashing, commitment trees, transcript, grinding, query scheduling) matter as much as the folding math.
 
-[For primitives: textbook attack on the from-scratch version.]
+## Pitfalls
+- **Wrong domain.** If `n` doesn’t divide `p-1`, you don’t have an `n`-th roots-of-unity subgroup, and the `x ↔ -x` pairing logic breaks.
+- **Forgetting the `/2`.** Folding uses division by 2; in a field you must multiply by `inv(2)` (and ensure `p ≠ 2`).
+- **Transcript malleability.** If challenges `β` aren’t bound to the committed layers (Fiat–Shamir done wrong), the prover can adapt and cheat.
+- **Indexing mismatches.** Real implementations map indices to domain points and back; off-by-one or “bit-reversal vs natural order” bugs silently break soundness.
+- **Hash/commitment details.** Security comes from commitments + random queries; a correct fold formula without correct openings is not a protocol.
 
 ## Ship It
+Save the reusable checklist as `outputs/fri-review-checklist.md`.
 
-[Reusable artifact this lesson produces. Save in outputs/.]
+Use it when reviewing a STARK/FRI implementation or spec: it forces you to write down (a) the domain, (b) the exact folding rule, (c) how challenges are derived, and (d) what the verifier actually checks.
 
 ## Exercises
-
-1. [Easy — reinforce core concept]
-2. [Medium — apply to a different problem]
-3. [Hard — extend, attack, or combine with prior lessons]
+1. **Easy.** Run `python3 code/main.py`. Observe how one changed evaluation changes the final folded value.
+2. **Medium.** Change `p`, `n`, and `coeffs` in `code/main.py` to a new valid `(p, n)` where `n | (p-1)` and `n` is a power of two. Confirm `get_root_of_unity(p, n)` still works and the demo still runs.
+3. **Hard.** Add a toy “query verifier”: pick a random index `i` and check that the prover can open the pair `evals[i]` and `evals[i+n/2]` and that folding produces the claimed next-layer value at index `i`. Repeat for several rounds and several random indices.
 
 ## Key Terms
-
 | Term | What people say | What it actually means |
-|------|----------------|----------------------|
-|      |                |                      |
-
-## Test Vectors
-
-[Source: RFC / NIST CAVP / academic. Code must pass tests/vectors.json.]
+|------|------------------|------------------------|
+| Low-degree test | “Checks a polynomial degree bound” | Distinguishes low-degree polynomials from arbitrary tables with high probability via randomness. |
+| Evaluation domain | “Roots of unity” | A multiplicative subgroup `D = ⟨ω⟩` where FFT-like structure and `x ↔ -x` pairing are easy. |
+| Folding | “Compresses the codeword” | A linear combination of paired evaluations that halves domain size each round. |
+| Challenge `β` | “Randomizer” | Field element that the prover can’t predict early; binds the prover to one folding path. |
+| Soundness | “Cheaters get caught” | Probability (over verifier randomness) that a false claim is rejected. |
 
 ## Further Reading
-
-- []() — []
+- Eli Ben-Sasson et al., *Fast Reed–Solomon Interactive Oracle Proofs of Proximity* (2018) — the FRI paper; defines folding + commitments + query checks.
+- Alessandro Chiesa, *A brief introduction to STARKs* (2018) — context for where FRI sits in STARK verification.
+- StarkWare, *STARK Math* (2019) — engineering-oriented notes on evaluation domains, composition polynomials, and FRI-style arguments.

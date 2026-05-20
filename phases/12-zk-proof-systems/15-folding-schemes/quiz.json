@@ -1,4 +1,101 @@
 {
-  "title": "Folding Schemes \u2014 Nova, SuperNova, HyperNova",
-  "questions": []
+  "title": "Folding Schemes — Nova, SuperNova, HyperNova",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What makes recursive SNARK verification expensive when building IVC (Incrementally Verifiable Computation)?",
+      "options": [
+        "The SNARK verifier contains operations like pairing checks that translate into thousands of extra R1CS constraints per recursion level.",
+        "Recursive SNARKs require a trusted setup that grows linearly with the number of steps.",
+        "Each step must re-prove all previous steps from scratch, so proof size grows quadratically.",
+        "SNARK recursion requires hashing the full witness at every step, dominating the cost."
+      ],
+      "correct": 0,
+      "explanation": "SNARK verifiers include expensive operations (pairing checks, hash-to-curve) that each translate to many R1CS constraints, making the inner verifier circuit large and expensive to prove."
+    },
+    {
+      "stage": "pre",
+      "question": "In an R1CS constraint (Az) ∘ (Bz) = Cz, what does the ∘ symbol denote?",
+      "options": [
+        "Component-wise (Hadamard) multiplication of two vectors.",
+        "Matrix multiplication of Az and Bz.",
+        "The inner dot product of Az and Bz.",
+        "The tensor product of the two vectors."
+      ],
+      "correct": 0,
+      "explanation": "The ∘ (Hadamard) product multiplies corresponding entries of two vectors of the same length, producing a vector of the same length. This is the key non-linear operation in R1CS."
+    },
+    {
+      "stage": "post",
+      "question": "A relaxed R1CS instance has u=1 and E=[0,…,0]. What does this reduce to?",
+      "options": [
+        "An ordinary R1CS check: (Az) ∘ (Bz) = Cz.",
+        "A trivially satisfied instance regardless of z.",
+        "A linear system Az = Bz = Cz.",
+        "A check that z is the all-zeros vector."
+      ],
+      "correct": 0,
+      "explanation": "With u=1 and E=0 the relaxed equation (Az)∘(Bz) = u·Cz + E collapses to (Az)∘(Bz) = Cz, exactly the standard R1CS satisfiability condition."
+    },
+    {
+      "stage": "post",
+      "question": "For the squaring gate (a·a = b) with witnesses z1=[3,9] and z2=[5,25], what is the cross term T mod 101?",
+      "options": [
+        "[97]  (which equals −4 mod 101, i.e. −(3−5)²)",
+        "[15]  (the product 3·5)",
+        "[34]  (the sum 9+25)",
+        "[0]   (cross terms always vanish for fresh instances)"
+      ],
+      "correct": 0,
+      "explanation": "T = 2·a1·a2 − a1² − a2² = 2·3·5 − 9 − 25 = 30−34 = −4 ≡ 97 (mod 101). It equals −(a1−a2)²."
+    },
+    {
+      "stage": "post",
+      "question": "After folding z1=[3,9] (u1=1, E1=[0]) and z2=[5,25] (u2=1, E2=[0]) with r=17 over F_101, what are z_fold, u_fold, E_fold?",
+      "options": [
+        "z_fold=[88,30], u_fold=18, E_fold=[33]",
+        "z_fold=[8,34], u_fold=2, E_fold=[0]",
+        "z_fold=[15,225], u_fold=1, E_fold=[97]",
+        "z_fold=[88,30], u_fold=17, E_fold=[97]"
+      ],
+      "correct": 0,
+      "explanation": "z_fold=[3+17·5, 9+17·25]%101=[88,434%101]=[88,30]; u_fold=(1+17)%101=18; E_fold=17·97%101=1649%101=33."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the prover commit to T (the cross term) before the verifier derives the folding challenge r?",
+      "options": [
+        "To prevent the prover from choosing T adaptively after seeing r, which could allow forging a fold that satisfies the relaxed check with an invalid witness.",
+        "To make the proof smaller by compressing T into a single field element.",
+        "To ensure T is in the correct field, since T can otherwise overflow.",
+        "To allow the verifier to recompute T independently without the witness."
+      ],
+      "correct": 0,
+      "explanation": "If r is chosen before T is fixed, the prover can pick T as a function of r to make E_fold = E1 + r·T + r²·E2 satisfy the relaxed check even when the underlying witnesses are invalid."
+    },
+    {
+      "stage": "post",
+      "question": "What distinguishes SuperNova from the original Nova?",
+      "options": [
+        "SuperNova supports non-uniform IVC: each step can use a different circuit selected by a program counter, whereas Nova uses the same circuit at every step.",
+        "SuperNova removes the need for a final SNARK by proving the folded instance directly.",
+        "SuperNova replaces the cross term with a sumcheck protocol, reducing cost to O(log n) per fold.",
+        "SuperNova extends Nova to support lookup arguments inside the folded circuit."
+      ],
+      "correct": 0,
+      "explanation": "Nova folds two instances of the *same* circuit. SuperNova generalises this so each IVC step can select a different circuit (e.g. different VM opcodes), enabling efficient non-uniform computation."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: a prover reuses the same folding challenge r for every fold in a chain of 100 steps. What can go wrong?",
+      "options": [
+        "The folded witnesses become linearly dependent, letting the prover construct a fake witness that satisfies the relaxed check without corresponding to any valid computation.",
+        "Nothing: r only affects the error term E, which the verifier does not check until the final SNARK.",
+        "The prover is forced to reveal the witness, breaking zero-knowledge.",
+        "The u scalar overflows the field after enough folds, causing an arithmetic error."
+      ],
+      "correct": 0,
+      "explanation": "With a fixed r, each fold applies the same linear combination. An adversary can craft a set of witnesses that are individually invalid but combine (under the fixed r weights) to a vector satisfying the accumulated relaxed check, breaking soundness."
+    }
+  ]
 }

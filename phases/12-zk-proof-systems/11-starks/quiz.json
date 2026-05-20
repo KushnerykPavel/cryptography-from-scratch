@@ -1,4 +1,101 @@
 {
-  "title": "STARKs from Scratch \u2014 AIR & Trace",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a STARK-style system, what is the trace table?",
+      "options": [
+        "A table of per-step register values that claims to be the computation’s execution",
+        "A table of elliptic-curve points that encodes the proving key",
+        "A table of random challenges sampled by the verifier before seeing any commitment",
+        "A table of hashes that replaces the need for any algebraic constraints"
+      ],
+      "correct": 0,
+      "explanation": "A trace is the prover’s claimed execution: rows are steps, columns are registers, all over a field."
+    },
+    {
+      "stage": "pre",
+      "question": "What does a Merkle commitment (Merkle root) primarily give you in a proof system?",
+      "options": [
+        "A binding commitment to many values with short inclusion proofs for a few opened values",
+        "A way to make polynomial evaluation faster than O(n)",
+        "A guarantee that the committed data forms a low-degree polynomial codeword",
+        "A trusted setup ceremony that generates toxic waste"
+      ],
+      "correct": 0,
+      "explanation": "A Merkle root binds the prover to the full dataset and supports logarithmic-size openings for sampled positions."
+    },
+    {
+      "stage": "post",
+      "question": "Which constraint type pins specific rows (like row 0) to expected values?",
+      "options": [
+        "Boundary constraints",
+        "Transition constraints",
+        "Permutation constraints",
+        "Lookup constraints"
+      ],
+      "correct": 0,
+      "explanation": "Boundary constraints enforce conditions at designated rows, typically the first and/or last rows."
+    },
+    {
+      "stage": "post",
+      "question": "In the Fibonacci AIR with registers (x0, x1), which transition rule is enforced from row i to row i+1?",
+      "options": [
+        "y0 = x1 and y1 = x0 + x1 (mod p)",
+        "y0 = x0 + x1 and y1 = x1 (mod p)",
+        "y0 = x0 and y1 = x1 (mod p)",
+        "y0 = x0 * x1 and y1 = x0 + x1 (mod p)"
+      ],
+      "correct": 0,
+      "explanation": "The next state shifts x1 into x0 and updates x1 to the sum of the previous two values."
+    },
+    {
+      "stage": "post",
+      "question": "What is the role of Fiat–Shamir in the toy protocol in this lesson?",
+      "options": [
+        "Derive deterministic query positions from the commitment so the proof can be non-interactive",
+        "Encrypt the trace so the verifier cannot see any opened values",
+        "Replace Merkle trees with polynomial commitments automatically",
+        "Guarantee post-quantum security even if the hash function is weak"
+      ],
+      "correct": 0,
+      "explanation": "Fiat–Shamir turns verifier randomness into hashes of the transcript/commitment, binding challenges to what was committed."
+    },
+    {
+      "stage": "post",
+      "question": "What major component is missing from the toy protocol that a full STARK uses to enforce polynomial structure?",
+      "options": [
+        "A low-degree test such as FRI",
+        "An elliptic-curve pairing check",
+        "A trusted setup ceremony",
+        "A group signature scheme"
+      ],
+      "correct": 0,
+      "explanation": "Full STARKs use a low-degree test (commonly FRI) so the committed evaluations must come from a low-degree polynomial."
+    },
+    {
+      "stage": "post",
+      "question": "Why are spot checks alone not enough to make this toy protocol a full STARK?",
+      "options": [
+        "A prover can craft an arbitrary table that passes a few local checks but is not a low-degree encoding of any trace polynomial",
+        "A Merkle tree cannot commit to more than 2^16 leaves",
+        "Fiat–Shamir only works with elliptic-curve commitments",
+        "Boundary constraints are impossible to check without revealing the entire trace"
+      ],
+      "correct": 0,
+      "explanation": "Without low-degree enforcement, the prover can commit to a table that is locally consistent at sampled points but globally invalid as a polynomial codeword."
+    },
+    {
+      "stage": "post",
+      "question": "Attack mindset: if the verifier forgets to check the boundary condition (row 0), what is a realistic failure mode?",
+      "options": [
+        "The prover can start from a different initial state and still satisfy many transition checks",
+        "The prover can invert SHA-256 and forge arbitrary Merkle roots",
+        "The verifier becomes unable to compute any Fiat–Shamir challenges",
+        "The trace becomes automatically low-degree even without FRI"
+      ],
+      "correct": 0,
+      "explanation": "If the initial state is unconstrained, many incorrect executions can satisfy the same transition rule while proving the wrong statement."
+    }
+  ]
 }
+

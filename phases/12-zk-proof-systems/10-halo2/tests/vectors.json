@@ -1,1 +1,13 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors computed in this lesson using the Goldilocks prime field modulus (2^64 - 2^32 + 1) and the toy range-check + addition circuit defined in code/main.py.",
+  "vectors": [
+    {"op": "f_add", "a": 10, "b": 3, "expected": 13},
+    {"op": "f_mul", "a": 10, "b": 3, "expected": 30},
+    {"op": "f_inv", "a": 3, "expected": 12297829379609722881},
+    {"op": "f_div", "a": 10, "b": 3, "expected": 12297829379609722884},
+    {"op": "decompose_3bit", "value": 6, "expected": [0, 1, 1]},
+    {"op": "recompose_3bit", "bits": [0, 1, 1], "expected": 6},
+    {"op": "prove_range_add_failures", "a": 5, "b": 6, "expected": 0},
+    {"op": "prove_range_add_failures", "a": 7, "b": 7, "expected": 0}
+  ]
+}

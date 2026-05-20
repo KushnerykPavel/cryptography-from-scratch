@@ -1,4 +1,100 @@
 {
-  "title": "SP1 & Jolt \u2014 STARK-Based zkVMs",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a zkVM, what is an execution trace?",
+      "options": [
+        "A table of witness values per step of execution",
+        "A Merkle tree root of the program source code",
+        "A single polynomial that directly encodes the whole program",
+        "A set of elliptic-curve points used for a trusted setup"
+      ],
+      "correct": 0,
+      "explanation": "zkVMs typically record execution as a step-indexed table (registers, memory buses, etc.) and then prove the table satisfies constraints."
+    },
+    {
+      "stage": "pre",
+      "question": "What does the sumcheck protocol help a verifier do efficiently?",
+      "options": [
+        "Verify a claimed sum of a multivariate polynomial over the Boolean hypercube",
+        "Compute a SHA-256 hash faster using field arithmetic",
+        "Encrypt the witness so the verifier can never learn any values",
+        "Derive a trusted setup for KZG commitments"
+      ],
+      "correct": 0,
+      "explanation": "Sumcheck reduces a large hypercube sum claim to a small number of rounds plus one final evaluation check."
+    },
+    {
+      "stage": "post",
+      "question": "In `mle_eval`, why do we fold pairs `(a0, a1)` into `(1-r)*a0 + r*a1`?",
+      "options": [
+        "It fixes one Boolean variable of the multilinear polynomial to the field value r",
+        "It converts a multivariate polynomial into a univariate polynomial by FFT",
+        "It hides the witness values by blinding with r",
+        "It computes a Merkle root over the evaluation table"
+      ],
+      "correct": 0,
+      "explanation": "For a multilinear polynomial, restricting one variable to r linearly interpolates between its values at 0 and 1, shrinking the table by half each fold."
+    },
+    {
+      "stage": "post",
+      "question": "What is the per-round verifier check for multilinear (degree-1) sumcheck messages when the prover sends `(s0, s1)`?",
+      "options": [
+        "Check that `s0 + s1 == current_claim` (mod p)",
+        "Check that `s0 * s1 == current_claim` (mod p)",
+        "Check that `s0 == s1` to ensure degree-1",
+        "Check that `s0` equals the final polynomial evaluation at r"
+      ],
+      "correct": 0,
+      "explanation": "Each round’s univariate is the partial sum polynomial; at X in {0,1}, the sum must match the running claim, so `s0+s1` must equal the claim."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the lesson multiply the per-step violation by `gamma^t` before summing?",
+      "options": [
+        "To make cancellation across different step indices unlikely for a wrong trace",
+        "To guarantee perfect zero-knowledge for the trace without commitments",
+        "To reduce the proof size from O(log n) to O(1)",
+        "To ensure all violations are nonnegative integers"
+      ],
+      "correct": 0,
+      "explanation": "A geometric weighting turns the sum into a polynomial in gamma; if the violation vector is nonzero, it only hits 0 for a small fraction of gamma values."
+    },
+    {
+      "stage": "post",
+      "question": "What is a key difference between what sumcheck proves and what a polynomial commitment (PCS) opening proves?",
+      "options": [
+        "Sumcheck proves a sum claim; PCS openings prove an evaluation claim at a point",
+        "Sumcheck is only for hashes; PCS openings are only for encryption",
+        "Sumcheck requires a trusted setup; PCS openings never do",
+        "Sumcheck only works over real numbers; PCS openings only over integers"
+      ],
+      "correct": 0,
+      "explanation": "Sumcheck reduces global statements to a final evaluation; a PCS is what makes that final evaluation check verifiable without revealing the full polynomial."
+    },
+    {
+      "stage": "post",
+      "question": "Which bug is most likely if the evaluation-table order (LSB/MSB) does not match the folding order in `mle_eval`?",
+      "options": [
+        "The verifier ends up checking a different polynomial than the prover intended",
+        "The field modulus becomes composite during execution",
+        "The proof becomes interactive again even with Fiat–Shamir",
+        "The trace becomes constant-time automatically"
+      ],
+      "correct": 0,
+      "explanation": "Index-to-bit ordering defines which entries are paired in each fold; a mismatch changes the polynomial being evaluated and can break correctness or soundness."
+    },
+    {
+      "stage": "post",
+      "question": "In a Fiat–Shamir transcript, why is it important to include (bind to) a commitment to the trace/polynomials before deriving challenges?",
+      "options": [
+        "So the prover cannot choose challenges after seeing them and adapt the witness",
+        "So the verifier can skip all checks except the final one",
+        "So the hash function output becomes uniformly distributed over integers",
+        "So the protocol works even if the field has size 2"
+      ],
+      "correct": 0,
+      "explanation": "Binding challenges to the committed witness prevents a prover from tailoring the witness to the challenges, which would break soundness."
+    }
+  ]
 }

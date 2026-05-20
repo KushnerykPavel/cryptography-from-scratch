@@ -1,4 +1,100 @@
 {
-  "title": "FRI \u2014 Fast Reed-Solomon IOP",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is FRI primarily used to test in STARK-style proof systems?",
+      "options": [
+        "That a large table of values is (close to) evaluations of a low-degree polynomial over a domain",
+        "That the prover knows a secret witness without revealing it (zero-knowledge) with no other assumptions",
+        "That a pairing equation holds for two elliptic-curve points (KZG-style verification)",
+        "That a hash function is collision-resistant by brute-force testing"
+      ],
+      "correct": 0,
+      "explanation": "FRI is a low-degree test: it checks that an oracle/table behaves like evaluations of a bounded-degree polynomial."
+    },
+    {
+      "stage": "pre",
+      "question": "Why do many polynomial protocols pick a roots-of-unity domain of size n (power of two)?",
+      "options": [
+        "It makes FFT/NTT-style structure available and makes pairings like x with -x easy to index",
+        "It guarantees soundness even if the verifier uses no randomness",
+        "It removes the need for commitments because the domain points are public",
+        "It forces the polynomial degree to be exactly n-1"
+      ],
+      "correct": 0,
+      "explanation": "Roots-of-unity domains support fast transforms and structured pairings used by protocols like FRI."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s folding step, how are two paired evaluations combined into one?",
+      "options": [
+        "g[i] = (f[i] + β · f[i+n/2]) / 2  (mod p)",
+        "g[i] = f[i] · f[i+n/2]  (mod p)",
+        "g[i] = f[i] + f[i+n/2] with no dependence on β",
+        "g[i] = f[i] XOR f[i+n/2] treating values as bitstrings"
+      ],
+      "correct": 0,
+      "explanation": "The fold is a linear combination with a random challenge β, scaled by 1/2 in the field."
+    },
+    {
+      "stage": "post",
+      "question": "On a roots-of-unity domain D = {1, ω, …, ω^(n-1)} with ω^(n/2) = -1, which indices correspond to x and -x?",
+      "options": [
+        "ω^i and ω^(i+n/2) because ω^(i+n/2) = ω^i · ω^(n/2) = -ω^i",
+        "ω^i and ω^(2i) because squaring negates a field element",
+        "ω^i and ω^(i+1) because consecutive powers differ by a sign",
+        "ω^i and ω^(n-i) because inversion is the same as negation"
+      ],
+      "correct": 0,
+      "explanation": "The n/2 shift multiplies by ω^(n/2) = -1, giving the negated domain point."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main reason FRI needs commitments (e.g., Merkle) plus random queries in addition to folding math?",
+      "options": [
+        "To stop the prover from changing earlier layers after seeing challenges and to force consistent openings",
+        "To compress the prover’s witness so it fits into a single field element with no interaction",
+        "To make the protocol work over any modulus including p = 2 without changing the folding formula",
+        "To eliminate the need for any randomness by making the transcript deterministic"
+      ],
+      "correct": 0,
+      "explanation": "Soundness comes from binding the prover to layers (commit) and spot-checking consistency (queries)."
+    },
+    {
+      "stage": "post",
+      "question": "In the idealized degree-halving intuition of FRI, what happens to the degree bound after one folding round?",
+      "options": [
+        "It roughly halves (degree in the new variable y = x² is about floor(deg/2))",
+        "It doubles because combining two points increases degree",
+        "It stays the same because folding is just reindexing",
+        "It becomes exactly n-1 regardless of the original degree"
+      ],
+      "correct": 0,
+      "explanation": "Folding can be seen as producing a new polynomial in y = x², which reduces degree by about a factor of 2."
+    },
+    {
+      "stage": "post",
+      "question": "Attack/soundness: what goes wrong if the prover can choose β after seeing which indices the verifier will query?",
+      "options": [
+        "The prover may be able to craft answers that satisfy the queried checks while remaining inconsistent elsewhere",
+        "Nothing; β only affects performance, not soundness",
+        "It only reduces zero-knowledge but keeps soundness intact",
+        "It forces the verifier to read the entire table, but soundness is unchanged"
+      ],
+      "correct": 0,
+      "explanation": "If challenges aren’t bound to the committed layers (or are chosen too late), the prover can adapt to the verifier’s checks."
+    },
+    {
+      "stage": "post",
+      "question": "In the demo, flipping one evaluation changes the final folded value. Why doesn’t a real verifier just check the final value directly?",
+      "options": [
+        "Because without commitment+query checks, a cheating prover could fabricate intermediate layers to reach any final value",
+        "Because the final value is always the same for all polynomials over a field",
+        "Because the final value reveals the witness and breaks zero-knowledge by itself",
+        "Because the verifier cannot compute the folding rounds without knowing the polynomial coefficients"
+      ],
+      "correct": 0,
+      "explanation": "The verifier must enforce consistency between committed layers via openings; the final value alone is not binding."
+    }
+  ]
 }

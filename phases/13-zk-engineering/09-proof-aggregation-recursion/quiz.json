@@ -1,4 +1,101 @@
 {
   "title": "Proof Aggregation & Recursion in Practice",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "You have 1,000 zk proofs and a very tight verifier budget (on-chain gas or a light client). What is the primary reason to use aggregation/recursion?",
+      "options": [
+        "To reduce prover computation to near-zero",
+        "To reduce verifier work to (roughly) one proof verification",
+        "To make the proofs fully private (zero-knowledge)",
+        "To eliminate the need for data availability"
+      ],
+      "correct": 1,
+      "explanation": "Aggregation/recursion is mainly about verifier efficiency: verify one compact artifact instead of N separate proofs."
+    },
+    {
+      "stage": "pre",
+      "question": "In a proof commitment used for aggregation, which field is most important to prevent accepting a proof for the wrong circuit?",
+      "options": [
+        "The proof byte length",
+        "A verifier identity (vk hash / program ID / parameters digest)",
+        "A wall-clock timestamp",
+        "A random nonce"
+      ],
+      "correct": 1,
+      "explanation": "Binding the verifier identity prevents cross-circuit substitution where a proof verifies under a different verification key than intended."
+    },
+    {
+      "stage": "post",
+      "question": "Why does `tagged_hash(tag, *parts)` length-prefix each part before hashing?",
+      "options": [
+        "To make the hash output longer",
+        "To prevent ambiguous concatenations like ('ab','c') vs ('a','bc')",
+        "To ensure the hash is commutative",
+        "To make hashing faster on CPUs"
+      ],
+      "correct": 1,
+      "explanation": "Length-prefixing (plus a tag) makes the encoding unambiguous so distinct inputs cannot collide via concatenation tricks."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s Merkle tree, what is the role of the `0x00` (leaf) and `0x01` (node) prefixes?",
+      "options": [
+        "They encrypt the leaf values",
+        "They separate leaf hashing from internal-node hashing (domain separation)",
+        "They sort the leaves deterministically",
+        "They allow Merkle roots to be computed without hashing"
+      ],
+      "correct": 1,
+      "explanation": "Using distinct prefixes prevents confusing an internal node hash with a leaf hash, improving robustness against structural second-preimage issues."
+    },
+    {
+      "stage": "post",
+      "question": "What must hold for a list of `StepProof`s to form a valid sequential `SegmentProof` in `prove_segment`?",
+      "options": [
+        "All messages must be identical",
+        "Each proof’s `end_state_hex` must equal the next proof’s `start_state_hex`",
+        "All step digests must start with the same prefix",
+        "The Merkle root must be computed without leaf hashing"
+      ],
+      "correct": 1,
+      "explanation": "Sequential recursion needs linking: the output state of step i must equal the input state of step i+1."
+    },
+    {
+      "stage": "post",
+      "question": "Why is “duplicate the last segment when the count is odd” not a valid padding rule for sequential segment folding?",
+      "options": [
+        "It makes the final proof too large",
+        "It breaks the required linking invariant unless the last segment’s end state equals its start state",
+        "It changes SHA-256 into a non-cryptographic hash",
+        "It makes the Merkle root impossible to compute"
+      ],
+      "correct": 1,
+      "explanation": "Sequential folds require `left.end == right.start`. Duplicating a segment makes `right.start` equal to the segment’s start, which generally does not match its end."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: an aggregation service commits to each proof as `H(public_inputs || proof_bytes)` and forgets to include `vk_hash` / program ID. What can go wrong?",
+      "options": [
+        "Nothing; verification keys never matter for commitments",
+        "A proof for a different circuit can be claimed as included, because the commitment does not bind which verifier should be used",
+        "The Merkle tree can no longer have inclusion proofs",
+        "SHA-256 becomes reversible"
+      ],
+      "correct": 1,
+      "explanation": "Without binding the verifier identity, a commitment (and thus a batch root) may authenticate the wrong statement/circuit even if every hash checks out."
+    },
+    {
+      "stage": "post",
+      "question": "Which trade-off is generally true when increasing aggregation fan-in (e.g., folding 16 proofs at once instead of 2)?",
+      "options": [
+        "It increases recursion depth but reduces per-step work",
+        "It reduces recursion depth but increases per-step circuit/prover work",
+        "It makes the system require trusted setup in all cases",
+        "It removes the need for statement binding"
+      ],
+      "correct": 1,
+      "explanation": "Higher fan-in means fewer recursion layers, but each layer must verify more proofs, which increases per-step complexity."
+    }
+  ]
 }

@@ -1,4 +1,101 @@
 {
-  "title": "DEEP-FRI & Recent Improvements",
-  "questions": []
+  "title": "DEEP-FRI — Sampling Outside the Box",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In an n=2^k multiplicative subgroup D={1,w,w^2,...,w^{n-1}}, why is -x always in D when x is in D?",
+      "options": [
+        "Because -1 equals w^{n/2}, so -x = (-1)·x stays in the subgroup",
+        "Because w is a primitive root of the whole field, so negatives are always powers of w",
+        "Because the field prime p is always of the form 2^k+1, so negatives are included",
+        "Because D is an additive subgroup, so it is closed under negation"
+      ],
+      "correct": 0,
+      "explanation": "For even n, w^{n/2} = -1 in the subgroup, so multiplying by -1 maps D to itself."
+    },
+    {
+      "stage": "pre",
+      "question": "For a non-constant polynomial f(X), what happens to the degree when you form q(X) = (f(X) - f(z)) / (X - z)?",
+      "options": [
+        "It decreases by 1",
+        "It stays the same",
+        "It increases by 1",
+        "It becomes unrelated to deg(f) because of division"
+      ],
+      "correct": 0,
+      "explanation": "f(X)-f(z) has a root at X=z, so it is divisible by (X-z) and the quotient has degree deg(f)-1."
+    },
+    {
+      "stage": "post",
+      "question": "In DEEP quotienting, which identity lets a verifier check that q(x) is consistent with f(x) at a sampled domain point x?",
+      "options": [
+        "f(x) = q(x)·(x - z) + f(z)",
+        "q(x) = f(x)·(x - z) + f(z)",
+        "f(z) = q(x)·(x - z) + f(x)",
+        "q(z) = (f(x) - f(z)) / (x - z)"
+      ],
+      "correct": 0,
+      "explanation": "Rearranging q(x)=(f(x)-f(z))/(x-z) gives f(x)=q(x)(x-z)+f(z), checkable pointwise."
+    },
+    {
+      "stage": "post",
+      "question": "Which folding formula matches the 2-fold FRI step used in this lesson (for y = x^2)?",
+      "options": [
+        "q_next(y) = (q(x)+q(-x))/2 + beta·(q(x)-q(-x))/(2x)",
+        "q_next(y) = (q(x)-q(-x))/2 + beta·(q(x)+q(-x))/(2x)",
+        "q_next(y) = q(x^2) + beta·q(-x^2)",
+        "q_next(y) = beta·q(x) + (1-beta)·q(-x)"
+      ],
+      "correct": 0,
+      "explanation": "FRI folding uses even/odd decomposition: g=(q(x)+q(-x))/2 and h=(q(x)-q(-x))/(2x), then q_next=g+beta·h."
+    },
+    {
+      "stage": "post",
+      "question": "What does a Merkle 'opening' for one entry in a committed layer consist of?",
+      "options": [
+        "The entry value and a list of sibling hashes proving inclusion up to the root",
+        "Only the layer's Merkle root, since the root commits to everything",
+        "The entire layer vector, so the verifier can recompute the root",
+        "A signature over the value, independent of the Merkle tree"
+      ],
+      "correct": 0,
+      "explanation": "An opening is the value plus an authentication path (sibling hashes + order) that recomputes the committed root."
+    },
+    {
+      "stage": "post",
+      "question": "Why must f(z) (the out-of-domain value) be bound to the transcript (e.g., via Fiat–Shamir) in a non-interactive DEEP-FRI proof?",
+      "options": [
+        "Otherwise the prover can adapt f(z) after seeing queries and keep the quotient checks consistent",
+        "Otherwise the field arithmetic becomes invalid and division by (x-z) is undefined",
+        "Otherwise Merkle trees stop being collision resistant",
+        "Otherwise the verifier cannot compute x^2 during folding"
+      ],
+      "correct": 0,
+      "explanation": "If f(z) is not fixed before queries, the prover can choose it to satisfy checks at the queried points without representing a single polynomial."
+    },
+    {
+      "stage": "post",
+      "question": "Intuitively, what does sampling a random z outside the evaluation domain help prevent?",
+      "options": [
+        "Pretender tables that behave 'low-degree on the grid' but don't match any low-degree polynomial globally",
+        "Merkle root collisions caused by internal node hashing",
+        "The need for random challenges beta during folding",
+        "The verifier having to read more than one layer"
+      ],
+      "correct": 0,
+      "explanation": "Out-of-domain sampling forces consistency at a random point off the grid, which rules out many structured cheating strategies."
+    },
+    {
+      "stage": "post",
+      "question": "In the fold step, why does the formula include division by x (i.e., (q(x)-q(-x))/(2x))?",
+      "options": [
+        "It extracts the 'odd part' h(y) when writing q(x)=g(x^2)+x·h(x^2)",
+        "It makes the folded value depend on fewer hash bits",
+        "It cancels the Merkle proof path length",
+        "It is only needed when p is not prime"
+      ],
+      "correct": 0,
+      "explanation": "Given q(x)=g(y)+x·h(y) with y=x^2, the difference q(x)-q(-x)=2x·h(y), so dividing by 2x recovers h(y)."
+    }
+  ]
 }

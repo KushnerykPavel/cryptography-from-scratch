@@ -1,1 +1,76 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-constructed deterministic vectors for the educational R1CS/\"Circom mental model\" toy compiler in this lesson (no external RFC/NIST vectors apply). Prime p=97 is small for readability.",
+  "vectors": [
+    { "op": "field_add", "p": 97, "a": 100, "b": 5, "expected": 8 },
+    { "op": "field_mul", "p": 97, "a": 20, "b": 10, "expected": 6 },
+
+    {
+      "op": "lc_eval",
+      "p": 97,
+      "const": 3,
+      "terms": [[2, 1], [5, 2]],
+      "assignment": { "0": 1, "1": 7, "2": 9 },
+      "expected": 62
+    },
+
+    {
+      "op": "r1cs_check",
+      "p": 97,
+      "constraints": [
+        {
+          "label": "x*y=z",
+          "A": { "const": 0, "terms": [[1, 1]] },
+          "B": { "const": 0, "terms": [[1, 2]] },
+          "C": { "const": 0, "terms": [[1, 3]] }
+        }
+      ],
+      "assignment": { "0": 1, "1": 3, "2": 4, "3": 12 },
+      "expected_ok": true
+    },
+    {
+      "op": "r1cs_check",
+      "p": 97,
+      "constraints": [
+        {
+          "label": "x*y=z",
+          "A": { "const": 0, "terms": [[1, 1]] },
+          "B": { "const": 0, "terms": [[1, 2]] },
+          "C": { "const": 0, "terms": [[1, 3]] }
+        }
+      ],
+      "assignment": { "0": 1, "1": 3, "2": 4, "3": 13 },
+      "expected_ok": false
+    },
+
+    {
+      "op": "compile_range_check_4bit",
+      "p": 97,
+      "x_var": 1,
+      "prefix": "x",
+      "assignment": { "0": 1, "1": 9, "2": 1, "3": 0, "4": 0, "5": 1 },
+      "expected_ok": true,
+      "expected_bit_ids": [2, 3, 4, 5]
+    },
+    {
+      "op": "compile_range_check_4bit",
+      "p": 97,
+      "x_var": 1,
+      "prefix": "x",
+      "assignment": { "0": 1, "1": 9, "2": 2, "3": 0, "4": 0, "5": 1 },
+      "expected_ok": false,
+      "expected_bit_ids": [2, 3, 4, 5]
+    },
+
+    { "op": "arith_range_circuit_ok", "p": 97, "a": 3, "b": 5, "c_in": 7, "d": 22 },
+    { "op": "arith_range_circuit_reject", "p": 97, "a": 3, "b": 5, "c_in": 7, "d": 23 },
+    {
+      "op": "arith_range_circuit_reject",
+      "p": 97,
+      "a": 3,
+      "b": 5,
+      "c_in": 7,
+      "d": 22,
+      "force_bad": { "a_bit0": 2 }
+    }
+  ]
+}

@@ -1,4 +1,101 @@
 {
   "title": "QAP \u2014 Quadratic Arithmetic Programs",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In an R1CS, each constraint has which general form?",
+      "options": [
+        "(linear combination) · (linear combination) = (linear combination)",
+        "(quadratic polynomial) = 0",
+        "(x^2 + y^2) = z^2",
+        "hash(message) = digest"
+      ],
+      "correct": 0,
+      "explanation": "R1CS constraints multiply two linear combinations and equate them to a third linear combination over a field."
+    },
+    {
+      "stage": "pre",
+      "question": "Over a field, what does it mean to say that t(x) divides P(x)?",
+      "options": [
+        "There exists a polynomial h(x) such that P(x) = t(x)·h(x) with zero remainder",
+        "P(x) and t(x) have the same degree",
+        "P(x) and t(x) share at least one root",
+        "P(0) = 0"
+      ],
+      "correct": 0,
+      "explanation": "Divisibility means exact multiplication in the polynomial ring, i.e. polynomial long division leaves remainder 0."
+    },
+    {
+      "stage": "post",
+      "question": "If the constraint domain is {1, 2}, what is the target/vanishing polynomial t(x)?",
+      "options": [
+        "(x - 1)(x - 2)",
+        "(x + 1)(x + 2)",
+        "x^2",
+        "(x - 1) + (x - 2)"
+      ],
+      "correct": 0,
+      "explanation": "By definition t(x)=∏(x-x_i), so for points 1 and 2 it is (x-1)(x-2)."
+    },
+    {
+      "stage": "post",
+      "question": "If an R1CS has m constraints and you build per-wire polynomials by interpolation on m points, what degree bound do those polynomials have?",
+      "options": [
+        "Degree < m",
+        "Degree ≤ m",
+        "Degree < m^2",
+        "No degree bound; it can be arbitrarily large"
+      ],
+      "correct": 0,
+      "explanation": "Interpolation on m points produces a unique polynomial of degree at most m-1, i.e. degree < m."
+    },
+    {
+      "stage": "post",
+      "question": "Why does QAP define one polynomial per wire (column) rather than one polynomial per constraint (row)?",
+      "options": [
+        "So a witness vector a can form aggregated polynomials A(x)=Σ a_j·A_j(x), B(x), C(x) with a single linear combination",
+        "So all polynomials automatically have degree 1",
+        "To avoid computing any field inverses",
+        "Because Groth16 requires exactly three polynomials total"
+      ],
+      "correct": 0,
+      "explanation": "The per-wire polynomials let the prover/verifier aggregate using the witness coefficients consistently across A, B, and C."
+    },
+    {
+      "stage": "post",
+      "question": "In the QAP check, why does t(x) | (A(x)B(x) - C(x)) capture 'all constraints are satisfied'?",
+      "options": [
+        "Because t(x) vanishes on all constraint points, and divisibility means A(x)B(x)-C(x) vanishes on the same set",
+        "Because any divisible polynomial must be constant",
+        "Because polynomial division is faster than multiplication",
+        "Because t(x) encodes the witness directly"
+      ],
+      "correct": 0,
+      "explanation": "If a polynomial has all x_i as roots, it must be a multiple of the product ∏(x-x_i), which is t(x)."
+    },
+    {
+      "stage": "post",
+      "question": "Which choice of constraint points {x_i} makes Lagrange interpolation invalid (or forces division by zero) in a prime field?",
+      "options": [
+        "Two points are equal modulo p",
+        "All points are non-zero modulo p",
+        "The points are in increasing order",
+        "The points are small integers"
+      ],
+      "correct": 0,
+      "explanation": "Interpolation uses denominators (x_i - x_j); if any x_i == x_j (mod p), a denominator becomes 0."
+    },
+    {
+      "stage": "post",
+      "question": "Why isn't the bare statement 't(x) divides A(x)B(x)-C(x)' sufficient by itself to make a secure SNARK verifier?",
+      "options": [
+        "A cheating prover must be forced (cryptographically) to use the correct per-wire polynomials and one consistent witness; otherwise they can fake A,B,C to satisfy the division",
+        "Because polynomial divisibility is undefined over fields",
+        "Because QAP only works for addition gates, not multiplication gates",
+        "Because t(x) must always be irreducible"
+      ],
+      "correct": 0,
+      "explanation": "SNARKs add commitments/CRS machinery so the prover can't choose arbitrary polynomials; the algebra must be tied to the circuit and witness."
+    }
+  ]
 }

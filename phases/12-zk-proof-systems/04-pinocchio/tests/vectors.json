@@ -1,1 +1,131 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-computed test vectors over F_101 for the lesson's toy Pinocchio pipeline (R1CS -> QAP -> divisibility -> single-point check).",
+  "vectors": [
+    {
+      "op": "mod_inv",
+      "inputs": {
+        "a": 3,
+        "p": 101
+      },
+      "expected": 34
+    },
+    {
+      "op": "mod_inv",
+      "inputs": {
+        "a": 2,
+        "p": 101
+      },
+      "expected": 51
+    },
+    {
+      "op": "poly_mul",
+      "inputs": {
+        "a": [
+          1,
+          2
+        ],
+        "b": [
+          3,
+          1
+        ],
+        "p": 101
+      },
+      "expected": [
+        3,
+        7,
+        2
+      ]
+    },
+    {
+      "op": "poly_divmod",
+      "inputs": {
+        "numer": [
+          100,
+          0,
+          1
+        ],
+        "denom": [
+          100,
+          1
+        ],
+        "p": 101
+      },
+      "expected": {
+        "quotient": [
+          1,
+          1
+        ],
+        "remainder": [
+          0
+        ]
+      }
+    },
+    {
+      "op": "lagrange_interpolate",
+      "inputs": {
+        "points": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            9
+          ]
+        ],
+        "p": 101
+      },
+      "expected": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "op": "vanishing_poly",
+      "inputs": {
+        "num_constraints": 3,
+        "p": 101
+      },
+      "expected": [
+        95,
+        11,
+        95,
+        1
+      ]
+    },
+    {
+      "op": "r1cs_is_satisfied_example",
+      "inputs": {
+        "p": 101
+      },
+      "expected": true
+    },
+    {
+      "op": "qap_is_satisfied_example",
+      "inputs": {
+        "p": 101
+      },
+      "expected": true
+    },
+    {
+      "op": "qap_is_satisfied_example_wrong_x",
+      "inputs": {
+        "p": 101
+      },
+      "expected": false
+    },
+    {
+      "op": "pinocchio_toy_verify_example",
+      "inputs": {
+        "p": 101,
+        "s": 42
+      },
+      "expected": true
+    }
+  ]
+}

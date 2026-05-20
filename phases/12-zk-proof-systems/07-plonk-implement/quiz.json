@@ -1,4 +1,100 @@
 {
-  "title": "PLONK from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In PLONK’s generic gate, what are the selector values (qL, qR, qM, qO, qC) conceptually?",
+      "options": [
+        "Per-row coefficients that choose which arithmetic relation a row enforces",
+        "A prover-chosen random mask that hides witness values",
+        "A hash of the witness columns used to derive Fiat–Shamir challenges",
+        "A permutation of rows that enforces copy constraints"
+      ],
+      "correct": 0,
+      "explanation": "Selectors are fixed coefficients (often preprocessed polynomials) that define the gate equation row-by-row."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a copy constraint in a circuit arithmetization?",
+      "options": [
+        "An equality requirement between two (or more) witness cells that represent the same variable",
+        "A requirement that the prover sends two identical copies of the proof for redundancy",
+        "A constraint that forces every row to be a multiplication gate",
+        "A rule that the verifier must re-compute the witness from public inputs"
+      ],
+      "correct": 0,
+      "explanation": "Copy constraints say that values appearing in different places in the witness table must be equal because they are the same logical variable."
+    },
+    {
+      "stage": "post",
+      "question": "Which equation is the standard PLONK generic gate constraint at a row i?",
+      "options": [
+        "qL[i]·a[i] + qR[i]·b[i] + qM[i]·a[i]·b[i] + qO[i]·c[i] + qC[i] = 0",
+        "a[i] + b[i] + c[i] = 0 (always)",
+        "qL[i]·a[i] + qR[i]·b[i] = qM[i]·c[i]",
+        "a[i]·b[i]·c[i] = 1"
+      ],
+      "correct": 0,
+      "explanation": "The generic gate uses five selectors to express addition, multiplication, constants, and combinations in a single per-row identity."
+    },
+    {
+      "stage": "post",
+      "question": "Why are the random challenges β and γ introduced in the permutation (copy-constraint) argument?",
+      "options": [
+        "To make it overwhelmingly unlikely that an incorrect wiring passes the product check by coincidence",
+        "To guarantee that the witness values are uniformly random",
+        "To remove the need for any boundary condition on the grand product Z",
+        "To allow the verifier to skip checking gate constraints"
+      ],
+      "correct": 0,
+      "explanation": "β and γ randomize the products so that equality of products implies the intended permutation property except with negligible probability."
+    },
+    {
+      "stage": "post",
+      "question": "What boundary condition is typically enforced for the grand product Z in a permutation argument?",
+      "options": [
+        "Z starts at 1 and ends at 1 over the domain",
+        "Z starts at 0 and ends at 0 over the domain",
+        "Z must be equal to the witness column a everywhere",
+        "Z must be a constant polynomial chosen by the verifier"
+      ],
+      "correct": 0,
+      "explanation": "The recurrence defines Z as a running product; forcing it to start and end at 1 is what pins down the permutation check."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s toy implementation, what is the biggest reason it is not a real SNARK proof system yet?",
+      "options": [
+        "It has no polynomial commitments/opening proofs, so the verifier effectively sees the full witness table",
+        "It uses SHA-256 instead of a SNARK-friendly hash like Poseidon",
+        "It uses Python instead of Rust, so it cannot be secure",
+        "It only supports addition gates and cannot express multiplication"
+      ],
+      "correct": 0,
+      "explanation": "PLONK needs commitments plus succinct opening proofs to make verification small without revealing the witness."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what can go wrong if the prover can choose β,γ without hashing the full transcript (e.g., missing some absorbed messages)?",
+      "options": [
+        "The proof can become malleable or unsound because challenges are no longer bound to the exact commitments being verified",
+        "The proof becomes information-theoretically secure in the standard model",
+        "The verifier gains the secret witness from the transcript",
+        "The gate constraint identity becomes unnecessary"
+      ],
+      "correct": 0,
+      "explanation": "Fiat–Shamir challenges must be derived from the exact transcript; missing absorbs can let an attacker adapt messages to the challenges."
+    },
+    {
+      "stage": "post",
+      "question": "Why do production PLONKish implementations usually require the domain size n to be a power of two?",
+      "options": [
+        "To use FFT/NTT algorithms for fast polynomial operations over the evaluation domain",
+        "Because finite fields only exist for power-of-two sizes",
+        "Because permutation arguments only work when n is a power of two",
+        "Because Fiat–Shamir hashing requires power-of-two transcript lengths"
+      ],
+      "correct": 0,
+      "explanation": "Power-of-two domains enable efficient FFT-based interpolation/evaluation, which dominates prover performance."
+    }
+  ]
 }

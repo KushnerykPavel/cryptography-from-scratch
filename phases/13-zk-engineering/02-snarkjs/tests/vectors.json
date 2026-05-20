@@ -1,1 +1,87 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors for stdlib-only checks over snarkjs-style Groth16 artifacts. Shapes follow the snarkjs-compatible formats documented by ark-snarkjs (ProofJson/VkJson) and common snarkjs Groth16 workflows (circom + snarkjs prove/verify).",
+  "vectors": [
+    {
+      "op": "canonical_json_dumps",
+      "inputs": { "obj": { "b": 1, "a": 2 } },
+      "expected": "{\"a\":2,\"b\":1}"
+    },
+    {
+      "op": "sha256_hex",
+      "inputs": { "text": "abc" },
+      "expected": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    },
+    {
+      "op": "normalize_g1_point",
+      "inputs": { "point": ["1", "2"], "field": "p" },
+      "expected": ["1", "2"]
+    },
+    {
+      "op": "normalize_g1_point",
+      "inputs": { "point": ["1", "2", "1"], "field": "p" },
+      "expected": ["1", "2"]
+    },
+    {
+      "op": "sha256_json_vk",
+      "inputs": {
+        "verification_key": {
+          "protocol": "groth16",
+          "curve": "bn128",
+          "nPublic": 2,
+          "vk_alpha_1": ["1", "2"],
+          "vk_beta_2": [["3", "4"], ["5", "6"]],
+          "vk_gamma_2": [["7", "8"], ["9", "10"]],
+          "vk_delta_2": [["11", "12"], ["13", "14"]],
+          "IC": [["15", "16"], ["17", "18"], ["19", "20"]]
+        }
+      },
+      "expected": "09fc6e271e48fb5de74d16c80c547d3b54121939f822ed0525766cdde738d8d0"
+    },
+    {
+      "op": "sha256_json_public",
+      "inputs": { "public_signals": ["42", "1337"] },
+      "expected": "27257fd5e073de00513d8cd3fe5b1986cd9b51da0d3b66c93d089b5c48a1eccc"
+    },
+    {
+      "op": "sha256_json_proof",
+      "inputs": {
+        "proof": {
+          "protocol": "groth16",
+          "curve": "bn128",
+          "pi_a": ["21", "22", "1"],
+          "pi_b": [["23", "24"], ["25", "26"], ["1", "0"]],
+          "pi_c": ["27", "28", "1"]
+        }
+      },
+      "expected": "89950318f4b42ffc75d6f511211230e524df591aff9449d4b0486e5ae87639d9"
+    },
+    {
+      "op": "bundle_manifest_hashes",
+      "inputs": {
+        "verification_key": {
+          "protocol": "groth16",
+          "curve": "bn128",
+          "nPublic": 2,
+          "vk_alpha_1": ["1", "2"],
+          "vk_beta_2": [["3", "4"], ["5", "6"]],
+          "vk_gamma_2": [["7", "8"], ["9", "10"]],
+          "vk_delta_2": [["11", "12"], ["13", "14"]],
+          "IC": [["15", "16"], ["17", "18"], ["19", "20"]]
+        },
+        "public_signals": ["42", "1337"],
+        "proof": {
+          "protocol": "groth16",
+          "curve": "bn128",
+          "pi_a": ["21", "22", "1"],
+          "pi_b": [["23", "24"], ["25", "26"], ["1", "0"]],
+          "pi_c": ["27", "28", "1"]
+        }
+      },
+      "expected": {
+        "verification_key_json": "09fc6e271e48fb5de74d16c80c547d3b54121939f822ed0525766cdde738d8d0",
+        "proof_json": "89950318f4b42ffc75d6f511211230e524df591aff9449d4b0486e5ae87639d9",
+        "public_json": "27257fd5e073de00513d8cd3fe5b1986cd9b51da0d3b66c93d089b5c48a1eccc"
+      }
+    }
+  ]
+}

@@ -1,4 +1,100 @@
 {
-  "title": "R1CS \u2014 Rank-1 Constraint Systems",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In an R1CS instance, what does it mean for a witness w to satisfy a constraint (A, B, C)?",
+      "options": [
+        "A(w) + B(w) = C(w) (mod p)",
+        "A(w) \u00b7 B(w) = C(w) (mod p)",
+        "A and B are constant matrices; only C depends on w",
+        "C(w) must be invertible (non-zero) (mod p)"
+      ],
+      "correct": 1,
+      "explanation": "Each constraint enforces one field equation: the product of two linear combinations equals a third, modulo p."
+    },
+    {
+      "stage": "pre",
+      "question": "Why do many R1CS systems reserve w[0] = 1?",
+      "options": [
+        "To make every witness unique by definition",
+        "To represent constants inside linear combinations",
+        "To prevent negative numbers from appearing",
+        "To ensure all constraints are linear"
+      ],
+      "correct": 1,
+      "explanation": "With w[0]=1, any constant term can be expressed as a coefficient on wire 0 in A, B, or C."
+    },
+    {
+      "stage": "post",
+      "question": "Which of the following correctly encodes an addition gate s = x + y as an R1CS constraint?",
+      "options": [
+        "(x + y) \u00b7 1 = s",
+        "x \u00b7 y = s",
+        "(x + y) \u00b7 s = 1",
+        "(x - y) \u00b7 1 = s"
+      ],
+      "correct": 0,
+      "explanation": "Addition is linear, so you can set B=1 and enforce A(w)\u00b71 = C(w)."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson circuit out = (x+y)(x-y), why do we introduce intermediate wires s and d?",
+      "options": [
+        "R1CS forbids multiplication, so we avoid it",
+        "R1CS requires every non-linear expression to be named by a wire",
+        "Intermediate wires are only for optimization and can always be skipped",
+        "To make the witness smaller"
+      ],
+      "correct": 1,
+      "explanation": "R1CS constraints talk about linear combinations of wires; to reuse a subexpression like (x+y), you allocate a wire for it."
+    },
+    {
+      "stage": "post",
+      "question": "Suppose a constraint fails. Which triple is the most useful local debug data for that constraint?",
+      "options": [
+        "The list of all constraints in the system",
+        "The prover\u2019s source code for the circuit",
+        "A(w), B(w), and C(w) values for the failing constraint",
+        "Only whether the verifier accepted or rejected"
+      ],
+      "correct": 2,
+      "explanation": "Computing A(w), B(w), C(w) shows exactly what equation was expected and which side is wrong."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key difference between \u201cR1CS constraints satisfied\u201d and \u201ca zero-knowledge proof verified\u201d?",
+      "options": [
+        "Constraint satisfaction already implies zero-knowledge",
+        "Constraint satisfaction is a statement; proof verification is evidence of that statement without revealing the witness",
+        "Proof verification only checks addition constraints, not multiplication constraints",
+        "Zero-knowledge proof verification does not depend on the field modulus"
+      ],
+      "correct": 1,
+      "explanation": "R1CS satisfiability defines the relation; a proof system provides a (usually succinct) protocol to convince a verifier of satisfiability."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-themed: if a circuit intends to prove an integer relation (e.g., \u201cv is in [0, 2^32)\u201d) but you only enforce equations in F_p, what can go wrong?",
+      "options": [
+        "Nothing: field equations always preserve integer meaning",
+        "The prover can use wrap-around values (mod p) that satisfy equations but violate the intended integer range",
+        "The verifier can recover the witness from the equations",
+        "The constraint system becomes non-deterministic"
+      ],
+      "correct": 1,
+      "explanation": "Field arithmetic is modulo p, so without explicit range constraints, a value can be interpreted as a different integer representative and still satisfy equations."
+    },
+    {
+      "stage": "post",
+      "question": "If a prover and verifier disagree on the indexing/order of witness wires, what is the most likely outcome?",
+      "options": [
+        "Constraints still verify because R1CS is commutative",
+        "Some constraints may accidentally pass, but the system is not well-defined and verification will generally fail",
+        "The witness becomes public automatically",
+        "Only the first constraint can fail; the rest are unaffected"
+      ],
+      "correct": 1,
+      "explanation": "Linear combinations refer to wire indices; inconsistent ordering means you\u2019re checking different equations than you think you are."
+    }
+  ]
 }

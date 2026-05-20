@@ -1,4 +1,101 @@
 {
   "title": "ZK Engineering Lab \u2014 Build a ZK App End to End",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the purpose of binding a ZK proof to a server-provided session challenge (e.g., a session_id)?",
+      "options": [
+        "To prevent replaying an old proof as a fresh login attempt",
+        "To make the proof shorter",
+        "To avoid using a hash function in Fiat\u2013Shamir",
+        "To hide the public key from the verifier"
+      ],
+      "correct": 0,
+      "explanation": "Without a unique challenge, a captured (valid) proof can be replayed to authenticate again. Binding the proof to a per-session message makes replays fail."
+    },
+    {
+      "stage": "pre",
+      "question": "What does \"domain separation\" mean when hashing a proof transcript?",
+      "options": [
+        "Including a protocol-specific label so the same bytes cannot be interpreted as a challenge in a different protocol",
+        "Using a different prime modulus for each user",
+        "Running the hash twice to double security",
+        "Encrypting the transcript before hashing"
+      ],
+      "correct": 0,
+      "explanation": "A domain tag (and/or transcript context) prevents cross-protocol confusion where the same byte string is accepted in multiple roles or protocols."
+    },
+    {
+      "stage": "post",
+      "question": "In Schnorr NIZK, the verifier checks g^s == R \u00b7 pk^c (mod p). Why must the verifier also validate that pk is in the correct subgroup?",
+      "options": [
+        "To prevent small-subgroup / invalid-element attacks that can break soundness or leak information",
+        "Because pk validation makes the proof smaller",
+        "Because pk must be equal to g",
+        "Because Fiat\u2013Shamir only works for prime fields of size 2^k"
+      ],
+      "correct": 0,
+      "explanation": "If pk is not a valid subgroup element, algebraic checks may succeed for unintended reasons. Group membership checks are part of making the proof system sound in an application."
+    },
+    {
+      "stage": "post",
+      "question": "Why do we hash (p, q, g, pk, R, message) \u2014 not just (R, message) \u2014 to compute the Fiat\u2013Shamir challenge c?",
+      "options": [
+        "It binds the proof to the exact statement and parameters, reducing cross-protocol and cross-parameter confusion",
+        "It makes SHA-256 faster by adding more input bytes",
+        "It hides the value R from the verifier",
+        "It ensures c is never 0"
+      ],
+      "correct": 0,
+      "explanation": "Including parameters and statement data makes the challenge unambiguous and protocol-specific, so the same transcript bytes cannot be reused under different assumptions."
+    },
+    {
+      "stage": "post",
+      "question": "Two valid proofs reuse the same nonce (same R) but have different challenges c1 \u2260 c2. What can an attacker compute?",
+      "options": [
+        "The secret x via x = (s1 - s2) \u00b7 (c1 - c2)^{-1} mod q",
+        "A new generator g",
+        "A collision in SHA-256",
+        "Nothing \u2014 nonce reuse is safe in Schnorr proofs"
+      ],
+      "correct": 0,
+      "explanation": "From s1 = r + c1x and s2 = r + c2x, subtract to eliminate r and solve for x. This is the classic nonce-reuse failure mode."
+    },
+    {
+      "stage": "post",
+      "question": "Why is length-prefixed encoding (e.g., u16 || bytes) used in transcript hashing?",
+      "options": [
+        "To avoid ambiguity where different tuples of values serialize to the same byte string",
+        "To make integers constant-time",
+        "To make SHA-256 output longer",
+        "To ensure the proof is zero-knowledge"
+      ],
+      "correct": 0,
+      "explanation": "Without a canonical, unambiguous encoding, an attacker can exploit parser/serializer mismatches or concatenation ambiguity to change what is being proven."
+    },
+    {
+      "stage": "post",
+      "question": "A server verifies a proof but does not track whether a (user_id, session_id) was already used. What bug does this introduce?",
+      "options": [
+        "Replay: the same proof can be reused to mint multiple tokens for the same session",
+        "Soundness: g^s == R \u00b7 pk^c no longer holds",
+        "Completeness: honest proofs start failing randomly",
+        "Confidentiality: the secret x becomes public immediately"
+      ],
+      "correct": 0,
+      "explanation": "Even a correct proof system needs application-level state to prevent replays. Otherwise a captured proof for that session can be reused."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best describes the boundary between \"crypto correctness\" and \"app correctness\" in a ZK login flow?",
+      "options": [
+        "Crypto correctness proves the statement; app correctness ensures the statement is the right one (fresh, bound, authorized) and is used safely",
+        "If the proof verifies, the app is automatically secure",
+        "App correctness is irrelevant because ZK proofs are zero-knowledge",
+        "Crypto correctness only matters if the server stores the secret key"
+      ],
+      "correct": 0,
+      "explanation": "A proof can be valid yet useless or dangerous if it proves the wrong thing or can be replayed. Engineering is about correctly binding proofs to intent and state."
+    }
+  ]
 }

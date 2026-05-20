@@ -1,1 +1,111 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Generated from code/main.py using SHA-256 tagged hashes (mixer-v1) and a Merkle tree with 0x00 leaf / 0x01 node prefixes; fixed seeds for deterministic regression tests.",
+  "vectors": [
+    {
+      "op": "note_roundtrip",
+      "inputs": {
+        "secret_hex": "bb54aac4b89dc868ba37d9cc21b2cece9f09b43ceb7e57a0ea8766221624d01b",
+        "nullifier_hex": "97966a534b20819c47d8068d5c8df4be830ff80d7713d616e4fd67effc39d895"
+      },
+      "expected": {
+        "note": "mixer-v1:bb54aac4b89dc868ba37d9cc21b2cece9f09b43ceb7e57a0ea8766221624d01b:97966a534b20819c47d8068d5c8df4be830ff80d7713d616e4fd67effc39d895"
+      }
+    },
+    {
+      "op": "commitment",
+      "inputs": {
+        "secret_hex": "bb54aac4b89dc868ba37d9cc21b2cece9f09b43ceb7e57a0ea8766221624d01b",
+        "nullifier_hex": "97966a534b20819c47d8068d5c8df4be830ff80d7713d616e4fd67effc39d895"
+      },
+      "expected": {
+        "commitment_hex": "19c77ea4dd7c7c1ad178d789405f670b7d42b21d663d29a353d8c84d45680600"
+      }
+    },
+    {
+      "op": "nullifier_hash",
+      "inputs": {
+        "nullifier_hex": "97966a534b20819c47d8068d5c8df4be830ff80d7713d616e4fd67effc39d895"
+      },
+      "expected": {
+        "nullifier_hash_hex": "654dcf7bb7e5b6db4c468b88cb83f5ab9a801934c8cc8c2c0cdd79fae803893c"
+      }
+    },
+    {
+      "op": "merkle_root",
+      "inputs": {
+        "commitment_hexes": [
+          "a5e494935de223e455cf50440cffdf9ba9a503b7c120e5d122a62e21fd0654f3",
+          "c0a2171b6786dcdb588fadc960047405490bf754c54384518dfb6d50144ebfdc",
+          "6e89d0cddf39767b6287783b456d90782c5fad064476ff6320e81441f0de81e7",
+          "43d18a263f25128413bd7fb6f017bd8a8265b865f32c6e81c43ef4ba917b17ad"
+        ]
+      },
+      "expected": {
+        "root_hex": "4fa224c30c0f4ce79eb4eba11b933fde8f66ff3fc9279829037d60e8ada0b937"
+      }
+    },
+    {
+      "op": "merkle_inclusion_proof",
+      "inputs": {
+        "commitment_hexes": [
+          "a5e494935de223e455cf50440cffdf9ba9a503b7c120e5d122a62e21fd0654f3",
+          "c0a2171b6786dcdb588fadc960047405490bf754c54384518dfb6d50144ebfdc",
+          "6e89d0cddf39767b6287783b456d90782c5fad064476ff6320e81441f0de81e7",
+          "43d18a263f25128413bd7fb6f017bd8a8265b865f32c6e81c43ef4ba917b17ad"
+        ],
+        "index": 2
+      },
+      "expected": {
+        "path": [
+          {
+            "side": "R",
+            "hash_hex": "d99ed531f9e17eaaeb7ade07d07eb6e329b9a7a3fd0613034e14014bce8f875a"
+          },
+          {
+            "side": "L",
+            "hash_hex": "e2e91d460ffde04274c00eb4d1eae9682a7f328598233579d28f43802664472e"
+          }
+        ],
+        "root_hex": "4fa224c30c0f4ce79eb4eba11b933fde8f66ff3fc9279829037d60e8ada0b937"
+      }
+    },
+    {
+      "op": "prove_withdrawal",
+      "inputs": {
+        "commitment_hexes": [
+          "a5e494935de223e455cf50440cffdf9ba9a503b7c120e5d122a62e21fd0654f3",
+          "c0a2171b6786dcdb588fadc960047405490bf754c54384518dfb6d50144ebfdc",
+          "6e89d0cddf39767b6287783b456d90782c5fad064476ff6320e81441f0de81e7",
+          "43d18a263f25128413bd7fb6f017bd8a8265b865f32c6e81c43ef4ba917b17ad"
+        ],
+        "leaf_index": 2,
+        "secret_hex": "feb871ede4e8ce0dab21f3e72c97ad10741fa3750047c8af107bc51f89cf4382",
+        "nullifier_hex": "3971919dcc3255ac9523a9c552cdefb2210ebbebac8ed924acdb012aa485f816",
+        "recipient": "0x1111111111111111111111111111111111111111",
+        "relayer": "0x2222222222222222222222222222222222222222",
+        "fee_wei": 10000000000000000
+      },
+      "expected": {
+        "statement": {
+          "root_hex": "4fa224c30c0f4ce79eb4eba11b933fde8f66ff3fc9279829037d60e8ada0b937",
+          "nullifier_hash_hex": "75d404ae43b4f371afa7f0c798ccc0df0dbc8af91c80a3c20aa47da6b4c79cca",
+          "recipient": "0x1111111111111111111111111111111111111111",
+          "relayer": "0x2222222222222222222222222222222222222222",
+          "fee_wei": 10000000000000000
+        },
+        "leaf_index": 2,
+        "merkle_path": [
+          {
+            "side": "R",
+            "hash_hex": "d99ed531f9e17eaaeb7ade07d07eb6e329b9a7a3fd0613034e14014bce8f875a"
+          },
+          {
+            "side": "L",
+            "hash_hex": "e2e91d460ffde04274c00eb4d1eae9682a7f328598233579d28f43802664472e"
+          }
+        ],
+        "proof_digest_hex": "3f64da8b828b476c0f6a279180f9dbb90e2f1b599a0dff2bd3186ef9a22f5e06"
+      }
+    }
+  ]
+}

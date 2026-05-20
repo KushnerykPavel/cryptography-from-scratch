@@ -1,4 +1,100 @@
 {
-  "title": "Pinocchio Protocol",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In an R1CS, what form does a single constraint take?",
+      "options": [
+        "(A · w) * (B · w) = (C · w)",
+        "A · w + B · w + C · w = 0",
+        "A(w) * B(w) = C(w) for polynomials A,B,C",
+        "e(A, B) = e(C, g) for a pairing e"
+      ],
+      "correct": 0,
+      "explanation": "R1CS constraints are rank-1 bilinear constraints: two linear combinations of the witness multiply to a third."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the vanishing polynomial for the constraint domain {1, 2, ..., m}?",
+      "options": [
+        "Z(x) = ∏_{k=1..m} (x - k)",
+        "Z(x) = ∏_{k=1..m} (x + k)",
+        "Z(x) = x^m - 1",
+        "Z(x) = x - m"
+      ],
+      "correct": 0,
+      "explanation": "Z(x) is the lowest-degree nonzero polynomial that evaluates to 0 at each domain point 1..m."
+    },
+    {
+      "stage": "post",
+      "question": "After converting R1CS to QAP polynomials A(x), B(x), and C(x), what polynomial does the protocol want to be divisible by Z(x)?",
+      "options": [
+        "P(x) = A(x) * B(x) - C(x)",
+        "P(x) = A(x) + B(x) - C(x)",
+        "P(x) = A(x) * B(x) + C(x)",
+        "P(x) = A(x) / B(x) - C(x)"
+      ],
+      "correct": 0,
+      "explanation": "The core QAP identity is A(x)B(x) − C(x) = H(x)Z(x), i.e. divisibility of A(x)B(x) − C(x) by Z(x)."
+    },
+    {
+      "stage": "post",
+      "question": "Why does “P(x) is divisible by Z(x)” capture “all m constraints are satisfied” (in the toy model)?",
+      "options": [
+        "Because Z(k)=0 for k=1..m, so divisibility implies P(k)=0 for all constraints",
+        "Because Z(x) is random, so divisibility is unlikely by chance",
+        "Because any polynomial can be divided by any other with zero remainder",
+        "Because divisibility implies P(x) has degree 0"
+      ],
+      "correct": 0,
+      "explanation": "If P(x)=H(x)Z(x), then at every root k of Z we have P(k)=0, matching the per-constraint checks."
+    },
+    {
+      "stage": "post",
+      "question": "What does Lagrange interpolation do for the R1CS → QAP reduction?",
+      "options": [
+        "Builds polynomials whose values at x=1..m match the per-constraint coefficients",
+        "Finds the witness values w that satisfy the circuit",
+        "Computes elliptic curve pairings efficiently",
+        "Turns a polynomial into a hash function"
+      ],
+      "correct": 0,
+      "explanation": "Each R1CS column becomes a polynomial by interpolating its m values over the constraint indices."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the witness vector include a fixed first entry equal to 1?",
+      "options": [
+        "To encode constants inside linear combinations (e.g., “+5” or “=35”)",
+        "To make polynomial multiplication commutative",
+        "To prevent interpolation from failing",
+        "To make the proof zero-knowledge by itself"
+      ],
+      "correct": 0,
+      "explanation": "The constant wire lets constraints express constants without adding new variables for each literal constant."
+    },
+    {
+      "stage": "post",
+      "question": "Attack: if a verifier only checks A(s)B(s) − C(s) = H(s)Z(s) at one point s, how can a malicious prover forge a passing 'proof' without a valid witness?",
+      "options": [
+        "Pick A(s), B(s), H(s) arbitrarily and set C(s) = A(s)B(s) − H(s)Z(s)",
+        "Pick s = 0 so that all polynomials become 0",
+        "Send the full witness w to the verifier",
+        "Increase the degree of Z(x) so the check is stronger"
+      ],
+      "correct": 0,
+      "explanation": "One equation in several unknowns is underdetermined; without consistency-binding, the prover can choose values that satisfy the check at s."
+    },
+    {
+      "stage": "post",
+      "question": "What extra ingredient does Pinocchio-style SNARK design add to stop the forging attack above?",
+      "options": [
+        "Consistency checks that bind A(s), B(s), C(s) to the same witness coefficients (via commitments/pairings/KoE-style arguments)",
+        "A larger prime field p so forging is impossible",
+        "A faster polynomial multiplication algorithm",
+        "Replacing Z(x) with x^m − 1"
+      ],
+      "correct": 0,
+      "explanation": "Pinocchio must ensure the prover can’t just pick evaluations; the proof must certify the values arise from the circuit polynomials and one witness."
+    }
+  ]
 }

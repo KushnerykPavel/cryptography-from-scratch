@@ -1,4 +1,100 @@
 {
-  "title": "zkVMs \u2014 RISC0 from User to Internals",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a zkVM workflow like RISC0, what is the purpose of an `image_id`?",
+      "options": [
+        "Identify the exact guest program being proven (a stable program identity)",
+        "Encrypt the guest\u2019s private inputs so they cannot be read by the prover",
+        "Store the guest\u2019s execution trace so the verifier can replay it",
+        "Replace the need to verify the receipt because the program hash is enough"
+      ],
+      "correct": 0,
+      "explanation": "`image_id` is a stable identifier for the exact guest code/binary you intend to prove and verify."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the `journal` in a zkVM interface?",
+      "options": [
+        "The intentionally public output bytes committed by the guest program",
+        "A debug log channel that is private to the prover",
+        "A list of all intermediate machine states (the full execution trace)",
+        "A secret key used to authenticate receipts"
+      ],
+      "correct": 0,
+      "explanation": "The journal is the guest-controlled public output channel; anything in it is revealed to verifiers."
+    },
+    {
+      "stage": "post",
+      "question": "A verifier checks that a receipt is \u201cvalid\u201d, but does not pin it to an expected `image_id`. What can go wrong?",
+      "options": [
+        "A prover can produce a valid receipt for a different program that returns the desired output",
+        "Nothing: any valid receipt implies the intended program was executed",
+        "Only performance issues: verification becomes slower but still correct",
+        "It only matters if the journal is empty"
+      ],
+      "correct": 0,
+      "explanation": "Verification must be tied to the intended guest identity; otherwise a prover can prove a different program."
+    },
+    {
+      "stage": "post",
+      "question": "Why do real zkVM receipts aim to be *succinct*?",
+      "options": [
+        "So verifiers don\u2019t need to re-run the entire computation to be convinced",
+        "So the prover can skip executing the guest program entirely",
+        "So the verifier can recover private inputs from the proof",
+        "So the guest program can be nondeterministic without issues"
+      ],
+      "correct": 0,
+      "explanation": "Succinct proofs let the verifier check correctness without re-executing a long trace."
+    },
+    {
+      "stage": "post",
+      "question": "Which host-side ordering is safest when consuming a zkVM result?",
+      "options": [
+        "Verify the receipt first, then parse and use the journal",
+        "Parse the journal first for performance, then verify if it looks plausible",
+        "Use the journal to update state, then verify asynchronously",
+        "Skip journal parsing and trust the prover\u2019s claimed output"
+      ],
+      "correct": 0,
+      "explanation": "Treat the journal as untrusted until the receipt is verified against the expected `image_id`."
+    },
+    {
+      "stage": "post",
+      "question": "What\u2019s the best interpretation of the `journal` from a security perspective?",
+      "options": [
+        "Public data: keep it minimal and assume attackers can see it",
+        "Private data: safe to store secrets because it\u2019s inside a proof",
+        "Encrypted data: safe to log anything because it\u2019s hashed",
+        "A randomness source: safe to derive keys from it"
+      ],
+      "correct": 0,
+      "explanation": "The journal is public output; it should be intentionally designed, minimal, and versioned."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the toy receipt implementation in this lesson *not* zero-knowledge?",
+      "options": [
+        "It includes private inputs inside the receipt to allow step recomputation during verification",
+        "It uses SHA-256, which is not a zero-knowledge hash function",
+        "It uses Merkle trees, which always leak the whole trace",
+        "It uses deterministic sampling, which makes zero-knowledge impossible"
+      ],
+      "correct": 0,
+      "explanation": "A real zkVM proof hides private inputs; the toy model reveals them so the verifier can recompute transitions."
+    },
+    {
+      "stage": "post",
+      "question": "A guest program writes extra data into the `journal` \u201cjust for debugging\u201d. What is the primary risk?",
+      "options": [
+        "Information leakage: the journal is public, so secrets may be exposed",
+        "The receipt becomes invalid because journals must be empty",
+        "The `image_id` changes even if the guest code is unchanged",
+        "The verifier can no longer pin the receipt to an `image_id`"
+      ],
+      "correct": 0,
+      "explanation": "Debug output in the journal is still public output; it can leak sensitive data and break privacy expectations."
+    }
+  ]
 }
