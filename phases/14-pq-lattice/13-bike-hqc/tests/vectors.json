@@ -1,1 +1,81 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors for the lesson's toy BIKE/HQC building blocks (bit-polynomials in GF(2)[x]/(x^r-1), QC syndrome computation, a tiny bit-flipping decoder, and a repetition-code demo). Expected values were computed by the reference implementations in code/main.py.",
+  "vectors": [
+    {
+      "op": "rotl",
+      "r": 7,
+      "x": 37,
+      "k": 2,
+      "expected": 21
+    },
+    {
+      "op": "poly_mul_mod_xr1",
+      "r": 7,
+      "a": 3,
+      "b": 4,
+      "expected": 12
+    },
+    {
+      "op": "syndrome_bike_like",
+      "r": 7,
+      "h0": 5,
+      "h1": 6,
+      "e0": 8,
+      "e1": 0,
+      "expected": 40
+    },
+    {
+      "op": "bitflip_decode_qcmdpc",
+      "r": 7,
+      "h0": 5,
+      "h1": 6,
+      "syndrome": 40,
+      "max_iters": 10,
+      "expected": {
+        "e0": 8,
+        "e1": 0,
+        "success": true,
+        "final_syndrome": 0
+      }
+    },
+    {
+      "op": "rep3_encode",
+      "k": 7,
+      "msg_bits": 90,
+      "expected": 1867320
+    },
+    {
+      "op": "rep3_decode",
+      "k": 7,
+      "codeword": 1867376,
+      "expected": 90
+    },
+    {
+      "op": "toy_hqc_encrypt_fixed",
+      "n": 21,
+      "k": 7,
+      "h": 1,
+      "s": 1,
+      "y": 0,
+      "msg_bits": 90,
+      "r1": 0,
+      "r2": 8,
+      "e": 64,
+      "expected": {
+        "u": 8,
+        "v": 1867376
+      }
+    },
+    {
+      "op": "toy_hqc_decrypt",
+      "n": 21,
+      "k": 7,
+      "h": 1,
+      "s": 1,
+      "y": 0,
+      "u": 8,
+      "v": 1867376,
+      "expected": 90
+    }
+  ]
+}

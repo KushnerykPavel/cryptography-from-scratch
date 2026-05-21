@@ -1,4 +1,101 @@
 {
   "title": "Multivariate Cryptography \u2014 Rainbow's Death",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does an MQ (multivariate quadratic) public key usually look like?",
+      "options": [
+        "A list of quadratic polynomials over a finite field",
+        "A single large prime modulus and a generator",
+        "A pair of elliptic-curve points",
+        "A symmetric-key and a nonce"
+      ],
+      "correct": 0,
+      "explanation": "MQ signature public keys are typically presented as many quadratic equations (polynomials) in many variables over a finite field."
+    },
+    {
+      "stage": "pre",
+      "question": "In Oil-and-Vinegar trapdoors, why does fixing vinegar variables help?",
+      "options": [
+        "It turns the remaining equations into a linear system in the oil variables",
+        "It makes the field prime so inverses exist",
+        "It hashes the message into a shorter digest",
+        "It compresses the public key into fewer bytes"
+      ],
+      "correct": 0,
+      "explanation": "OV polynomials are constructed to avoid oil×oil terms, so once vinegars are fixed the system becomes linear in the oils."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson's toy scheme, what condition makes `LayeredOVCentralMap._solve_layer(...)` valid?",
+      "options": [
+        "The layer's polynomials contain no quadratic oil×oil terms",
+        "The signer uses SHA-256 to hash the message",
+        "The public key polynomials are dense",
+        "The modulus p is larger than the number of variables"
+      ],
+      "correct": 0,
+      "explanation": "The solver probes oil variables one-at-a-time; this only works as a linear extraction if there are no oil×oil quadratic terms."
+    },
+    {
+      "stage": "post",
+      "question": "What is the public verification equation for MQ signatures in this lesson?",
+      "options": [
+        "P(signature) == H(message)",
+        "F(signature) == H(message)",
+        "S(message) == T(signature)",
+        "H(signature) == P(message)"
+      ],
+      "correct": 0,
+      "explanation": "Verification evaluates the public quadratic map P on the signature and compares it to the hash digest of the message."
+    },
+    {
+      "stage": "post",
+      "question": "Why does composing the central map with affine maps hide the Oil-and-Vinegar structure?",
+      "options": [
+        "It mixes variables and outputs so the public polynomials look dense and unstructured",
+        "It removes all quadratic terms from the polynomials",
+        "It makes signing possible without solving any equations",
+        "It guarantees the public key is small"
+      ],
+      "correct": 0,
+      "explanation": "Affine input/output mixing spreads structure across variables and equations, making the public system look closer to a random MQ system."
+    },
+    {
+      "stage": "post",
+      "question": "In layered OV (Rainbow-style), what changes between Layer 1 and Layer 2 during signing?",
+      "options": [
+        "Layer 2 treats all Layer-1 variables as vinegar variables and solves for new oils",
+        "Layer 2 switches from finite fields to integers",
+        "Layer 2 removes the hash function",
+        "Layer 2 replaces quadratic polynomials with elliptic curves"
+      ],
+      "correct": 0,
+      "explanation": "Later layers consider previous variables as known (vinegars) and introduce additional oil variables that are solved from a new linear system."
+    },
+    {
+      "stage": "post",
+      "question": "Why is Rainbow described as 'dead' in modern cryptography discussions?",
+      "options": [
+        "Practical key-recovery attacks were found against proposed parameter sets",
+        "It requires quantum computers to verify signatures",
+        "It cannot be implemented over finite fields",
+        "It only works for one-time signatures"
+      ],
+      "correct": 0,
+      "explanation": "Rainbow suffered practical cryptanalytic breaks (key recovery), so it is not considered safe to deploy."
+    },
+    {
+      "stage": "post",
+      "question": "Which implementation issue is especially dangerous for MQ/OV signers?",
+      "options": [
+        "Side-channel leakage during signing (timing/power/faults) revealing structure",
+        "Using too many print statements in verification",
+        "Storing the public key as JSON instead of bytes",
+        "Using a slow hash function like SHA-256"
+      ],
+      "correct": 0,
+      "explanation": "Signing involves secret structure and linear algebra; side-channels can leak information about the trapdoor even if the math is correct."
+    }
+  ]
 }

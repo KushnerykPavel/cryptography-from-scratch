@@ -1,1 +1,35 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Custom pedagogical vectors for Torus LWE math over Q=2^32.",
+  "vectors": [
+    {
+      "op": "encode_boolean",
+      "input": 1,
+      "expected": 536870912
+    },
+    {
+      "op": "encode_boolean",
+      "input": 0,
+      "expected": 3758096384
+    },
+    {
+      "op": "decode_boolean",
+      "input": 536870912,
+      "expected": 1
+    },
+    {
+      "op": "decode_boolean",
+      "input": 3758096384,
+      "expected": 0
+    },
+    {
+      "op": "torus_add",
+      "input": [4000000000, 1000000000],
+      "expected": 705032704
+    },
+    {
+      "op": "torus_sub",
+      "input": [1000000000, 4000000000],
+      "expected": 1294967296
+    }
+  ]
+}

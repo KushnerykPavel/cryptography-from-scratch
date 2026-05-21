@@ -1,4 +1,101 @@
 {
   "title": "Lattice PQC Lab \u2014 Build a Mini Kyber",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In the quotient ring R_q = Z_q[x]/(x^N + 1), what identity is enforced?",
+      "options": [
+        "x^N = -1",
+        "x^N = 1",
+        "x^N = 0",
+        "x^N = q"
+      ],
+      "correct": 0,
+      "explanation": "Reducing modulo (x^N + 1) means x^N ≡ -1, which gives negacyclic wrap-around."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does LWE-style encryption add small noise terms to linear equations?",
+      "options": [
+        "To make the equations only approximately solvable without the secret",
+        "To reduce key sizes by making coefficients sparse",
+        "To make the scheme deterministic for easier testing",
+        "To avoid modular arithmetic by working over integers"
+      ],
+      "correct": 0,
+      "explanation": "Noise turns exact linear relations into approximate ones; recovering the secret becomes the LWE problem."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy scheme, what value is computed right before decoding the message bits?",
+      "options": [
+        "v - s^T·u",
+        "u - s^T·v",
+        "A·u + e",
+        "A^T·v + e"
+      ],
+      "correct": 0,
+      "explanation": "Decryption cancels the masking term using the secret: m_poly = v - s^T·u, then Decode(m_poly)."
+    },
+    {
+      "stage": "post",
+      "question": "What makes multiplication “negacyclic” in R_q = Z_q[x]/(x^N + 1)?",
+      "options": [
+        "Terms of degree ≥ N wrap around with a sign flip (x^N = -1)",
+        "Terms of degree ≥ N are dropped (x^N = 0)",
+        "Coefficients are negated after every multiplication",
+        "The modulus q must be negative"
+      ],
+      "correct": 0,
+      "explanation": "Because x^N ≡ -1, coefficients that wrap from degree k+N contribute with a minus sign."
+    },
+    {
+      "stage": "post",
+      "question": "This lab implements a raw PKE-like structure. What major security property is missing compared to real ML-KEM, and why does it matter?",
+      "options": [
+        "Chosen-ciphertext security (IND-CCA), which prevents attackers from learning from decapsulation failures",
+        "Collision resistance, which prevents two ciphertexts from matching",
+        "Forward secrecy, which prevents past ciphertexts from being decrypted",
+        "Non-repudiation, which prevents senders from denying messages"
+      ],
+      "correct": 0,
+      "explanation": "ML-KEM is designed for active attackers; IND-CCA prevents adaptive ciphertext attacks that break raw IND-CPA encryption."
+    },
+    {
+      "stage": "post",
+      "question": "Compression is lossy. Why can decryption still work in Kyber-like designs?",
+      "options": [
+        "Noise is small enough that coefficients remain closer to 0 or q/2 after rounding",
+        "Compression is lossless because it uses base64 encoding",
+        "The matrix A is secret, so rounding errors do not matter",
+        "Decryption ignores the ciphertext and recomputes the message"
+      ],
+      "correct": 0,
+      "explanation": "Correctness relies on a decoding margin: rounding plus small noise still keeps the coefficient on the correct side of the threshold."
+    },
+    {
+      "stage": "post",
+      "question": "When deriving many pseudorandom streams from SHAKE, why use domain separation and nonces?",
+      "options": [
+        "To prevent accidental reuse/correlation between streams (e.g., A sampling vs noise sampling)",
+        "To make the output more random than SHAKE already is",
+        "To reduce the number of bytes SHAKE outputs",
+        "To ensure the scheme works without modular arithmetic"
+      ],
+      "correct": 0,
+      "explanation": "Domain separation ensures independent-looking streams for different roles, avoiding subtle correlations and proof breaks."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: if an implementation branches on whether decapsulation “failed” and reveals that bit via timing, what class of issue is this?",
+      "options": [
+        "A side-channel that can enable adaptive chosen-ciphertext attacks",
+        "A hash collision that breaks message integrity",
+        "A padding oracle that applies only to RSA",
+        "A key escrow feature required by standards"
+      ],
+      "correct": 0,
+      "explanation": "Leakage from failure handling (timing, errors) can become an oracle; real ML-KEM implementations must be constant-time and robust."
+    }
+  ]
 }

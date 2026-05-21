@@ -1,4 +1,100 @@
 {
-  "title": "SIDH & Why It Was Broken",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the primary motivation for using supersingular isogeny graphs in cryptography?",
+      "options": [
+        "To allow faster encryption speeds than RSA.",
+        "To create public keys that are significantly smaller than other post-quantum schemes.",
+        "To ensure perfectly commutative group actions for multi-party computation.",
+        "To easily support fully homomorphic encryption."
+      ],
+      "correct": 1,
+      "explanation": "Isogeny-based cryptography, particularly SIDH/SIKE, is famous for having the smallest public keys among post-quantum contenders."
+    },
+    {
+      "stage": "pre",
+      "question": "If finding a specific path of length N in a 3-regular expander graph takes O(3^(N/2)) using meet-in-the-middle, how does providing a theoretical oracle that verifies correct edge choices affect the time complexity?",
+      "options": [
+        "It reduces the complexity to O(3^(N/4)).",
+        "It reduces the complexity to O(N).",
+        "It has no effect because the graph is an expander.",
+        "It increases the complexity because oracle calls are expensive."
+      ],
+      "correct": 1,
+      "explanation": "An oracle that verifies if an edge is on the correct path allows you to just guess step-by-step, taking linear time O(N)."
+    },
+    {
+      "stage": "post",
+      "question": "In the context of the Castryck-Decru attack, what specific information did SIDH leak that enabled the break?",
+      "options": [
+        "The starting elliptic curve E_0.",
+        "The exact degree of the secret isogeny.",
+        "The images of the other party's auxiliary torsion points under the secret isogeny.",
+        "The prime p used for the base field."
+      ],
+      "correct": 2,
+      "explanation": "The fatal flaw of SIDH was publishing how the secret isogeny mapped the auxiliary torsion points P and Q."
+    },
+    {
+      "stage": "post",
+      "question": "What mathematical principle was used by Castryck and Decru to exploit the auxiliary torsion points?",
+      "options": [
+        "Shor's Algorithm for quantum order finding.",
+        "Kani's Theorem applied to abelian surfaces.",
+        "Lattice reduction using LLL.",
+        "The Weil pairing on supersingular curves."
+      ],
+      "correct": 1,
+      "explanation": "The attack uses Kani's Theorem, which links the existence of certain isogenies between elliptic curves to higher-dimensional abelian surfaces."
+    },
+    {
+      "stage": "post",
+      "question": "Why didn't the Castryck-Decru attack break CSIDH?",
+      "options": [
+        "CSIDH uses larger keys than SIDH.",
+        "CSIDH is based on ordinary curves, not supersingular curves.",
+        "CSIDH does not require the exchange of auxiliary torsion points.",
+        "CSIDH uses a different base field prime structure."
+      ],
+      "correct": 2,
+      "explanation": "CSIDH relies on commutative group actions and does not need Alice and Bob to share torsion point images, rendering the CD attack inapplicable."
+    },
+    {
+      "stage": "post",
+      "question": "In our toy model, how does the attacker find the secret path without doing a full brute-force search?",
+      "options": [
+        "By simulating Kani's theorem as an oracle to test each candidate step against the target torsion matrix.",
+        "By using a quantum computer to reverse the hash function.",
+        "By finding a collision in the graph traversal.",
+        "By multiplying the target matrix by the inverse of the start node."
+      ],
+      "correct": 0,
+      "explanation": "The attacker uses the torsion point information (the target matrix) to mathematically check (via Kani's oracle) if a guessed step is on the correct path."
+    },
+    {
+      "stage": "post",
+      "question": "What is the time complexity of the Castryck-Decru key recovery attack on SIDH?",
+      "options": [
+        "Sub-exponential in the size of the prime p.",
+        "O(p^(1/4))",
+        "Polynomial time in the security parameter.",
+        "O(3^(N/2))"
+      ],
+      "correct": 2,
+      "explanation": "The CD attack is devastating because it breaks SIDH in polynomial time, easily running on a standard laptop."
+    },
+    {
+      "stage": "post",
+      "question": "As an auditor reviewing a new isogeny-based key exchange proposal, what is the biggest red flag you should look for based on the fall of SIDH?",
+      "options": [
+        "The protocol uses a supersingular curve over a prime field.",
+        "The protocol requires transmitting the action of a secret isogeny on a public basis of points.",
+        "The protocol uses a random walk of length greater than 100.",
+        "The protocol was designed to be drop-in compatible with ECDH."
+      ],
+      "correct": 1,
+      "explanation": "Transmitting the action of a secret isogeny on public points (auxiliary torsion) is the exact structural leak that Kani's theorem exploits."
+    }
+  ]
 }

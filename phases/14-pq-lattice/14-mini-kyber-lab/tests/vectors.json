@@ -1,1 +1,58 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors generated from `code/main.py` using fixed seeds. Parameters and rounding/compression formulas are inspired by ML-KEM (Kyber) as standardized in NIST FIPS 203, but this lesson uses toy sizes (N=8, k=2) for pedagogy.",
+  "vectors": [
+    {
+      "op": "poly_mul_negacyclic",
+      "a": [1, 2, 3, 4, 0, 0, 0, 0],
+      "b": [0, 1, 0, 1, 0, 0, 0, 0],
+      "expected": [0, 1, 2, 4, 6, 3, 4, 0]
+    },
+    {
+      "op": "sample_uniform_poly",
+      "seed_hex": "4141414141414141414141414141414141414141414141414141414141414141",
+      "nonce": 0,
+      "expected": [2612, 559, 111, 770, 2159, 2285, 2097, 2398]
+    },
+    {
+      "op": "sample_cbd_poly",
+      "seed_hex": "4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e",
+      "nonce": 0,
+      "expected": [1, 0, 1, 3328, 1, 3327, 3328, 2]
+    },
+    {
+      "op": "pke_encrypt_deterministic",
+      "master_seed_hex": "7468697320697320612064657465726d696e69737469632064656d6f20736565642121",
+      "coins_hex": "636f696e7320666f7220656e6372797074696f6e202864657465726d696e697374696329",
+      "m": 172,
+      "expected": {
+        "pk_seed_a": "e02d05dadb498c133691f9cc47108fb7ef67d8de2e021779f1f529175ee2fd38",
+        "pk_t": [
+          [3100, 225, 1589, 435, 2082, 918, 264, 729],
+          [2215, 1109, 3141, 2012, 2627, 2879, 1940, 1600]
+        ],
+        "sk_s": [
+          [1, 3327, 3327, 1, 2, 1, 1, 0],
+          [1, 0, 3328, 0, 0, 3328, 1, 3327]
+        ],
+        "ct_u": [
+          [90, 1178, 1799, 1732, 934, 1451, 1570, 2904],
+          [1514, 1963, 2043, 2773, 3159, 908, 212, 2268]
+        ],
+        "ct_v": [1908, 1717, 2977, 1791, 2399, 564, 1210, 827],
+        "decrypted": 172
+      }
+    },
+    {
+      "op": "pack_bits_le",
+      "values": [28, 362, 553, 533, 287, 446, 483, 893],
+      "bits": 10,
+      "expected_hex": "1ca89562851ff9365edf"
+    },
+    {
+      "op": "compress_decompress_poly",
+      "poly": [90, 1178, 1799, 1732, 934, 1451, 1570, 2904],
+      "d": 10,
+      "expected": [91, 1177, 1798, 1733, 933, 1450, 1570, 2903]
+    }
+  ]
+}

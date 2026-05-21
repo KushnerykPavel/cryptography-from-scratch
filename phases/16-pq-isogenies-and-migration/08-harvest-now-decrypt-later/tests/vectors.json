@@ -1,1 +1,115 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors derived from the lesson's reference implementation in code/main.py (no external RFC/NIST vectors exist for this risk-model toy).",
+  "vectors": [
+    {
+      "op": "clamp_int",
+      "inputs": {"value": 5, "lo": 0, "hi": 10},
+      "expected": 5
+    },
+    {
+      "op": "clamp_int",
+      "inputs": {"value": -1, "lo": 0, "hi": 10},
+      "expected": 0
+    },
+    {
+      "op": "clamp_int",
+      "inputs": {"value": 11, "lo": 0, "hi": 10},
+      "expected": 10
+    },
+    {
+      "op": "hndl_exposure_years",
+      "inputs": {"data_security_life_years": 15, "years_to_crqc": 10},
+      "expected": 5
+    },
+    {
+      "op": "hndl_exposure_years",
+      "inputs": {"data_security_life_years": 10, "years_to_crqc": 10},
+      "expected": 0
+    },
+    {
+      "op": "hndl_exposure_years",
+      "inputs": {"data_security_life_years": 3, "years_to_crqc": 10},
+      "expected": 0
+    },
+    {
+      "op": "mosca_margin_years",
+      "inputs": {"data_security_life_years": 15, "migration_years": 4, "years_to_crqc": 10},
+      "expected": 9
+    },
+    {
+      "op": "grover_effective_security_bits",
+      "inputs": {"symmetric_key_bits": 128},
+      "expected": 64
+    },
+    {
+      "op": "grover_effective_security_bits",
+      "inputs": {"symmetric_key_bits": 256},
+      "expected": 128
+    },
+    {
+      "op": "is_hybrid_or_pq",
+      "inputs": {"mode": "hybrid"},
+      "expected": true
+    },
+    {
+      "op": "is_hybrid_or_pq",
+      "inputs": {"mode": "classical"},
+      "expected": false
+    },
+    {
+      "op": "is_classical",
+      "inputs": {"mode": "ecdhe"},
+      "expected": true
+    },
+    {
+      "op": "is_classical",
+      "inputs": {"mode": "pqc"},
+      "expected": false
+    },
+    {
+      "op": "hndl_risk_score",
+      "inputs": {
+        "use": {
+          "name": "External API TLS",
+          "kind": "in_transit",
+          "key_establishment_mode": "classical",
+          "data_security_life_years": 12,
+          "migration_years": 3,
+          "blast_radius": 3
+        },
+        "years_to_crqc": 10
+      },
+      "expected": 71
+    },
+    {
+      "op": "hndl_risk_score",
+      "inputs": {
+        "use": {
+          "name": "Internal service mesh",
+          "kind": "in_transit",
+          "key_establishment_mode": "hybrid",
+          "data_security_life_years": 7,
+          "migration_years": 2,
+          "blast_radius": 3
+        },
+        "years_to_crqc": 10
+      },
+      "expected": 0
+    },
+    {
+      "op": "hndl_risk_score",
+      "inputs": {
+        "use": {
+          "name": "Long-term backups (envelope keys)",
+          "kind": "at_rest",
+          "key_establishment_mode": "classical",
+          "data_security_life_years": 20,
+          "migration_years": 5,
+          "blast_radius": 2
+        },
+        "years_to_crqc": 10
+      },
+      "expected": 90
+    }
+  ]
+}

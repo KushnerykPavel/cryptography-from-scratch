@@ -1,1 +1,61 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Lamport OTS per this lesson's `code/main.py`. Test vectors are generated deterministically using the lesson PRG `SHA256(domain || seed || counter)` and SHA-256 message digests (Lamport, 1979).",
+  "vectors": [
+    {
+      "op": "sha256_hex",
+      "inputs": { "data_hex": "6c616d706f72742064656d6f206d657373616765" },
+      "expected_hex": "7770699f40ad5d8c565c9f3475d76bb1bfc298b8457bae83f449dd5c5331df2a"
+    },
+    {
+      "op": "bits_msb_prefix",
+      "inputs": { "data_hex": "7770699f40ad5d8c565c9f3475d76bb1bfc298b8457bae83f449dd5c5331df2a", "prefix_bits": 16 },
+      "expected": "0111011101110000"
+    },
+    {
+      "op": "lamport_keygen_fingerprint_public",
+      "inputs": { "seed_hex": "64656d6f2d736565642d666f722d6c616d706f72742d6f7473" },
+      "expected_hex": "6f1025ca83515ee91e7ea007e7531215e59cd391c15a2e8bb073b0533e7960e5"
+    },
+    {
+      "op": "lamport_sign_fingerprint_signature",
+      "inputs": {
+        "seed_hex": "64656d6f2d736565642d666f722d6c616d706f72742d6f7473",
+        "message_hex": "6c616d706f72742064656d6f206d657373616765"
+      },
+      "expected": {
+        "sig_fingerprint_hex": "ca72b609fdea13048660b422a9fc18724ca8245ccabe4e6b27364579dd180b9b",
+        "sig0_hex": "3ec9032e6777e4bf7770c5bbf43b131fcf168411c59829de264b13042f510fea"
+      }
+    },
+    {
+      "op": "lamport_verify_bool",
+      "inputs": {
+        "seed_hex": "64656d6f2d736565642d666f722d6c616d706f72742d6f7473",
+        "message_hex": "6c616d706f72742064656d6f206d657373616765",
+        "verify_message_hex": "6c616d706f72742064656d6f206d657373616765"
+      },
+      "expected": true
+    },
+    {
+      "op": "lamport_verify_bool",
+      "inputs": {
+        "seed_hex": "64656d6f2d736565642d666f722d6c616d706f72742d6f7473",
+        "message_hex": "6c616d706f72742064656d6f206d657373616765",
+        "verify_message_hex": "6c616d706f72742064656d6f206d65737361676521"
+      },
+      "expected": false
+    },
+    {
+      "op": "lamport_reuse_leakage",
+      "inputs": {
+        "seed_hex": "64656d6f2d736565642d666f722d6c616d706f72742d6f7473",
+        "messages_hex": ["6d31", "6d32", "6d33"]
+      },
+      "expected": {
+        "messages": 3,
+        "fully_revealed_positions": 192,
+        "partially_revealed_positions": 256
+      }
+    }
+  ]
+}

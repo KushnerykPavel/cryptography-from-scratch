@@ -1,1 +1,85 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors derived from the lesson's idealized cost models: classical key search ~ 2^k trials, Grover key search ~ 2^(k/2) queries, hash collision classical ~ 2^(n/2), hash collision quantum (BHT) ~ 2^(n/3).",
+  "vectors": [
+    {
+      "op": "is_power_of_two",
+      "inputs": { "n": 1 },
+      "expected": true
+    },
+    {
+      "op": "is_power_of_two",
+      "inputs": { "n": 12 },
+      "expected": false
+    },
+    {
+      "op": "log2_pow2",
+      "inputs": { "n": 1024 },
+      "expected": 10
+    },
+    {
+      "op": "classical_key_search_log2_work",
+      "inputs": { "key_bits": 80, "parallelism": 1 },
+      "expected": 80
+    },
+    {
+      "op": "classical_key_search_log2_work",
+      "inputs": { "key_bits": 80, "parallelism": 1024 },
+      "expected": 70
+    },
+    {
+      "op": "grover_key_search_log2_work",
+      "inputs": { "key_bits": 128, "parallelism": 1 },
+      "expected": "64"
+    },
+    {
+      "op": "grover_key_search_log2_work",
+      "inputs": { "key_bits": 255, "parallelism": 1 },
+      "expected": "255/2"
+    },
+    {
+      "op": "grover_key_search_log2_work",
+      "inputs": { "key_bits": 256, "parallelism": 1048576 },
+      "expected": "108"
+    },
+    {
+      "op": "min_key_bits_for_target_under_grover",
+      "inputs": { "target_security_bits": 128, "safety_margin_bits": 0 },
+      "expected": 256
+    },
+    {
+      "op": "recommend_aes_key_bits",
+      "inputs": { "target_security_bits": 64, "safety_margin_bits": 0 },
+      "expected": 128
+    },
+    {
+      "op": "recommend_aes_key_bits",
+      "inputs": { "target_security_bits": 96, "safety_margin_bits": 0 },
+      "expected": 192
+    },
+    {
+      "op": "recommend_aes_key_bits",
+      "inputs": { "target_security_bits": 128, "safety_margin_bits": 0 },
+      "expected": 256
+    },
+    {
+      "op": "hash_preimage_log2_work_classical",
+      "inputs": { "output_bits": 256, "parallelism": 1 },
+      "expected": 256
+    },
+    {
+      "op": "hash_preimage_log2_work_grover",
+      "inputs": { "output_bits": 256, "parallelism": 1 },
+      "expected": "128"
+    },
+    {
+      "op": "hash_collision_log2_work_classical",
+      "inputs": { "output_bits": 256 },
+      "expected": "128"
+    },
+    {
+      "op": "hash_collision_log2_work_quantum_bht",
+      "inputs": { "output_bits": 256 },
+      "expected": "256/3"
+    }
+  ]
+}

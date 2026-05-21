@@ -1,4 +1,101 @@
 {
-  "title": "UOV & MAYO \u2014 Modern Multivariate",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why does knowing an Oil-and-Vinegar (OV) structure help you invert a quadratic map?",
+      "options": [
+        "Fixing vinegar variables turns the remaining system into linear equations in the oil variables",
+        "Quadratic equations become linear if you evaluate them at enough random points",
+        "OV maps are always permutations, so you can invert them with a lookup table",
+        "OV maps are invertible because their Jacobian is always non-singular"
+      ],
+      "correct": 0,
+      "explanation": "The trapdoor is that, once vinegar variables are fixed, no oil variable multiplies another oil variable, so the unknown oils appear linearly."
+    },
+    {
+      "stage": "pre",
+      "question": "For a quadratic map P over a field, what does the polar form P'(x,y)=P(x+y)-P(x)-P(y) represent?",
+      "options": [
+        "A bilinear map derived from P\u2019s quadratic part",
+        "The gradient (vector of partial derivatives) of P at x",
+        "A hash of x and y into the output field",
+        "A method to remove the vinegar variables from P"
+      ],
+      "correct": 0,
+      "explanation": "For quadratic maps, this finite-difference expression cancels constants/linears and leaves a bilinear form."
+    },
+    {
+      "stage": "post",
+      "question": "In an OV map that vanishes on the oil subspace O (i.e., P(o)=0 for all o in O), which terms must be absent from each polynomial?",
+      "options": [
+        "Any term that contains only oil variables (constants, oil linear, and oil\u00d7oil terms)",
+        "All vinegar\u00d7vinegar terms, because they prevent solvability",
+        "All vinegar\u00d7oil terms, because they leak the oil space",
+        "All linear terms (both vinegar and oil), because polar forms require homogeneity"
+      ],
+      "correct": 0,
+      "explanation": "To ensure P(o)=0 whenever the vinegar part is 0, every term must contain at least one vinegar variable."
+    },
+    {
+      "stage": "post",
+      "question": "After fixing vinegar variables, what is the algebraic form of the signing step P(v+o)=t in the oil variables?",
+      "options": [
+        "A linear system A\u00b7o=b over the field",
+        "A quadratic system that still requires Gr\u00f6bner bases",
+        "A discrete logarithm problem in a finite group",
+        "A lattice closest-vector problem"
+      ],
+      "correct": 0,
+      "explanation": "With no oil\u00d7oil terms, each equation becomes linear in the oil variables once vinegar is fixed."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the na\u00efve OV/UOV signing equation tend to fail in the MAYO setting when o < m?",
+      "options": [
+        "It becomes m linear equations in only o unknowns, so for random targets it is usually inconsistent",
+        "The polar form stops being bilinear when o < m",
+        "The field stops being a field when o < m",
+        "Verification requires inverting the public key, which is not possible when o < m"
+      ],
+      "correct": 0,
+      "explanation": "With fewer unknown oils than equations, only a small fraction of targets can be hit for a given vinegar choice."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key purpose of the whipped map P*(x1,...,xk) in MAYO?",
+      "options": [
+        "Increase the number of oil unknowns to k\u00b7o so the signing linear system becomes solvable with high probability",
+        "Make verification quadratic-time so it is harder to forge signatures",
+        "Eliminate the need for hashing the message to a target vector",
+        "Convert the scheme into a stateful signature to prevent replay"
+      ],
+      "correct": 0,
+      "explanation": "Whipping up turns the signing problem into m linear equations in k\u00b7o unknowns while preserving a trapdoor structure."
+    },
+    {
+      "stage": "post",
+      "question": "Which implementation detail is most likely to leak secret information via timing in a na\u00efve OV/UOV/MAYO signer?",
+      "options": [
+        "Branchy Gaussian elimination and variable number of restarts when a linear system has no solution",
+        "Using addition modulo p instead of bitwise XOR",
+        "Using JSON for test vectors instead of a binary format",
+        "Using Python instead of C"
+      ],
+      "correct": 0,
+      "explanation": "Pivot search, row swaps, and retry loops can leak structure and internal state unless carefully hardened."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson\u2019s solver, what does it mean when solve_linear_system_modp(A,b,p) returns None?",
+      "options": [
+        "The system is inconsistent (no solutions) over GF(p)",
+        "The solution exists but is not unique",
+        "The solver found multiple solutions and refused to choose one",
+        "The matrix A is square but has determinant 1"
+      ],
+      "correct": 0,
+      "explanation": "None indicates a contradiction after elimination (a zero row with a nonzero RHS)."
+    }
+  ]
 }
+

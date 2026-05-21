@@ -1,4 +1,101 @@
 {
-  "title": "Dual Regev & Trapdoors",
-  "questions": []
+  "title": "Dual Regev Trapdoors (Gadget-Style)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In Dual Regev PKE, what is the *classical* decryption key (conceptually)?",
+      "options": [
+        "A secret vector s such that b = s^T A + e^T",
+        "A short vector x such that A x = y (mod q)",
+        "A random binary vector r used during encryption",
+        "A public gadget matrix G that anyone can invert"
+      ],
+      "correct": 1,
+      "explanation": "Dual Regev decryption uses a short preimage x with A x = y (mod q) so that c2 - c1^T x cancels the s^T y term up to small noise."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does this lesson pick a power-of-two modulus q = 2^k?",
+      "options": [
+        "Because then bit decomposition gives an exact gadget inverse G^{-1} over Z_q",
+        "Because LWE is only defined for power-of-two moduli",
+        "Because matrix multiplication mod q is faster only when q is a power of two",
+        "Because dual Regev fails to decrypt unless q is a power of two"
+      ],
+      "correct": 0,
+      "explanation": "For q = 2^k, representing each coordinate in binary gives x' with G x' = y (mod q) exactly, which is the gadget inversion step."
+    },
+    {
+      "stage": "post",
+      "question": "Let q=16 and x=13. What is bit_decompose_element(x, q) in little-endian (LSB-first) order?",
+      "options": [
+        "[1, 0, 1, 1]",
+        "[1, 1, 0, 1]",
+        "[0, 1, 1, 0]",
+        "[1, 0, 0, 1]"
+      ],
+      "correct": 0,
+      "explanation": "13 = 1 + 4 + 8, so the bits (1,2,4,8) are (1,0,1,1) in LSB-first order."
+    },
+    {
+      "stage": "post",
+      "question": "In the MP12-style gadget trapdoor construction A = [A' | G - A'R] and T = [R; I], which identity holds (mod q)?",
+      "options": [
+        "T A = G",
+        "A T = G",
+        "A A' = G",
+        "R A' = G"
+      ],
+      "correct": 1,
+      "explanation": "By construction, A [R; I] = A'R + (G - A'R) = G (mod q)."
+    },
+    {
+      "stage": "post",
+      "question": "Dual Regev decryption computes value = (c2 - c1^T x) (mod q). If A x = y (mod q), what should value look like?",
+      "options": [
+        "Approximately b * floor(q/2) plus a small noise term",
+        "Exactly 0 for any ciphertext",
+        "Exactly y for any ciphertext",
+        "A uniformly random element of Z_q even with the secret key"
+      ],
+      "correct": 0,
+      "explanation": "The secret key cancels the s^T y term, leaving the embedded message offset b*floor(q/2) plus a small inner-product noise term."
+    },
+    {
+      "stage": "post",
+      "question": "Attack intuition: why is a deterministic preimage rule like x = T * G^{-1}(y) unsafe in real schemes?",
+      "options": [
+        "It makes encryption deterministic, so it reveals the plaintext directly",
+        "It makes x depend heavily on the trapdoor T, so many samples can leak trapdoor structure",
+        "It forces q to be prime, which breaks LWE hardness",
+        "It prevents correct decryption even with zero noise"
+      ],
+      "correct": 1,
+      "explanation": "Real constructions sample x from a distribution that is (statistically) independent of the trapdoor; otherwise x can leak information about T."
+    },
+    {
+      "stage": "post",
+      "question": "Which change most directly breaks the guarantee that gadget_compose_vec(bit_decompose_vec(y, q), q) == y (mod q) in this toy?",
+      "options": [
+        "Switching q from 2^k to a non power-of-two like 257 while keeping the same bit decomposition",
+        "Switching the RNG seed for KeyGen",
+        "Using larger n while keeping q fixed",
+        "Printing fewer columns of A in the demo output"
+      ],
+      "correct": 0,
+      "explanation": "The bit decomposition used here is an exact inverse for the gadget matrix only in the power-of-two modulus setting."
+    },
+    {
+      "stage": "post",
+      "question": "If you increase the error size in Dual Regev (larger |e_i| and |e'|), what typically fails first?",
+      "options": [
+        "The trapdoor identity A T = G stops holding",
+        "Decryption correctness, because noise can cross the rounding threshold near q/4",
+        "Key generation stops producing uniform-looking matrices A",
+        "Bit decomposition no longer returns bits in {0,1}"
+      ],
+      "correct": 1,
+      "explanation": "Bigger noise increases the magnitude of the term e' - e^T x, and once it wraps around mod q, rounding can decode the wrong bit."
+    }
+  ]
 }

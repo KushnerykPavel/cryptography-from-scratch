@@ -1,4 +1,100 @@
 {
-  "title": "Lamport One-Time Signatures",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which hash property is most directly used by Lamport OTS security?",
+      "options": [
+        "Preimage resistance (one-wayness)",
+        "Reversible encoding (invertibility)",
+        "Output expansion (longer output)",
+        "Compression ratio (short output)"
+      ],
+      "correct": 0,
+      "explanation": "Verification checks hashes of revealed secrets, so forging requires inverting the hash on at least one commitment."
+    },
+    {
+      "stage": "pre",
+      "question": "How many bits are in a SHA-256 digest?",
+      "options": [
+        "128 bits total",
+        "160 bits total",
+        "256 bits total",
+        "512 bits total"
+      ],
+      "correct": 2,
+      "explanation": "SHA-256 outputs 32 bytes, which is 256 bits."
+    },
+    {
+      "stage": "post",
+      "question": "In Lamport OTS, what does the public key contain for each bit position i?",
+      "options": [
+        "Two hashed commitments H(sk0[i]) and H(sk1[i])",
+        "Two plaintext secrets sk0[i] and sk1[i] for signing",
+        "One hash of the message digest bit d[i] for reuse",
+        "One RSA modulus shared across all bit positions"
+      ],
+      "correct": 0,
+      "explanation": "The public key publishes hashes of both possible secrets; the private key keeps the secrets themselves."
+    },
+    {
+      "stage": "post",
+      "question": "A Lamport signature on SHA256(message) contains which data?",
+      "options": [
+        "All 512 private secrets for every bit position",
+        "Exactly 256 revealed secrets chosen by digest bits",
+        "Exactly 256 hashes of secrets to keep them hidden",
+        "A single 64-byte value that replaces all secrets"
+      ],
+      "correct": 1,
+      "explanation": "For each digest bit, the signer reveals one of the two secrets at that position."
+    },
+    {
+      "stage": "post",
+      "question": "If two implementations disagree on MSB-first vs LSB-first bit order, what is the most likely outcome?",
+      "options": [
+        "Valid signatures fail verification across implementations",
+        "Signatures become smaller because fewer bits are used",
+        "Security increases because the digest bits are permuted",
+        "Public keys shrink because only one key half is needed"
+      ],
+      "correct": 0,
+      "explanation": "The verifier must select the same per-bit commitments the signer used; a bit-order mismatch selects different secrets."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main cryptographic risk of signing two different messages with the same Lamport key?",
+      "options": [
+        "Many positions reveal both secrets sk0[i] and sk1[i]",
+        "The hash function stops being deterministic for digests",
+        "The verifier can no longer compute SHA-256 correctly",
+        "Signatures get shorter and lose their fixed-length form"
+      ],
+      "correct": 0,
+      "explanation": "Once both secrets for a position are exposed, an attacker can satisfy either digest bit at that position in a forgery."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson leakage check, what does a 'fully revealed position' mean?",
+      "options": [
+        "Both sk0[i] and sk1[i] have been exposed via signatures",
+        "The digest bit at i is always 1 for every signed message",
+        "The public key is missing the commitment for that index",
+        "The signature length is not equal to the digest bit length"
+      ],
+      "correct": 0,
+      "explanation": "A position is fully revealed once signatures have exposed secrets for both possible digest bit values at that index."
+    },
+    {
+      "stage": "post",
+      "question": "How do practical hash-based signature schemes get many one-time keys into a multi-use system?",
+      "options": [
+        "Authenticate many OTS public keys with a Merkle tree root",
+        "Reuse the same OTS key but rotate the bit order each time",
+        "Encrypt each OTS secret under the public key for reuse",
+        "Replace the hash with RSA so the key can be reused safely"
+      ],
+      "correct": 0,
+      "explanation": "Merkle-tree composition lets you commit to many one-time public keys under a single root, consuming one leaf per signature."
+    }
+  ]
 }

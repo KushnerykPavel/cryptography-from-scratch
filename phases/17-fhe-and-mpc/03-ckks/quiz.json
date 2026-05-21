@@ -1,4 +1,101 @@
 {
-  "title": "CKKS \u2014 FHE for Real Numbers",
-  "questions": []
+  "title": "CKKS — Approximate FHE for Real Numbers",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In CKKS-style approximate arithmetic, what does the \"scale\" primarily control?",
+      "options": [
+        "How many ciphertexts you can add before decryption fails",
+        "The fixed-point precision used when mapping reals to integers via x -> round(x * scale)",
+        "The polynomial degree n in the RLWE ring",
+        "Whether encryption is deterministic or randomized"
+      ],
+      "correct": 1,
+      "explanation": "CKKS treats real/complex values as fixed-point: scaling and rounding determine quantization precision and how large values become during evaluation."
+    },
+    {
+      "stage": "pre",
+      "question": "If two ciphertexts are both at scale S, what happens to the scale after a homomorphic multiplication (before rescaling)?",
+      "options": [
+        "It stays S",
+        "It becomes 2S",
+        "It becomes S^2",
+        "It becomes S/2"
+      ],
+      "correct": 2,
+      "explanation": "Multiplying two scaled values (x*S) and (y*S) yields (x*y)*S^2. CKKS then uses rescaling to bring the scale back down."
+    },
+    {
+      "stage": "post",
+      "question": "Which pair best describes the two most visible sources of error in CKKS-style workflows?",
+      "options": [
+        "Hash collisions and padding-oracle errors",
+        "Quantization (rounding) error and noise growth from homomorphic operations",
+        "Packet loss and TCP retransmissions",
+        "Cache misses and branch mispredictions"
+      ],
+      "correct": 1,
+      "explanation": "CKKS error comes from fixed-point rounding during encoding/decoding and from noise/approximation growth as you add, multiply, and rescale."
+    },
+    {
+      "stage": "post",
+      "question": "Why do CKKS implementations rescale after multiplication?",
+      "options": [
+        "To convert approximate arithmetic into exact modular arithmetic",
+        "To bring the scale back down and move to a lower modulus level in the chain",
+        "To make ciphertexts deterministic so they can be cached",
+        "To remove the need for a secret key during decryption"
+      ],
+      "correct": 1,
+      "explanation": "After multiplication, the scale grows (often to S^2). Rescaling divides by a modulus prime (conceptually) to reduce scale and consume one level of the modulus chain."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy simulator for this lesson, which condition is required to add two ciphertexts?",
+      "options": [
+        "They must use the same noise seed",
+        "They must have the same scale and the same level",
+        "They must have different scales to avoid cancellation",
+        "They must be at different levels so the noise budgets add"
+      ],
+      "correct": 1,
+      "explanation": "Addition assumes both operands represent values in the same fixed-point units (scale) and the same modulus-chain position (level)."
+    },
+    {
+      "stage": "post",
+      "question": "Conceptually, what does a \"level\" represent in CKKS parameter selection?",
+      "options": [
+        "The number of slots packed into one ciphertext",
+        "The number of bits in the secret key",
+        "Your position in the modulus chain (how many rescale/modswitch steps have been consumed)",
+        "The number of network hops between client and server"
+      ],
+      "correct": 2,
+      "explanation": "CKKS uses a chain of moduli for depth. Each rescale/modulus-switch step moves you down the chain; your remaining depth depends on levels left."
+    },
+    {
+      "stage": "post",
+      "question": "If you skip rescaling after one or more multiplications in CKKS, what is the most likely outcome?",
+      "options": [
+        "Results become exact because rounding is avoided",
+        "The scale (and values) grow too large for the remaining modulus headroom, and decryption/decoding loses significant precision",
+        "Ciphertexts become smaller and faster to evaluate",
+        "Security increases because noise grows faster than the message"
+      ],
+      "correct": 1,
+      "explanation": "Uncontrolled scale growth rapidly eats modulus headroom; even if computations continue, decoded outputs can be dominated by error/precision loss."
+    },
+    {
+      "stage": "post",
+      "question": "Attack question: a product uses CKKS to compute a score and then compares it to a threshold (e.g., score > 0.5) to decide access, treating the result as exact. What is a realistic risk?",
+      "options": [
+        "No risk; CKKS guarantees exact comparisons if you choose a large enough polynomial degree",
+        "An attacker can craft inputs near the decision boundary so small approximation errors flip the decision, causing bypasses or inconsistent behavior",
+        "The attacker can always recover the secret key from a single comparison",
+        "The only issue is slower performance, not correctness"
+      ],
+      "correct": 1,
+      "explanation": "CKKS is approximate. If you branch on near-boundary values without a safety margin, small errors (from noise + rounding + rescaling) can flip outcomes and become exploitable."
+    }
+  ]
 }

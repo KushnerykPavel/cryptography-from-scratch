@@ -1,4 +1,86 @@
 {
   "title": "What FHE Is \u2014 Levels, Schemes, Limits",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which statement best captures what it means for encryption to be homomorphic for a function f?",
+      "options": [
+        "Given Enc(m1) and Enc(m2), anyone can compute a ciphertext c such that Dec(c) = f(m1, m2).",
+        "Given Enc(m), anyone can recover m without the secret key by running Eval.",
+        "Homomorphic encryption means ciphertexts are shorter than plaintexts.",
+        "Homomorphic encryption means decryption is faster than encryption."
+      ],
+      "correct": 0,
+      "explanation": "Homomorphism is about evaluating a function on ciphertexts and getting a decryptable ciphertext of the result, without using the secret key."
+    },
+    {
+      "stage": "pre",
+      "question": "In most practical FHE schemes, which operation tends to grow noise (or error) the fastest?",
+      "options": ["Ciphertext-ciphertext multiplication", "Ciphertext addition", "Key generation", "Serialization to bytes"],
+      "correct": 0,
+      "explanation": "Addition is usually cheap and grows noise slowly; multiplication is the operation that tends to blow up noise and drive parameter selection."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main difference between SHE (somewhat homomorphic) and FHE (fully homomorphic) in practice?",
+      "options": [
+        "SHE supports only additions; FHE supports only multiplications.",
+        "SHE supports add+mul but only for small depth; FHE supports arbitrary depth via refresh/bootstrapping.",
+        "SHE is public-key and FHE is symmetric-key only.",
+        "SHE is quantum-safe and FHE is not."
+      ],
+      "correct": 1,
+      "explanation": "SHE can evaluate only a limited-depth circuit before noise breaks decryption; FHE achieves unbounded depth by refreshing ciphertexts (bootstrapping or related techniques)."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy DGHV-style scheme, ciphertexts have the form c = p*q + 2*r + m with m in {0,1}. Why is the noise term written as 2*r?",
+      "options": [
+        "So the noise is always odd, making the ciphertext look random.",
+        "So the noise is always even and does not change the ciphertext parity, letting parity carry the bit.",
+        "So encryption can be done without randomness.",
+        "So decryption does not need the secret key p."
+      ],
+      "correct": 1,
+      "explanation": "Because 2*r is even, the parity of (c mod p) is determined by m (as long as the centered residue hasn’t wrapped around)."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy scheme, which ciphertext operation corresponds to XOR of the underlying plaintext bits (assuming decryption remains correct)?",
+      "options": ["c1 + c2", "c1 * c2", "c1 - c2", "c1 // c2"],
+      "correct": 0,
+      "explanation": "Adding ciphertexts adds the (2*r + m) residues, so the decrypted bit becomes (m1 + m2) mod 2, which is XOR."
+    },
+    {
+      "stage": "post",
+      "question": "What does 'bootstrapping' do at a high level in an FHE system?",
+      "options": [
+        "It turns a public-key scheme into a symmetric-key scheme.",
+        "It refreshes a ciphertext to reduce noise so more computation can be done.",
+        "It compresses ciphertexts to plaintext size.",
+        "It removes the need for evaluation keys (relinearization/rotation keys)."
+      ],
+      "correct": 1,
+      "explanation": "Bootstrapping is a refresh step that produces a new ciphertext of the same plaintext with lower noise, enabling deeper circuits."
+    },
+    {
+      "stage": "post",
+      "question": "Which FHE family is most naturally suited for approximate real-number arithmetic (like dot products for ML inference)?",
+      "options": ["BFV/BGV", "CKKS", "TFHE", "Paillier"],
+      "correct": 1,
+      "explanation": "CKKS is designed for approximate arithmetic on reals/complex values, which matches many ML workloads."
+    },
+    {
+      "stage": "post",
+      "question": "You need to do comparisons (e.g., x > threshold) repeatedly on encrypted values with tight correctness requirements. Which direction is usually the best starting point?",
+      "options": [
+        "CKKS with no extra tricks, because comparisons are exact in CKKS.",
+        "TFHE-style boolean/LUT evaluation (or scheme switching to TFHE-style) because comparisons are naturally bit/LUT operations.",
+        "BFV/BGV with no circuit changes, because comparisons are a single multiplication.",
+        "Any scheme is equally good; the choice is only about key size."
+      ],
+      "correct": 1,
+      "explanation": "Comparisons and branching-like logic are most naturally expressed as boolean/LUT computations, which TFHE-style schemes target."
+    }
+  ]
 }

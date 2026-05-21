@@ -1,1 +1,73 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic toy vectors derived directly from the MP12 gadget-trapdoor identities (A=[A'|G-A'R] mod q, T=[R;I], and x=T*G^{-1}(y)). Parameters use a tiny power-of-two modulus q=16 so bit decomposition is exact.",
+  "vectors": [
+    {
+      "op": "gadget_matrix",
+      "inputs": { "n": 2, "q": 16 },
+      "expected": [
+        [1, 2, 4, 8, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 2, 4, 8]
+      ]
+    },
+    {
+      "op": "bit_decompose_element",
+      "inputs": { "x": 13, "q": 16 },
+      "expected": [1, 0, 1, 1]
+    },
+    {
+      "op": "bit_decompose_vec",
+      "inputs": { "v": [13, 2], "q": 16 },
+      "expected": [1, 0, 1, 1, 0, 1, 0, 0]
+    },
+    {
+      "op": "gadget_compose_vec",
+      "inputs": { "bits": [1, 0, 1, 1, 0, 1, 0, 0], "q": 16 },
+      "expected": [13, 2]
+    },
+    {
+      "op": "trapdoor_generate",
+      "inputs": {
+        "A_prime": [[1, 2], [3, 4]],
+        "R": [
+          [1, 0, -1, 0, 0, 1, 0, -1],
+          [0, 1, 0, -1, 1, 0, -1, 0]
+        ],
+        "q": 16
+      },
+      "expected": {
+        "A": [
+          [1, 2, 0, 0, 5, 10, 14, 15, 2, 1],
+          [3, 4, 13, 12, 3, 4, 13, 15, 8, 11]
+        ],
+        "T": [
+          [1, 0, -1, 0, 0, 1, 0, -1],
+          [0, 1, 0, -1, 1, 0, -1, 0],
+          [1, 0, 0, 0, 0, 0, 0, 0],
+          [0, 1, 0, 0, 0, 0, 0, 0],
+          [0, 0, 1, 0, 0, 0, 0, 0],
+          [0, 0, 0, 1, 0, 0, 0, 0],
+          [0, 0, 0, 0, 1, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1, 0, 0],
+          [0, 0, 0, 0, 0, 0, 1, 0],
+          [0, 0, 0, 0, 0, 0, 0, 1]
+        ]
+      }
+    },
+    {
+      "op": "trapdoor_preimage",
+      "inputs": {
+        "A_prime": [[1, 2], [3, 4]],
+        "R": [
+          [1, 0, -1, 0, 0, 1, 0, -1],
+          [0, 1, 0, -1, 1, 0, -1, 0]
+        ],
+        "q": 16,
+        "y": [13, 2]
+      },
+      "expected": {
+        "x": [1, -1, 1, 0, 1, 1, 0, 1, 0, 0],
+        "Ax_mod_q": [13, 2]
+      }
+    }
+  ]
+}

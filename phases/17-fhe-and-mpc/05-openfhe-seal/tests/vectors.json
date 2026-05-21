@@ -1,1 +1,47 @@
-{"source": "TBD", "vectors": []}
+[
+  {
+    "source": "Educational Mock FHE Framework",
+    "op": "evaluate",
+    "inputs": {
+      "poly_modulus_degree": 4096,
+      "array1": [2, 3],
+      "array2": [4, 5],
+      "operation": "add"
+    },
+    "expected": {
+      "result": [6, 8],
+      "depth": 0,
+      "size": 2
+    }
+  },
+  {
+    "source": "Educational Mock FHE Framework",
+    "op": "evaluate",
+    "inputs": {
+      "poly_modulus_degree": 4096,
+      "array1": [2, 3],
+      "array2": [4, 5],
+      "operation": "multiply"
+    },
+    "expected": {
+      "result": [8, 15],
+      "depth": 1,
+      "size": 3
+    }
+  },
+  {
+    "source": "Educational Mock FHE Framework",
+    "op": "evaluate",
+    "inputs": {
+      "poly_modulus_degree": 4096,
+      "array1": [2, 3],
+      "array2": [4, 5],
+      "operation": "multiply_and_relinearize"
+    },
+    "expected": {
+      "result": [8, 15],
+      "depth": 1,
+      "size": 2
+    }
+  }
+]

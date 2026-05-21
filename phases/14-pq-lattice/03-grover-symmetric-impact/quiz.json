@@ -1,4 +1,101 @@
 {
   "title": "Grover's Algorithm & Symmetric Impact",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In the ideal brute-force model, roughly how many trials does it take to search a k-bit key space?",
+      "options": [
+        "About 2^k trials",
+        "About k^2 trials",
+        "About 2^(k/2) trials",
+        "About 2^(2k) trials"
+      ],
+      "correct": 0,
+      "explanation": "A k-bit key space has 2^k keys, so unstructured brute force scales like 2^k up to constant factors."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the headline scaling change Grover's algorithm gives for unstructured search?",
+      "options": [
+        "It turns 2^k work into about 2^(k/2) oracle queries",
+        "It turns 2^k work into about k oracle queries",
+        "It turns k work into about 2^k oracle queries",
+        "It turns 2^(k/2) work into about 2^k oracle queries"
+      ],
+      "correct": 0,
+      "explanation": "Grover provides a quadratic speedup: the exponent is halved for idealized unstructured search."
+    },
+    {
+      "stage": "post",
+      "question": "Ignoring constants and parallelism, what is Grover's log2(work) for searching an AES-256 key?",
+      "options": [
+        "128 bits",
+        "256 bits",
+        "64 bits",
+        "96 bits"
+      ],
+      "correct": 0,
+      "explanation": "Grover key search scales like 2^(k/2), so AES-256 corresponds to ~256/2 = 128 bits in this model."
+    },
+    {
+      "stage": "post",
+      "question": "If you want ~128 bits of post-quantum strength against key search, which standard AES key size matches the simple Grover rule-of-thumb?",
+      "options": [
+        "AES-128",
+        "AES-192",
+        "AES-256",
+        "Any AES key size is equivalent under Grover"
+      ],
+      "correct": 2,
+      "explanation": "To get ~128 Grover bits you need ~256 key bits, so AES-256 is the standard match."
+    },
+    {
+      "stage": "post",
+      "question": "For an ideal n-bit hash, what is the classical log2(work) to find a collision (birthday bound)?",
+      "options": [
+        "About n/2",
+        "About n",
+        "About n/3",
+        "About 2n"
+      ],
+      "correct": 0,
+      "explanation": "Classical collision search scales like ~2^(n/2), so log2(work) is about n/2."
+    },
+    {
+      "stage": "post",
+      "question": "For an ideal n-bit hash, what is the quantum log2(work) to find a collision under the BHT model?",
+      "options": [
+        "About n/3",
+        "About n/2",
+        "About n",
+        "About log2(n)"
+      ],
+      "correct": 0,
+      "explanation": "The BHT collision algorithm gives a ~2^(n/3) scaling for idealized collision finding."
+    },
+    {
+      "stage": "post",
+      "question": "You model Grover key search as ~2^(k/2) queries. If an attacker has P = 2^20 identical quantum workers and can parallelize perfectly, how does log2(work) change?",
+      "options": [
+        "It decreases by 20 bits",
+        "It increases by 20 bits",
+        "It is unchanged because Grover can't be parallelized",
+        "It decreases by 40 bits"
+      ],
+      "correct": 0,
+      "explanation": "If work divides linearly by P, then log2(work/P) = log2(work) - log2(P) = log2(work) - 20."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best matches the lesson's recommended mental model for 'security bits' under quantum?",
+      "options": [
+        "State an attack model, compute log2(work), then adjust exponents (k -> k/2 for Grover) rather than making binary claims",
+        "Assume quantum instantly breaks all symmetric primitives, so always replace them with new ones",
+        "Ignore quantum for symmetric crypto because Grover is only theoretical",
+        "Treat '128-bit security' as a wall-clock guarantee independent of assumptions"
+      ],
+      "correct": 0,
+      "explanation": "The lesson uses log2(work) as a model and updates it under Grover/BHT scaling, with explicit assumptions and caveats."
+    }
+  ]
 }

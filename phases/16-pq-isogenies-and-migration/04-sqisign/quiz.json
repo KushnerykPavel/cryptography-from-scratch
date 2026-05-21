@@ -1,4 +1,100 @@
 {
-  "title": "SQIsign \u2014 Compact Isogeny Signatures",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does the Fiat\u2013Shamir transform do to an interactive identification protocol?",
+      "options": [
+        "It replaces the prover with a trusted third party.",
+        "It replaces the verifier\u2019s random challenge with a deterministic hash of the transcript and message.",
+        "It converts any signature scheme into a key exchange.",
+        "It makes the protocol information-theoretically secure."
+      ],
+      "correct": 1,
+      "explanation": "Fiat\u2013Shamir derives the challenge as H(transcript, message), turning an interactive proof/ID protocol into a non-interactive signature."
+    },
+    {
+      "stage": "pre",
+      "question": "In a commit\u2013challenge\u2013response protocol, what is the main purpose of the commitment?",
+      "options": [
+        "To reveal the secret key in a compressed form.",
+        "To lock the prover into a choice before seeing the challenge.",
+        "To let the verifier precompute the response.",
+        "To avoid using any randomness during signing."
+      ],
+      "correct": 1,
+      "explanation": "The commitment prevents the prover from tailoring their first message after learning the challenge."
+    },
+    {
+      "stage": "post",
+      "question": "In the SQIsign \u201cshape\u201d, which transcript elements should the challenge hash bind (at minimum)?",
+      "options": [
+        "Only the message.",
+        "Only the public key.",
+        "The public key, the commitment, and the message (with domain separation).",
+        "Only the response, because it contains everything."
+      ],
+      "correct": 2,
+      "explanation": "If the challenge doesn\u2019t bind pk + commitment + message, you risk replay/cross-context attacks and broken unforgeability."
+    },
+    {
+      "stage": "post",
+      "question": "Attack: if a Fiat\u2013Shamir signature\u2019s challenge hash does NOT include the message, what can go wrong?",
+      "options": [
+        "Nothing; verification still checks the response.",
+        "The same signature transcript can be replayed as valid for many different messages.",
+        "The signer can no longer abort and retry commitments.",
+        "The verifier becomes unable to parse the signature."
+      ],
+      "correct": 1,
+      "explanation": "Omitting the message breaks message binding: an attacker can reuse a valid (commitment,response) pair as a \u201csignature\u201d on other messages."
+    },
+    {
+      "stage": "post",
+      "question": "What does \u201cFiat\u2013Shamir with aborts\u201d mean in practice?",
+      "options": [
+        "The verifier aborts if the signature is too large.",
+        "The signer retries commitments until the derived challenge satisfies a required property.",
+        "The signature is interactive again, but only on failures.",
+        "The scheme skips hashing and uses random challenges."
+      ],
+      "correct": 1,
+      "explanation": "Some commitments lead to \u201cbad\u201d challenges (no response, too long, wrong shape), so the signer loops until they get a \u201cgood\u201d one."
+    },
+    {
+      "stage": "post",
+      "question": "Why are abort/retry loops a real implementation concern?",
+      "options": [
+        "They make the scheme mathematically incorrect.",
+        "They can leak information via timing or retry count if not handled carefully.",
+        "They prevent deterministic test vectors from existing.",
+        "They force the verifier to do key generation."
+      ],
+      "correct": 1,
+      "explanation": "Variable numbers of retries are observable unless you design countermeasures; that can become a side-channel."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson\u2019s toy model, what is the verifier fundamentally checking?",
+      "options": [
+        "That a short response path, applied to the public key node, reaches the challenge node derived from (pk, commitment, message).",
+        "That the signer included their secret key seed in the signature.",
+        "That the commitment node equals the public key node.",
+        "That the response path is the same as the secret key path."
+      ],
+      "correct": 0,
+      "explanation": "Verification recomputes the challenge from the transcript, then checks the response walks from pk to the derived challenge node."
+    },
+    {
+      "stage": "post",
+      "question": "Conceptually, what makes SQIsign different from the broken SIDH/SIKE key exchange pattern?",
+      "options": [
+        "SQIsign is classical (not post-quantum).",
+        "SQIsign avoids publishing auxiliary torsion-point images that act as a \u201ccompass\u201d through the graph; the secret stays hidden behind a proof transcript.",
+        "SQIsign uses only ordinary curves, never supersingular curves.",
+        "SQIsign is secure only because signatures are smaller."
+      ],
+      "correct": 1,
+      "explanation": "SIDH leaked extra structure (torsion images) that enabled a polynomial-time attack; SQIsign\u2019s design aims to avoid that kind of structural leakage while still being verifiable."
+    }
+  ]
 }

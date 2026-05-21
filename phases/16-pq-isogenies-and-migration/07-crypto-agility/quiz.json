@@ -1,4 +1,100 @@
 {
-  "title": "Crypto-Agility \u2014 Designing for Migration",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main goal of crypto-agility in an engineering system?",
+      "options": [
+        "Make algorithm changes safe and measurable via policy-driven selection and controlled rollout",
+        "Support as many algorithms as possible to maximize compatibility",
+        "Hide which algorithm is used so attackers cannot target it",
+        "Avoid having to rotate keys by using longer key sizes"
+      ],
+      "correct": 0,
+      "explanation": "Crypto-agility is about safe change over time: explicit policy constraints, deterministic selection, telemetry, and rollback/kill switches."
+    },
+    {
+      "stage": "pre",
+      "question": "Which pair best captures the difference between capability and policy?",
+      "options": [
+        "Capability is what code can do; policy is what production is allowed to do today",
+        "Capability is what attackers can do; policy is what defenders can do",
+        "Capability is performance; policy is correctness",
+        "Capability is encryption; policy is authentication"
+      ],
+      "correct": 0,
+      "explanation": "A component may support many algorithms, but policy determines which are permitted in a given environment and time window."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson code, why does `canonicalize_alg_id` exist?",
+      "options": [
+        "To enforce a stable, comparable algorithm ID so different components don't disagree about strings",
+        "To make algorithms cryptographically stronger by normalizing names",
+        "To compress algorithm IDs for network transport efficiency",
+        "To randomly rename algorithms to prevent fingerprinting"
+      ],
+      "correct": 0,
+      "explanation": "Crypto-agility treats algorithm IDs as an API: canonicalization prevents silent mismatches like \"Ed25519\" vs \"ed_25519\"."
+    },
+    {
+      "stage": "post",
+      "question": "What does a policy allowlist typically mean in negotiation logic?",
+      "options": [
+        "Only algorithms explicitly listed may be selected; everything else is rejected",
+        "Algorithms not listed are preferred but not required",
+        "Algorithms listed are disabled until a feature flag is turned on",
+        "Algorithms listed are automatically considered secure forever"
+      ],
+      "correct": 0,
+      "explanation": "An allowlist is a constraint: selection must come from that set (plus any other explicit policy rules like version gates and deprecation)."
+    },
+    {
+      "stage": "post",
+      "question": "Why is an emergency denylist (kill switch) valuable during PQ migration?",
+      "options": [
+        "It lets you rapidly block a broken/deprecated algorithm across deployments without code changes",
+        "It improves performance by reducing handshake messages",
+        "It prevents key reuse by forcing new randomness",
+        "It guarantees forward secrecy even with static keys"
+      ],
+      "correct": 0,
+      "explanation": "When an algorithm becomes unacceptable, you want one fast control point to disable it everywhere and stop negotiation immediately."
+    },
+    {
+      "stage": "post",
+      "question": "A downgrade attack in a negotiable protocol is best described as:",
+      "options": [
+        "An attacker forces peers to select a weaker or unintended but still accepted suite by manipulating negotiation",
+        "An attacker breaks the math of a strong algorithm directly",
+        "An attacker steals a private key from disk using malware",
+        "An attacker tricks a user into reusing a password"
+      ],
+      "correct": 0,
+      "explanation": "Downgrades target the seams: if negotiation can be influenced into an allowed-but-weak choice, the system becomes weaker without breaking the math."
+    },
+    {
+      "stage": "post",
+      "question": "In `negotiate_suite`, why is it important that the chosen suite passes policy for both the signature and KEM?",
+      "options": [
+        "Because the security of the combined handshake depends on both algorithms, and policy must gate every selection path",
+        "Because policy only matters for signatures, not for key establishment",
+        "Because it makes the negotiation faster by filtering earlier",
+        "Because it prevents servers from ever changing preferences"
+      ],
+      "correct": 0,
+      "explanation": "A suite is a bundle: if either part is disallowed or deprecated, negotiation must reject it to avoid accidental use of unsafe components."
+    },
+    {
+      "stage": "post",
+      "question": "What is the most direct reason to log negotiated algorithm IDs (suite IDs) in production?",
+      "options": [
+        "To measure real-world usage and detect regressions or unexpected fallbacks during rollout",
+        "To make clients trust the server more by showing internal state",
+        "To hide which algorithms are used by mixing logs",
+        "To avoid having to document configuration"
+      ],
+      "correct": 0,
+      "explanation": "Telemetry turns migration into a measurable process: you can see what is actually negotiated and catch surprises early."
+    }
+  ]
 }

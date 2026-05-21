@@ -1,4 +1,100 @@
 {
-  "title": "Kyber / ML-KEM from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the primary job of a KEM like ML-KEM?",
+      "options": [
+        "Encrypt arbitrary-length messages to a recipient",
+        "Establish a shared secret key over a public channel",
+        "Sign messages so recipients can verify authenticity",
+        "Generate random numbers faster than a CSPRNG"
+      ],
+      "correct": 1,
+      "explanation": "A KEM’s API is KeyGen/Encaps/Decaps to agree on a shared secret; bulk data encryption is done with symmetric AEAD."
+    },
+    {
+      "stage": "pre",
+      "question": "In one sentence, what does IND-CCA security protect against?",
+      "options": [
+        "Attackers who can request signatures on chosen messages",
+        "Attackers who can ask for decryptions of chosen ciphertexts (with a challenge restriction)",
+        "Attackers who can observe only public keys and ciphertexts but never interact",
+        "Attackers who can factor large integers efficiently"
+      ],
+      "correct": 1,
+      "explanation": "IND-CCA models an attacker who can adaptively query a decryption oracle on chosen ciphertexts (except for the challenge ciphertext)."
+    },
+    {
+      "stage": "post",
+      "question": "Why does Kyber-style polynomial multiplication in R_q = Z_q[X]/(X^N + 1) include a sign flip on wrap-around terms?",
+      "options": [
+        "Because X^N is treated as 0 in this ring",
+        "Because X^N is treated as 1 in this ring",
+        "Because X^N is treated as -1 in this ring",
+        "Because coefficients are stored in two’s-complement form"
+      ],
+      "correct": 2,
+      "explanation": "In the quotient by (X^N + 1), we have X^N ≡ -1, so terms that wrap past degree N-1 pick up a minus sign."
+    },
+    {
+      "stage": "post",
+      "question": "What is the purpose of Compress/Decompress in ML-KEM-style schemes?",
+      "options": [
+        "Reduce ciphertext size by mapping mod-q coefficients to fewer bits with controlled error",
+        "Make the encryption deterministic so randomness is unnecessary",
+        "Prevent side-channel attacks by forcing constant-time division",
+        "Turn a KEM into a signature scheme"
+      ],
+      "correct": 0,
+      "explanation": "Compression is a lossy scaling from Z_q to d-bit integers; decryption still works because noise + rounding loss stays below the decision threshold."
+    },
+    {
+      "stage": "post",
+      "question": "In K-PKE.Encrypt, why is A transposed (using A^T) when computing u?",
+      "options": [
+        "It removes the need for any hashing",
+        "It matches the algebra so decryption can compute v - s^T u and cancel the main term",
+        "It makes ciphertexts shorter by a factor of k",
+        "It ensures all coefficients are already compressed"
+      ],
+      "correct": 1,
+      "explanation": "Using A^T aligns the terms so decryption’s dot product with s cancels the shared A·s·r structure, leaving (mostly) the message plus bounded noise."
+    },
+    {
+      "stage": "post",
+      "question": "What is the point of the re-encryption check in ML-KEM decapsulation (the FO-style check)?",
+      "options": [
+        "To verify that the ciphertext is well-formed without revealing a decryption-validity oracle",
+        "To speed up polynomial multiplication by caching intermediate products",
+        "To convert the KEM into a deterministic signature primitive",
+        "To allow encrypting arbitrary messages instead of random ones"
+      ],
+      "correct": 0,
+      "explanation": "The check prevents chosen-ciphertext attacks by ensuring decapsulation only uses the decrypted value if it reproduces the ciphertext under deterministic re-encryption."
+    },
+    {
+      "stage": "post",
+      "question": "In implicit rejection, what does decapsulation output when the ciphertext check fails?",
+      "options": [
+        "A fixed all-zero key so callers can detect failure",
+        "A pseudorandom-looking shared secret derived from a secret fallback value and the ciphertext",
+        "The decrypted message so callers can debug mismatches",
+        "The public key so the caller can retry encapsulation"
+      ],
+      "correct": 1,
+      "explanation": "Implicit rejection avoids exposing validity: the output stays computationally indistinguishable from a real shared secret even for malformed ciphertexts."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-themed: What goes wrong if your decapsulation path leaks whether the ciphertext check passed (e.g., via logs or timing)?",
+      "options": [
+        "An attacker can turn it into a chosen-ciphertext oracle and extract information about secrets over many queries",
+        "An attacker can factor q and recover the secret key immediately",
+        "An attacker can forge signatures because KEMs and signatures are interchangeable",
+        "Nothing important; it only affects performance, not security"
+      ],
+      "correct": 0,
+      "explanation": "Any observable validity signal can enable adaptive chosen-ciphertext strategies (and often side-channel amplification), which the FO transform is designed to prevent."
+    }
+  ]
 }

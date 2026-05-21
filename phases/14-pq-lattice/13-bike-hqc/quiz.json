@@ -1,4 +1,101 @@
 {
-  "title": "BIKE & HQC \u2014 Code-Based KEMs",
-  "questions": []
+  "title": "BIKE & HQC — Code-Based KEMs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a (binary) syndrome in a linear code setting?",
+      "options": [
+        "A compact vector computed from a received word that is 0 exactly when all parity checks pass",
+        "A random seed used to sample error vectors of fixed Hamming weight",
+        "A secret key component that must be kept hidden for security",
+        "A hash of the plaintext used to derive a shared secret"
+      ],
+      "correct": 0,
+      "explanation": "A syndrome is the result of applying the parity-check equations; it is zero iff the word satisfies all checks."
+    },
+    {
+      "stage": "pre",
+      "question": "In the ring R = GF(2)[x]/(x^r - 1), what does reducing modulo (x^r - 1) do to exponents?",
+      "options": [
+        "It wraps exponents modulo r (cyclic behavior)",
+        "It forces all polynomials to have degree exactly r",
+        "It turns multiplication into ordinary integer multiplication",
+        "It removes all odd-degree terms from the polynomial"
+      ],
+      "correct": 0,
+      "explanation": "Modulo (x^r - 1) identifies x^r with 1, so exponents wrap around modulo r."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy BIKE-like model of this lesson, the syndrome is computed as:",
+      "options": [
+        "s(x) = e0(x)·h0(x) + e1(x)·h1(x) in R",
+        "s(x) = h0(x)·h1(x) + e0(x)·e1(x) in R",
+        "s(x) = e0(x) + e1(x) + h0(x) + h1(x) in R",
+        "s(x) = e0(x)·e1(x) in R"
+      ],
+      "correct": 0,
+      "explanation": "The syndrome is a linear image of the error under the parity-check structure: s = e0h0 + e1h1."
+    },
+    {
+      "stage": "post",
+      "question": "In a bit-flipping decoder, what does a per-bit “counter” typically measure?",
+      "options": [
+        "How many currently-unsatisfied parity checks involve that bit",
+        "The number of times the bit was sampled by the RNG",
+        "The Hamming weight of the secret key",
+        "The number of bytes in the ciphertext"
+      ],
+      "correct": 0,
+      "explanation": "Counters estimate how likely a bit is wrong by correlating the current syndrome with the bit’s incident checks."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best distinguishes BIKE from HQC at a high level?",
+      "options": [
+        "BIKE focuses on decoding a QC-MDPC syndrome to recover a low-weight error; HQC focuses on decoding a noisy codeword using a public decodable code",
+        "BIKE is symmetric-key only; HQC is public-key only",
+        "BIKE uses only hashes; HQC uses only signatures",
+        "BIKE uses real numbers; HQC uses only prime fields"
+      ],
+      "correct": 0,
+      "explanation": "Both are code-based and use QC structure, but the “decode target” differs: error/syndrome vs message/noisy codeword."
+    },
+    {
+      "stage": "post",
+      "question": "Why can decoder failures (DFR) become a serious security issue for code-based schemes?",
+      "options": [
+        "If an attacker can distinguish success vs failure (timing/errors/protocol behavior), it can act as an oracle for reaction/timing attacks",
+        "Because any nonzero DFR immediately reveals the full secret key",
+        "Because DFR only affects performance, not security",
+        "Because DFR means the hash function output is no longer uniform"
+      ],
+      "correct": 0,
+      "explanation": "Even rare failures can be amplified if they are observable; distinguishing failure can leak information about the secret structure."
+    },
+    {
+      "stage": "post",
+      "question": "What is the practical consequence of accidentally implementing polynomial multiplication modulo (x^r + 1) instead of (x^r - 1)?",
+      "options": [
+        "You get a different convolution rule (negacyclic vs cyclic), so outputs and test vectors won’t match",
+        "The code becomes constant-time automatically",
+        "The ciphertext becomes shorter by a factor of 2",
+        "The decoder becomes deterministic and never fails"
+      ],
+      "correct": 0,
+      "explanation": "Changing the modulus changes the ring. The sign/wrap rule differs, breaking compatibility and correctness."
+    },
+    {
+      "stage": "post",
+      "question": "A (3,1) repetition code with majority decoding can correctly recover the bit when:",
+      "options": [
+        "At most 1 of the 3 transmitted bits is flipped",
+        "At most 2 of the 3 transmitted bits are flipped",
+        "All 3 transmitted bits are flipped",
+        "Exactly 2 of the 3 transmitted bits are flipped"
+      ],
+      "correct": 0,
+      "explanation": "Majority vote works as long as a strict majority remains correct, i.e., at most one bit flips in a triplet."
+    }
+  ]
 }

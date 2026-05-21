@@ -1,4 +1,100 @@
 {
-  "title": "LMS \u2014 RFC 8554",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the defining operational rule of a one-time signature (OTS) keypair?",
+      "options": [
+        "It must sign at most one message securely",
+        "It can sign many messages as long as messages are short",
+        "It is secure only if the verifier also keeps state",
+        "It becomes secure if the hash function output is longer"
+      ],
+      "correct": 0,
+      "explanation": "OTS schemes are designed to be used once. Reusing the same OTS keypair can leak structure that breaks unforgeability."
+    },
+    {
+      "stage": "pre",
+      "question": "In a Merkle-tree signature scheme, what does the authentication path provide?",
+      "options": [
+        "Sibling hashes that let you recompute the root from a leaf",
+        "A second independent signature for the same message",
+        "A way to compress the message before hashing",
+        "A shared secret used to randomize the signature"
+      ],
+      "correct": 0,
+      "explanation": "The authentication path is a Merkle proof: a list of sibling node hashes used to recompute the published root."
+    },
+    {
+      "stage": "post",
+      "question": "What is the final validity check performed by LMS verification?",
+      "options": [
+        "The recomputed Merkle root equals the public key root",
+        "The signature's randomizer C equals a stored value",
+        "The signer index q is less than the message length",
+        "The message hash equals the signature bytes"
+      ],
+      "correct": 0,
+      "explanation": "Verification rebuilds the root from the signed leaf and its authentication path; the signature is valid iff the root matches the public key root."
+    },
+    {
+      "stage": "post",
+      "question": "Why is LMS called a stateful signature scheme?",
+      "options": [
+        "The signer must track and never reuse the leaf index q",
+        "The verifier must store every signature it has ever seen",
+        "The hash function must maintain internal mutable state",
+        "The public key changes after every verification"
+      ],
+      "correct": 0,
+      "explanation": "Each LMS signature consumes a one-time key at index q. If q is reused, security can collapse."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: if a buggy signer reuses the same q (same LM-OTS key) to sign two different messages, what is the core security failure?",
+      "options": [
+        "One-time security is violated and attackers may be able to forge additional signatures",
+        "The Merkle tree root changes and verification always fails",
+        "The scheme becomes deterministic but still unforgeable",
+        "Only signature size increases; security is unaffected"
+      ],
+      "correct": 0,
+      "explanation": "LMS relies on LM-OTS being used once. Reuse can expose enough information for practical forgeries depending on the OTS parameters and attacker capabilities."
+    },
+    {
+      "stage": "post",
+      "question": "For LMOTS_SHA256_N32_W8 in this lesson, why is p = 34?",
+      "options": [
+        "32 coefficients come from Q plus 2 coefficients from the checksum",
+        "34 is the Merkle tree height, so it matches the path length",
+        "34 is the SHA-256 output size in bytes",
+        "34 is chosen to make signatures always a power of two bytes"
+      ],
+      "correct": 0,
+      "explanation": "With w=8 and n=32, Q contributes 32 bytes (32 coefficients). The checksum contributes 2 more bytes, giving p=34."
+    },
+    {
+      "stage": "post",
+      "question": "Which elements are needed to recompute the leaf value during LMS verification?",
+      "options": [
+        "I, q, the message, and the LM-OTS signature",
+        "Only the public root and the message hash",
+        "Only the authentication path and the public root",
+        "Only the LM-OTS public key hash stored in the public key"
+      ],
+      "correct": 0,
+      "explanation": "The verifier derives an LM-OTS public key candidate from (I, q, message, LM-OTS signature), then hashes it into a leaf and walks up using the path."
+    },
+    {
+      "stage": "post",
+      "question": "A signer crashes after emitting a signature but before persisting the incremented q counter. What is the concrete risk after restart?",
+      "options": [
+        "The next signature may reuse the same q and break one-time security",
+        "The Merkle tree can no longer be verified by anyone",
+        "Old signatures become unverifiable because roots change",
+        "Verification becomes slower but security is unchanged"
+      ],
+      "correct": 0,
+      "explanation": "If the counter update is not atomic, a crash can roll q back and cause leaf reuse, which is a serious security bug for stateful hash-based signatures."
+    }
+  ]
 }

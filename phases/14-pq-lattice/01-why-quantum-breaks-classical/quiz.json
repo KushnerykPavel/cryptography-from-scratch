@@ -1,4 +1,100 @@
 {
-  "title": "Why Quantum Breaks Classical Crypto",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which classical cryptographic assumption is *directly* targeted by Shor’s algorithm?",
+      "options": [
+        "Factoring and discrete logarithms become efficient on a quantum computer",
+        "Hash functions lose all preimage resistance",
+        "Block ciphers stop being permutations",
+        "Random number generators become predictable"
+      ],
+      "correct": 0,
+      "explanation": "Shor’s algorithm gives polynomial-time quantum algorithms for factoring and discrete logarithms, which undermines RSA and (EC)DH-style cryptography."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the most accurate “rule of thumb” for Grover’s impact on brute-force key search?",
+      "options": [
+        "It roughly halves the effective security bits (√ speedup)",
+        "It makes brute force impossible because it requires quantum memory",
+        "It breaks RSA and ECDSA completely",
+        "It only affects hash collisions, not key search"
+      ],
+      "correct": 0,
+      "explanation": "Grover gives an unstructured search speedup of about √N, which corresponds to about half as many security bits for key search and preimages."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson’s RSA demo, what lets the attacker recover the private exponent d from the public key (n, e)?",
+      "options": [
+        "Factoring n into p and q, then computing d = e^{-1} mod (p-1)(q-1)",
+        "Finding a hash collision in SHA-256 for the ciphertext",
+        "Using Grover’s algorithm to guess d directly without factoring",
+        "Brute-forcing e until it matches the ciphertext"
+      ],
+      "correct": 0,
+      "explanation": "Once p and q are known, φ(n) is easy to compute and so is d = e^{-1} mod φ(n). RSA relies on factoring being hard."
+    },
+    {
+      "stage": "post",
+      "question": "If you want roughly 128-bit security against Grover-style key search, which symmetric key size is the right rule-of-thumb choice?",
+      "options": [
+        "256-bit keys (e.g., AES-256)",
+        "128-bit keys (e.g., AES-128)",
+        "192-bit keys (e.g., AES-192)",
+        "64-bit keys (because Grover reduces work)"
+      ],
+      "correct": 0,
+      "explanation": "Grover roughly halves effective security bits, so you typically double key sizes to keep the same margin (128 → 256)."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best distinguishes Shor’s impact from Grover’s impact in practice?",
+      "options": [
+        "Shor breaks common public-key primitives; Grover mostly reduces margins for symmetric/hashes",
+        "Shor only reduces margins; Grover fully breaks RSA and ECDH",
+        "Both only affect hashes; public-key crypto is unchanged",
+        "Both require no cryptographic migration because parameters can always be doubled"
+      ],
+      "correct": 0,
+      "explanation": "Shor changes factoring/discrete-log from hard to easy (forcing replacement). Grover changes the exponent for brute force (often handled by larger parameters)."
+    },
+    {
+      "stage": "post",
+      "question": "You are worried about harvest-now, decrypt-later (HNDL). Which situation is the *highest priority* PQ concern?",
+      "options": [
+        "Recorded key exchanges protecting long-lived secrets (e.g., captured TLS handshakes for sensitive traffic)",
+        "A password database stored with salted SHA-256 hashes only",
+        "An internal service that uses AES-256 for storage encryption",
+        "A monitoring system that signs logs with HMAC-SHA-256"
+      ],
+      "correct": 0,
+      "explanation": "HNDL is about capturing ciphertext/handshakes today and decrypting later once public-key assumptions fall (e.g., ECDH)."
+    },
+    {
+      "stage": "post",
+      "question": "The lesson uses an n/3 rule for quantum collision security (BHT-style). What does it represent?",
+      "options": [
+        "A changed exponent for collision finding compared to the classical birthday bound",
+        "A guarantee that collisions no longer exist for n-bit hashes",
+        "A proof that SHA-256 is broken on today’s computers",
+        "A requirement that hashes must be replaced by lattice hashes"
+      ],
+      "correct": 0,
+      "explanation": "Classical collision search is ~2^(n/2). Quantum collision algorithms can change the exponent; the n/3 rule is a common rough mental model."
+    },
+    {
+      "stage": "post",
+      "question": "In the lesson’s migration mapping, what is the recommended replacement direction for RSA used as a key establishment primitive?",
+      "options": [
+        "Use a standardized PQ KEM such as ML-KEM (Kyber), often in a hybrid transition",
+        "Keep RSA but rotate to larger moduli (e.g., RSA-8192) and call it PQ-safe",
+        "Replace RSA with SHA-256 because hashes are quantum-resistant",
+        "Replace RSA signatures with AES-256 encryption"
+      ],
+      "correct": 0,
+      "explanation": "RSA key transport is not PQ-safe; the migration path is to PQ KEMs (often hybrid-first) plus crypto-agility."
+    }
+  ]
 }

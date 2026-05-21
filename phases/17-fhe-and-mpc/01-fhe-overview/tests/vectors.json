@@ -1,1 +1,54 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors based on the toy DGHV-style definition c = p*q + 2*r + m from van Dijk, Gentry, Halevi, Vaikuntanathan (IACR ePrint 2009/616). Parameters are intentionally tiny and insecure; values are hand-picked to exercise centered reduction, XOR/AND homomorphism, and a small 3-input circuit.",
+  "vectors": [
+    {"op": "centered_mod", "x": -3, "modulus": 1019, "expected": -3},
+    {"op": "centered_mod", "x": 1021, "modulus": 1019, "expected": 2},
+    {"op": "centered_mod", "x": 510, "modulus": 1019, "expected": -509},
+
+    {
+      "op": "encrypt_bit_with_qr",
+      "p": 1019,
+      "m": 1,
+      "q": 12345,
+      "r": 7,
+      "expected": 12579570
+    },
+    {
+      "op": "encrypt_bit_with_qr",
+      "p": 1019,
+      "m": 0,
+      "q": 54321,
+      "r": -9,
+      "expected": 55353081
+    },
+
+    {"op": "decrypt_bit", "p": 1019, "c": 12579570, "expected": 1},
+    {"op": "decrypt_bit", "p": 1019, "c": 55353081, "expected": 0},
+
+    {"op": "ciphertext_noise", "p": 1019, "c": 12579570, "expected": 14},
+    {"op": "ciphertext_noise", "p": 1019, "c": 55353081, "expected": 18},
+
+    {
+      "op": "homomorphic_xor",
+      "c1": 12579570,
+      "c2": 55353081,
+      "expected": 67932651
+    },
+    {
+      "op": "homomorphic_and",
+      "c1": 12579570,
+      "c2": 55353081,
+      "expected": 696317957155170
+    },
+
+    {
+      "op": "eval_circuit_xor_and",
+      "p": 1019,
+      "c_bits": [2038003, 3056997, 4076006],
+      "q_bits": 10,
+      "r_bound": 5,
+      "rng_seed": 0,
+      "expected": 6230173132997
+    }
+  ]
+}

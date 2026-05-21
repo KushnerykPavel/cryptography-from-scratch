@@ -1,4 +1,101 @@
 {
-  "title": "Winternitz One-Time Signatures",
-  "questions": []
+  "title": "Winternitz One-Time Signatures (WOTS+)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does it mean that WOTS is a one-time signature scheme?",
+      "options": [
+        "A single secret key must be used to sign at most one message.",
+        "A signature can be verified only once.",
+        "A key pair expires after one day.",
+        "The signer must delete the public key after signing."
+      ],
+      "correct": 0,
+      "explanation": "Security relies on not leaking multiple intermediate chain values from the same private key; reuse breaks the assumptions."
+    },
+    {
+      "stage": "pre",
+      "question": "If you know an intermediate hash-chain value H^a(x), what can you compute easily (without inverting H)?",
+      "options": [
+        "H^(a+1)(x)",
+        "H^(a-1)(x)",
+        "x",
+        "A collision in H"
+      ],
+      "correct": 0,
+      "explanation": "Hash chains are forward-computable: you can apply H more times, but you can't go backwards without breaking preimage resistance."
+    },
+    {
+      "stage": "post",
+      "question": "Why does WOTS represent the message digest in base w?",
+      "options": [
+        "To trade off signature size (number of chains) against hash work (chain lengths).",
+        "Because SHA-256 only outputs base-w digits.",
+        "To make signatures independent of the hash function output length.",
+        "So that signatures can be verified without knowing w."
+      ],
+      "correct": 0,
+      "explanation": "Larger w means fewer chains (shorter signatures) but more hashing per chain; base-w digits make that trade-off explicit."
+    },
+    {
+      "stage": "post",
+      "question": "With n = 32 bytes and w = 16, what is len_1 in RFC 8391 parameter derivation?",
+      "options": [
+        "64",
+        "32",
+        "67",
+        "16"
+      ],
+      "correct": 0,
+      "explanation": "len_1 = ceil(8n / lg(w)) = ceil(256 / 4) = 64."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson's implementation, if sig[i] = H^{d_i}(sk[i]) and pk[i] = H^{w-1}(sk[i]), how does a verifier derive pk[i] from sig[i]?",
+      "options": [
+        "Hash sig[i] exactly (w - 1 - d_i) times.",
+        "Hash sig[i] exactly d_i times.",
+        "Invert H on sig[i] exactly d_i times.",
+        "XOR sig[i] with the message digit d_i."
+      ],
+      "correct": 0,
+      "explanation": "Verification completes the chain: H^{w-1-d_i}(H^{d_i}(sk[i])) = H^{w-1}(sk[i])."
+    },
+    {
+      "stage": "post",
+      "question": "What is the checksum in WOTS primarily preventing?",
+      "options": [
+        "Forging a new message by only increasing some message digits (hashing forward) without needing any preimages.",
+        "Hash collisions in SHA-256.",
+        "Side-channel leakage of timing information.",
+        "Public-key substitution attacks."
+      ],
+      "correct": 0,
+      "explanation": "Without a checksum, a signature can often be transformed into signatures for 'larger' digit vectors by hashing forward; checksum digits force a decrease somewhere."
+    },
+    {
+      "stage": "post",
+      "question": "What does WOTS+ add compared to 'plain' WOTS (high level)?",
+      "options": [
+        "Per-step domain separation and masking so each hash invocation is randomized by an address/seed.",
+        "It makes the scheme safe for unlimited signatures with the same key.",
+        "It replaces hash chains with RSA exponentiation.",
+        "It removes the need for a checksum."
+      ],
+      "correct": 0,
+      "explanation": "WOTS+ keeps the one-time nature but strengthens the chaining function with address-based tweaks/masks to avoid structural issues."
+    },
+    {
+      "stage": "post",
+      "question": "What is the most important operational rule when using WOTS inside a larger scheme like XMSS?",
+      "options": [
+        "Never reuse the same WOTS private key elements (chain starts) to sign two different messages.",
+        "Always choose w as large as possible.",
+        "Always publish signatures before public keys.",
+        "Always truncate SHA-256 to 16 bytes."
+      ],
+      "correct": 0,
+      "explanation": "XMSS manages many one-time keys with a Merkle tree; breaking the 'one-time' rule breaks the security story."
+    }
+  ]
 }

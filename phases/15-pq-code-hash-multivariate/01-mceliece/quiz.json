@@ -1,4 +1,102 @@
 {
-  "title": "McEliece \u2014 The Original PQ Cryptosystem",
-  "questions": []
+  "title": "McEliece — The Original PQ Cryptosystem",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a binary linear (n,k) code with generator matrix G (k×n), what does encoding compute?",
+      "options": [
+        "A codeword c = m·G (mod 2) for a k-bit message m",
+        "A parity-check value s = H·m^T (mod 2) for a k-bit message m",
+        "A ciphertext c = m^d (mod N) for an integer message m",
+        "A hash digest h = SHA-256(m) for a bitstring message m"
+      ],
+      "correct": 0,
+      "explanation": "Encoding multiplies the message by the generator matrix over GF(2), producing an n-bit codeword."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the syndrome s = H·r^T used for in syndrome-based decoding?",
+      "options": [
+        "It is an error fingerprint: s=0 means r is a valid codeword, and non-zero may identify an error pattern",
+        "It is the encrypted message, directly recoverable by multiplying by G^{-1}",
+        "It is a secret key that must be kept private to decrypt",
+        "It is a random nonce used to ensure semantic security"
+      ],
+      "correct": 0,
+      "explanation": "The syndrome checks parity constraints; for some codes, each non-zero syndrome maps to a correctable error pattern."
+    },
+    {
+      "stage": "post",
+      "question": "In textbook McEliece PKE, which statement best describes the public key and secret key?",
+      "options": [
+        "Public: (G_pub, t). Secret: a structured code/decoder plus transformations that relate it to G_pub",
+        "Public: (S, P). Secret: only the permutation P^{-1}",
+        "Public: (H, syndrome table). Secret: the plaintext message m",
+        "Public: (n, e). Secret: the prime factors of n"
+      ],
+      "correct": 0,
+      "explanation": "The public key is a generator matrix that looks random; the secret key includes a fast decoder for a structured code plus the hiding transforms."
+    },
+    {
+      "stage": "post",
+      "question": "Using the row-vector convention in this lesson, what is the McEliece encryption equation?",
+      "options": [
+        "c = m·G_pub ⊕ e, with wt(e) ≤ t",
+        "c = H·m^T, with wt(m) ≤ t",
+        "c = G_pub·m^T ⊕ e, with wt(e) ≥ t",
+        "c = m ⊕ e, where e is a full-length random pad"
+      ],
+      "correct": 0,
+      "explanation": "Encryption encodes the message as a codeword under G_pub and adds a low-weight error vector."
+    },
+    {
+      "stage": "post",
+      "question": "Why does decryption start by applying the inverse permutation P^{-1} to the ciphertext coordinates?",
+      "options": [
+        "To undo the public key’s column permutation so the secret decoder can operate on the original structured code",
+        "To reduce the ciphertext length from n bits to k bits",
+        "To make the error vector heavier so it is easier to detect",
+        "To convert XOR into ordinary integer addition"
+      ],
+      "correct": 0,
+      "explanation": "P hides the code structure by permuting coordinates; P^{-1} restores the coordinate order expected by the secret decoder."
+    },
+    {
+      "stage": "post",
+      "question": "After decoding recovers mS (the scrambled message), what final step recovers the original message m?",
+      "options": [
+        "Multiply by S^{-1} on the right: m = (mS)·S^{-1}",
+        "Multiply by P^{-1} again: m = (mS)·P^{-1}",
+        "Hash mS with SHA-256 to remove S",
+        "Flip the bit indicated by the syndrome to remove S"
+      ],
+      "correct": 0,
+      "explanation": "S is an invertible k×k matrix; once you have mS, you undo it by multiplying by S^{-1}."
+    },
+    {
+      "stage": "post",
+      "question": "What is the core idea behind information-set decoding (ISD) attacks on McEliece-style public keys?",
+      "options": [
+        "Guess a set of k error-free positions so a submatrix can be inverted, then reconstruct the message/error",
+        "Factor a large integer n to recover a private exponent d",
+        "Find collisions in SHA-256 to break the KEM transform",
+        "Solve discrete logarithms on elliptic curves over GF(p)"
+      ],
+      "correct": 0,
+      "explanation": "ISD treats the public code as random and tries to find an error-free information set to peel off the error and recover the message."
+    },
+    {
+      "stage": "post",
+      "question": "Which integration mistake most directly risks turning a McEliece/Classic McEliece deployment into a practical chosen-ciphertext (CCA) oracle?",
+      "options": [
+        "Returning distinguishable errors or timing differences between valid and invalid ciphertexts",
+        "Using XOR instead of AND in GF(2) multiplication",
+        "Storing the public key in a file instead of hardcoding it",
+        "Choosing n larger than k for the code parameters"
+      ],
+      "correct": 0,
+      "explanation": "If an attacker can distinguish valid from invalid ciphertexts (via errors or timing), they can often build an adaptive oracle attack against the system."
+    }
+  ]
 }
+

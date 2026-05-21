@@ -1,1 +1,72 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors for a toy McEliece-shaped PKE built from a systematic Hamming(7,4) code over GF(2). Matrices follow the standard linear-code definitions (c = m·G mod 2, syndrome = H·r^T). Values are computed by code/main.py and cross-checked against hand calculation.",
+  "vectors": [
+    {
+      "op": "invert_matrix_mod2",
+      "inputs": {
+        "a": [
+          [1, 0, 1, 1],
+          [0, 1, 1, 0],
+          [0, 0, 1, 1],
+          [1, 0, 0, 1]
+        ]
+      },
+      "expected": [
+        [1, 0, 1, 0],
+        [1, 1, 0, 1],
+        [1, 0, 0, 1],
+        [1, 0, 1, 1]
+      ]
+    },
+    {
+      "op": "hamming74_encode",
+      "inputs": { "message_4": [1, 0, 1, 1] },
+      "expected": [1, 0, 1, 1, 0, 1, 0]
+    },
+    {
+      "op": "hamming74_syndrome",
+      "inputs": { "received_7": [1, 0, 1, 1, 0, 0, 0] },
+      "expected": [0, 1, 0]
+    },
+    {
+      "op": "hamming74_decode_1error",
+      "inputs": { "received_7": [1, 0, 1, 1, 0, 0, 0] },
+      "expected": { "message_4": [1, 0, 1, 1], "corrected_7": [1, 0, 1, 1, 0, 1, 0], "flipped_index": 5 }
+    },
+    {
+      "op": "mceliece_encrypt_toy",
+      "inputs": {
+        "public_key": {
+          "G_pub": [
+            [0, 0, 1, 1, 0, 1, 0],
+            [1, 1, 1, 1, 1, 1, 1],
+            [0, 1, 0, 1, 1, 0, 0],
+            [1, 1, 1, 0, 0, 0, 0]
+          ],
+          "t": 1
+        },
+        "message_4": [1, 1, 0, 1],
+        "error_7": [0, 0, 0, 0, 0, 0, 0]
+      },
+      "expected": [0, 0, 1, 0, 1, 0, 1]
+    },
+    {
+      "op": "mceliece_decrypt_toy",
+      "inputs": {
+        "secret_key": {
+          "G": [
+            [1, 0, 0, 0, 1, 1, 0],
+            [0, 1, 0, 0, 1, 0, 1],
+            [0, 0, 1, 0, 0, 1, 1],
+            [0, 0, 0, 1, 1, 1, 1]
+          ],
+          "S_inv": [[1, 0, 1, 1], [0, 1, 1, 1], [1, 1, 0, 1], [0, 1, 0, 1]],
+          "P_inv": [0, 1, 2, 3, 5, 4, 6],
+          "t": 1
+        },
+        "ciphertext_7": [0, 0, 1, 0, 1, 0, 1]
+      },
+      "expected": [1, 1, 0, 1]
+    }
+  ]
+}

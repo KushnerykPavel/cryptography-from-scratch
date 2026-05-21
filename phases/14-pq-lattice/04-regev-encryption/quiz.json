@@ -1,4 +1,101 @@
 {
   "title": "Regev Encryption from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In an LWE public key b = A·s + e (mod q), what is the role of the error term e?",
+      "options": [
+        "It hides the exact linear relation so recovering s becomes hard",
+        "It makes A invertible by construction for any m and n",
+        "It allows decryption to compute s by dividing b by e",
+        "It prevents any modular wrap-around from ever happening"
+      ],
+      "correct": 0,
+      "explanation": "If e=0, (A,b) is just linear equations; small error keeps structure but makes recovering s hard at the right dimensions."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the main reason real systems use hybrid encryption (KEM-DEM) instead of encrypting long messages directly with public-key math?",
+      "options": [
+        "Public-key operations are expensive/large; symmetric encryption is fast and compact",
+        "Public-key encryption cannot be randomized, so it leaks repeated messages",
+        "Symmetric encryption is always information-theoretically secure",
+        "Hybrid encryption removes the need for randomness entirely"
+      ],
+      "correct": 0,
+      "explanation": "KEM-DEM uses public-key crypto to protect a small key, then uses symmetric crypto for the bulk data efficiently."
+    },
+    {
+      "stage": "post",
+      "question": "In toy Regev encryption, what is the public key and what is the secret key?",
+      "options": [
+        "Public key is (A, b) and secret key is s",
+        "Public key is (s, e) and secret key is (A, b)",
+        "Public key is A only and secret key is b",
+        "Public key is (A, s) and secret key is e"
+      ],
+      "correct": 0,
+      "explanation": "The public key is an LWE instance (A, b=A·s+e mod q); the secret key is the hidden vector s."
+    },
+    {
+      "stage": "post",
+      "question": "In encryption, what is the conceptual purpose of choosing r ∈ {0,1}^m?",
+      "options": [
+        "It selects a random subset/combination of the published equations",
+        "It makes the matrix A orthogonal over Z_q",
+        "It deterministically derives the secret key from the public key",
+        "It forces the error terms to cancel out to exactly zero"
+      ],
+      "correct": 0,
+      "explanation": "The binary vector r forms a random linear combination of rows; this is what produces u=A^T·r (plus small noise)."
+    },
+    {
+      "stage": "post",
+      "question": "Why does encryption add μ·(q/2) to v (mod q) in the bit scheme?",
+      "options": [
+        "It encodes the bit as a value far from 0 so small noise won’t confuse it",
+        "It ensures v is always the same for μ=0 and μ=1",
+        "It guarantees the secret s becomes uniform in Z_q^n",
+        "It makes the scheme deterministic (no randomness needed)"
+      ],
+      "correct": 0,
+      "explanation": "Using two well-separated targets (0 and q/2) lets decryption decide which one the phase is closer to despite noise."
+    },
+    {
+      "stage": "post",
+      "question": "Decryption computes x = v - <u, s> (mod q). In the small-noise case, x should be closest to what values?",
+      "options": [
+        "0 when μ=0, and q/2 when μ=1",
+        "A uniformly random value in {0,…,q−1} regardless of μ",
+        "The determinant of A when μ=0, and 0 when μ=1",
+        "Always exactly 0 if the implementation is correct"
+      ],
+      "correct": 0,
+      "explanation": "After removing the structured part, only the encoding term μ·(q/2) and small noise remain."
+    },
+    {
+      "stage": "post",
+      "question": "Which failure mode is most directly responsible for bit flips when q is chosen too small?",
+      "options": [
+        "Noise wraps around modulo q so the phase can land closer to the wrong target",
+        "The secret vector s becomes all zeros with high probability",
+        "The ciphertext becomes identical for μ=0 and μ=1",
+        "The RNG produces negative numbers, which Python cannot represent"
+      ],
+      "correct": 0,
+      "explanation": "If the phase crosses the midpoint due to modular wrap-around, the circular-distance test can misclassify the bit."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-themed: why do toy parameters make brute-force recovery of the secret s feasible?",
+      "options": [
+        "The secret space is tiny (e.g., ternary vectors) so enumeration is possible",
+        "LWE becomes easy as soon as q is prime",
+        "Using a matrix A with m>n always reveals s immediately",
+        "The encryption step leaks s directly in u"
+      ],
+      "correct": 0,
+      "explanation": "With small n and small secret distributions, you can enumerate candidates and check whether the implied errors stay within the bound."
+    }
+  ]
 }

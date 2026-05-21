@@ -1,1 +1,50 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-checked toy parameters; isogeny computed via Vélu's formulas for short Weierstrass curves (see Washington, *Elliptic Curves: Number Theory and Cryptography*, and Proposition 4.21 in Gallay's *Courbes elliptiques* report).",
+  "vectors": [
+    {
+      "op": "inv_mod",
+      "p": 101,
+      "a": 2,
+      "expected": 51
+    },
+    {
+      "op": "inv_mod",
+      "p": 101,
+      "a": 100,
+      "expected": 100
+    },
+    {
+      "op": "point_add",
+      "curve": { "p": 101, "a": 2, "b": 3 },
+      "p1": [1, 39],
+      "p2": [1, 39],
+      "expected": [79, 57]
+    },
+    {
+      "op": "scalar_mul",
+      "curve": { "p": 101, "a": 2, "b": 3 },
+      "k": 7,
+      "p1": [1, 39],
+      "expected": [41, 86]
+    },
+    {
+      "op": "subgroup_points",
+      "curve": { "p": 101, "a": 2, "b": 3 },
+      "generator": [35, 15],
+      "expected": [null, [35, 15], [35, 86]]
+    },
+    {
+      "op": "velu_codomain",
+      "curve": { "p": 101, "a": 2, "b": 3 },
+      "kernel_generator": [35, 15],
+      "expected": { "a": 97, "b": 75 }
+    },
+    {
+      "op": "velu_map_point",
+      "curve": { "p": 101, "a": 2, "b": 3 },
+      "kernel_generator": [35, 15],
+      "point": [41, 86],
+      "expected": [46, 60]
+    }
+  ]
+}

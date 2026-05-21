@@ -1,4 +1,101 @@
 {
   "title": "Hybrid TLS \u2014 Classical + PQ",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a TLS 1.3-style key schedule, what does the transcript hash primarily achieve?",
+      "options": [
+        "It binds derived keys to what was negotiated and authenticated",
+        "It makes the connection faster by skipping key derivation",
+        "It replaces the need for certificates",
+        "It guarantees constant-time implementations"
+      ],
+      "correct": 0,
+      "explanation": "The transcript hash ensures the traffic keys depend on the actual handshake messages (algorithms, extensions, identities), limiting downgrade and cross-protocol confusion."
+    },
+    {
+      "stage": "pre",
+      "question": "Hybrid TLS key exchange is designed so that session keys remain secure if\u2026",
+      "options": [
+        "at least one of the classical or PQ assumptions holds",
+        "both the classical and PQ assumptions hold",
+        "the PQ assumption holds, regardless of classical security",
+        "the classical assumption holds, regardless of PQ security"
+      ],
+      "correct": 0,
+      "explanation": "The point of hybrid is a safety net: the final keys should stay safe if either the classical or the PQ component remains secure."
+    },
+    {
+      "stage": "post",
+      "question": "Why should a hybrid combiner feed `ss_classical` and `ss_pq` through a KDF like HKDF instead of using raw concatenation as a session key?",
+      "options": [
+        "To produce uniform, fixed-length key material with domain separation",
+        "To ensure the ciphertexts become shorter",
+        "To avoid needing any randomness anywhere in the protocol",
+        "To make the handshake work without authentication"
+      ],
+      "correct": 0,
+      "explanation": "HKDF extracts and expands key material safely, normalizes length/distribution, and lets you bind context via labels."
+    },
+    {
+      "stage": "post",
+      "question": "If PQ KEM decapsulation fails during a hybrid TLS handshake, the safest behavior is to\u2026",
+      "options": [
+        "abort the handshake (fail closed)",
+        "set `ss_pq` to all-zero bytes and continue",
+        "retry decapsulation until it works",
+        "ignore the PQ component and report success"
+      ],
+      "correct": 0,
+      "explanation": "Continuing after decapsulation failure can silently downgrade security. Failing closed avoids accidental 'classical-only' sessions."
+    },
+    {
+      "stage": "post",
+      "question": "Two endpoints implement `HKDF(ss_classical || ss_pq)` but disagree on the order and one computes `HKDF(ss_pq || ss_classical)`. What happens?",
+      "options": [
+        "They derive different traffic keys and the handshake fails",
+        "They derive the same keys because HKDF is commutative",
+        "They derive the same keys as long as both secrets are the same length",
+        "Only the PQ part changes; the classical part stays the same"
+      ],
+      "correct": 0,
+      "explanation": "Order matters: concatenation is not commutative, so a mismatch yields different secrets and the handshake cannot complete."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main security risk if derived traffic keys do not depend on the negotiated handshake transcript?",
+      "options": [
+        "Downgrade and cross-protocol confusion become easier",
+        "The cipher suite automatically becomes AEAD",
+        "The server becomes immune to replay attacks",
+        "Certificates stop expiring"
+      ],
+      "correct": 0,
+      "explanation": "Without transcript binding, attackers can try to force or replay different negotiations while keeping the same derived key material, enabling downgrade-style attacks."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best describes hybrid TLS in practice?",
+      "options": [
+        "It is a migration technique: negotiate classical + PQ together and combine secrets with a KDF",
+        "It means replacing certificates with PQ signatures only",
+        "It means XORing ciphertexts from two key exchanges to save bandwidth",
+        "It is a way to avoid implementing TLS 1.3"
+      ],
+      "correct": 0,
+      "explanation": "Hybrid TLS runs both algorithms and combines their resulting shared secrets in a principled way, aiming to reduce migration risk."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: an implementation accepts a handshake where the PQ KEM share is missing but still derives keys as if PQ was negotiated. Which defense is most directly relevant?",
+      "options": [
+        "Bind the negotiated parameters into the transcript hash used for key derivation",
+        "Use longer RSA keys for certificates",
+        "Disable HKDF and use raw concatenation",
+        "Compress the handshake transcript to reduce overhead"
+      ],
+      "correct": 0,
+      "explanation": "Transcript binding ensures that if the PQ share (or its identifiers) is absent, the transcript hash changes and the derived keys differ, preventing confusion/downgrade acceptance."
+    }
+  ]
 }

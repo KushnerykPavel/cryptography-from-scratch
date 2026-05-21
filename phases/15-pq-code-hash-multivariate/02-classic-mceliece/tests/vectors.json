@@ -1,1 +1,59 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors for the toy implementation in code/main.py. Hamming(7,4) values follow the standard parity-bit placement (p1,p2,d1,p3,d2,d3,d4) and the parity-check mapping where syndrome bits encode the flipped position in binary; McEliece toy vectors use the fixed (S, perm) shown in code/main.py Step 3, with ciphertexts computed by running the reference code.",
+  "vectors": [
+    {
+      "op": "gf2_matrix_inv",
+      "a": [[1, 0, 1, 1], [1, 1, 0, 1], [0, 1, 1, 1], [1, 0, 0, 1]],
+      "expected": [[1, 1, 1, 1], [0, 1, 0, 1], [1, 0, 0, 1], [1, 1, 1, 0]]
+    },
+    {
+      "op": "gf2_matrix_inv",
+      "a": [[1, 0], [1, 0]],
+      "expected_error": "matrix is not invertible over GF(2)"
+    },
+    {
+      "op": "invert_permutation",
+      "perm": [2, 4, 6, 0, 1, 3, 5],
+      "expected": [3, 4, 0, 5, 1, 6, 2]
+    },
+    {
+      "op": "apply_permutation",
+      "v": [0, 1, 1, 0, 0, 1, 1],
+      "perm": [2, 4, 6, 0, 1, 3, 5],
+      "expected": [1, 0, 1, 0, 1, 0, 1]
+    },
+    {
+      "op": "hamming74_encode",
+      "msg": [1, 0, 1, 1],
+      "expected": [0, 1, 1, 0, 0, 1, 1]
+    },
+    {
+      "op": "hamming74_syndrome",
+      "word": [0, 1, 1, 0, 1, 1, 1],
+      "expected": [1, 0, 1]
+    },
+    {
+      "op": "classic_mceliece_encrypt",
+      "s": [[1, 0, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 1]],
+      "perm": [2, 4, 6, 0, 1, 3, 5],
+      "msg": [1, 1, 0, 1],
+      "err": [0, 0, 0, 1, 0, 0, 0],
+      "expected": [1, 0, 0, 0, 1, 0, 0]
+    },
+    {
+      "op": "classic_mceliece_encrypt",
+      "s": [[1, 0, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 1]],
+      "perm": [2, 4, 6, 0, 1, 3, 5],
+      "msg": [1, 1, 0, 1],
+      "err": [1, 0, 0, 1, 0, 0, 0],
+      "expected_error": "error weight exceeds decoder capability t"
+    },
+    {
+      "op": "classic_mceliece_decrypt",
+      "s": [[1, 0, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 1]],
+      "perm": [2, 4, 6, 0, 1, 3, 5],
+      "ct": [1, 0, 0, 0, 1, 0, 0],
+      "expected": [1, 1, 0, 1]
+    }
+  ]
+}

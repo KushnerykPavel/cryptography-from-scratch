@@ -1,1 +1,95 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Educational toy model for SIDH torsion leakage.",
+  "vectors": [
+    {
+      "op": "get_neighbors",
+      "inputs": {
+        "node": 100
+      },
+      "expected": [
+        818627,
+        949879,
+        871885
+      ]
+    },
+    {
+      "op": "generate_matrices",
+      "inputs": {
+        "node": 100,
+        "neighbor": 818627
+      },
+      "expected": [
+        41,
+        79,
+        46,
+        49
+      ]
+    },
+    {
+      "op": "multiply_matrices",
+      "inputs": {
+        "m1": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "m2": [
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "expected": [
+        19,
+        22,
+        43,
+        50
+      ]
+    },
+    {
+      "op": "sidh_alice_keygen",
+      "inputs": {
+        "start_node": 100,
+        "secret_path": [
+          0,
+          2,
+          1,
+          0,
+          2
+        ]
+      },
+      "expected": {
+        "public_curve": 505148,
+        "torsion_matrix": [
+          46,
+          49,
+          1,
+          30
+        ]
+      }
+    },
+    {
+      "op": "torsion_compass_attack",
+      "inputs": {
+        "start_node": 100,
+        "walk_length": 5,
+        "public_curve": 505148,
+        "torsion_matrix": [
+          46,
+          49,
+          1,
+          30
+        ]
+      },
+      "expected": [
+        0,
+        2,
+        1,
+        0,
+        2
+      ]
+    }
+  ]
+}

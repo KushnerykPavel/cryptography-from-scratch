@@ -1,1 +1,41 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors generated from `code/main.py` using p=31, seed=b\"rainbow-toy-seed\", message=b\"hello, multivariate signatures\". These are educational test vectors for this toy implementation (not Rainbow spec vectors).",
+  "vectors": [
+    {
+      "op": "mod_inv",
+      "p": 31,
+      "a": 7,
+      "expected": 9
+    },
+    {
+      "op": "solve_linear_system",
+      "p": 31,
+      "A": [
+        [2, 3],
+        [5, 7]
+      ],
+      "b": [11, 19],
+      "expected": [11, 17]
+    },
+    {
+      "op": "hash_to_field_elems",
+      "p": 31,
+      "m": 4,
+      "message": "hello, multivariate signatures",
+      "expected": [17, 6, 2, 29]
+    },
+    {
+      "op": "rainbow_toy_sign",
+      "seed": "rainbow-toy-seed",
+      "message": "hello, multivariate signatures",
+      "expected": [22, 22, 6, 16, 22, 17]
+    },
+    {
+      "op": "rainbow_toy_verify",
+      "seed": "rainbow-toy-seed",
+      "message": "hello, multivariate signatures",
+      "signature": [22, 22, 6, 16, 22, 17],
+      "expected": true
+    }
+  ]
+}

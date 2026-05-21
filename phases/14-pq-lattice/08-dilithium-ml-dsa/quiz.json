@@ -1,4 +1,102 @@
 {
-  "title": "Dilithium / ML-DSA from Scratch",
-  "questions": []
+  "title": "Dilithium / ML-DSA from Scratch (Toy)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a Fiat–Shamir-style signature, the verifier’s challenge is derived by hashing which data?",
+      "options": [
+        "Only the message",
+        "Only the public key",
+        "The message (or message representative) concatenated with the signer’s commitment",
+        "Only the signer’s response"
+      ],
+      "correct": 2,
+      "explanation": "Fiat–Shamir replaces an interactive challenge with a hash of the message (or its representative) and the commitment so both parties derive the same challenge."
+    },
+    {
+      "stage": "pre",
+      "question": "In ML-DSA/Dilithium, what is the purpose of the hint bits in the signature?",
+      "options": [
+        "They increase the polynomial modulus q",
+        "They help the verifier reconstruct the same high bits that the signer hashed despite missing low-bit information",
+        "They let the signer skip hashing the message",
+        "They replace the need for a public key"
+      ],
+      "correct": 1,
+      "explanation": "Hints guide rounding: the verifier can recover the same high-bit view (w1) the signer used, even though the verifier only computes an approximation."
+    },
+    {
+      "stage": "post",
+      "question": "Dilithium/ML-DSA does arithmetic in which polynomial ring (conceptually)?",
+      "options": [
+        "Z_q[x] / (x^n - 1)",
+        "Z_q[x] / (x^n + 1)",
+        "Z[x] / (x^n + q)",
+        "GF(2)[x] / (x^n + 1)"
+      ],
+      "correct": 1,
+      "explanation": "Dilithium uses the negacyclic ring R_q = Z_q[x]/(x^n + 1), which enables fast NTT-based multiplication in real implementations."
+    },
+    {
+      "stage": "post",
+      "question": "Why does verification compute something like A·z − c·t (or an approximation of it)?",
+      "options": [
+        "To recover the random mask y exactly",
+        "To cancel the secret term involving s1 and relate the signature back to the commitment",
+        "To compute the public key from the signature",
+        "To avoid using any hash function"
+      ],
+      "correct": 1,
+      "explanation": "With z = y + c·s1 and t = A·s1 + s2, the expression A·z − c·t simplifies to A·y − c·s2, linking verification back to the commitment without knowing s1."
+    },
+    {
+      "stage": "post",
+      "question": "What does the signing-time rejection condition “HighBits(w − c·s2) must match HighBits(w)” ensure?",
+      "options": [
+        "That the public key was generated correctly",
+        "That the verifier will hash the same w1 the signer hashed (so the challenge recomputes consistently)",
+        "That the signature is smaller than a threshold in bytes",
+        "That q is prime"
+      ],
+      "correct": 1,
+      "explanation": "The verifier effectively sees a noised version of the commitment. The signer must ensure this noise does not change the high-bit view used for hashing, or verification would fail."
+    },
+    {
+      "stage": "post",
+      "question": "Attack-themed: if an implementation removed the rejection sampling and always released z = y + c·s1, what becomes feasible from many signatures?",
+      "options": [
+        "Recover the secret s1 by averaging z values across signatures",
+        "Factor the modulus q",
+        "Recover the hash function’s internal state exactly",
+        "Derive the verifier’s public key from the signature"
+      ],
+      "correct": 0,
+      "explanation": "Without the abort/rejection logic, z retains a statistical dependence on s1; over many signatures, simple averaging attacks can reveal the secret."
+    },
+    {
+      "stage": "post",
+      "question": "Why does ML-DSA split t into t1 and t0 (keeping only t1 in the public key)?",
+      "options": [
+        "To increase signing speed by skipping matrix multiplication",
+        "To reduce public key size by dropping low bits (t0), while still letting the signer correct rounding using t0",
+        "To avoid using an extendable-output function (XOF)",
+        "To make signatures deterministic"
+      ],
+      "correct": 1,
+      "explanation": "t0 contains low bits that are not published to save space; the signer retains t0 and provides hints so the verifier can still derive the correct high-bit view."
+    },
+    {
+      "stage": "post",
+      "question": "Which encoding/decoding practice is most important to prevent malleability and cross-implementation bugs?",
+      "options": [
+        "Allow multiple different byte encodings to decode to the same signature",
+        "Use non-canonical encodings and normalize silently during verification",
+        "Require a single canonical encoding and reject out-of-range or non-canonical inputs",
+        "Skip all range checks for performance"
+      ],
+      "correct": 2,
+      "explanation": "Cryptographic encodings must be canonical: verification should reject malformed or non-canonical inputs rather than “fixing them up”, to avoid malleability and interop issues."
+    }
+  ]
 }
+

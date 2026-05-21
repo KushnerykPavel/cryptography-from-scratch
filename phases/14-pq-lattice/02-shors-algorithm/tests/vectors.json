@@ -1,1 +1,61 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors derived from the reference implementation in code/main.py. Values are small enough to verify by hand and cross-check against Python's built-in pow(..., mod) where applicable.",
+  "vectors": [
+    {"op": "gcd", "a": 54, "b": 24, "expected": 6},
+    {"op": "gcd", "a": 0, "b": 0, "expected": 0},
+    {"op": "mod_pow", "base": 7, "exponent": 4, "modulus": 15, "expected": 1},
+    {"op": "mod_pow", "base": -2, "exponent": 5, "modulus": 15, "expected": 13},
+    {
+      "op": "mod_pow",
+      "base": 2,
+      "exponent": -1,
+      "modulus": 15,
+      "expected_error": "exponent must be nonnegative"
+    },
+    {
+      "op": "continued_fraction_rational",
+      "numerator": 7,
+      "denominator": 22,
+      "expected": [0, 3, 7]
+    },
+    {
+      "op": "continued_fraction_rational",
+      "numerator": 32,
+      "denominator": 64,
+      "expected": [0, 2]
+    },
+    {"op": "convergents", "coefficients": [0, 3, 7], "expected": [[0, 1], [1, 3], [7, 22]]},
+    {"op": "multiplicative_order", "a": 2, "n": 15, "max_r": 15, "expected": 4},
+    {"op": "multiplicative_order", "a": 4, "n": 15, "max_r": 15, "expected": 2},
+    {
+      "op": "multiplicative_order",
+      "a": 5,
+      "n": 15,
+      "max_r": 15,
+      "expected_error": "a must be coprime to n"
+    },
+    {"op": "simulate_phase_measurement", "s": 2, "r": 4, "Q": 64, "expected": 32},
+    {
+      "op": "recover_order_from_phase",
+      "inputs": {
+        "measurement": 32,
+        "Q": 64,
+        "a": 2,
+        "N": 15,
+        "max_denominator": 15,
+        "max_multiplier": 10
+      },
+      "expected": 4
+    },
+    {
+      "op": "recover_order_from_phase",
+      "inputs": {"measurement": 64, "Q": 64, "a": 2, "N": 15},
+      "expected_error": "measurement must satisfy 0 <= measurement < Q"
+    },
+    {
+      "op": "shor_factor_toy",
+      "inputs": {"N": 21, "seed": 0, "max_attempts": 50},
+      "expected": [3, 7]
+    }
+  ]
+}

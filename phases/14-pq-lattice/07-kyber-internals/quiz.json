@@ -1,4 +1,102 @@
 {
-  "title": "Kyber Internals \u2014 NTT & Compression",
-  "questions": []
+  "title": "Kyber Internals — NTT & Compression",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which statement correctly distinguishes cyclic vs negacyclic convolution for polynomials of length n?",
+      "options": [
+        "Cyclic uses x^n = -1; negacyclic uses x^n = 1",
+        "Cyclic uses x^n = 1; negacyclic uses x^n = -1",
+        "Cyclic and negacyclic are the same; the names are historical",
+        "Negacyclic only exists when q is composite"
+      ],
+      "correct": 1,
+      "explanation": "Cyclic convolution corresponds to reduction modulo x^n − 1 (so x^n = 1). Negacyclic convolution corresponds to reduction modulo x^n + 1 (so x^n = −1)."
+    },
+    {
+      "stage": "pre",
+      "question": "In the “twisted NTT” method for multiplying in Z_q[y]/(y^n + 1), what condition must the twist element psi satisfy (at minimum)?",
+      "options": [
+        "psi^n = -1 (so psi has order 2n)",
+        "psi^n = 1 (so psi has order n)",
+        "psi = 0 (so multiplication becomes linear)",
+        "psi must be a generator of Z_q as an additive group"
+      ],
+      "correct": 0,
+      "explanation": "To turn negacyclic convolution into cyclic convolution via a twist, you need psi^n = −1, which implies psi has order 2n in the multiplicative group."
+    },
+    {
+      "stage": "post",
+      "question": "Working modulo x^8 + 1, what is x^9 reduced to?",
+      "options": [
+        "x",
+        "-x",
+        "1",
+        "-1"
+      ],
+      "correct": 1,
+      "explanation": "Modulo x^8 + 1 we have x^8 = −1, so x^9 = x·x^8 = −x."
+    },
+    {
+      "stage": "post",
+      "question": "In the twisted NTT setup with psi of order 2n, the n-th root omega used by the cyclic NTT is:",
+      "options": [
+        "omega = psi^2",
+        "omega = psi^n",
+        "omega = psi^(2n)",
+        "omega = psi^(-1)"
+      ],
+      "correct": 0,
+      "explanation": "If psi has order 2n, then omega = psi^2 has order n and can be used as the primitive n-th root for the cyclic NTT."
+    },
+    {
+      "stage": "post",
+      "question": "With the even/odd split a(x) = a_e(y) + x·a_o(y) and b(x) = b_e(y) + x·b_o(y) where y = x^2, what is the coefficient of x in the product a(x)·b(x)?",
+      "options": [
+        "a_e·b_e + y·a_o·b_o",
+        "a_e·b_o + a_o·b_e",
+        "a_e·b_e − a_o·b_o",
+        "a_e + b_e"
+      ],
+      "correct": 1,
+      "explanation": "Multiply out (a_e + x a_o)(b_e + x b_o) = (a_e b_e + x^2 a_o b_o) + x(a_e b_o + a_o b_e). The x term is a_e b_o + a_o b_e."
+    },
+    {
+      "stage": "post",
+      "question": "Kyber-style coefficient compression maps c in [0,q) to t in [0,2^d). Which expression matches that intent?",
+      "options": [
+        "t = floor((2^d · c) / q)",
+        "t = round((2^d · c) / q)",
+        "t = c mod 2^d",
+        "t = floor((q · c) / 2^d)"
+      ],
+      "correct": 1,
+      "explanation": "Compression is a quantization step: scale by 2^d/q and round to the nearest integer so t fits in d bits while approximating c."
+    },
+    {
+      "stage": "post",
+      "question": "In the pack_bits implementation used in this lesson, where do the bits of the first value go?",
+      "options": [
+        "Into the most-significant bits of the first byte",
+        "Into the least-significant bits of the first byte",
+        "They are stored as a separate length-prefixed field before the bytes",
+        "They are dropped; only the second value is packed"
+      ],
+      "correct": 1,
+      "explanation": "The code builds an accumulator by shifting the next value in at the current low-bit position, then emits bytes from the low end. That places the first value in the least-significant bits of the first output byte."
+    },
+    {
+      "stage": "post",
+      "question": "A production ML-KEM implementation must not branch early on mismatch during ciphertext checks (e.g., comparing recomputed ciphertext or decompress/pack results). Why?",
+      "options": [
+        "Because branching makes the code longer, which hurts performance",
+        "Because it can leak information via timing/power/cache, acting like a decryption-validity oracle",
+        "Because the standard forbids using if-statements in cryptographic code",
+        "Because compression only works when executed on a GPU"
+      ],
+      "correct": 1,
+      "explanation": "Early exits and data-dependent branches can leak whether a ciphertext was valid via timing or microarchitectural signals, which attackers can amplify into an oracle."
+    }
+  ]
 }
+

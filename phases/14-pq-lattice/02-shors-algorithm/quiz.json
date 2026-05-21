@@ -1,4 +1,100 @@
 {
-  "title": "Shor's Algorithm \u2014 Walkthrough",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does the **order** `r` of `a (mod N)` mean (assuming `gcd(a, N) = 1`)?",
+      "options": [
+        "The smallest positive `r` such that `a^r ≡ 1 (mod N)`",
+        "The number of distinct prime factors of `N` counted with multiplicity",
+        "The smallest positive `r` such that `r * a ≡ 1 (mod N)`",
+        "The largest `r` such that `a^r < N` as integers (no modular reduction)"
+      ],
+      "correct": 0,
+      "explanation": "Order is a multiplicative-period concept: `a^r` returns to 1 modulo `N` for the first time at `r`."
+    },
+    {
+      "stage": "pre",
+      "question": "In Shor's factoring reduction, which condition is an immediate win before doing any order finding?",
+      "options": [
+        "Finding an `a` such that `gcd(a, N) > 1`",
+        "Finding an `a` such that `a^2 ≡ 1 (mod N)`",
+        "Finding an `a` such that `a ≡ 1 (mod N)`",
+        "Finding an `a` such that `a` is prime"
+      ],
+      "correct": 0,
+      "explanation": "If `gcd(a, N)` is nontrivial, it is already a factor of `N`; no quantum/classical order logic is needed."
+    },
+    {
+      "stage": "post",
+      "question": "After quantum phase estimation yields a measurement `m` and you know `Q = 2^n`, what classical tool is used to recover candidate denominators for `m/Q ≈ s/r`?",
+      "options": [
+        "Continued fractions and their convergents",
+        "Fast Fourier transform (FFT) on the digits of `m`",
+        "Chinese remainder theorem (CRT) reconstruction over many moduli",
+        "Miller–Rabin primality tests on `m` until it is prime"
+      ],
+      "correct": 0,
+      "explanation": "The classical post-processing step enumerates convergents of the continued fraction of `m/Q` to find candidate `r` values."
+    },
+    {
+      "stage": "post",
+      "question": "Why can the fraction recovered from `m/Q` give only a **divisor** of the true order `r`?",
+      "options": [
+        "Because `s/r` can reduce to `s'/r'` when `gcd(s, r) ≠ 1`, so the denominator shrinks",
+        "Because continued fractions always return the smallest possible denominator, even if it is incorrect",
+        "Because `Q` must equal `N` exactly; otherwise the denominator is forced to divide `N`",
+        "Because modular exponentiation is not associative, so the concept of order is not well-defined"
+      ],
+      "correct": 0,
+      "explanation": "If `s` and `r` share a gcd, the rational `s/r` reduces and the denominator becomes `r / gcd(s, r)`. Shor repeats measurements (or tests small multiples) to recover the full order."
+    },
+    {
+      "stage": "post",
+      "question": "In the factoring step, you compute `x = a^(r/2) mod N`. Why do you require `r` to be even and `x` not to be `1` or `-1 (mod N)`?",
+      "options": [
+        "Even `r` makes `r/2` an integer, and `x ≡ ±1` makes `gcd(x±1, N)` trivial",
+        "Even `r` ensures `a` is prime, and `x ≡ ±1` ensures `N` is a perfect square",
+        "Even `r` avoids overflow, and `x ≡ ±1` prevents division by zero in Euclid's algorithm",
+        "Even `r` guarantees `N` is odd, and `x ≡ ±1` guarantees `m/Q` is irreducible"
+      ],
+      "correct": 0,
+      "explanation": "The algebra uses `(x-1)(x+1) ≡ 0 (mod N)`. If `x ≡ 1` or `x ≡ -1`, then one of `x±1` is 0 mod `N` and gcds become `1` or `N`."
+    },
+    {
+      "stage": "post",
+      "question": "Example: let `N = 15`, `a = 2`, and the order is `r = 4`. What factors do you get from `x = a^(r/2) mod N`?",
+      "options": [
+        "`x = 4`, so `gcd(4-1, 15) = 3` and `gcd(4+1, 15) = 5`",
+        "`x = 2`, so `gcd(2-1, 15) = 1` and `gcd(2+1, 15) = 3`",
+        "`x = 8`, so `gcd(8-1, 15) = 7` and `gcd(8+1, 15) = 9`",
+        "`x = 1`, so `gcd(1-1, 15) = 15` and `gcd(1+1, 15) = 2`"
+      ],
+      "correct": 0,
+      "explanation": "`x = 2^2 mod 15 = 4`. Then `gcd(3, 15) = 3` and `gcd(5, 15) = 5`, giving a full factorization."
+    },
+    {
+      "stage": "post",
+      "question": "Which family of cryptosystems is directly threatened by Shor's algorithm (assuming large fault-tolerant quantum computers)?",
+      "options": [
+        "RSA and (EC)DH/(EC)DLP-based systems (including ECDSA/ECDH)",
+        "AES and ChaCha20 stream ciphers (symmetric encryption) at full strength",
+        "Hash functions like SHA-256 via collision attacks faster than birthday bound",
+        "One-time pads, because qubits can read the key without disturbing it"
+      ],
+      "correct": 0,
+      "explanation": "Shor solves factoring and discrete log in polynomial time, undermining RSA and discrete-log-based constructions over finite fields and elliptic curves."
+    },
+    {
+      "stage": "post",
+      "question": "During the transition to post-quantum crypto, what is a common reason to deploy **hybrid key exchange**?",
+      "options": [
+        "It combines a classical exchange and a PQ KEM so that breaking one does not break the session key",
+        "It reduces certificate size by replacing public keys with hash digests",
+        "It eliminates the need for authentication by using two independent secrets",
+        "It makes handshakes constant-time automatically because two schemes cancel timing leaks"
+      ],
+      "correct": 0,
+      "explanation": "Hybrid approaches hedge against surprises: the session key remains secure as long as at least one component (classical or PQ) remains unbroken."
+    }
+  ]
 }

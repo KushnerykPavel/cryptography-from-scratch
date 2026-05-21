@@ -1,4 +1,101 @@
 {
   "title": "PQ Migration Lab \u2014 Audit a Real Codebase",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does “algorithm agility” mean in a cryptographic system?",
+      "options": [
+        "The system can change algorithms via configuration and negotiation without redesigning the protocol",
+        "The system uses the newest algorithms available in the ecosystem",
+        "The system uses many algorithms at once to increase security",
+        "The system can compute cryptographic operations faster by switching at runtime"
+      ],
+      "correct": 0,
+      "explanation": "Algorithm agility is about designing protocols and code so algorithms can be upgraded safely (config/negotiation/telemetry), not about using the newest thing."
+    },
+    {
+      "stage": "pre",
+      "question": "In a hybrid key exchange, what is typically being combined?",
+      "options": [
+        "Two shared secrets (e.g., a classical exchange output and a PQ-KEM shared secret) via a KDF",
+        "Two ciphertexts (one classical and one PQ) by concatenating them",
+        "Two public keys by hashing them together to form a shared key",
+        "Two signatures (classical and PQ) by XORing them"
+      ],
+      "correct": 0,
+      "explanation": "Hybrid key exchange usually means you run two key establishment mechanisms and combine the resulting shared secrets with a KDF."
+    },
+    {
+      "stage": "post",
+      "question": "Why does a PQ migration usually start with an inventory step?",
+      "options": [
+        "Because you need visibility into which algorithms and boundaries exist before you can set policy or roll out changes",
+        "Because PQ algorithms require special hardware that must be purchased in advance",
+        "Because inventory replaces the need for compatibility testing",
+        "Because inventory guarantees the chosen PQ scheme cannot be broken later"
+      ],
+      "correct": 0,
+      "explanation": "Inventory tells you what crypto exists where (protocols, libraries, key formats, lifetimes), which is prerequisite to a safe policy and rollout plan."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main reason to use an extract-then-expand KDF (HKDF style) when combining two secrets?",
+      "options": [
+        "Extraction turns the combined input into a pseudorandom key even if the inputs have structure or bias",
+        "Expansion makes the combined secret reversible for debugging and incident response",
+        "Extraction ensures both inputs can be recovered later from the output key",
+        "Expansion guarantees the output key is secure even if both inputs are public"
+      ],
+      "correct": 0,
+      "explanation": "HKDF-Extract provides randomness extraction so structured/biasy inputs become a PRK, then HKDF-Expand derives keys with domain separation."
+    },
+    {
+      "stage": "post",
+      "question": "What does transcript binding prevent in a negotiated protocol?",
+      "options": [
+        "A silent downgrade or mismatch where different negotiation results could lead to the same derived keys",
+        "A denial-of-service attack where a peer refuses to connect",
+        "A memory-safety bug in the cryptographic library implementation",
+        "A timing side-channel in the CPU's multiplication instruction"
+      ],
+      "correct": 0,
+      "explanation": "If negotiation parameters influence the KDF context (transcript), then a forced fallback changes derived keys and can be detected or fail closed."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s negotiation model, what does the server do when selecting a KEX?",
+      "options": [
+        "Selects the first server-preferred option that the client offered, or fails if none overlap",
+        "Selects the client's first offered option regardless of server policy",
+        "Randomly selects an option to balance load across algorithms",
+        "Selects the strongest option by comparing key sizes numerically"
+      ],
+      "correct": 0,
+      "explanation": "The lab uses deterministic server-side selection: iterate server preference and pick the first item also present in the client offer list."
+    },
+    {
+      "stage": "post",
+      "question": "Which migration strategy most often preserves compatibility while improving security over time?",
+      "options": [
+        "Ship hybrid first (classical + PQ), then later tighten policy and eventually remove classical",
+        "Ship PQ-only immediately and require all clients to update before connecting",
+        "Avoid changing algorithms and instead increase RSA key sizes indefinitely",
+        "Replace all asymmetric crypto with symmetric keys shared out-of-band"
+      ],
+      "correct": 0,
+      "explanation": "Hybrid deployments can bridge compatibility gaps while you roll out PQ support, measure negotiations, and later enforce stronger modes."
+    },
+    {
+      "stage": "post",
+      "question": "Which signal is most useful for detecting “supported but not used” PQ migration failures?",
+      "options": [
+        "Telemetry/logs showing what algorithms were actually negotiated in production",
+        "A unit test that imports the PQ library successfully",
+        "A design document stating that PQC is supported",
+        "A marketing page listing PQ features"
+      ],
+      "correct": 0,
+      "explanation": "Real failures often come from fallback or misconfiguration; the only reliable signal is what production handshakes actually negotiate."
+    }
+  ]
 }

@@ -1,4 +1,100 @@
 {
-  "title": "OpenFHE & SEAL Tour",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which FHE library paradigm focuses on approximate real-number arithmetic often used in Machine Learning?",
+      "options": [
+        "BGV",
+        "BFV",
+        "CKKS",
+        "TFHE"
+      ],
+      "correct": 2,
+      "explanation": "CKKS is designed for approximate arithmetic, making it ideal for the floating-point calculations prevalent in ML."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the primary consequence of multiplying two ciphertexts in a library like SEAL?",
+      "options": [
+        "The operation is instantaneous",
+        "The noise budget decreases and ciphertext size increases",
+        "The plaintext values are randomized",
+        "The poly_modulus_degree shrinks"
+      ],
+      "correct": 1,
+      "explanation": "Multiplication rapidly consumes the noise budget and expands the ciphertext size from 2 polynomials to 3."
+    },
+    {
+      "stage": "post",
+      "question": "Why do developers need to generate and provide a Relinearization Key to the server?",
+      "options": [
+        "To allow the server to decrypt the data",
+        "To allow the server to rotate batched arrays",
+        "To shrink a ciphertext back to its normal size after multiplication",
+        "To convert CKKS ciphertexts to BFV ciphertexts"
+      ],
+      "correct": 2,
+      "explanation": "Multiplication grows the ciphertext; the relinearization key mathematically reduces it back to its canonical size of 2 polynomials without decrypting."
+    },
+    {
+      "stage": "post",
+      "question": "If you want to perform a left rotation (shift) on an array packed inside a single ciphertext, which key must you provide?",
+      "options": [
+        "PublicKey",
+        "RelinKey",
+        "GaloisKey",
+        "SecretKey"
+      ],
+      "correct": 2,
+      "explanation": "GaloisKeys enable homomorphic cyclic rotations of batched SIMD arrays."
+    },
+    {
+      "stage": "post",
+      "question": "What happens in most FHE libraries if you exceed the noise budget limit configured by your parameters?",
+      "options": [
+        "The Evaluator automatically bootstraps the ciphertext",
+        "The program crashes with an OutOfMemory error",
+        "The ciphertext silently becomes undecryptable and yields garbage values",
+        "The Evaluator falls back to cleartext execution"
+      ],
+      "correct": 2,
+      "explanation": "If the error term grows larger than the allowed budget, the plaintext is irreversibly corrupted, and decryption yields random garbage."
+    },
+    {
+      "stage": "post",
+      "question": "When designing an FHE circuit to compute a polynomial like a * b * c * d, how should it be structured to maximize noise budget?",
+      "options": [
+        "Evaluate sequentially: (((a * b) * c) * d)",
+        "Evaluate as a binary tree: (a * b) * (c * d)",
+        "There is no difference in noise budget",
+        "Evaluate additions first, then multiply"
+      ],
+      "correct": 1,
+      "explanation": "A binary tree execution gives a multiplicative depth of 2, whereas sequential execution gives a depth of 3. Lower depth preserves more noise budget."
+    },
+    {
+      "stage": "post",
+      "question": "Which of the following is an 'attack' or massive performance pitfall when writing FHE applications?",
+      "options": [
+        "Using Batch Encoding to pack thousands of values",
+        "Relinearizing ciphertexts after every single multiplication",
+        "Encrypting one integer per ciphertext instead of batching arrays",
+        "Using CKKS for machine learning inference"
+      ],
+      "correct": 2,
+      "explanation": "Homomorphic operations are extremely slow. Failing to batch arrays (SIMD) means you waste 99% of your poly_modulus_degree slots, causing catastrophic performance loss."
+    },
+    {
+      "stage": "post",
+      "question": "In the context of setting up poly_modulus_degree, what trade-off must a developer make?",
+      "options": [
+        "A higher degree provides more noise budget (depth) but runs significantly slower.",
+        "A higher degree reduces security but speeds up encryption.",
+        "A higher degree reduces the number of batch slots but increases security.",
+        "A higher degree is only required if using the TFHE scheme."
+      ],
+      "correct": 0,
+      "explanation": "A larger poly_modulus_degree allows for a larger coefficient modulus, giving more noise budget (deeper multiplications) and more SIMD slots, at the cost of much heavier computations."
+    }
+  ]
 }

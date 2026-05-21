@@ -1,4 +1,101 @@
 {
   "title": "Merkle Signatures (MSS) from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the defining constraint of a one-time signature (OTS) scheme?",
+      "options": [
+        "A keypair must sign at most one message",
+        "A public key can verify at most one signature",
+        "A signature must be exactly one hash long",
+        "Verification requires no public key"
+      ],
+      "correct": 0,
+      "explanation": "OTS security only holds if each keypair is used to sign at most one message; reusing the key can leak enough material to enable forgeries."
+    },
+    {
+      "stage": "pre",
+      "question": "In a Merkle tree, what does an authentication path typically contain?",
+      "options": [
+        "The private keys for every leaf",
+        "The list of sibling hashes from the leaf level up to the root",
+        "A random nonce used to salt every internal node",
+        "A full copy of the entire tree"
+      ],
+      "correct": 1,
+      "explanation": "An auth path is the minimal set of sibling hashes needed to recompute the root from a given leaf."
+    },
+    {
+      "stage": "post",
+      "question": "In a basic Merkle signature scheme (MSS), what is the long-term public key most verifiers pin to?",
+      "options": [
+        "A Merkle root (plus pinned parameters like hash and tree height)",
+        "A single Lamport secret key",
+        "The concatenation of all leaf private keys",
+        "The last signature produced by the signer"
+      ],
+      "correct": 0,
+      "explanation": "The Merkle root commits to all leaf public keys; verification also requires the verifier to know the parameters used to build that root."
+    },
+    {
+      "stage": "post",
+      "question": "Why must a Merkle signature include the leaf index (or equivalent position information)?",
+      "options": [
+        "So the verifier can choose the correct sibling order while hashing up the path",
+        "So the verifier can recover the signer's master secret",
+        "So the verifier can compress the signature to a single byte",
+        "So the verifier can skip checking the authentication path"
+      ],
+      "correct": 0,
+      "explanation": "At each level the verifier must know whether the current hash is a left or right child; the index determines the ordering with each sibling."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what is the most common catastrophic failure in stateful Merkle-tree signature schemes like XMSS/LMS?",
+      "options": [
+        "Reusing the same leaf/OTS key index due to crashes, rollbacks, or concurrency bugs",
+        "Using SHA-256 instead of SHA-512",
+        "Including the auth path in the signature",
+        "Storing the public root in a certificate"
+      ],
+      "correct": 0,
+      "explanation": "Leaf reuse breaks the 'one-time' assumption of the OTS layer and can leak enough material to enable forgeries."
+    },
+    {
+      "stage": "post",
+      "question": "What must an MSS verifier check to accept a signature?",
+      "options": [
+        "Only that the authentication path recomputes the public root",
+        "Only that the OTS signature verifies under the included leaf public key",
+        "Both OTS verification and Merkle membership (auth path) to the pinned root",
+        "Neither; MSS signatures are self-authenticating"
+      ],
+      "correct": 2,
+      "explanation": "MSS has two layers: the OTS signature must verify, and the leaf public key must be proven to be part of the committed set via the auth path."
+    },
+    {
+      "stage": "post",
+      "question": "What does domain separation mean in this context, and why does it matter?",
+      "options": [
+        "Using different hash functions for leaves and internal nodes to speed up verification",
+        "Prefixing/labeling hashes for different purposes to prevent cross-protocol or cross-layer collisions",
+        "Encrypting the Merkle root so attackers cannot see it",
+        "Changing the tree height for every signature"
+      ],
+      "correct": 1,
+      "explanation": "Domain separation uses labels/prefixes so that a hash intended as a leaf cannot be interpreted as an internal node (or vice versa) in another context."
+    },
+    {
+      "stage": "post",
+      "question": "How do stateful schemes (XMSS/LMS) differ from stateless schemes (SPHINCS+) operationally?",
+      "options": [
+        "Stateful schemes require leaf index management; stateless schemes avoid it but typically have larger signatures",
+        "Stateful schemes are always faster and smaller than stateless schemes in every parameter set",
+        "Stateless schemes require keeping a counter on disk; stateful schemes do not",
+        "They are operationally identical; only the names differ"
+      ],
+      "correct": 0,
+      "explanation": "Stateful schemes must ensure indices never repeat (which is operationally hard); stateless schemes avoid that requirement at the cost of different performance/size trade-offs."
+    }
+  ]
 }

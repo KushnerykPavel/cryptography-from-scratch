@@ -1,4 +1,100 @@
 {
-  "title": "Isogenies \u2014 Maps Between Elliptic Curves",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In group terms, what is the kernel of a homomorphism \u03c6: E \u2192 E' ?",
+      "options": [
+        "The set of points that map to the identity element (the point at infinity)",
+        "The set of points where the curve equation has no solutions",
+        "The set of points with x = 0",
+        "The set of points with maximal order"
+      ],
+      "correct": 0,
+      "explanation": "The kernel is exactly the set of inputs that map to the group identity; for elliptic curves that identity is the point at infinity."
+    },
+    {
+      "stage": "pre",
+      "question": "On a short Weierstrass curve y^2 = x^3 + ax + b over a prime field, what characterizes a 2-torsion point (order 2) in affine coordinates?",
+      "options": [
+        "It has y = 0 (so the point is its own negation)",
+        "It has x = 0",
+        "It has y = 1",
+        "It has x = y"
+      ],
+      "correct": 0,
+      "explanation": "In short Weierstrass form, negation is (x, y) \u2192 (x, -y), so a point equals its negation exactly when y = 0."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best distinguishes an isogeny from an isomorphism?",
+      "options": [
+        "An isogeny can be many-to-one (non-injective) because it collapses a finite kernel; an isomorphism is bijective",
+        "An isogeny is only defined over the real numbers; an isomorphism is only defined over finite fields",
+        "An isogeny preserves x-coordinates; an isomorphism preserves y-coordinates",
+        "An isogeny always has degree 1; an isomorphism always has prime degree"
+      ],
+      "correct": 0,
+      "explanation": "Isogenies are homomorphisms with finite kernel and typically are not invertible; isomorphisms are reversible coordinate changes."
+    },
+    {
+      "stage": "post",
+      "question": "In the short-Weierstrass Vélu setup used in this lesson, which codomain update is correct?",
+      "options": [
+        "E': y^2 = x^3 + (a - 5v)x + (b - 7w)",
+        "E': y^2 = x^3 + (a + 5v)x + (b + 7w)",
+        "E': y^2 = x^3 + (av)x + (bw)",
+        "E': y^2 = x^3 + (a - v)x + (b - w)"
+      ],
+      "correct": 0,
+      "explanation": "Vélu’s formulas compute v and w from the kernel representatives and update the curve coefficients with the (a - 5v, b - 7w) rule."
+    },
+    {
+      "stage": "post",
+      "question": "What should \u03c6(Q) be for any kernel point Q \u2208 ker(\u03c6) ?",
+      "options": [
+        "The point at infinity (the identity), because kernel points are exactly those mapped to identity",
+        "Q itself (kernel points are fixed points)",
+        "A random point on the codomain curve",
+        "A point with y = 0 on the codomain curve"
+      ],
+      "correct": 0,
+      "explanation": "By definition, the kernel is the set of points that map to the identity element."
+    },
+    {
+      "stage": "post",
+      "question": "Why does Vélu’s construction use a set S containing one representative from each \u00b1 pair of non-2-torsion kernel points (plus all 2-torsion points)?",
+      "options": [
+        "To avoid double-counting Q and -Q while keeping the sums well-defined and covering the whole kernel structure",
+        "Because only one point in each \u00b1 pair lies on the curve",
+        "Because it makes the isogeny injective",
+        "Because it ensures the curve becomes singular"
+      ],
+      "correct": 0,
+      "explanation": "Non-2-torsion kernel points come in \u00b1 pairs; summing over one representative per pair avoids duplicating contributions."
+    },
+    {
+      "stage": "post",
+      "question": "You find SIDH/SIKE used for key establishment in a production system. What is the correct posture today?",
+      "options": [
+        "Treat it as broken for security purposes, plan removal, rotate affected secrets, and migrate to supported PQ KEMs",
+        "Keep it; isogeny-based cryptography is automatically post-quantum safe forever",
+        "Only increase parameter sizes; the underlying protocol design is unaffected",
+        "Replace it with a custom curve and keep the same SIDH protocol"
+      ],
+      "correct": 0,
+      "explanation": "SIDH/SIKE suffered efficient key-recovery attacks; migration should prioritize removing broken primitives and rotating impacted material."
+    },
+    {
+      "stage": "post",
+      "question": "If your goal is post-quantum key establishment in real systems, what is the most practical replacement direction?",
+      "options": [
+        "Adopt standardized PQ KEMs (e.g., ML-KEM), often in a hybrid transition if needed",
+        "Implement SIDH from scratch in Python and deploy it behind TLS",
+        "Use elliptic-curve Diffie\u2013Hellman with a larger curve",
+        "Use RSA-4096 as a post-quantum KEM"
+      ],
+      "correct": 0,
+      "explanation": "For engineering migration, the path is standardized PQ KEMs with crypto-agility; toy implementations and broken designs are not acceptable."
+    }
+  ]
 }

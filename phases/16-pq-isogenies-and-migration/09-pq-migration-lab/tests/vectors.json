@@ -1,1 +1,81 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors for this lesson's toy primitives + HKDF (RFC 5869 / HMAC-SHA256) sanity checks",
+  "vectors": [
+    {
+      "op": "hkdf_extract",
+      "salt_ascii": "salt",
+      "ikm_ascii": "ikm",
+      "expected_hex": "6c1a16bbfd2d010d2b2508af08a0cfb6a6f8445e71e209e4daabbe6d1bebf402"
+    },
+    {
+      "op": "hkdf_expand",
+      "prk_hex": "6c1a16bbfd2d010d2b2508af08a0cfb6a6f8445e71e209e4daabbe6d1bebf402",
+      "info_ascii": "info",
+      "length": 42,
+      "expected_hex": "fe8f9615d2374c0d17f77d1aeaf408c2e75fe0466073d0def23c733e2f862dfd6814c9254418fa112fe8"
+    },
+    {
+      "op": "hkdf",
+      "salt_ascii": "salt",
+      "ikm_ascii": "ikm",
+      "info_ascii": "info",
+      "length": 42,
+      "expected_hex": "fe8f9615d2374c0d17f77d1aeaf408c2e75fe0466073d0def23c733e2f862dfd6814c9254418fa112fe8"
+    },
+    {
+      "op": "transcript_hash",
+      "messages_ascii": ["a", "bc", "def"],
+      "expected_hex": "80854f715f7e16456219cb83f56df8e34ccfac0d06ce7c88e992426e24f96639"
+    },
+    {
+      "op": "parse_hybrid_name",
+      "name": "HYBRID(X25519,PQC-MLKEM-768)",
+      "expected_parts": ["X25519", "PQC-MLKEM-768"]
+    },
+    {"op": "parse_hybrid_name", "name": "X25519", "expected_parts": null},
+    {"op": "kex_has_pq", "name": "HYBRID(X25519,PQC-MLKEM-768)", "expected": true},
+    {"op": "kex_has_pq", "name": "X25519", "expected": false},
+    {
+      "op": "server_select_kex",
+      "client_offered": ["X25519", "HYBRID(X25519,PQC-MLKEM-768)", "PQC-MLKEM-768"],
+      "server_preference": ["HYBRID(X25519,PQC-MLKEM-768)", "X25519", "PQC-MLKEM-768"],
+      "expected": "HYBRID(X25519,PQC-MLKEM-768)"
+    },
+    {
+      "op": "enforce_kex_policy",
+      "selected": "HYBRID(X25519,PQC-MLKEM-768)",
+      "require_pq": true,
+      "expected": "ok"
+    },
+    {
+      "op": "enforce_kex_policy",
+      "selected": "X25519",
+      "require_pq": true,
+      "expected_error": "PolicyError"
+    },
+    {
+      "op": "toy_kem_roundtrip",
+      "keygen_seed_ascii": "kem-seed",
+      "encap_seed_ascii": "encap-seed",
+      "expected_ct_hex": "3a0294a0d9c67f9b4c8289054407a558f3f5aeca667aeace3a1f94cb70ee707b",
+      "expected_ss_hex": "d3eadf30bc517b492c4509874a40be756caf11051e96b396a1b00947ed40864c"
+    },
+    {
+      "op": "toy_dh_shared",
+      "p": 170141183460469231731687303715884105727,
+      "g": 3,
+      "client_seed_ascii": "client-seed",
+      "server_seed_ascii": "server-seed",
+      "expected_shared_hex": "8bb8658dc07ed48603357b9524584e5c0ae1647b864ef96e9e5b80487ec78069"
+    },
+    {
+      "op": "derive_hybrid_session_key",
+      "classical_hex": "4141414141414141414141414141414141414141414141414141414141414141",
+      "pq_hex": "4242424242424242424242424242424242424242424242424242424242424242",
+      "transcript_hex": "c0f14902b006694c74a5cb9cd7f9531cb66aed56eee8022044d440b3d2c56c6a",
+      "info_ascii": "ctx",
+      "length": 32,
+      "expected_hex": "5cc10b726f09c75a41cd770afdcaecc75857a2319d6590368672a59780626a34"
+    }
+  ]
+}

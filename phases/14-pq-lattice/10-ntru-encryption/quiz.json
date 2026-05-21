@@ -1,4 +1,101 @@
 {
   "title": "NTRU Encryption & NTRU Prime",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In Z_q, what does a \"center-lift\" of a residue usually mean?",
+      "options": [
+        "Choose the representative in roughly [-q/2, q/2]",
+        "Convert coefficients to bits and back",
+        "Replace every coefficient by its absolute value",
+        "Multiply by q to avoid modular wrap-around"
+      ],
+      "correct": 0,
+      "explanation": "Center-lift maps a residue mod q back to a small signed integer representative, typically in [-⌊q/2⌋, ⌊q/2⌋]."
+    },
+    {
+      "stage": "pre",
+      "question": "In the quotient ring Z_q[x]/(x^N - 1), which identity holds?",
+      "options": [
+        "x^N ≡ 1",
+        "x^N ≡ 0",
+        "x^N ≡ x",
+        "x^N ≡ -1"
+      ],
+      "correct": 0,
+      "explanation": "Reducing modulo (x^N - 1) means x^N is identified with 1, giving cyclic (wrapped) indexing in multiplication."
+    },
+    {
+      "stage": "post",
+      "question": "In classic NTRUEncrypt-style key generation, the public key h is computed as:",
+      "options": [
+        "h = p * f^{-1} * g (mod q)",
+        "h = q * f^{-1} * g (mod p)",
+        "h = f * g (mod q)",
+        "h = f^{-1} + g^{-1} (mod q)"
+      ],
+      "correct": 0,
+      "explanation": "A typical NTRUEncrypt public key is h = p·f^{-1}·g mod q (in the chosen quotient ring)."
+    },
+    {
+      "stage": "post",
+      "question": "Which decryption sequence matches the lesson implementation?",
+      "options": [
+        "Compute a = f*e (mod q), center-lift a, then compute m = f^{-1}*a (mod p) and center-lift mod p",
+        "Compute a = e^f (mod q), then divide by p",
+        "Compute a = f^{-1}*e (mod q), then center-lift mod p",
+        "Compute m = e (mod p) directly (no other steps needed)"
+      ],
+      "correct": 0,
+      "explanation": "You multiply by the secret f, center-lift to recover small integers, then map down to mod p using f^{-1} (mod p)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main *correctness* reason NTRU decryption can fail for bad parameters?",
+      "options": [
+        "Coefficients wrap modulo q so center-lift recovers the wrong integers",
+        "Polynomial multiplication becomes non-commutative",
+        "The modulus p is prime",
+        "The ciphertext has too many zeros"
+      ],
+      "correct": 0,
+      "explanation": "If intermediate coefficients exceed the intended range, reduction mod q changes them, and center-lift no longer recovers the original small values."
+    },
+    {
+      "stage": "post",
+      "question": "Why can \"rare decryption failures\" be a security problem in real NTRU-family systems?",
+      "options": [
+        "They can create an oracle: different behavior on failure leaks information under chosen-ciphertext queries",
+        "They make polynomial multiplication slower than RSA",
+        "They force the public key to be secret",
+        "They imply the scheme is symmetric-key, not public-key"
+      ],
+      "correct": 0,
+      "explanation": "Even tiny failure probabilities can become exploitable if failures are distinguishable (timing/logging/branching), enabling adaptive attacks."
+    },
+    {
+      "stage": "post",
+      "question": "At a high level, what is a key design goal difference often attributed to NTRU Prime compared to many classic NTRUEncrypt choices?",
+      "options": [
+        "Reduce attack surface by using more conservative ring choices (e.g., avoiding some structured rings) while keeping performance",
+        "Replace all polynomial arithmetic with elliptic curves",
+        "Make q smaller than p to speed up decryption",
+        "Eliminate randomness r so encryption is deterministic"
+      ],
+      "correct": 0,
+      "explanation": "NTRU Prime variants were designed to reduce certain structural attack surfaces while preserving the “small polynomials in a quotient ring” flavor."
+    },
+    {
+      "stage": "post",
+      "question": "Why does this lesson pick q as a small prime (e.g., q=61) instead of a power of two?",
+      "options": [
+        "So polynomial inverses can be computed with field arithmetic in Z/qZ for a simple educational implementation",
+        "Because NTRU only works when q is prime in production",
+        "Because powers of two make multiplication non-cyclic",
+        "Because center-lift is undefined for non-prime q"
+      ],
+      "correct": 0,
+      "explanation": "A prime modulus gives a field, making inversion via extended Euclid straightforward for a from-scratch demo; production implementations may use different choices and specialized algorithms."
+    }
+  ]
 }

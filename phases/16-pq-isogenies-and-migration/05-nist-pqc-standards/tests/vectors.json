@@ -1,1 +1,116 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors for this lesson, grounded in NIST FIPS 203/204/205 naming and roles (standardized 2024-08-13). See docs/en.md Further Reading for the normative publications.",
+  "vectors": [
+    {"op": "normalize_algorithm_name", "name": "Kyber", "expected": "ML-KEM"},
+    {"op": "normalize_algorithm_name", "name": "CRYSTALS-Dilithium", "expected": "ML-DSA"},
+    {"op": "normalize_algorithm_name", "name": "SPHINCS+", "expected": "SLH-DSA"},
+
+    {"op": "security_category_to_bits", "category": 1, "expected": 128},
+    {"op": "security_category_to_bits", "category": 3, "expected": 192},
+    {"op": "security_category_to_bits", "category": 5, "expected": 256},
+
+    {
+      "op": "toy_kem_keygen",
+      "seed_ascii": "demo-seed-00000000000000000000",
+      "expected_public_key_hex": "cbf0232f9adaee1a554b1b7e1f8cfa65d8237f34a2f40e64c966a40aacc9c7f7",
+      "expected_secret_key_hex": "f18f8da6299b64be74b89d28264d13fa95c4ae7849e29a47fee641e7a7628bd0"
+    },
+    {
+      "op": "toy_kem_encaps",
+      "public_key_hex": "cbf0232f9adaee1a554b1b7e1f8cfa65d8237f34a2f40e64c966a40aacc9c7f7",
+      "seed_ascii": "encaps-seed-000000000000000",
+      "expected_ciphertext_hex": "b5059db2863564f82890bf288307f35f975c489da3354373a3fd51876ee48e44",
+      "expected_shared_secret_hex": "f40eae5e9d720d8844e24ed0212e35b829c984736cdfbb42d4a86416afba8fa4"
+    },
+    {
+      "op": "toy_kem_decaps",
+      "secret_key_hex": "f18f8da6299b64be74b89d28264d13fa95c4ae7849e29a47fee641e7a7628bd0",
+      "ciphertext_hex": "b5059db2863564f82890bf288307f35f975c489da3354373a3fd51876ee48e44",
+      "expected_shared_secret_hex": "f40eae5e9d720d8844e24ed0212e35b829c984736cdfbb42d4a86416afba8fa4"
+    },
+
+    {
+      "op": "recommend_pqc_suite",
+      "profile": {
+        "use_case": "tls",
+        "target_security_category": 1,
+        "conservative_signatures": false,
+        "hybrid_during_migration": true
+      },
+      "expected": {
+        "kem": "ML-KEM",
+        "signature": "ML-DSA",
+        "notes": [
+          "Target security category 1 (~128-bit).",
+          "Chose ML-DSA for mainstream PQ signatures (smaller, faster in many environments).",
+          "Use hybrid (classical + PQC) during migration to handle compatibility and reduce single-family risk."
+        ]
+      }
+    },
+    {
+      "op": "recommend_pqc_suite",
+      "profile": {
+        "use_case": "code-signing",
+        "target_security_category": 5,
+        "conservative_signatures": true,
+        "hybrid_during_migration": false
+      },
+      "expected": {
+        "kem": "ML-KEM",
+        "signature": "SLH-DSA",
+        "notes": [
+          "Target security category 5 (~256-bit).",
+          "Chose SLH-DSA for conservative, hash-based signatures (larger signatures).",
+          "Conservative choice often fits better for long-lived roots / high-assurance signing."
+        ]
+      }
+    },
+
+    {
+      "op": "hndl_priority",
+      "years_confidentiality_needed": 15,
+      "years_until_q_ready": 10,
+      "expected": "urgent"
+    },
+    {
+      "op": "hndl_priority",
+      "years_confidentiality_needed": 8,
+      "years_until_q_ready": 10,
+      "expected": "high"
+    },
+    {
+      "op": "hndl_priority",
+      "years_confidentiality_needed": 1,
+      "years_until_q_ready": 10,
+      "expected": "moderate"
+    },
+
+    {
+      "op": "classify_component",
+      "component": {"component": "TLS termination", "primitive": "key-establishment", "algorithm": "ECDH P-256"},
+      "expected": {
+        "component": "TLS termination",
+        "primitive": "key-establishment",
+        "algorithm": "ECDH P-256",
+        "pqc_relevant": true
+      }
+    },
+    {
+      "op": "classify_component",
+      "component": {"component": "DB", "primitive": "symmetric", "algorithm": "AES-256-GCM"},
+      "expected": {
+        "component": "DB",
+        "primitive": "symmetric",
+        "algorithm": "AES-256-GCM",
+        "pqc_relevant": false
+      }
+    },
+
+    {
+      "op": "render_checklist_markdown",
+      "title": "T",
+      "items": ["A", "B"],
+      "expected": "# T\n\n- [ ] A\n- [ ] B\n"
+    }
+  ]
+}

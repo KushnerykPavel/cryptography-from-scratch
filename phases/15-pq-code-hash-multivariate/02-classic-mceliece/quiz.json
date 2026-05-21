@@ -1,4 +1,96 @@
 {
-  "title": "Classic McEliece \u2014 NIST Round 4",
-  "questions": []
+  "title": "Classic McEliece (Toy) — Hide a Decoder Behind a Random Matrix",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a binary linear code with a k×n generator matrix G, what is the length of the encoded codeword c = m·G?",
+      "options": ["k bits", "n bits", "k×n bits", "It depends on the message m"],
+      "correct": 1,
+      "explanation": "A k-bit message multiplied by a k×n generator matrix produces an n-bit codeword."
+    },
+    {
+      "stage": "pre",
+      "question": "What makes McEliece-style encryption probabilistic (non-deterministic) even for the same plaintext message?",
+      "options": [
+        "Adding a random low-weight error vector to the codeword",
+        "Using a random public exponent like RSA",
+        "Using a random initialization vector for a block cipher mode",
+        "Re-randomizing the public key for each encryption"
+      ],
+      "correct": 0,
+      "explanation": "McEliece encryption masks a codeword by XORing a randomly chosen error vector of small Hamming weight."
+    },
+    {
+      "stage": "post",
+      "question": "In textbook McEliece, the public generator matrix is formed as G_pub = S·G_base·P. What are S and P?",
+      "options": [
+        "S is an invertible k×k scrambler and P is an n×n permutation of columns",
+        "S is a hash function and P is a prime modulus",
+        "S is a signature scheme and P is a padding rule",
+        "S is a symmetric key and P is a public nonce"
+      ],
+      "correct": 0,
+      "explanation": "S changes the basis of the message space (invertible k×k), and P permutes the n columns to hide the code’s structure while preserving Hamming weight."
+    },
+    {
+      "stage": "post",
+      "question": "Why does multiplying by a permutation matrix (column permutation) preserve the Hamming weight of an error vector?",
+      "options": [
+        "It only reorders bit positions; it doesn’t change which bits are 1",
+        "It adds extra parity bits that cancel out 1s",
+        "It converts the error into a lower-weight representation",
+        "It works only over GF(2^m), not over GF(2)"
+      ],
+      "correct": 0,
+      "explanation": "A permutation is just a reindexing of coordinates, so the number of 1s (weight) stays the same."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s toy implementation, what is the purpose of storing S_inv in the private key?",
+      "options": [
+        "To recover the original message after decoding the scrambled message u = m·S",
+        "To compute the public key from the ciphertext",
+        "To generate the error vector during encryption",
+        "To compress the public key for transmission"
+      ],
+      "correct": 0,
+      "explanation": "Decryption decodes u = m·S under the base code, then multiplies by S_inv to recover m."
+    },
+    {
+      "stage": "post",
+      "question": "Suppose an attacker can recover the hidden structure of G_pub (i.e., find an equivalent decodable base code and its decoder). What happens to security?",
+      "options": [
+        "They can decrypt ciphertexts by decoding, breaking confidentiality",
+        "Nothing; security depends only on the size of the public key",
+        "They can only forge signatures, not decrypt",
+        "They can only break security if they also learn the RNG seed"
+      ],
+      "correct": 0,
+      "explanation": "The trapdoor is the private decoding capability; if an attacker reconstructs it from the public key, they can decode and recover plaintexts."
+    },
+    {
+      "stage": "post",
+      "question": "What is a real-world pitfall when using a decoder that 'always outputs a closest codeword' (like Hamming(7,4)) without extra checks?",
+      "options": [
+        "Two-bit corruptions can silently mis-decode to a wrong valid message",
+        "The ciphertext becomes deterministic",
+        "The public key becomes smaller",
+        "The scheme becomes IND-CCA2 secure automatically"
+      ],
+      "correct": 0,
+      "explanation": "Some decoders will return a plausible output even when corruption exceeds the intended error-correction radius, causing silent failures unless the protocol includes a consistency check."
+    },
+    {
+      "stage": "post",
+      "question": "Classic McEliece is deployed as a KEM rather than as textbook public-key encryption. What does a KEM primarily output on decapsulation?",
+      "options": [
+        "A shared secret key (and a success/failure decision) rather than a plaintext message",
+        "A plaintext message m directly",
+        "A signature over the ciphertext",
+        "A hash of the public key only"
+      ],
+      "correct": 0,
+      "explanation": "A KEM encapsulates/decapsulates to agree on a shared secret; the internal decoding result is used to derive and validate that secret."
+    }
+  ]
 }

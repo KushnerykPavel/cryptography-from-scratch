@@ -1,4 +1,96 @@
 {
-  "title": "Falcon \u2014 NTRU + GPV Sampling",
-  "questions": []
+  "title": "Falcon (Toy) — NTRU Trapdoor + Short Signatures",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In the quotient ring Z_q[x]/(x^n + 1), what rule replaces x^n during reduction?",
+      "options": ["x^n = -1", "x^n = 0", "x^n = 1", "x^n = q"],
+      "correct": 0,
+      "explanation": "Reducing modulo x^n + 1 means x^n \u2261 -1, so wraparound terms pick up a minus sign."
+    },
+    {
+      "stage": "pre",
+      "question": "At a high level, what does Falcon verification recompute from (salt, message, s2, h)?",
+      "options": [
+        "s1 = c - s2*h (mod q), then a norm check",
+        "A discrete logarithm, then a hash check",
+        "The private key (f, g), then an equality check",
+        "A pairing equation, then a subgroup check"
+      ],
+      "correct": 0,
+      "explanation": "Verification is essentially: hash-to-point c, compute s1 = c - s2*h mod q, then accept only if (s1,s2) is short."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the norm bound (||(s1,s2)||^2 \u2264 \u03b2^2) crucial in Falcon verification?",
+      "options": [
+        "Because s1 is defined from s2, the equation always holds; only shortness is hard to satisfy",
+        "Because it makes hashing collision-resistant",
+        "Because it prevents replay attacks by itself",
+        "Because it allows recovering the public key from the signature"
+      ],
+      "correct": 0,
+      "explanation": "The verification equation holds for any s2 if you define s1 accordingly; security comes from the inability to make (s1,s2) short without the trapdoor."
+    },
+    {
+      "stage": "post",
+      "question": "In a negacyclic ring (mod x^n+1), what does multiplying a polynomial by x do to its coefficient vector?",
+      "options": [
+        "It rotates by 1, and the wrapped coefficient flips sign",
+        "It appends a zero coefficient and increases degree forever",
+        "It leaves coefficients unchanged",
+        "It rotates by 1 without any sign change"
+      ],
+      "correct": 0,
+      "explanation": "Because x^n \u2261 -1, the coefficient that wraps around picks up a minus sign."
+    },
+    {
+      "stage": "post",
+      "question": "To compute the public key h = g/f (mod x^n+1, q), what must be true about f?",
+      "options": [
+        "f must be invertible modulo (x^n+1, q)",
+        "f must be prime as an integer",
+        "f must have all coefficients equal to 1",
+        "f must equal g"
+      ],
+      "correct": 0,
+      "explanation": "You need f^{-1} in the ring modulo q; if f is not invertible, h is undefined."
+    },
+    {
+      "stage": "post",
+      "question": "Babai nearest-plane is best described as which kind of algorithm in this lesson?",
+      "options": [
+        "A heuristic for approximate closest vector (CVP) using Gram\u2013Schmidt projections",
+        "A method for factoring integers",
+        "A deterministic way to find collisions in SHA-256",
+        "An algorithm for computing discrete logs in finite fields"
+      ],
+      "correct": 0,
+      "explanation": "Babai nearest-plane rounds coordinates in a basis using Gram\u2013Schmidt orthogonalization to find a lattice vector near a target."
+    },
+    {
+      "stage": "post",
+      "question": "Attack intuition: what happens if a verifier uses a \u03b2^2 bound that is far too large?",
+      "options": [
+        "Many random s2 values will pass, making signatures easy to forge",
+        "Verification becomes impossible even for valid signatures",
+        "Public keys become larger",
+        "Hashing stops being deterministic"
+      ],
+      "correct": 0,
+      "explanation": "If the norm bound is too permissive, the 'shortness' requirement no longer filters out forgeries."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the verifier center-lift coefficients (e.g., map to roughly [-q/2, q/2]) before computing the norm?",
+      "options": [
+        "To measure the true integer size of coefficients instead of their residues in [0, q)",
+        "To make polynomial multiplication faster",
+        "To avoid needing the salt",
+        "To ensure s1 equals 0 for valid signatures"
+      ],
+      "correct": 0,
+      "explanation": "Norms are about integer magnitude; treating residues near q as 'small' would break the intended shortness test."
+    }
+  ]
 }

@@ -1,1 +1,201 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors derived from this lesson's selection rules (canonicalize IDs, policy filtering, deterministic negotiation). No external crypto computations.",
+  "vectors": [
+    {
+      "op": "canonicalize_alg_id",
+      "input": " ML-KEM_768 ",
+      "expected": "ml-kem-768"
+    },
+    {
+      "op": "canonicalize_alg_id",
+      "input": "RSA 2048",
+      "expected": "rsa-2048"
+    },
+    {
+      "op": "filter_algorithms",
+      "family": "kem",
+      "algorithms": [
+        {
+          "alg_id": "x25519",
+          "family": "kem",
+          "security_level": 1,
+          "pq": false,
+          "min_protocol_version": 1
+        },
+        {
+          "alg_id": "ml-kem-512",
+          "family": "kem",
+          "security_level": 1,
+          "pq": true,
+          "min_protocol_version": 2
+        },
+        {
+          "alg_id": "ml-kem-768",
+          "family": "kem",
+          "security_level": 3,
+          "pq": true,
+          "min_protocol_version": 2
+        },
+        {
+          "alg_id": "sike-p434",
+          "family": "kem",
+          "security_level": 1,
+          "pq": true,
+          "min_protocol_version": 2,
+          "not_after": "2022-08-01"
+        }
+      ],
+      "policy": {
+        "protocol_version": 2,
+        "now": "2026-05-21",
+        "min_security_level": 2,
+        "require_pq": true,
+        "allow_classical_fallback": false,
+        "denied_algs": ["sike-p434"]
+      },
+      "expected": ["ml-kem-768"]
+    },
+    {
+      "op": "pick_algorithm",
+      "family": "sig",
+      "algorithms": [
+        {
+          "alg_id": "ed25519",
+          "family": "sig",
+          "security_level": 1,
+          "pq": false,
+          "min_protocol_version": 1
+        },
+        {
+          "alg_id": "ml-dsa-44",
+          "family": "sig",
+          "security_level": 2,
+          "pq": true,
+          "min_protocol_version": 2
+        },
+        {
+          "alg_id": "ml-dsa-65",
+          "family": "sig",
+          "security_level": 3,
+          "pq": true,
+          "min_protocol_version": 2
+        }
+      ],
+      "policy": {
+        "protocol_version": 2,
+        "now": "2026-05-21",
+        "min_security_level": 2,
+        "require_pq": true,
+        "allow_classical_fallback": false
+      },
+      "expected": "ml-dsa-65"
+    },
+    {
+      "op": "negotiate_suite",
+      "algorithms": [
+        {
+          "alg_id": "ed25519",
+          "family": "sig",
+          "security_level": 1,
+          "pq": false,
+          "min_protocol_version": 1
+        },
+        {
+          "alg_id": "ml-dsa-44",
+          "family": "sig",
+          "security_level": 2,
+          "pq": true,
+          "min_protocol_version": 2
+        },
+        {
+          "alg_id": "ml-dsa-65",
+          "family": "sig",
+          "security_level": 3,
+          "pq": true,
+          "min_protocol_version": 2
+        },
+        {
+          "alg_id": "x25519",
+          "family": "kem",
+          "security_level": 1,
+          "pq": false,
+          "min_protocol_version": 1
+        },
+        {
+          "alg_id": "ml-kem-512",
+          "family": "kem",
+          "security_level": 1,
+          "pq": true,
+          "min_protocol_version": 2
+        },
+        {
+          "alg_id": "ml-kem-768",
+          "family": "kem",
+          "security_level": 3,
+          "pq": true,
+          "min_protocol_version": 2
+        }
+      ],
+      "policy": {
+        "protocol_version": 2,
+        "now": "2026-05-21",
+        "min_security_level": 2,
+        "require_pq": true,
+        "allow_classical_fallback": false
+      },
+      "client_suites": [
+        {"sig_alg": "ed25519", "kem_alg": "x25519"},
+        {"sig_alg": "ml-dsa-44", "kem_alg": "ml-kem-512"},
+        {"sig_alg": "ml-dsa-65", "kem_alg": "ml-kem-768"}
+      ],
+      "server_suites": [
+        {"sig_alg": "ml-dsa-65", "kem_alg": "ml-kem-768"},
+        {"sig_alg": "ml-dsa-44", "kem_alg": "ml-kem-512"},
+        {"sig_alg": "ed25519", "kem_alg": "x25519"}
+      ],
+      "expected": "sig=ml-dsa-65;kem=ml-kem-768"
+    },
+    {
+      "op": "scan_config_for_deprecated_algorithms",
+      "algorithms": [
+        {
+          "alg_id": "rsa-2048",
+          "family": "sig",
+          "security_level": 1,
+          "pq": false,
+          "min_protocol_version": 1,
+          "not_after": "2030-01-01"
+        },
+        {
+          "alg_id": "sike-p434",
+          "family": "kem",
+          "security_level": 1,
+          "pq": true,
+          "min_protocol_version": 2,
+          "not_after": "2022-08-01"
+        },
+        {
+          "alg_id": "ml-kem-768",
+          "family": "kem",
+          "security_level": 3,
+          "pq": true,
+          "min_protocol_version": 2
+        }
+      ],
+      "on": "2026-05-21",
+      "config": {
+        "sig_alg": "RSA 2048",
+        "kem_alg": "SIKE_P434",
+        "allowed_algs": ["rsa-2048", "ml-kem-768", "sike-p434"],
+        "denied_algs": []
+      },
+      "expected": [
+        {
+          "alg_id": "sike-p434",
+          "reason": "deprecated after 2022-08-01",
+          "action": "remove from allowlist/negotiation and rotate any long-lived keys"
+        }
+      ]
+    }
+  ]
+}

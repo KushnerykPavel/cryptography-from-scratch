@@ -1,4 +1,101 @@
 {
   "title": "SPHINCS+ from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main practical downside of SPHINCS+ compared to ECDSA/Ed25519?",
+      "options": [
+        "Much larger signatures",
+        "Much larger public keys",
+        "It requires trusted setup",
+        "It cannot be verified without the private key"
+      ],
+      "correct": 0,
+      "explanation": "SPHINCS+ is designed to be conservative and stateless, but signatures are much larger than classical signatures."
+    },
+    {
+      "stage": "pre",
+      "question": "In a Merkle authentication path, what does the verifier need (besides the leaf value and its index) to recompute the root?",
+      "options": [
+        "The sibling nodes along the path to the root",
+        "All leaves in the tree",
+        "The signer’s secret seed",
+        "The full internal tree structure in memory"
+      ],
+      "correct": 0,
+      "explanation": "An auth path is exactly the sequence of sibling hashes needed to fold the leaf up to the root."
+    },
+    {
+      "stage": "post",
+      "question": "Why does WOTS+ verification not require the signer’s secret key material?",
+      "options": [
+        "The verifier can hash the revealed chain elements forward to the public key",
+        "The verifier can invert the hash function to recover the secret",
+        "The verifier guesses the missing chain links by brute force",
+        "The verifier replaces hashing with modular arithmetic"
+      ],
+      "correct": 0,
+      "explanation": "A WOTS+ signature reveals intermediate chain values; verification completes the remaining hash steps to reconstruct the public key."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s XMSS signature representation, what are the three main components?",
+      "options": [
+        "(leaf_index, wots_sig, auth_path)",
+        "(pub_seed, secret_key, auth_path)",
+        "(root, pub_seed, signature_hash)",
+        "(nonce, commitment, challenge)"
+      ],
+      "correct": 0,
+      "explanation": "XMSS signs with one WOTS+ key at a chosen leaf and proves that leaf is in the XMSS Merkle tree via an authentication path."
+    },
+    {
+      "stage": "post",
+      "question": "What does SPHINCS+ gain by stacking XMSS trees into a hypertree?",
+      "options": [
+        "Many more one-time keys can be used under a single top-level public root",
+        "Smaller signatures than a single XMSS tree",
+        "A requirement for synchronized signer state across devices",
+        "Deterministic signatures without hashing"
+      ],
+      "correct": 0,
+      "explanation": "The hypertree lets you authenticate many XMSS subtrees: a lower-layer root is signed by an upper layer, chaining up to one public root."
+    },
+    {
+      "stage": "post",
+      "question": "In our toy `sphincs_verify`, why can the verifier compute a bottom XMSS root candidate without knowing any bottom private seeds?",
+      "options": [
+        "The bottom XMSS root is computed from the bottom signature itself (implicit verification)",
+        "The bottom XMSS root is included verbatim in the public key",
+        "The bottom XMSS root is always all-zero bytes",
+        "The verifier downloads the bottom seeds from a key server"
+      ],
+      "correct": 0,
+      "explanation": "An XMSS signature plus message lets the verifier reconstruct a candidate XMSS root; higher layers then authenticate that root up to the trusted public root."
+    },
+    {
+      "stage": "post",
+      "question": "Which implementation mistake most directly enables forgeries in one-time or few-time hash-based signatures?",
+      "options": [
+        "Reusing the same one-time key (or leaf index) to sign multiple messages",
+        "Using SHA-256 instead of SHA-512",
+        "Storing the public key in hex instead of bytes",
+        "Choosing a taller Merkle tree than necessary"
+      ],
+      "correct": 0,
+      "explanation": "If the same one-time key is used twice, the attacker may combine revealed information from both signatures to forge additional signatures."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main purpose of domain separation / addressing in hash-based signature schemes?",
+      "options": [
+        "Ensure hashes used for different roles (leaves, parents, chains, PRFs) don’t collide by construction",
+        "Make signatures smaller by compressing hashes",
+        "Allow the verifier to skip checking authentication paths",
+        "Make the hash function invertible for verification"
+      ],
+      "correct": 0,
+      "explanation": "By mixing role-specific tags and addresses into hash inputs, you reduce the risk that a value meant for one role is valid in another."
+    }
+  ]
 }

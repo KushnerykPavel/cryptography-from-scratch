@@ -1,4 +1,101 @@
 {
   "title": "CSIDH from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In elliptic-curve cryptography, what is an isogeny (informally)?",
+      "options": [
+        "A group homomorphism between elliptic curves with a finite kernel",
+        "A hash function from curve points to integers mod p",
+        "A proof that two curves have the same number of points",
+        "A constant-time algorithm for scalar multiplication"
+      ],
+      "correct": 0,
+      "explanation": "An isogeny is a non-constant morphism that is also a group homomorphism; it is determined by a finite kernel."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does this lesson use a tiny prime field (like p=419) instead of real CSIDH parameters?",
+      "options": [
+        "So we can implement and test the math without external libraries and huge runtimes",
+        "Because CSIDH is only defined for small primes",
+        "Because large primes make elliptic curves stop forming a group",
+        "So that we can ignore key validation and side channels safely in production"
+      ],
+      "correct": 0,
+      "explanation": "Toy parameters let you see and test the full pipeline (points, torsion, Vélu) in seconds; they do not imply production safety."
+    },
+    {
+      "stage": "post",
+      "question": "In the short Weierstrass model y^2 = x^3 + ax + b over F_p, what does it mean for a point P to have order ℓ?",
+      "options": [
+        "ℓP = O and for any 0 < k < ℓ, kP != O",
+        "P has x-coordinate equal to ℓ mod p",
+        "P is a point whose y-coordinate is a quadratic residue",
+        "The curve has exactly ℓ points total"
+      ],
+      "correct": 0,
+      "explanation": "Order ℓ means P generates a cyclic subgroup of size ℓ: multiplying by ℓ gives the identity, and no smaller positive multiple does."
+    },
+    {
+      "stage": "post",
+      "question": "What is the input that Vélu’s formulas need in order to construct an ℓ-isogeny E -> E/⟨P⟩ (odd prime ℓ) in this lesson?",
+      "options": [
+        "A generator P of a cyclic kernel subgroup of order ℓ",
+        "Only the j-invariant of E",
+        "A discrete logarithm oracle for E(F_p)",
+        "A pairing e(P,Q) on E"
+      ],
+      "correct": 0,
+      "explanation": "Vélu constructs the quotient curve and rational maps from the kernel subgroup; for a cyclic kernel, a generator P is enough."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy demo, why do the two quotient orders (first 3-isogeny then 5-isogeny vs first 5 then 3) produce the same j-invariant?",
+      "options": [
+        "Because we transport the remaining torsion point through the isogeny map before taking the next quotient",
+        "Because all elliptic curves over F_p have the same j-invariant",
+        "Because j-invariants are always 0 in characteristic p",
+        "Because isogenies always commute without any additional structure"
+      ],
+      "correct": 0,
+      "explanation": "Order-independence here relies on taking quotients by coprime-order kernels and mapping the other subgroup across via the isogeny."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best captures the security warning in the lesson?",
+      "options": [
+        "Correct math on toy parameters does not imply constant-time or production-safe cryptography",
+        "If code passes unit tests, it is safe to deploy in production",
+        "Side channels only matter on client devices, not servers",
+        "Isogeny-based cryptography is always safer than ECDH"
+      ],
+      "correct": 0,
+      "explanation": "Production security requires constant-time implementations, validation, hardened failure behavior, and vetted parameters; toy correctness is not enough."
+    },
+    {
+      "stage": "post",
+      "question": "Attack mindset: what is a realistic risk if an implementation accepts malformed public keys and then runs secret-dependent branches while processing them?",
+      "options": [
+        "The attacker can use timing/cache behavior to learn information about the secret",
+        "The attacker can force p to become composite",
+        "The attacker can make the Legendre symbol return a wrong value mathematically",
+        "The attacker can always solve discrete logs instantly"
+      ],
+      "correct": 0,
+      "explanation": "Malformed inputs can trigger exceptional cases and secret-dependent control flow; side-channel leakage can reveal bits of the secret over many queries."
+    },
+    {
+      "stage": "post",
+      "question": "What does comparing j-invariants tell you in this lesson’s commute demo?",
+      "options": [
+        "Whether two curves are isomorphic over an algebraic closure (a useful equivalence signal for the demo)",
+        "Whether two points are equal on the same curve",
+        "Whether the curve has prime order",
+        "Whether Vélu’s formulas ran in constant time"
+      ],
+      "correct": 0,
+      "explanation": "Equal j-invariant indicates the curves are in the same isomorphism class over an algebraic closure; it’s a convenient check for this toy example."
+    }
+  ]
 }

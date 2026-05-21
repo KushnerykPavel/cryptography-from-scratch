@@ -1,4 +1,100 @@
 {
-  "title": "TFHE \u2014 Bootstrapping in 0.1s",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What mathematical domain does TFHE use natively for its ciphertexts?",
+      "options": [
+        "Real numbers modulo 1 (The Torus)",
+        "Integers modulo a large prime",
+        "Binary vectors over GF(2)",
+        "Complex numbers"
+      ],
+      "correct": 0,
+      "explanation": "TFHE operates on the Torus (real numbers modulo 1), which is typically discretized as 32-bit or 64-bit integers."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the primary advantage of TFHE compared to schemes like BGV or BFV?",
+      "options": [
+        "It supports much faster SIMD operations on large arrays",
+        "It can natively encrypt floating-point numbers",
+        "It has a very fast, per-gate bootstrapping allowing infinite depth circuits",
+        "It does not require adding any noise during encryption"
+      ],
+      "correct": 2,
+      "explanation": "TFHE's main breakthrough is its extremely fast bootstrapping, which makes evaluating deep boolean circuits practical without huge parameters."
+    },
+    {
+      "stage": "post",
+      "question": "In standard TFHE Boolean encoding, what Torus values represent True and False?",
+      "options": [
+        "True is 1, False is 0",
+        "True is 1/8, False is -1/8 (or 7/8)",
+        "True is 1/4, False is 3/4",
+        "True is 1/2, False is 0"
+      ],
+      "correct": 1,
+      "explanation": "TFHE maps True to 1/8 and False to -1/8 to leave room for noise and perfectly map logic gates to linear combinations."
+    },
+    {
+      "stage": "post",
+      "question": "How is a NAND gate evaluated homomorphically in our TLWE implementation?",
+      "options": [
+        "By multiplying the two ciphertexts together",
+        "By doing a polynomial convolution",
+        "By evaluating the linear combination (0, 1/8) - c1 - c2",
+        "By hashing the ciphertexts and mapping back to Torus"
+      ],
+      "correct": 2,
+      "explanation": "Because of the +/- 1/8 encoding, the linear combination natively computes the NAND logic table."
+    },
+    {
+      "stage": "post",
+      "question": "What happens to the ciphertext noise when we evaluate the homomorphic NAND gate without bootstrapping?",
+      "options": [
+        "The noise is automatically reduced to zero",
+        "The noise stays exactly the same",
+        "The noise grows as we add and subtract ciphertexts",
+        "The noise is multiplied exponentially"
+      ],
+      "correct": 2,
+      "explanation": "Linear combinations of ciphertexts add their noise together. Without bootstrapping, the noise continually grows."
+    },
+    {
+      "stage": "post",
+      "question": "Which TFHE technique allows it to evaluate a function while simultaneously reducing noise?",
+      "options": [
+        "Blind Rotation / Programmable Bootstrapping",
+        "Modulus Switching",
+        "Key Switching",
+        "Relinearization"
+      ],
+      "correct": 0,
+      "explanation": "Programmable Bootstrapping (which uses blind rotation) allows TFHE to evaluate a look-up table while refreshing ciphertext noise."
+    },
+    {
+      "stage": "post",
+      "question": "When implementing TLWE in software, how is the continuous Torus typically represented?",
+      "options": [
+        "Using arbitrary precision floating-point numbers",
+        "Using 32-bit or 64-bit unsigned integers where overflow acts as modulo 1",
+        "Using string representations of decimals",
+        "Using complex number types in standard libraries"
+      ],
+      "correct": 1,
+      "explanation": "Software uses fixed-size integers (like unsigned 32-bit) where the natural integer overflow mimics wrapping around the Torus."
+    },
+    {
+      "stage": "post",
+      "question": "Attack It: If a developer uses TLWE to chain 1,000 NAND gates without implementing bootstrapping, what happens?",
+      "options": [
+        "The computation takes exponentially longer to complete",
+        "The secret key is exposed through side-channels",
+        "The noise overflows the decision boundaries, resulting in random, incorrect decrypted values",
+        "The ciphertexts perfectly retain their values but cannot be decrypted"
+      ],
+      "correct": 2,
+      "explanation": "Without bootstrapping, the noise from linear combinations will eventually push the phase outside the correct (0, 1/2) boundary, destroying the message."
+    }
+  ]
 }

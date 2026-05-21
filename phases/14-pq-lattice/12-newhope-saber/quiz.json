@@ -1,4 +1,101 @@
 {
-  "title": "NewHope & Saber \u2014 Earlier Designs",
-  "questions": []
+  "title": "NewHope & Saber — Noise vs Rounding in Lattice KEMs",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In the ring R_q = Z_q[x]/(x^n + 1), what does the relation x^n = -1 mean for multiplication?",
+      "options": [
+        "High-degree terms wrap around with a minus sign (negacyclic reduction).",
+        "Polynomials become cyclic: x^n = 1 so terms wrap without sign changes.",
+        "All coefficients must be either 0 or 1 after reduction.",
+        "Multiplication is undefined unless q is prime."
+      ],
+      "correct": 0,
+      "explanation": "Reducing modulo (x^n+1) implies x^n ≡ -1, so x^{n+k} ≡ -x^k and overflowed terms subtract back in."
+    },
+    {
+      "stage": "pre",
+      "question": "In LWE-style constructions, why do we add an error term e in b = a·s + e (mod q)?",
+      "options": [
+        "It hides the secret by making the relation noisy, which is the source of hardness.",
+        "It prevents the need for a random public a, so a can be constant.",
+        "It makes decryption deterministic with no chance of failure.",
+        "It allows replacing multiplication with addition."
+      ],
+      "correct": 0,
+      "explanation": "Without error, the system becomes exact linear equations; with error, distinguishing/recovering secrets is conjectured hard."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy RLWE PKE, why does `encode_bits_as_poly` map a bit 1 to q//2 (instead of 1)?",
+      "options": [
+        "Because after adding small noise, coefficients stay near either 0 or q/2, enabling threshold decoding by distance.",
+        "Because q//2 is always a primitive root of unity needed for NTT.",
+        "Because it makes ciphertexts smaller by half.",
+        "Because it removes the need for randomness in encryption."
+      ],
+      "correct": 0,
+      "explanation": "The decoder chooses whichever center (0 or q/2) is closer; embedding far apart gives robustness to noise."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key conceptual difference between RLWE (NewHope flavor) and RLWR/LWR (Saber flavor)?",
+      "options": [
+        "RLWE uses sampled random error; LWR gets its effective error from deterministic rounding (dropping bits).",
+        "RLWE is symmetric-key only; LWR is public-key only.",
+        "RLWE can’t use polynomial rings; LWR can.",
+        "RLWE always uses power-of-two moduli; LWR always uses primes."
+      ],
+      "correct": 0,
+      "explanation": "LWR replaces explicit error sampling with information loss from mapping Z_q to a smaller Z_p via rounding."
+    },
+    {
+      "stage": "post",
+      "question": "When p divides q, what does `poly_round_to_p` compute for a coefficient x in Z_q?",
+      "options": [
+        "The nearest element in Z_p to (p/q)·x (implemented as add-half-then-divide).",
+        "A cryptographic hash of x reduced mod p.",
+        "The lowest log2(p) bits of x.",
+        "A random element of Z_p derived from x."
+      ],
+      "correct": 0,
+      "explanation": "With scale=q/p, rounding is approximately ⌊(x + scale/2)/scale⌋ mod p, i.e., quantizing x into p buckets."
+    },
+    {
+      "stage": "post",
+      "question": "Why is domain separation important when using an XOF to derive values like a, s, e, and r from seeds?",
+      "options": [
+        "To ensure different roles produce independent streams even if a seed is reused.",
+        "To make the output shorter so keys are smaller.",
+        "To force all outputs to be uniformly random without rejection sampling.",
+        "To make decoding always succeed regardless of noise."
+      ],
+      "correct": 0,
+      "explanation": "Using different domain tags avoids accidental correlations (or catastrophic reuse) between values meant to be independent."
+    },
+    {
+      "stage": "post",
+      "question": "Attack intuition: what is a major risk if you set the RLWE error distribution to zero (no e, no e') in a = uniform, b = a·s (mod q)?",
+      "options": [
+        "The public key becomes an exact equation that can often be solved with linear algebra to recover s.",
+        "Ciphertexts become larger and slower but remain secure.",
+        "Decryption becomes impossible because noise is required to decode.",
+        "It forces you to switch to LWR because RLWE requires errors."
+      ],
+      "correct": 0,
+      "explanation": "Removing noise collapses the hardness assumption: the attacker sees exact algebraic relations instead of noisy ones."
+    },
+    {
+      "stage": "post",
+      "question": "Why do real lattice KEMs typically apply a Fujisaki–Okamoto (FO) style transform on top of an IND-CPA PKE?",
+      "options": [
+        "To upgrade to chosen-ciphertext security by re-encrypting/checking and binding the ciphertext into key derivation.",
+        "To remove the need for randomness in encryption.",
+        "To turn a KEM into a signature scheme.",
+        "To avoid polynomial multiplication."
+      ],
+      "correct": 0,
+      "explanation": "FO-style transforms are the standard way to obtain IND-CCA security from a CPA-secure lattice PKE in the random oracle model."
+    }
+  ]
 }

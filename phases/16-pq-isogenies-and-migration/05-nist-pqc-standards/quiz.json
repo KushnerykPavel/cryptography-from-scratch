@@ -1,4 +1,101 @@
 {
-  "title": "NIST PQC Standards Tour",
-  "questions": []
+  "title": "NIST PQC Standards (FIPS 203/204/205)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the most accurate description of a KEM (like ML-KEM)?",
+      "options": [
+        "A mechanism that establishes a shared secret that you then use with symmetric encryption",
+        "A public-key encryption scheme that directly encrypts application data",
+        "A digital signature scheme used to authenticate certificates",
+        "A hash function family used for commitments and fingerprints"
+      ],
+      "correct": 0,
+      "explanation": "A KEM establishes a shared secret; you still encrypt data with symmetric AEAD using that secret (or keys derived from it)."
+    },
+    {
+      "stage": "pre",
+      "question": "In a migration, what does “hybrid” usually mean?",
+      "options": [
+        "Use a classical algorithm and a PQC algorithm together for a transition period",
+        "Use two PQC algorithms at the same time to double security",
+        "Use a PQC algorithm only when a quantum attack is detected",
+        "Use symmetric cryptography for everything and remove public-key cryptography"
+      ],
+      "correct": 0,
+      "explanation": "Hybrid typically combines classical + PQC during transition for compatibility and to avoid betting everything on a single new family."
+    },
+    {
+      "stage": "post",
+      "question": "Which NIST FIPS publication specifies ML-KEM?",
+      "options": [
+        "FIPS 203",
+        "FIPS 204",
+        "FIPS 205",
+        "FIPS 186-5"
+      ],
+      "correct": 0,
+      "explanation": "ML-KEM is standardized in FIPS 203."
+    },
+    {
+      "stage": "post",
+      "question": "Which standardized family name corresponds to CRYSTALS-Dilithium?",
+      "options": [
+        "ML-DSA",
+        "ML-KEM",
+        "SLH-DSA",
+        "FN-DSA"
+      ],
+      "correct": 0,
+      "explanation": "CRYSTALS-Dilithium was standardized under the name ML-DSA (FIPS 204)."
+    },
+    {
+      "stage": "post",
+      "question": "You encrypt data today using a key established with ECDH. The ciphertext must stay confidential for 15 years. What is the main risk driver?",
+      "options": [
+        "Harvest-now-decrypt-later: recorded traffic may be decrypted later if key establishment is broken",
+        "AES-256 becomes breakable by a future quantum computer before 15 years",
+        "Hash functions stop working, so integrity breaks before confidentiality",
+        "Certificates expire, so confidentiality automatically expires too"
+      ],
+      "correct": 0,
+      "explanation": "If key establishment is quantum-broken later, previously recorded sessions may be decrypted (HNDL), independent of today’s symmetric strength."
+    },
+    {
+      "stage": "post",
+      "question": "Which inventory item is most directly PQC-relevant in the short term?",
+      "options": [
+        "TLS key establishment (ECDH/RSA key transport)",
+        "AES-GCM for data at rest",
+        "SHA-256 for logging identifiers",
+        "Compression settings in HTTP"
+      ],
+      "correct": 0,
+      "explanation": "PQC primarily targets quantum-vulnerable public-key operations: key establishment and signatures."
+    },
+    {
+      "stage": "post",
+      "question": "What is a common pitfall when adopting ML-KEM?",
+      "options": [
+        "Assuming it replaces symmetric encryption and trying to encrypt large payloads with it",
+        "Assuming it is only for signatures and using it to sign certificates",
+        "Assuming it is a hash function and using it for integrity checks",
+        "Assuming it requires no randomness and hardcoding nonces"
+      ],
+      "correct": 0,
+      "explanation": "ML-KEM is a key-establishment primitive; you still need symmetric AEAD to encrypt application data."
+    },
+    {
+      "stage": "post",
+      "question": "What does “crypto agility” most directly enable during a PQC transition?",
+      "options": [
+        "Negotiating and rotating algorithms without redesigning the entire system",
+        "Making signatures constant-time without changing libraries",
+        "Avoiding the need for certificates by using passwords",
+        "Compressing PQC messages so they fit legacy packet sizes"
+      ],
+      "correct": 0,
+      "explanation": "Crypto agility is the ability to change/rotate algorithms and parameters safely via negotiation/versioning and operational controls."
+    }
+  ]
 }

@@ -1,4 +1,100 @@
 {
-  "title": "XMSS \u2014 RFC 8391",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What makes XMSS a stateful signature scheme?",
+      "options": [
+        "The signer must track and never reuse the leaf index (idx)",
+        "The verifier must store every signature ever seen",
+        "The public key changes after every verification",
+        "The hash function output depends on wall-clock time"
+      ],
+      "correct": 0,
+      "explanation": "XMSS consumes one one-time key per signature, so security requires a monotonically increasing, never-reused index."
+    },
+    {
+      "stage": "pre",
+      "question": "In XMSS, which primitive directly signs the per-message digest M'?",
+      "options": [
+        "WOTS+ (Winternitz one-time signature)",
+        "AES-GCM (symmetric encryption)",
+        "ECDSA (elliptic-curve signatures)",
+        "RSA-PSS (modular signatures)"
+      ],
+      "correct": 0,
+      "explanation": "XMSS is built from WOTS+ one-time signatures whose public keys are authenticated by a Merkle tree root."
+    },
+    {
+      "stage": "post",
+      "question": "An XMSS signature contains which four logical parts?",
+      "options": [
+        "idx, r, WOTS+ signature, authentication path",
+        "nonce, IV, ciphertext, MAC tag",
+        "modulus, exponent, salt, padding",
+        "curve point, scalar, challenge, response"
+      ],
+      "correct": 0,
+      "explanation": "XMSS signs with one WOTS+ key at index idx and includes the auth path so the verifier can recompute the Merkle root."
+    },
+    {
+      "stage": "post",
+      "question": "What is the role of the L-tree in XMSS?",
+      "options": [
+        "Compress a WOTS+ public key vector into a single n-byte leaf value",
+        "Derive the WOTS+ private key from the message digest",
+        "Store the full Merkle tree so the verifier can download it",
+        "Replace the authentication path to make signatures stateless"
+      ],
+      "correct": 0,
+      "explanation": "Each WOTS+ public key has many elements; the L-tree hashes them down to one leaf node for the Merkle tree."
+    },
+    {
+      "stage": "post",
+      "question": "How does a verifier use the authentication path auth to recompute the root?",
+      "options": [
+        "Hash the current node with the sibling at each level, ordering left/right based on idx bits",
+        "Decrypt each auth node with the public key and take the last one as root",
+        "Concatenate all auth nodes and hash once to get the root",
+        "XOR all auth nodes together to cancel out the leaf"
+      ],
+      "correct": 0,
+      "explanation": "At each level you hash (left||right); which side the current node is on is determined by the leaf index."
+    },
+    {
+      "stage": "post",
+      "question": "With tree height h, how many distinct messages can a single XMSS key sign safely?",
+      "options": [
+        "At most 2^h signatures (one per leaf index)",
+        "At most h signatures (one per level)",
+        "Unlimited signatures if the message includes a timestamp",
+        "Unlimited signatures if you reuse the same idx but change r"
+      ],
+      "correct": 0,
+      "explanation": "There are 2^h leaves, and each leaf corresponds to one WOTS+ one-time key pair."
+    },
+    {
+      "stage": "post",
+      "question": "Why is reusing the same WOTS+ key (same leaf index) across two different messages dangerous?",
+      "options": [
+        "Two signatures reveal chain nodes at different positions, enabling practical forgeries for some digests",
+        "The Merkle root changes and cannot be recomputed by verifiers",
+        "The hash function becomes reversible after the second signature",
+        "Verification fails only because signatures become a different length"
+      ],
+      "correct": 0,
+      "explanation": "WOTS+ reveals positions in hash chains; seeing multiple positions from the same chains lets an attacker advance chains to forge signatures under constraints."
+    },
+    {
+      "stage": "post",
+      "question": "In a production XMSS implementation, which boundary must be treated as an atomic operation?",
+      "options": [
+        "Persisting idx and returning the signature (never return before idx is safely advanced)",
+        "Parsing the public key and printing it to logs",
+        "Caching the entire Merkle tree in memory for faster verification",
+        "Randomly rotating w between 4 and 16 to confuse attackers"
+      ],
+      "correct": 0,
+      "explanation": "If a crash can happen after producing a signature but before persisting the idx increment, the same leaf can be reused after restart."
+    }
+  ]
 }

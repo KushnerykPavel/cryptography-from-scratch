@@ -1,1 +1,215 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors computed from this lesson's toy CKKS simulator (scale+rounding with half-away-from-zero rounding, plus uniform integer noise via random.Random(seed)).",
+  "vectors": [
+    {
+      "op": "round_nearest_int",
+      "x": 2.3,
+      "expected": 2
+    },
+    {
+      "op": "round_nearest_int",
+      "x": 2.5,
+      "expected": 3
+    },
+    {
+      "op": "round_nearest_int",
+      "x": -2.5,
+      "expected": -3
+    },
+    {
+      "op": "round_div_int",
+      "num": 7,
+      "den": 3,
+      "expected": 2
+    },
+    {
+      "op": "round_div_int",
+      "num": -7,
+      "den": 3,
+      "expected": -2
+    },
+    {
+      "op": "ckks_encode",
+      "values": [
+        1.25,
+        -0.5,
+        2.0
+      ],
+      "scale": 1024,
+      "expected": {
+        "slots": [
+          1280,
+          -512,
+          2048
+        ],
+        "scale": 1024
+      }
+    },
+    {
+      "op": "ckks_decode",
+      "pt": {
+        "slots": [
+          1280,
+          -512,
+          2048
+        ],
+        "scale": 1024
+      },
+      "expected": [
+        1.25,
+        -0.5,
+        2.0
+      ]
+    },
+    {
+      "op": "ckks_encrypt",
+      "pt": {
+        "slots": [
+          1280,
+          -512,
+          2048
+        ],
+        "scale": 1024
+      },
+      "noise_bound": 3,
+      "seed": 123,
+      "level": 0,
+      "expected": {
+        "slots": [
+          1277,
+          -513,
+          2045
+        ],
+        "noise": [
+          -3,
+          -1,
+          -3
+        ],
+        "scale": 1024,
+        "level": 0
+      }
+    },
+    {
+      "op": "ckks_add",
+      "ct_a": {
+        "slots": [
+          1277,
+          -513,
+          2045
+        ],
+        "noise": [
+          -3,
+          -1,
+          -3
+        ],
+        "scale": 1024,
+        "level": 0
+      },
+      "ct_b": {
+        "slots": [
+          1277,
+          -513,
+          2045
+        ],
+        "noise": [
+          -3,
+          -1,
+          -3
+        ],
+        "scale": 1024,
+        "level": 0
+      },
+      "expected": {
+        "slots": [
+          2554,
+          -1026,
+          4090
+        ],
+        "noise": [
+          -6,
+          -2,
+          -6
+        ],
+        "scale": 1024,
+        "level": 0
+      }
+    },
+    {
+      "op": "ckks_mul",
+      "ct_a": {
+        "slots": [
+          1277,
+          -513,
+          2045
+        ],
+        "noise": [
+          -3,
+          -1,
+          -3
+        ],
+        "scale": 1024,
+        "level": 0
+      },
+      "ct_b": {
+        "slots": [
+          1277,
+          -513,
+          2045
+        ],
+        "noise": [
+          -3,
+          -1,
+          -3
+        ],
+        "scale": 1024,
+        "level": 0
+      },
+      "expected": {
+        "slots": [
+          1630729,
+          263169,
+          4182025
+        ],
+        "noise": [
+          -7671,
+          1025,
+          -12279
+        ],
+        "scale": 1048576,
+        "level": 0
+      }
+    },
+    {
+      "op": "ckks_rescale",
+      "ct": {
+        "slots": [
+          1630729,
+          263169,
+          4182025
+        ],
+        "noise": [
+          -7671,
+          1025,
+          -12279
+        ],
+        "scale": 1048576,
+        "level": 0
+      },
+      "factor": 1024,
+      "expected": {
+        "slots": [
+          1593,
+          257,
+          4084
+        ],
+        "noise": [
+          -7,
+          1,
+          -12
+        ],
+        "scale": 1024,
+        "level": 1
+      }
+    }
+  ]
+}

@@ -1,4 +1,101 @@
 {
   "title": "FrodoKEM \u2014 LWE Without Rings",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In the LWE equation B = A*S + E (mod q), which part is responsible for making the system hard to solve with plain linear algebra?",
+      "options": [
+        "The matrix A being public and uniformly random",
+        "The error matrix E being small but non-zero",
+        "The modulus q being a power of two",
+        "The secret matrix S being rectangular"
+      ],
+      "correct": 1,
+      "explanation": "Without the small error E, the equation is just linear algebra modulo q and S can be recovered efficiently. The error is what creates the LWE hardness."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the purpose of FrodoKEM's Encode/Decode step when carrying message bits through noisy arithmetic?",
+      "options": [
+        "To compress ciphertexts using entropy coding",
+        "To map small symbols into Z_q so rounding can recover them after noise",
+        "To avoid modular reduction and keep computations over integers",
+        "To convert a KEM into a signature scheme"
+      ],
+      "correct": 1,
+      "explanation": "Encode scales small symbols into Z_q, and Decode rounds back to the nearest symbol, tolerating small noise."
+    },
+    {
+      "stage": "post",
+      "question": "Which ciphertext components does the toy FrodoPKE encryption output?",
+      "options": [
+        "(A, S) where A is uniform and S is secret",
+        "(B, C) where B is the public key and C is the shared secret",
+        "(B', C) where B' is an n\u0304\u00d7n matrix and C is an n\u0304\u00d7n\u0304 matrix",
+        "(seedA, \u03bc) where seedA regenerates A and \u03bc is the plaintext"
+      ],
+      "correct": 2,
+      "explanation": "Encryption outputs a pair (B', C). In Frodo-style PKE, B' carries the ephemeral LWE term and C carries the encoded message plus noise."
+    },
+    {
+      "stage": "post",
+      "question": "In decryption, why does W = C - B'*S (mod q) reveal Encode(\u03bc) (up to small noise)?",
+      "options": [
+        "Because B' equals A and S equals E, so the subtraction cancels exactly",
+        "Because C is computed as S'*B + E'' + Encode(\u03bc) and B'*S is approximately S'*A*S",
+        "Because modular subtraction removes all noise terms by definition",
+        "Because q is a power of two, so multiplication becomes invertible"
+      ],
+      "correct": 1,
+      "explanation": "C contains S'*B and B contains A*S + E. Multiplying out shows the large term S'*A*S cancels against B'*S, leaving Encode(\u03bc) plus small error terms."
+    },
+    {
+      "stage": "post",
+      "question": "What does the Fujisaki\u2013Okamoto style re-encryption check in decapsulation prevent?",
+      "options": [
+        "Chosen-ciphertext attacks that would otherwise turn decapsulation into an oracle",
+        "All timing side-channels in the entire implementation automatically",
+        "The need for an error distribution in LWE schemes",
+        "Interoperability issues caused by different endianness"
+      ],
+      "correct": 0,
+      "explanation": "The re-encryption check ensures decapsulation only outputs a key for well-formed ciphertexts, preventing many CCA-style oracle attacks."
+    },
+    {
+      "stage": "post",
+      "question": "Which implementation detail is most likely to create a practical attack surface even if the math is correct?",
+      "options": [
+        "Using a public seed to regenerate A",
+        "Comparing ciphertexts in a way that exits early on the first mismatch",
+        "Reducing all intermediate results modulo q",
+        "Keeping q as a power of two"
+      ],
+      "correct": 1,
+      "explanation": "A non-constant-time ciphertext comparison can leak information via timing, creating a side-channel oracle around the FO check."
+    },
+    {
+      "stage": "post",
+      "question": "A single-unit tamper to one entry of C typically causes decapsulation to output a different shared secret. What property is this demonstrating at a high level?",
+      "options": [
+        "Ciphertexts are malleable but the KEM outputs are bound to the ciphertext via a KDF",
+        "The scheme has no decryption failure probability",
+        "The scheme provides forward secrecy without any protocol",
+        "Encode/Decode is unnecessary for correctness"
+      ],
+      "correct": 0,
+      "explanation": "Even if decryption produces the wrong \u03bc (or the FO check fails), the KDF binds the shared secret to the accepted \u03bc and ciphertext, so tampering changes the output key."
+    },
+    {
+      "stage": "post",
+      "question": "Why does FrodoKEM have much larger keys and ciphertexts than ring/module-based schemes like ML-KEM (Kyber)?",
+      "options": [
+        "Because it uses discrete log rather than lattices",
+        "Because it avoids rings and works with generic n\u00d7n matrices instead of structured polynomials",
+        "Because it cannot use hashing internally",
+        "Because it encodes the entire A matrix directly in the public key"
+      ],
+      "correct": 1,
+      "explanation": "Avoiding ring/module structure removes helpful algebraic compression and fast polynomial arithmetic, so you pay with big matrices and bandwidth."
+    }
+  ]
 }

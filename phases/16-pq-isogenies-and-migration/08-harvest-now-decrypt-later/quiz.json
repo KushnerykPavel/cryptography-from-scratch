@@ -1,4 +1,96 @@
 {
   "title": "Harvest-Now-Decrypt-Later \u2014 Threat & Timeline",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does “harvest now, decrypt later” (HNDL) mean?",
+      "options": [
+        "Attackers decrypt your traffic immediately using quantum computers today",
+        "Attackers record encrypted data today and decrypt it later after new capabilities arrive",
+        "Attackers can only decrypt data if you reuse the same symmetric key",
+        "Attackers must compromise your server private key first, then decrypt old traffic"
+      ],
+      "correct": 1,
+      "explanation": "HNDL is a time-shifted threat: capture ciphertext now, wait, then decrypt when algorithms/capabilities change."
+    },
+    {
+      "stage": "pre",
+      "question": "In Mosca’s X/Y/Z timeline model, what does Z represent?",
+      "options": [
+        "Years until your data is no longer valuable (data lifetime)",
+        "Years until you finish migrating to PQ/hybrid (migration time)",
+        "Years until a cryptographically relevant quantum computer exists (collapse time)",
+        "The number of systems that use RSA/ECDH (inventory size)"
+      ],
+      "correct": 2,
+      "explanation": "Z is the estimated time until a CRQC can break today’s quantum-vulnerable public-key cryptography."
+    },
+    {
+      "stage": "post",
+      "question": "If data must remain secret for X=15 years and you estimate Z=10 years until CRQC, what is the HNDL exposure window max(0, X−Z)?",
+      "options": ["0 years", "5 years", "10 years", "25 years"],
+      "correct": 1,
+      "explanation": "Exposure is the portion of the data’s lifetime that extends past CRQC arrival: 15−10=5."
+    },
+    {
+      "stage": "post",
+      "question": "Using Mosca’s rule-of-thumb, when should you treat PQ migration as urgent?",
+      "options": [
+        "When X + Y < Z",
+        "When X + Y = 0",
+        "When X + Y > Z",
+        "Only when Z has already happened"
+      ],
+      "correct": 2,
+      "explanation": "If X (data lifetime) plus Y (migration time) exceeds Z (years to CRQC), you won’t finish in time."
+    },
+    {
+      "stage": "post",
+      "question": "For HNDL risk in TLS, which part of the handshake is the main problem under Shor’s algorithm?",
+      "options": [
+        "The symmetric AEAD cipher (e.g., AES-GCM) used after the handshake",
+        "The public-key key establishment (e.g., RSA or (EC)DHE) used to derive session keys",
+        "The TCP checksum protecting packets on the wire",
+        "The certificate’s subject name (CN/SAN) field"
+      ],
+      "correct": 1,
+      "explanation": "If the key establishment is broken, attackers can recover the session key and decrypt recorded traffic."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best matches the difference between Shor and Grover for cryptography planning?",
+      "options": [
+        "Shor weakens symmetric ciphers; Grover breaks RSA/ECC",
+        "Shor breaks RSA/ECC-style public-key math; Grover gives a generic square-root speedup for brute-force",
+        "Both only affect hash functions",
+        "Neither matters for real systems because TLS already uses PFS"
+      ],
+      "correct": 1,
+      "explanation": "Shor is catastrophic for RSA/DH/ECDH; Grover is a generic speedup that is often mitigated by larger symmetric keys."
+    },
+    {
+      "stage": "post",
+      "question": "In this lesson’s `hndl_risk_score` model, when does the score become 0 even for long-lived data?",
+      "options": [
+        "When `key_establishment_mode` is hybrid or PQ",
+        "When `blast_radius` is 3",
+        "When `migration_years` is greater than Z",
+        "When `data_security_life_years` is greater than Z"
+      ],
+      "correct": 0,
+      "explanation": "The toy model treats hybrid/PQ key establishment as eliminating the HNDL confidentiality risk for future traffic."
+    },
+    {
+      "stage": "post",
+      "question": "A common pitfall is thinking “TLS 1.3 has PFS, so HNDL is solved.” What’s the best correction?",
+      "options": [
+        "PFS only helps if the key exchange remains hard; if the key exchange breaks, recorded sessions can still be decrypted",
+        "PFS means the server never uses public-key cryptography",
+        "PFS only works if you use AES-128, not AES-256",
+        "PFS prevents attackers from recording ciphertext in the first place"
+      ],
+      "correct": 0,
+      "explanation": "PFS protects against later key compromise, not against future algorithmic breakthroughs that recover secrets from recorded public data."
+    }
+  ]
 }

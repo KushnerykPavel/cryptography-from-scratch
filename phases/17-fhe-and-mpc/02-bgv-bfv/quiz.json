@@ -1,4 +1,101 @@
 {
   "title": "BGV / BFV from Scratch",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In Ring-LWE-based schemes, what is the typical shape of the secret key s?",
+      "options": [
+        "A uniformly random polynomial with coefficients in Z_q",
+        "A small polynomial with coefficients in {-1, 0, 1} (or similarly small integers)",
+        "A large prime number",
+        "A random byte string used only as a seed"
+      ],
+      "correct": 1,
+      "explanation": "Ring-LWE secrets are sampled from a small distribution so the decryption expression stays close to the intended value; security comes from the added error, not from s being uniform in Z_q."
+    },
+    {
+      "stage": "pre",
+      "question": "Which expression best matches BFV-style decryption for a ciphertext (c0, c1)?",
+      "options": [
+        "m = (c0 + c1*s) mod t",
+        "m = round((t/q) * (c0 + c1*s mod q)) mod t",
+        "m = hash(c0 || c1)",
+        "m = (c0 * s + c1) mod q"
+      ],
+      "correct": 1,
+      "explanation": "BFV embeds plaintexts at scale Δ≈q/t, so decryption uses a centered lift and a rounding step proportional to t/q."
+    },
+    {
+      "stage": "post",
+      "question": "In the ring R_q = Z_q[x]/(x^n + 1), what identity is used to reduce high-degree terms?",
+      "options": [
+        "x^n = 0",
+        "x^n = 1",
+        "x^n = -1",
+        "x^n = q"
+      ],
+      "correct": 2,
+      "explanation": "Negacyclic reduction uses x^n == -1, so terms with degree ≥ n fold back with a sign flip."
+    },
+    {
+      "stage": "post",
+      "question": "What invariant is a BFV-style ciphertext (c0, c1) designed to satisfy (up to noise)?",
+      "options": [
+        "c0 + c1*s ≈ Δ*m (mod q)",
+        "c0 * c1 ≈ m (mod q)",
+        "c0 + c1 ≈ m (mod t)",
+        "c0 - c1*s ≈ m^2 (mod q)"
+      ],
+      "correct": 0,
+      "explanation": "BFV encodes plaintext at scale Δ≈q/t so that c0 + c1*s is close to Δ*m modulo q, with a small error term."
+    },
+    {
+      "stage": "post",
+      "question": "Why does multiplying two 2-component ciphertexts naturally produce a 3-component ciphertext?",
+      "options": [
+        "Because polynomial multiplication needs three temporaries",
+        "Because the product introduces an s^2 term during decryption",
+        "Because q must be prime for multiplication",
+        "Because addition and multiplication require different moduli"
+      ],
+      "correct": 1,
+      "explanation": "If ct decrypts with (1, s) and ct' decrypts with (1, s), then the product decrypts with (1, s, s^2) unless you key-switch/relinearize."
+    },
+    {
+      "stage": "post",
+      "question": "What is the purpose of relinearization in BFV/BGV?",
+      "options": [
+        "To make ciphertexts smaller by compressing coefficients losslessly",
+        "To convert a ciphertext that depends on s^2 back into one that depends only on s",
+        "To remove noise completely so decryption always works",
+        "To change the plaintext modulus t"
+      ],
+      "correct": 1,
+      "explanation": "Relinearization is key switching: it uses an evaluation key to fold the s^2 term into the (1, s) basis, keeping ciphertext size manageable."
+    },
+    {
+      "stage": "post",
+      "question": "A toy modulus switch maps coefficients from modulus q to a smaller q'. Which mapping matches the core idea?",
+      "options": [
+        "c' = c mod q'",
+        "c' = floor((q'/q) * lift_centered(c)) mod q'",
+        "c' = round((q'/q) * lift_centered(c)) mod q'",
+        "c' = (c * q') mod q"
+      ],
+      "correct": 2,
+      "explanation": "Modulus switching is a scale-and-round map from Z_q to Z_{q'} applied to (centered) coefficients; rounding is the crucial part."
+    },
+    {
+      "stage": "post",
+      "question": "Attack question: what can go wrong if an implementation accidentally reuses the same encryption randomness (the same a polynomial) for two encryptions under the same secret key?",
+      "options": [
+        "Nothing; BFV/BGV are deterministic by design",
+        "It can make ciphertext differences reveal plaintext differences (up to scaled noise), harming semantic security",
+        "It only slows down encryption but does not affect security",
+        "It forces decryption to fail immediately"
+      ],
+      "correct": 1,
+      "explanation": "Reusing encryption randomness creates structured relations between ciphertexts (e.g., ct1 - ct2 cancels a*s), which can leak information about m1 - m2."
+    }
+  ]
 }

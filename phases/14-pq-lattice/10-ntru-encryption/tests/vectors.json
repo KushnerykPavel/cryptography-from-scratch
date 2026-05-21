@@ -1,1 +1,80 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Educational vectors generated from code/main.py (toy parameters N=11, p=3, q=61) on 2026-05-21. These are not standard test vectors; they lock down deterministic behavior for this lesson implementation.",
+  "vectors": [
+    {
+      "op": "poly_mul_cyclic",
+      "inputs": {
+        "a": [1, -1, 0, 2, 0, 0, 1, 0, 0, 0, 0],
+        "b": [0, 1, 1, 0, 0, -1, 0, 0, 0, 2, 0],
+        "N": 11,
+        "mod": 61
+      },
+      "expected": [60, 5, 0, 60, 4, 1, 1, 1, 60, 2, 59]
+    },
+    {
+      "op": "poly_center_lift",
+      "inputs": {
+        "a": [60, 5, 0, 60, 4, 1, 1, 1, 60, 2, 59],
+        "mod": 61
+      },
+      "expected": [-1, 5, 0, -1, 4, 1, 1, 1, -1, 2, -2]
+    },
+    {
+      "op": "poly_inverse_mod_prime",
+      "inputs": {
+        "f": [1, 1, 0, 0, -1, 0, 0, 1, 0, 0, 0],
+        "N": 11,
+        "prime": 3
+      },
+      "expected": [2, 1, 0, 1, 1, 0, 2, 0, 0, 0, 1]
+    },
+    {
+      "op": "poly_mul_cyclic",
+      "inputs": {
+        "a": [1, 1, 0, 0, 2, 0, 0, 1, 0, 0, 0],
+        "b": [2, 1, 0, 1, 1, 0, 2, 0, 0, 0, 1],
+        "N": 11,
+        "mod": 3
+      },
+      "expected": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "op": "ntru_keygen_deterministic",
+      "inputs": {
+        "N": 11,
+        "p": 3,
+        "q": 61,
+        "seed": "ntru-demo-keygen-v1"
+      },
+      "expected": {
+        "h": [35, 31, 38, 9, 43, 20, 29, 11, 28, 57, 7],
+        "f": [-1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 1],
+        "f_inv_p": [2, 0, 0, 2, 2, 2, 1, 0, 2, 0, 0]
+      }
+    },
+    {
+      "op": "ntru_encrypt",
+      "inputs": {
+        "N": 11,
+        "p": 3,
+        "q": 61,
+        "h": [35, 31, 38, 9, 43, 20, 29, 11, 28, 57, 7],
+        "m": [1, 0, -1, 1, 0, 0, -1, 0, 0, 0, 0],
+        "r": [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, -1]
+      },
+      "expected": [51, 52, 59, 47, 37, 39, 23, 3, 39, 5, 8]
+    },
+    {
+      "op": "ntru_decrypt",
+      "inputs": {
+        "N": 11,
+        "p": 3,
+        "q": 61,
+        "f": [-1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 1],
+        "f_inv_p": [2, 0, 0, 2, 2, 2, 1, 0, 2, 0, 0],
+        "e": [51, 52, 59, 47, 37, 39, 23, 3, 39, 5, 8]
+      },
+      "expected": [1, 0, -1, 1, 0, 0, -1, 0, 0, 0, 0]
+    }
+  ]
+}
