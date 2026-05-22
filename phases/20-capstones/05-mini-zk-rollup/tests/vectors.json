@@ -1,1 +1,89 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, deterministic vectors for the Mini ZK Rollup demo (hand-checked by running code/main.py with fixed keys and fixed seed).",
+  "vectors": [
+    {
+      "op": "merkle_hash",
+      "comment": "Hash two 32-byte leaf nodes; result is SHA-256(left || right)",
+      "left_hex":  "071fb8d284782f437b2e09b7a933ce5fd614252c2e0c16abfd5be3ad6454e193",
+      "right_hex": "ec1da5e4034e76e21694b5a4570c46d98b098dd6cf06ca20df730b42b201b209",
+      "expected_hex": "e7243218cac313cded40347be2b587fdfc8d2b35482a83817ad96c0e1a8f16a0"
+    },
+    {
+      "op": "merkle_root",
+      "comment": "Root of the 4-account initial state (Alice=1000, Bob=500, Carol=750, Dave=250)",
+      "leaves_hex": [
+        "071fb8d284782f437b2e09b7a933ce5fd614252c2e0c16abfd5be3ad6454e193",
+        "ec1da5e4034e76e21694b5a4570c46d98b098dd6cf06ca20df730b42b201b209",
+        "32c0ddf31ee672e0e9bf0279501e1871b17f81341cd25d8305aba95c2f40ab0c",
+        "178edd7b1a0be6d0bbcf360a5c6035576839d29bb6e41a46b6e6ba8fe5f1261a"
+      ],
+      "expected_hex": "b227e0cd7c35976ac0d1c52dce30da2f36a74e21d52fe3571954b426f352a2b3"
+    },
+    {
+      "op": "merkle_verify",
+      "comment": "Alice (index 0) inclusion proof against the initial state root",
+      "root_hex":  "b227e0cd7c35976ac0d1c52dce30da2f36a74e21d52fe3571954b426f352a2b3",
+      "leaf_hex":  "071fb8d284782f437b2e09b7a933ce5fd614252c2e0c16abfd5be3ad6454e193",
+      "proof_hex": [
+        "ec1da5e4034e76e21694b5a4570c46d98b098dd6cf06ca20df730b42b201b209",
+        "cde14c5b8a6f0130ff4c1b9aed53bc71a6358d6875ee2ee4f49f9c4ae005710c"
+      ],
+      "index": 0,
+      "expected_valid": true
+    },
+    {
+      "op": "sign_tx",
+      "comment": "HMAC-SHA256 signature of tx(sender=1, receiver=2, amount=100, nonce=1) with SK_ALICE=sha256('sk:alice')",
+      "sk_hex": "6ccfd740b5c0572295700d194be6c0f0b28a54eebc20b69843c286c7ad0a3278",
+      "sender": 1,
+      "receiver": 2,
+      "amount": 100,
+      "nonce": 1,
+      "expected_sig_hex": "832f319a006b93022dea80bd23f0e0806c7e631346f2d8d1e917529316d90b8f"
+    },
+    {
+      "op": "state_root_after_single_tx",
+      "comment": "State root after Alice sends 100 to Bob (single tx, initial state)",
+      "initial_balances": [
+        {"address": 1, "balance": 1000},
+        {"address": 2, "balance": 500},
+        {"address": 3, "balance": 750},
+        {"address": 4, "balance": 250}
+      ],
+      "expected_new_balances": [
+        {"address": 1, "balance": 900},
+        {"address": 2, "balance": 600},
+        {"address": 3, "balance": 750},
+        {"address": 4, "balance": 250}
+      ],
+      "expected_new_root_hex": "cd6e8878d5ac4a7e2752c9e952699237ed6cd97c10d6814d0950eef719fa3b43"
+    },
+    {
+      "op": "state_root_after_batch",
+      "comment": "State root after 3-tx batch: Alice->Bob 100, Bob->Carol 50, Carol->Dave 200",
+      "initial_balances": [
+        {"address": 1, "balance": 1000},
+        {"address": 2, "balance": 500},
+        {"address": 3, "balance": 750},
+        {"address": 4, "balance": 250}
+      ],
+      "expected_new_balances": [
+        {"address": 1, "balance": 900},
+        {"address": 2, "balance": 550},
+        {"address": 3, "balance": 600},
+        {"address": 4, "balance": 450}
+      ],
+      "expected_new_root_hex": "1b6762633ef923d8d22756b378d5009b3edf47b470b612de6736d8ef4e5700f2"
+    },
+    {
+      "op": "validity_proof",
+      "comment": "Validity proof for the 3-tx batch using seed='rollup-demo-seed-v1'",
+      "old_root_hex": "b227e0cd7c35976ac0d1c52dce30da2f36a74e21d52fe3571954b426f352a2b3",
+      "new_root_hex": "1b6762633ef923d8d22756b378d5009b3edf47b470b612de6736d8ef4e5700f2",
+      "seed_ascii": "rollup-demo-seed-v1",
+      "expected_proof_hex": "885a6b5bb58a48e4155bf690d986c80366e2b65a586a73131c38dcc494dadd00",
+      "disc0_commitment_old_hex": "7f9871940175be8b2536dfcb0550eb460371733b8f8589e3ea4d840d31a85b51",
+      "disc0_commitment_new_hex": "8254b712d80cdd8bfcef68cdc3f75fed9f787b86a6dc14a9604453b5bd2eb576"
+    }
+  ]
+}

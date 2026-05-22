@@ -1,1 +1,110 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "computed by code/main.py with N = (2^31-1)*(2^61-1) = 4951760154835678088235319297",
+  "N": 4951760154835678088235319297,
+  "vectors": [
+    {
+      "description": "vdf_eval: x=2, T=10",
+      "op": "vdf_eval",
+      "x": 2,
+      "T": 10,
+      "N": 4951760154835678088235319297,
+      "expected_y": 604453686716752709025796
+    },
+    {
+      "description": "vdf_eval: x=2, T=20",
+      "op": "vdf_eval",
+      "x": 2,
+      "T": 20,
+      "N": 4951760154835678088235319297,
+      "expected_y": 302222231672357927124996
+    },
+    {
+      "description": "vdf_eval: x=3, T=5",
+      "op": "vdf_eval",
+      "x": 3,
+      "T": 5,
+      "N": 4951760154835678088235319297,
+      "expected_y": 1853020188851841
+    },
+    {
+      "description": "vdf_eval: x=3, T=10",
+      "op": "vdf_eval",
+      "x": 3,
+      "T": 10,
+      "N": 4951760154835678088235319297,
+      "expected_y": 4085088768715370141837429273
+    },
+    {
+      "description": "vdf_eval: x=5, T=10",
+      "op": "vdf_eval",
+      "x": 5,
+      "T": 10,
+      "N": 4951760154835678088235319297,
+      "expected_y": 2908594322185637187655142367
+    },
+    {
+      "description": "vdf_eval: x=7, T=15",
+      "op": "vdf_eval",
+      "x": 7,
+      "T": 15,
+      "N": 4951760154835678088235319297,
+      "expected_y": 1315156464413230194248545122
+    },
+    {
+      "description": "vdf_challenge: x=2, T=20",
+      "op": "vdf_challenge",
+      "x": 2,
+      "y": 302222231672357927124996,
+      "T": 20,
+      "expected_l": 74063
+    },
+    {
+      "description": "vdf_challenge: x=3, T=10",
+      "op": "vdf_challenge",
+      "x": 3,
+      "y": 4085088768715370141837429273,
+      "T": 10,
+      "expected_l": 164
+    },
+    {
+      "description": "vdf_verify: x=2, T=20 — valid proof",
+      "op": "vdf_verify",
+      "x": 2,
+      "T": 20,
+      "y": 302222231672357927124996,
+      "pi": 16384,
+      "N": 4951760154835678088235319297,
+      "expected": true
+    },
+    {
+      "description": "vdf_verify: x=3, T=10 — valid proof",
+      "op": "vdf_verify",
+      "x": 3,
+      "T": 10,
+      "y": 4085088768715370141837429273,
+      "pi": 729,
+      "N": 4951760154835678088235319297,
+      "expected": true
+    },
+    {
+      "description": "vdf_verify: x=2, T=20 — tampered y",
+      "op": "vdf_verify",
+      "x": 2,
+      "T": 20,
+      "y": 302222231672357927124997,
+      "pi": 16384,
+      "N": 4951760154835678088235319297,
+      "expected": false
+    },
+    {
+      "description": "vdf_verify: x=5, T=10 — valid proof",
+      "op": "vdf_verify",
+      "x": 5,
+      "T": 10,
+      "y": 2908594322185637187655142367,
+      "pi": 1769030817195346647796986649,
+      "N": 4951760154835678088235319297,
+      "expected": true
+    }
+  ]
+}

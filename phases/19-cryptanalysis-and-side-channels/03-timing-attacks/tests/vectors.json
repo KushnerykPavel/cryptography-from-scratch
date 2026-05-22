@@ -1,1 +1,29 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, deterministic vectors for timing-attack demo helpers (step-count timing proxy).",
+  "vectors": [
+    {
+      "op": "insecure_prefix_compare",
+      "a_hex": "414243",
+      "b_hex": "415858",
+      "expected": [false, 2]
+    },
+    {
+      "op": "insecure_prefix_compare",
+      "a_hex": "414243",
+      "b_hex": "414243",
+      "expected": [true, 4]
+    },
+    {
+      "op": "constant_time_compare",
+      "a_hex": "414243",
+      "b_hex": "415858",
+      "expected": [false, 3]
+    },
+    {
+      "op": "constant_time_compare",
+      "a_hex": "414243",
+      "b_hex": "414243",
+      "expected": [true, 3]
+    }
+  ]
+}

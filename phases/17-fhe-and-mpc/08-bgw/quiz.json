@@ -1,4 +1,100 @@
 {
-  "title": "BGW & Information-Theoretic MPC",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In Shamir secret sharing with threshold t, what is guaranteed to be information-theoretically hidden?",
+      "options": [
+        "Any t shares reveal nothing about the secret",
+        "Any t+1 shares reveal nothing about the secret",
+        "Any single share reveals the secret",
+        "Any n-1 shares reveal nothing about the secret"
+      ],
+      "correct": 0,
+      "explanation": "Shamir sharing is t-private: any set of at most t shares is consistent with any secret in the field."
+    },
+    {
+      "stage": "pre",
+      "question": "If a secret is shared by a degree-t polynomial f(x) and another by degree-t polynomial g(x), what is the degree of h(x)=f(x)·g(x)?",
+      "options": [
+        "t",
+        "2t",
+        "t+1",
+        "2t+1"
+      ],
+      "correct": 1,
+      "explanation": "Multiplying two degree-t polynomials yields a degree-2t polynomial."
+    },
+    {
+      "stage": "post",
+      "question": "Why does BGW-style MPC usually evaluate arithmetic circuits over a finite field F_p rather than over integers?",
+      "options": [
+        "Because modular arithmetic provides inverses needed for interpolation",
+        "Because integers are not additive, only multiplicative",
+        "Because fields prevent any information leakage by themselves",
+        "Because Shamir sharing requires floating point arithmetic"
+      ],
+      "correct": 0,
+      "explanation": "Reconstruction uses Lagrange interpolation, which requires dividing by (xj−xi); that needs multiplicative inverses in a field."
+    },
+    {
+      "stage": "post",
+      "question": "In Shamir-based MPC, why can parties compute shares of (a+b) without any communication?",
+      "options": [
+        "Addition of polynomials preserves the sharing degree and is done pointwise",
+        "Because addition is always public in MPC",
+        "Because each party can reconstruct a and b locally first",
+        "Because the dealer sends the sum directly to everyone"
+      ],
+      "correct": 0,
+      "explanation": "If a is f(0) and b is g(0), then a+b is (f+g)(0); each party can add its points f(i)+g(i)."
+    },
+    {
+      "stage": "post",
+      "question": "What is the purpose of the BGW degree-reduction step after multiplying shares?",
+      "options": [
+        "Convert a degree-2t sharing of ab into a fresh degree-t sharing of ab",
+        "Convert a degree-t sharing of ab into a degree-2t sharing of ab",
+        "Reveal ab to all parties so they can re-share it",
+        "Remove the need for any randomness in future gates"
+      ],
+      "correct": 0,
+      "explanation": "Local multiplication raises the polynomial degree; degree reduction refreshes the sharing back to degree t without revealing the secret."
+    },
+    {
+      "stage": "post",
+      "question": "For the passive (semi-honest) BGW multiplication described in this lesson, which condition is needed to reconstruct the degree-2t polynomial at x=0 during degree reduction?",
+      "options": [
+        "n ≥ t+1",
+        "n ≥ 2t+1",
+        "n ≥ 3t+1",
+        "n ≥ 4t+1"
+      ],
+      "correct": 1,
+      "explanation": "A degree-2t polynomial is determined by 2t+1 points, so the protocol needs at least 2t+1 parties/points for that step."
+    },
+    {
+      "stage": "post",
+      "question": "In degree reduction, the public coefficients λ_i are chosen so that for any degree-2t polynomial h, which relation holds?",
+      "options": [
+        "h(0) = Σ_i λ_i · h(i)",
+        "h(i) = Σ_j λ_j · h(j) for all i",
+        "h(0) = Π_i h(i)",
+        "h(i) = λ_i · h(0) for all i"
+      ],
+      "correct": 0,
+      "explanation": "The λ_i are Lagrange interpolation weights for evaluating the polynomial at x=0 from its values at the chosen x-coordinates."
+    },
+    {
+      "stage": "post",
+      "question": "Attack thinking: what can go wrong if an implementation reuses the same Shamir-sharing polynomial coefficients (the same randomness) across two different secrets?",
+      "options": [
+        "Shares can become correlated, enabling information leakage across secrets",
+        "Nothing; Shamir sharing is secure even with reused randomness",
+        "It only affects performance, not privacy",
+        "It only affects correctness, not privacy"
+      ],
+      "correct": 0,
+      "explanation": "Reusing the same random coefficients links shares across secrets; adversaries can exploit correlations (e.g., differences cancel randomness) to learn information."
+    }
+  ]
 }

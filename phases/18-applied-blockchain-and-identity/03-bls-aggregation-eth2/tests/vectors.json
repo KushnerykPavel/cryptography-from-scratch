@@ -1,1 +1,91 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Generated locally using toy BLS over Z_Q where Q=1000003. All values are deterministic from hardcoded sk inputs.",
+  "vectors": [
+    {
+      "op": "hash_to_g1",
+      "message_hex": "68656c6c6f",
+      "expected": 501190
+    },
+    {
+      "op": "hash_to_g1",
+      "message_hex": "776f726c64",
+      "expected": 81952
+    },
+    {
+      "op": "keygen",
+      "sk": 42,
+      "expected_pk": 42
+    },
+    {
+      "op": "keygen",
+      "sk": 100,
+      "expected_pk": 100
+    },
+    {
+      "op": "keygen",
+      "sk": 1000042,
+      "expected_pk": 39
+    },
+    {
+      "op": "sign",
+      "sk": 42,
+      "message_hex": "68656c6c6f",
+      "expected_sig": 49917
+    },
+    {
+      "op": "sign",
+      "sk": 100,
+      "message_hex": "68656c6c6f",
+      "expected_sig": 118850
+    },
+    {
+      "op": "sign",
+      "sk": 200,
+      "message_hex": "68656c6c6f",
+      "expected_sig": 237700
+    },
+    {
+      "op": "verify",
+      "pk": 42,
+      "message_hex": "68656c6c6f",
+      "sig": 49917,
+      "expected": true
+    },
+    {
+      "op": "verify",
+      "pk": 42,
+      "message_hex": "68656c6c6f",
+      "sig": 118850,
+      "expected": false
+    },
+    {
+      "op": "aggregate_sigs",
+      "sigs": [49917, 118850, 237700],
+      "expected_agg_sig": 406467
+    },
+    {
+      "op": "aggregate_pks",
+      "pks": [42, 100, 200],
+      "expected_agg_pk": 342
+    },
+    {
+      "op": "verify_aggregate",
+      "agg_pk": 342,
+      "message_hex": "68656c6c6f",
+      "agg_sig": 406467,
+      "expected": true
+    },
+    {
+      "op": "rogue_key_attack",
+      "target_pk": 42,
+      "attacker_sk": 999,
+      "expected_rogue_pk": 957
+    },
+    {
+      "op": "verify_pop",
+      "pk": 42,
+      "pop": 383678,
+      "expected": true
+    }
+  ]
+}

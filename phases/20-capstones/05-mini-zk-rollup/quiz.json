@@ -1,4 +1,101 @@
 {
   "title": "Build a Mini ZK Rollup",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does the Merkle root of an account-balance tree represent?",
+      "options": [
+        "A single 32-byte fingerprint that commits to every account's balance; any change produces a different root",
+        "The encrypted list of all balances, recoverable with the root key",
+        "The sum of all balances in the tree",
+        "The hash of the most recently changed account only"
+      ],
+      "correct": 0,
+      "explanation": "The Merkle root is a collision-resistant digest of the entire leaf set. Changing any leaf changes the root unpredictably."
+    },
+    {
+      "stage": "pre",
+      "question": "Why must a ZK rollup post a validity proof to L1 rather than just the new state root?",
+      "options": [
+        "The L1 has no way to verify that the new root results from valid state transitions without a proof",
+        "The new state root is too large to fit in a transaction",
+        "L1 nodes re-execute all L2 transactions anyway, so the proof is just a formality",
+        "The proof is needed to decrypt the compressed transaction data"
+      ],
+      "correct": 0,
+      "explanation": "The L1 smart contract never sees individual balances or transaction details. The proof is its only way to know the operator applied the rules correctly."
+    },
+    {
+      "stage": "post",
+      "question": "In this implementation, why does generate_validity_proof walk intermediate states rather than using old_state directly for every transaction?",
+      "options": [
+        "A sender's balance may change mid-batch if they receive tokens in an earlier transaction; the pre-balance for tx[i] must reflect those earlier changes",
+        "The intermediate states are needed to compute the new Merkle root",
+        "Walking intermediate states is a ZK requirement to avoid information leakage",
+        "old_state is immutable, so intermediate copies are required for memory reasons"
+      ],
+      "correct": 0,
+      "explanation": "If Bob receives 100 tokens in tx[0] and spends 50 in tx[1], his pre-balance for tx[1] is 600 (500 + 100), not 500. Using old_state would commit to the wrong number."
+    },
+    {
+      "stage": "post",
+      "question": "What does verify_validity_proof check for each per-transaction disclosure?",
+      "options": [
+        "balance_minus_amount >= 0, both commitments open correctly, and the final aggregated hash matches the validity_proof",
+        "Only that the commitment hash matches the validity_proof",
+        "That the sender's address exists in the new Merkle tree",
+        "That the transaction signature is valid"
+      ],
+      "correct": 0,
+      "explanation": "Three checks per disclosure: non-negative remainder (range check), C_old opens to old_balance, C_new opens to old_balance - amount. Then the aggregated hash must match."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the simplified validity proof in this lesson NOT zero-knowledge?",
+      "options": [
+        "The verifier receives old_balance and randomness for each transaction, which fully reveals every sender's balance before the transfer",
+        "The proof is too short to hide information about balances",
+        "SHA-256 is not a zero-knowledge hash function",
+        "The Merkle root reveals all individual account balances"
+      ],
+      "correct": 0,
+      "explanation": "Revealing the opening (value + randomness) of a commitment destroys its hiding property. A real ZK proof proves the commitment opens correctly inside a circuit without revealing either value."
+    },
+    {
+      "stage": "post",
+      "question": "What is the canonical leaf encoding used for Account.leaf_hash(), and why does it matter?",
+      "options": [
+        "SHA-256(address_BE4 || balance_BE8); fixed-width big-endian encoding avoids ambiguity that would cause different implementations to compute different roots for the same state",
+        "SHA-256(str(address) + str(balance)); human-readable strings are easier to debug",
+        "HMAC-SHA256(balance, address); HMAC provides stronger collision resistance",
+        "SHA-256(balance_LE8 || address_LE4); little-endian matches x86 native byte order"
+      ],
+      "correct": 0,
+      "explanation": "Canonical encoding is critical for interoperability. str() output depends on locale and Python version. Fixed big-endian struct.pack produces identical bytes everywhere."
+    },
+    {
+      "stage": "post",
+      "question": "What data does the L1 submission bundle contain, and what does the L1 smart contract need to verify?",
+      "options": [
+        "(old_root, new_root, validity_proof, compressed_txs); the contract checks old_root matches its stored state, verifies the proof, then updates state to new_root",
+        "(old_root, new_root, all account balances); the contract re-executes every transfer",
+        "(validity_proof, compressed_txs only); the roots are derived from the compressed transactions on-chain",
+        "(new_root, validity_proof only); old_root is implicit from the contract's previous state without explicit verification"
+      ],
+      "correct": 0,
+      "explanation": "The L1 contract holds one state root. On each batch submission it verifies the proof ties old_root to new_root, then atomically updates its stored root."
+    },
+    {
+      "stage": "post",
+      "question": "A production ZK rollup uses Groth16 or PLONK instead of hash commitments for the validity proof. What property does that add?",
+      "options": [
+        "The verifier learns nothing about individual balances or transaction amounts (true zero-knowledge), and the proof is succinct regardless of batch size",
+        "The proof becomes larger but verifies faster because elliptic curve operations are cheaper than SHA-256",
+        "The proof replaces the Merkle tree so the state root is no longer needed",
+        "Groth16 eliminates the need for a canonical transaction serialization"
+      ],
+      "correct": 0,
+      "explanation": "SNARKs/STARKs provide both succinctness (constant-size proof) and zero-knowledge (the verifier learns only that the prover knows a valid witness, not the witness itself)."
+    }
+  ]
 }

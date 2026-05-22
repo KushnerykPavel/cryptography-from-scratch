@@ -1,4 +1,101 @@
 {
   "title": "Build a ZK Voting System",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What property of ElGamal encryption makes homomorphic tallying possible?",
+      "options": [
+        "Multiplying two ciphertexts produces a ciphertext of the sum of the plaintexts",
+        "The public key can be used to decrypt without the private key",
+        "ElGamal ciphertexts are additively homomorphic over XOR",
+        "The randomness r cancels out when ciphertexts are added"
+      ],
+      "correct": 0,
+      "explanation": "ElGamal is multiplicatively homomorphic: Enc(v1) * Enc(v2) mod p = Enc(v1 + v2), because (g^r1 * g^r2, h^(r1+r2) * g^(v1+v2)) is a valid encryption of v1+v2."
+    },
+    {
+      "stage": "pre",
+      "question": "In an or-proof (disjunctive sigma protocol), how does the prover handle the branch corresponding to the value they did NOT choose?",
+      "options": [
+        "They simulate it: pick a fake challenge and response, then back-compute the commitment",
+        "They leave it blank — the verifier fills in the missing branch",
+        "They copy the commitment from the real branch to the fake branch",
+        "They prove both branches identically using the same witness"
+      ],
+      "correct": 0,
+      "explanation": "The or-trick (Cramer et al.) lets the prover simulate the false branch by choosing c_false and z_false freely, then back-computing A_false = g^z_false * C1^(-c_false). The verifier cannot tell which branch was simulated."
+    },
+    {
+      "stage": "post",
+      "question": "After multiplying all three ciphertexts (Enc(1), Enc(0), Enc(1)) together, what does decrypting the product reveal?",
+      "options": [
+        "The integer 2, which is the sum 1+0+1",
+        "The three individual votes 1, 0, 1 in sequence",
+        "The product of the votes: 1*0*1 = 0",
+        "The XOR of the votes: 1 XOR 0 XOR 1 = 0"
+      ],
+      "correct": 0,
+      "explanation": "ElGamal's homomorphism adds exponents: g^(v1+v2+v3) is recovered from the product ciphertext, so the brute-force discrete log yields the sum 1+0+1 = 2."
+    },
+    {
+      "stage": "post",
+      "question": "Why must proofs be verified before the ciphertexts are included in the tally?",
+      "options": [
+        "Invalid ciphertexts (e.g. vote=100) cannot be removed from the product after multiplication",
+        "Proofs expire after the tally is computed",
+        "The public key changes after tallying, making old proofs unverifiable",
+        "Verification requires the individual votes, which are hidden after tallying"
+      ],
+      "correct": 0,
+      "explanation": "Once a rogue ciphertext is multiplied into the tally, its contribution is irreversible — there is no way to subtract it out without knowing which ciphertext it was."
+    },
+    {
+      "stage": "post",
+      "question": "In verify_vote_proof, the check '(c0 + c1) % Q == c_total % Q' enforces what property?",
+      "options": [
+        "The prover split the Fiat-Shamir challenge honestly between the two branches",
+        "Both votes sum to a valid total",
+        "The ciphertext was produced with a fresh random r",
+        "The commitment nonces k for each branch are distinct"
+      ],
+      "correct": 0,
+      "explanation": "The or-trick requires c0 + c1 = H(...) mod q. If the prover could choose both c0 and c1 freely without this constraint, they could forge proofs for invalid votes."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the Fiat-Shamir hash include both sets of commitments (A0, B0, A1, B1) rather than just the real branch's commitments?",
+      "options": [
+        "To bind the challenge to both branches simultaneously, preventing the prover from adaptively choosing the fake branch after seeing the hash",
+        "To double the security level of the hash function",
+        "Because the verifier needs to recompute the fake branch from scratch",
+        "To ensure the hash output is in the subgroup of order q"
+      ],
+      "correct": 0,
+      "explanation": "Hashing all commitments at once prevents the prover from first computing the real commitment, hashing it to get a challenge, and then constructing a fake branch to match. All commitments are fixed before the challenge is known."
+    },
+    {
+      "stage": "post",
+      "question": "What attack does threshold decryption (k-of-n key splitting) prevent that single-authority decryption does not?",
+      "options": [
+        "A single compromised or coerced authority decrypting individual ballots",
+        "A voter casting multiple ballots under the same identity",
+        "A verifier learning the vote from the or-proof transcripts",
+        "An attacker forging a valid ciphertext for vote=2"
+      ],
+      "correct": 0,
+      "explanation": "With a single authority, anyone who obtains the private key can decrypt any ballot. With k-of-n threshold, decryption of individual ballots is mathematically impossible unless k trustees collude."
+    },
+    {
+      "stage": "post",
+      "question": "A voter submits a ciphertext Enc(1) from a previous election and attaches its valid or-proof. Why should the bulletin board reject this replayed ballot?",
+      "options": [
+        "The Fiat-Shamir hash did not include the election ID, so the proof is valid in both elections — but binding the voter-id or election-id closes this attack",
+        "The ciphertext is invalid because it uses an outdated public key",
+        "The or-proof challenge bits are election-specific and would fail recomputation",
+        "Replay is impossible because ElGamal randomness r is never reused"
+      ],
+      "correct": 0,
+      "explanation": "Without binding the election ID (or voter nonce) into the Fiat-Shamir hash, a valid proof from one election verifies in another. Bernhard et al. (2012) showed this exact flaw in early Helios."
+    }
+  ]
 }

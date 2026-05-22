@@ -1,4 +1,101 @@
 {
-  "title": "Padding Oracle Attacks \u2014 CBC, RSA-OAEP",
-  "questions": []
+  "title": "Padding Oracle Attacks — CBC",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In CBC mode, what does a plaintext block depend on during decryption?",
+      "options": [
+        "The block decryption of the current ciphertext XORed with the previous ciphertext (or IV)",
+        "Only the current ciphertext block (CBC is not chained during decryption)",
+        "Only the IV (the ciphertext is used only for integrity)",
+        "The sum of all previous plaintext blocks (CBC is additive)"
+      ],
+      "correct": 0,
+      "explanation": "CBC decryption is P_i = D_K(C_i) XOR C_{i-1}, with C_0 = IV."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a padding oracle, in the attacker’s view?",
+      "options": [
+        "Any observable signal that correlates with whether decrypted padding is valid",
+        "A server endpoint that returns the decrypted plaintext",
+        "A public key that allows anyone to decrypt CBC ciphertexts",
+        "A random-number generator used to create padding bytes"
+      ],
+      "correct": 0,
+      "explanation": "The attacker only needs a yes/no (or distinguishable) signal tied to padding validity."
+    },
+    {
+      "stage": "post",
+      "question": "Why does changing the IV (or C_{i-1}) let an attacker control bytes of P_i in CBC decryption?",
+      "options": [
+        "Because P_i is XORed with the IV/previous ciphertext after block decryption",
+        "Because the block cipher key is derived from the IV",
+        "Because the IV is encrypted with ECB before use",
+        "Because CBC decryption reuses the same block twice"
+      ],
+      "correct": 0,
+      "explanation": "In CBC, the XOR with IV/C_{i-1} happens after D_K(C_i), so flipping bits flips plaintext bits."
+    },
+    {
+      "stage": "post",
+      "question": "In a byte-at-a-time padding oracle attack, what does a “valid padding” response tell you?",
+      "options": [
+        "Your trial IV/C_{i-1} produced a plaintext suffix matching the required padding pattern",
+        "You found the encryption key",
+        "The ciphertext was not modified in transit",
+        "The plaintext is ASCII and therefore parseable"
+      ],
+      "correct": 0,
+      "explanation": "Valid padding means the decrypted block ends in 0x01 or 0x02 0x02, etc., which leaks information."
+    },
+    {
+      "stage": "post",
+      "question": "When targeting pad_len = 3, how do you set already-recovered trailing bytes in the trial IV/C_{i-1}?",
+      "options": [
+        "Force each trailing plaintext byte to equal 0x03 by XORing with (known intermediate) and 0x03",
+        "Leave them unchanged; only the new byte matters",
+        "Set them all to 0x00 so the block becomes zeroed",
+        "Randomize them each query to avoid detection"
+      ],
+      "correct": 0,
+      "explanation": "You must adjust previously solved positions so the block ends with 0x03 0x03 0x03."
+    },
+    {
+      "stage": "post",
+      "question": "Which defense actually prevents the padding oracle in legacy CBC designs?",
+      "options": [
+        "Authenticate ciphertexts and verify the MAC before decrypting/unpadding, with indistinguishable errors",
+        "Add random sleep on padding failure",
+        "Base64-encode ciphertexts before decrypting",
+        "Use a longer IV"
+      ],
+      "correct": 0,
+      "explanation": "Verify integrity first (encrypt-then-authenticate) and avoid distinguishable failure signals."
+    },
+    {
+      "stage": "post",
+      "question": "What is the best modern replacement for CBC+PKCS#7 in new systems?",
+      "options": [
+        "An AEAD mode like AES-GCM or ChaCha20-Poly1305",
+        "ECB with a random IV",
+        "CBC with a secret IV",
+        "A custom padding scheme with randomized bytes"
+      ],
+      "correct": 0,
+      "explanation": "AEAD provides confidentiality and integrity in one construction and avoids padding-oracle footguns."
+    },
+    {
+      "stage": "post",
+      "question": "Why is “add random delay on failure” an unreliable padding-oracle mitigation?",
+      "options": [
+        "The signal often remains statistically distinguishable with enough samples",
+        "It makes the ciphertext immutable",
+        "It prevents chosen-ciphertext queries entirely",
+        "It changes CBC into an AEAD mode"
+      ],
+      "correct": 0,
+      "explanation": "Noise can reduce signal strength, but attackers can average it out; the oracle often still exists."
+    }
+  ]
 }

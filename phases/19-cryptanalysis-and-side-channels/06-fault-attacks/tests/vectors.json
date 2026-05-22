@@ -1,1 +1,19 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, deterministic vectors for the toy RSA-CRT fault attack demo (fixed p,q,e and message).",
+  "vectors": [
+    {
+      "op": "rsa_encrypt",
+      "m": 123456789,
+      "n": 68896914737375842657598074697,
+      "e": 5,
+      "expected": 2996813151047481013883191324
+    },
+    {
+      "op": "factor_from_faulty_pair",
+      "n": 68896914737375842657598074697,
+      "correct": 123456789,
+      "faulty": 40327334882448272055589201874,
+      "expected": [251444687128489, 274004257255073]
+    }
+  ]
+}

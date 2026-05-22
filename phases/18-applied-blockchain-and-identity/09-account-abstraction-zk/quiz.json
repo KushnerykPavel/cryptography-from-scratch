@@ -1,4 +1,101 @@
 {
   "title": "Account Abstraction & ZK Accounts",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main limitation of Ethereum EOAs (Externally Owned Accounts) that ERC-4337 addresses?",
+      "options": [
+        "Authorization is locked to a single private key; there is no built-in way to add custom validation logic, social recovery, or gas sponsorship",
+        "EOAs cannot sign transactions larger than 32 bytes",
+        "EOAs require a separate key for each token type",
+        "EOAs store private keys on-chain, creating a security risk"
+      ],
+      "correct": 0,
+      "explanation": "EOAs are controlled by a single ECDSA private key with no programmable validation. ERC-4337 lets smart contract accounts define any validateUserOp logic, enabling multisig, ZK proofs, social recovery, and paymasters."
+    },
+    {
+      "stage": "pre",
+      "question": "In a Schnorr sigma protocol, what is the Fiat-Shamir transform used for?",
+      "options": [
+        "Replacing the verifier's random challenge with a hash of the public inputs, making the protocol non-interactive",
+        "Encrypting the prover's secret key before transmission",
+        "Converting an interactive proof into a threshold signature scheme",
+        "Hashing the proof response to reduce its size"
+      ],
+      "correct": 0,
+      "explanation": "Fiat-Shamir replaces the verifier's random challenge with a hash of all public values. This collapses the interactive protocol into a single message, producing a NIZK proof."
+    },
+    {
+      "stage": "post",
+      "question": "In aa_create_zk_proof, why is the response s computed as (k + sk * e) % _AA_ORDER and not % _AA_N?",
+      "options": [
+        "Because scalars used as exponents in Z_N* must be reduced mod (N-1), the group order, not mod N",
+        "Because N is not a prime so modular arithmetic doesn't apply",
+        "Because _AA_ORDER is larger than _AA_N and provides extra security",
+        "To match the output size of SHA-256"
+      ],
+      "correct": 0,
+      "explanation": "By Fermat's little theorem, G^a ≡ G^(a mod (N-1)) mod N for prime N. Scalar exponents live in Z_{N-1}, not Z_N. Using the wrong modulus breaks verification."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the proof field excluded when computing the UserOperation hash inside aa_create_zk_proof?",
+      "options": [
+        "Including proof in the hash would create a circular dependency: the hash depends on the proof, which depends on the hash",
+        "The proof is already embedded in the calldata field",
+        "JSON serialization of None values is non-deterministic across Python versions",
+        "The proof field is not yet assigned when the hash is first computed"
+      ],
+      "correct": 0,
+      "explanation": "The ZK proof commits to op_hash = hash(UserOp). If op_hash included the proof, you'd need to know the proof to compute the hash used to produce the proof — a circular dependency."
+    },
+    {
+      "stage": "post",
+      "question": "What does aa_validate_user_op check to verify the proof, and what inputs does it require?",
+      "options": [
+        "It checks G^s ≡ R · commitment^e (mod N) using only the public values (R, s, commitment, op_hash) — the secret key is never needed",
+        "It recomputes the proof using the stored secret key and compares byte-for-byte",
+        "It queries an on-chain oracle that stores all valid proofs",
+        "It checks that SHA256(proof) equals the account's commitment"
+      ],
+      "correct": 0,
+      "explanation": "Schnorr verification uses only public values: G^s = R * PK^e mod N where PK = commitment. The secret key stays with the prover and is never transmitted or needed by the verifier."
+    },
+    {
+      "stage": "post",
+      "question": "A paymaster has policy = {max_fee: 10000, whitelist: []}. A UserOp arrives with max_fee = 5000 and sender = 0xABCD. What does aa_paymaster_check return?",
+      "options": [
+        "True — fee is within limit and empty whitelist means all senders are allowed",
+        "False — 0xABCD is not in the whitelist",
+        "False — fee must equal max_fee exactly",
+        "True — but only if the sender is the zero address"
+      ],
+      "correct": 0,
+      "explanation": "An empty whitelist means the policy imposes no sender restriction. 5000 ≤ 10000, so both conditions pass and the paymaster approves the operation."
+    },
+    {
+      "stage": "post",
+      "question": "What attack is possible if the Schnorr nonce k is reused for two different UserOperations?",
+      "options": [
+        "The secret key sk can be recovered: given two equations s1 = k + sk*e1 and s2 = k + sk*e2, subtract to get sk = (s1-s2)/(e1-e2) mod ORDER",
+        "Only the nonce k leaks, but sk remains safe because the commitment is one-way",
+        "Verification fails for both operations, so the account is temporarily locked",
+        "The bundler detects the duplicate R values and drops both UserOps"
+      ],
+      "correct": 0,
+      "explanation": "Reusing k means R = G^k is the same. From s1 - s2 = sk*(e1 - e2) mod ORDER, an attacker computes sk = (s1-s2) * modinv(e1-e2, ORDER). This is the same attack as ECDSA nonce reuse."
+    },
+    {
+      "stage": "post",
+      "question": "In aa_verify_bundle, what happens if an account address in a UserOp does not appear in the accounts list?",
+      "options": [
+        "The function returns False immediately — an unrecognised sender cannot be validated",
+        "The function skips that op and validates the remaining ones",
+        "The function raises a KeyError exception",
+        "The function returns True if at least one op is valid"
+      ],
+      "correct": 0,
+      "explanation": "aa_verify_bundle looks up each sender in account_by_addr. If the address is not found, acc is None and the function returns False. All ops in the bundle must have a known, valid account."
+    }
+  ]
 }

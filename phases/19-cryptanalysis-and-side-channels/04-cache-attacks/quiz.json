@@ -1,4 +1,101 @@
 {
-  "title": "Cache Attacks \u2014 Flush+Reload, Prime+Probe",
-  "questions": []
+  "title": "Cache Attacks — Prime+Probe (Simulated)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a cache hit?",
+      "options": [
+        "Accessing data that is already in cache, so it is faster",
+        "Accessing data that is not in memory at all",
+        "A cryptographic collision in a hash function",
+        "A CPU exception caused by invalid memory"
+      ],
+      "correct": 0,
+      "explanation": "A cache hit means the requested line is present in the cache, so access is fast."
+    },
+    {
+      "stage": "pre",
+      "question": "What does a Prime+Probe attacker try to infer?",
+      "options": [
+        "Which cache sets/lines the victim accessed, by measuring evictions",
+        "The victim’s source code from binary output",
+        "The victim’s network address via DNS",
+        "The victim’s random number generator seed from ciphertext length"
+      ],
+      "correct": 0,
+      "explanation": "Prime+Probe infers cache activity by priming and then probing for misses."
+    },
+    {
+      "stage": "post",
+      "question": "Which step order matches Prime+Probe?",
+      "options": [
+        "Prime cache → victim runs → probe cache timings",
+        "Flush cache → victim runs → reload shared line",
+        "Encrypt message → compare digests → decrypt message",
+        "Train branch predictor → read registers → dump memory"
+      ],
+      "correct": 0,
+      "explanation": "Prime+Probe is prime, victim, probe (measure which accesses got slower)."
+    },
+    {
+      "stage": "post",
+      "question": "Why can a secret-dependent table lookup leak information in caches?",
+      "options": [
+        "Different indices touch different cache sets/lines, changing later access times",
+        "Because table lookups always reveal the secret directly",
+        "Because caches store cryptographic keys in plaintext",
+        "Because AES requires cache flushing after each round"
+      ],
+      "correct": 0,
+      "explanation": "Memory access patterns influence cache state, which can be measured indirectly."
+    },
+    {
+      "stage": "post",
+      "question": "What makes Flush+Reload different from Prime+Probe?",
+      "options": [
+        "Flush+Reload requires shared memory pages between attacker and victim",
+        "Flush+Reload works only against symmetric cryptography",
+        "Prime+Probe requires shared memory pages between attacker and victim",
+        "Prime+Probe can only be done remotely"
+      ],
+      "correct": 0,
+      "explanation": "Flush+Reload typically relies on shared pages; Prime+Probe does not."
+    },
+    {
+      "stage": "post",
+      "question": "Which mitigation most directly targets cache side-channel leakage in crypto code?",
+      "options": [
+        "Use constant-time, table-free implementations for secret-dependent operations",
+        "Increase ciphertext length",
+        "Compress network responses",
+        "Add random whitespace to JSON outputs"
+      ],
+      "correct": 0,
+      "explanation": "The root cause is secret-dependent memory access; constant-time/table-free code addresses it."
+    },
+    {
+      "stage": "post",
+      "question": "Why are “random delays” not a strong mitigation for cache/timing attacks?",
+      "options": [
+        "Attackers can average out noise across many measurements",
+        "Random delays change the cache associativity",
+        "Random delays disable branch prediction permanently",
+        "Random delays prevent the victim from accessing memory"
+      ],
+      "correct": 0,
+      "explanation": "Noise reduces signal quality but often doesn’t eliminate it statistically."
+    },
+    {
+      "stage": "post",
+      "question": "In a direct-mapped cache, what causes a conflict miss?",
+      "options": [
+        "Two different addresses map to the same set, so one evicts the other",
+        "A hash collision in the address computation",
+        "A CPU timer overflow",
+        "A mismatch in MAC verification"
+      ],
+      "correct": 0,
+      "explanation": "Direct-mapped caches have one line per set; different tags mapping to the same set conflict."
+    }
+  ]
 }

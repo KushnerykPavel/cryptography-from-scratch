@@ -1,4 +1,100 @@
 {
-  "title": "Private Set Intersection",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the core goal of Private Set Intersection (PSI)?",
+      "options": [
+        "Let two parties learn the exact union A ∪ B",
+        "Let one or both parties learn (something about) A ∩ B without revealing the rest of the sets",
+        "Let two parties compute a shared secret key for encryption",
+        "Let a server prove it knows its entire dataset to a client"
+      ],
+      "correct": 1,
+      "explanation": "PSI is about learning the intersection while minimizing what each side learns about the non-intersecting elements."
+    },
+    {
+      "stage": "pre",
+      "question": "In a commutative-encryption PSI sketch using exponentiation mod p, what does 'commutative' mean?",
+      "options": [
+        "Enc_a(Enc_b(m)) equals Enc_b(Enc_a(m)) for all messages",
+        "Enc_a(m) can be decrypted without knowing a",
+        "Enc_a(m) is constant-time for all inputs",
+        "Enc_a(m) is secure even when p is small"
+      ],
+      "correct": 0,
+      "explanation": "Commutativity means applying party A's transform then party B's transform yields the same result as doing them in the opposite order."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the client's exponent a be coprime with (p−1) in the exponentiation-based PSI demo?",
+      "options": [
+        "So that a has an inverse modulo (p−1), enabling unblinding",
+        "So that a is smaller than p and fits in 64 bits",
+        "So that the server cannot shuffle the response",
+        "So that SHA-256 outputs are uniformly random"
+      ],
+      "correct": 0,
+      "explanation": "Unblinding requires computing inv(a) mod (p−1); that inverse exists exactly when gcd(a, p−1)=1."
+    },
+    {
+      "stage": "post",
+      "question": "What changes when the server sorts (or otherwise reorders) the client's re-encrypted items before returning them?",
+      "options": [
+        "The client can still learn which of its items are in the intersection",
+        "The client can only learn an unordered intersection size (not item-by-item membership) unless extra structure is used",
+        "The protocol becomes information-theoretically secure",
+        "The server learns the client's plaintext items"
+      ],
+      "correct": 1,
+      "explanation": "Reordering breaks per-item alignment, so the client can only compare sets (cardinality) rather than map matches back to specific items."
+    },
+    {
+      "stage": "post",
+      "question": "Which piece of information typically leaks in basic PSI protocols even if the intersection stays private?",
+      "options": [
+        "The exact non-intersection elements",
+        "The private keys a and b",
+        "The set sizes (|A| and |B|), and often timing/traffic shape",
+        "A proof that all elements are prime numbers"
+      ],
+      "correct": 2,
+      "explanation": "Most PSI designs leak at least set sizes and some metadata unless you add padding/batching and traffic-shaping."
+    },
+    {
+      "stage": "post",
+      "question": "A Bloom filter is used as a membership structure for server tags. What does a 'match' mean?",
+      "options": [
+        "The element is definitely in the server set (no error possible)",
+        "The element is definitely not in the server set",
+        "The element is possibly in the server set (false positives are possible)",
+        "The server's secret key can be recovered"
+      ],
+      "correct": 2,
+      "explanation": "Bloom filters have no false negatives for inserted items, but they can produce false positives for non-members."
+    },
+    {
+      "stage": "post",
+      "question": "If the item domain is small (e.g., phone numbers) and you run PSI repeatedly, what is a common mitigation to reduce offline guessing and linkability?",
+      "options": [
+        "Use a smaller prime p so computations run faster",
+        "Use an OPRF/VOPRF-style protocol so tags are keyed and hard to enumerate without the key",
+        "Replace SHA-256 with CRC32 so hashes are shorter",
+        "Disable shuffling so the client can map responses to items"
+      ],
+      "correct": 1,
+      "explanation": "An OPRF/VOPRF makes it harder for attackers to precompute tags over a small domain and reduces cross-run linkability when designed with key rotation."
+    },
+    {
+      "stage": "post",
+      "question": "Which abuse risk exists when a client is allowed to run 'reveal intersection' PSI without restrictions?",
+      "options": [
+        "The client can turn PSI into a membership oracle by querying one candidate at a time",
+        "The client can force the server to reveal its secret exponent b directly",
+        "The client can bypass TLS and sniff plaintext packets",
+        "The client can compute discrete logs in any group instantly"
+      ],
+      "correct": 0,
+      "explanation": "A malicious client can query many candidates and learn whether the server contains each one, so real systems enforce authorization and rate limits."
+    }
+  ]
 }

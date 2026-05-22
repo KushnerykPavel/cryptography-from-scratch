@@ -1,1 +1,12 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Educational Yao's Garbled Circuit Vectors",
+  "vectors": [
+    {
+      "op": "enc",
+      "k1": "00000000000000000000000000000000",
+      "k2": "11111111111111111111111111111111",
+      "m": "22222222222222222222222222222222",
+      "expected": "a39d62d3937d5eea68032e63990ec443d4ad809d7911a3161d153de12bf5bcc5"
+    }
+  ]
+}

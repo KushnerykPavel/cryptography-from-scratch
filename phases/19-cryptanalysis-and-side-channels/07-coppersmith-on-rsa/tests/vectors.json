@@ -1,1 +1,19 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, deterministic vectors for toy small-root brute force demo (Coppersmith idea).",
+  "vectors": [
+    {
+      "op": "poly_eval_mod",
+      "n": 18446744726544586159,
+      "coeffs": [1, 3703703670000, 5222709643550424034, 6946554742144748879],
+      "x": 4242,
+      "expected": 0
+    },
+    {
+      "op": "find_small_root_bruteforce",
+      "n": 18446744726544586159,
+      "coeffs": [1, 3703703670000, 5222709643550424034, 6946554742144748879],
+      "x_bound": 65536,
+      "expected": 4242
+    }
+  ]
+}

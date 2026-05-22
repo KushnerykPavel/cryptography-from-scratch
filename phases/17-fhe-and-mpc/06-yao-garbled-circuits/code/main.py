@@ -90,7 +90,7 @@ def main():
     
     garbler_input_A = 1
     evaluator_input_B = 1
-    print(f"\\n=== Step 2: Oblivious Transfer ===")
+    print(f"\n=== Step 2: Oblivious Transfer ===")
     print(f"Garbler's private input A: {garbler_input_A}")
     print(f"Evaluator's private input B: {evaluator_input_B}")
     
@@ -98,12 +98,12 @@ def main():
     label_B = dummy_oblivious_transfer(evaluator_input_B, wires['B'])
     print("Evaluator obtained their input label via Oblivious Transfer.")
     
-    print("\\n=== Step 3: Evaluation ===")
+    print("\n=== Step 3: Evaluation ===")
     print("Evaluator decrypts the garbled tables...")
     label_S = evaluate_gate(table_S, label_A, label_B)
     label_C = evaluate_gate(table_C, label_A, label_B)
     
-    print("\\n=== Step 4: Decoding ===")
+    print("\n=== Step 4: Decoding ===")
     out_S = output_map[label_S]
     out_C = output_map[label_C]
     print(f"Result -> Sum: {out_S}, Carry: {out_C}")

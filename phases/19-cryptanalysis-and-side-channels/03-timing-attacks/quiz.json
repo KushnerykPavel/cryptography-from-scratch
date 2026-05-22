@@ -1,4 +1,101 @@
 {
-  "title": "Timing Attacks on RSA & ECDSA",
-  "questions": []
+  "title": "Timing Attacks — Early Exit vs Constant Time",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does an “early-exit” byte comparison do on a mismatch?",
+      "options": [
+        "Stops immediately when it finds the first differing byte",
+        "Continues comparing all bytes and accumulates differences",
+        "Always pads both inputs to a fixed length first",
+        "Encrypts both inputs before comparing them"
+      ],
+      "correct": 0,
+      "explanation": "Early-exit comparisons return as soon as they see a mismatch."
+    },
+    {
+      "stage": "pre",
+      "question": "What is the attacker’s advantage in a timing attack?",
+      "options": [
+        "They can learn information correlated with secrets by measuring runtime",
+        "They can directly read memory from the target process",
+        "They can always recover the private key in one request",
+        "They can bypass authentication without any guesses"
+      ],
+      "correct": 0,
+      "explanation": "Timing provides a side channel: it correlates with secret-dependent control flow."
+    },
+    {
+      "stage": "post",
+      "question": "Why can an early-exit token comparison leak the token one byte at a time?",
+      "options": [
+        "Guesses with a longer correct prefix run longer, so timing reveals prefix length",
+        "Tokens are always ASCII, making them easier to brute force",
+        "Network packets contain the token twice",
+        "TLS encryption is deterministic"
+      ],
+      "correct": 0,
+      "explanation": "The runtime correlates with how many bytes matched before the first mismatch."
+    },
+    {
+      "stage": "post",
+      "question": "Which property best defines a constant-time comparison routine?",
+      "options": [
+        "Its control flow and work do not depend on secret data values",
+        "It has a low average runtime",
+        "It uses constant memory",
+        "It runs in exactly one CPU cycle"
+      ],
+      "correct": 0,
+      "explanation": "Constant-time means no secret-dependent branches/early exits (at a practical level)."
+    },
+    {
+      "stage": "post",
+      "question": "In Python, which standard library function is designed for constant-time equality checks of authentication data?",
+      "options": [
+        "hmac.compare_digest",
+        "hashlib.sha256",
+        "base64.b64encode",
+        "secrets.token_hex"
+      ],
+      "correct": 0,
+      "explanation": "`hmac.compare_digest` is intended to mitigate timing leaks in comparisons."
+    },
+    {
+      "stage": "post",
+      "question": "Why is adding random delay on failures not a reliable fix for timing attacks?",
+      "options": [
+        "Attackers can average out noise over many requests and recover the signal statistically",
+        "It turns the comparison into constant-time automatically",
+        "It prevents attackers from making requests at all",
+        "It makes tokens unguessable"
+      ],
+      "correct": 0,
+      "explanation": "Noise reduces signal quality but often doesn’t remove it; repeated sampling can recover it."
+    },
+    {
+      "stage": "post",
+      "question": "Which ordering is safer when verifying attacker-controlled encrypted/authenticated data?",
+      "options": [
+        "Verify integrity/authenticity first, then parse/decrypt",
+        "Parse/decrypt first, then verify authenticity only if parsing succeeded",
+        "Return detailed errors for each failure stage",
+        "Retry parsing with multiple fallback formats"
+      ],
+      "correct": 0,
+      "explanation": "Authenticity checks should happen before expensive or detail-leaking parsing/decryption."
+    },
+    {
+      "stage": "post",
+      "question": "What is an “oracle” in the context of timing attacks?",
+      "options": [
+        "Any interface that leaks a measurable signal correlated with a secret",
+        "A database that stores secrets safely",
+        "A randomness source used for nonces",
+        "A public key used for encryption"
+      ],
+      "correct": 0,
+      "explanation": "An oracle can be timing, error codes, response lengths—anything observable per query."
+    }
+  ]
 }

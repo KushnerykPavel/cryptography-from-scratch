@@ -1,4 +1,100 @@
 {
-  "title": "Garbled Circuits \u2014 Yao's Protocol",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the primary goal of Secure Multi-Party Computation (MPC)?",
+      "options": [
+        "To distribute the computation to speed it up across multiple nodes",
+        "To allow mutually distrusting parties to compute a function over their inputs while keeping those inputs private",
+        "To encrypt data at rest using multiple keys",
+        "To prevent denial of service attacks by splitting traffic"
+      ],
+      "correct": 1,
+      "explanation": "MPC ensures privacy of inputs while correctly computing a joint function."
+    },
+    {
+      "stage": "pre",
+      "question": "In a 1-out-of-2 Oblivious Transfer (OT), what does the receiver learn?",
+      "options": [
+        "Both messages held by the sender",
+        "Only the message they requested, without the sender knowing which one was chosen",
+        "A garbled table of the sender's inputs",
+        "The cryptographic key used to encrypt the other message"
+      ],
+      "correct": 1,
+      "explanation": "OT allows a receiver to get exactly one of the two messages, while the sender learns nothing about the choice."
+    },
+    {
+      "stage": "post",
+      "question": "In Yao's Garbled Circuits, what does a 'wire label' represent?",
+      "options": [
+        "The physical memory address of the boolean gate",
+        "A public identifier used for routing the circuit in a network",
+        "A random 128-bit string corresponding to the truth value (0 or 1) of a specific wire",
+        "The cryptographic hash of the entire circuit"
+      ],
+      "correct": 2,
+      "explanation": "Wire labels are random secrets; each wire has two labels, one for 0 and one for 1."
+    },
+    {
+      "stage": "post",
+      "question": "How many ciphertexts are typically in a basic garbled table for a 2-input boolean gate?",
+      "options": [
+        "1",
+        "2",
+        "4",
+        "8"
+      ],
+      "correct": 2,
+      "explanation": "A 2-input gate has 4 possible input combinations (00, 01, 10, 11), each corresponding to one ciphertext."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the four ciphertexts in a garbled table be randomly shuffled?",
+      "options": [
+        "To optimize the evaluation speed",
+        "To prevent the evaluator from deducing the wire's truth value from the ciphertext's position",
+        "To compress the circuit size for faster transmission",
+        "To ensure the symmetric encryption algorithm generates a uniform distribution"
+      ],
+      "correct": 1,
+      "explanation": "If the table were ordered (e.g., 00, 01, 10, 11), the evaluator could immediately tell which input bits were used based on which ciphertext decrypted successfully."
+    },
+    {
+      "stage": "post",
+      "question": "How does the Evaluator obtain the labels for their own private inputs?",
+      "options": [
+        "The Garbler sends both labels for the Evaluator to choose from",
+        "The Evaluator guesses the labels and verifies them using a hash function",
+        "The Garbler randomly selects a label and sends it",
+        "By executing an Oblivious Transfer protocol with the Garbler"
+      ],
+      "correct": 3,
+      "explanation": "Oblivious Transfer ensures the Evaluator gets exactly the label for their input bit, without revealing that bit to the Garbler."
+    },
+    {
+      "stage": "post",
+      "question": "Attack It: What happens if a Garbler reuses the same wire labels to evaluate the circuit a second time with different inputs?",
+      "options": [
+        "The circuit evaluates twice as fast because the labels are cached",
+        "The Evaluator can combine the labels from both executions to decipher the underlying truth values and break privacy",
+        "The Oblivious Transfer protocol will reject the duplicate labels",
+        "Nothing, the security of the symmetric encryption ensures it remains perfectly secure"
+      ],
+      "correct": 1,
+      "explanation": "Reusing labels breaks the one-time encryption property. The Evaluator can cross-reference which labels match to reconstruct the true boolean values."
+    },
+    {
+      "stage": "post",
+      "question": "During evaluation, how does the Evaluator know which of the 4 ciphertexts is the correct one to decrypt?",
+      "options": [
+        "They try decrypting all 4; only one will yield a valid padded plaintext (or they use a point-and-permute bit to select exactly one)",
+        "The Garbler sends a hint indicating the correct index",
+        "They use Oblivious Transfer a second time to request the correct index",
+        "The ciphertext corresponding to the correct output is always left unencrypted"
+      ],
+      "correct": 0,
+      "explanation": "The Evaluator attempts decryption. Either a redundancy check (like zero-padding) confirms success, or an optimization like point-and-permute tells them exactly which one to decrypt."
+    }
+  ]
 }

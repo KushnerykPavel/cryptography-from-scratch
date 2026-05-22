@@ -1,1 +1,80 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-constructed deterministic examples for the toy SPDZ implementation in code/main.py (not from a standard).",
+  "vectors": [
+    {
+      "op": "mod_add",
+      "inputs": { "a": 2000000000, "b": 200000000, "p": 2147483647 },
+      "expected": 52516353
+    },
+    {
+      "op": "mod_mul",
+      "inputs": { "a": 123456, "b": 654321, "p": 2147483647 },
+      "expected": 1322958437
+    },
+    {
+      "op": "reconstruct",
+      "inputs": { "shares": [111, 222, 901], "p": 2147483647 },
+      "expected": 1234
+    },
+    {
+      "op": "beaver_multiply_shares",
+      "inputs": {
+        "x_shares": [111, 222, 901],
+        "y_shares": [333, 444, 4901],
+        "a_shares": [10, 20, 969],
+        "b_shares": [30, 40, 818],
+        "c_shares": [50, 60, 887002],
+        "p": 2147483647
+      },
+      "expected": { "z_shares": [1180650, 105260, 5720742], "opened": 7006652 }
+    },
+    {
+      "op": "spdz_open",
+      "inputs": {
+        "alpha_shares": [100, 200, 12045],
+        "auth_shares": [
+          { "value": 111, "mac": 7 },
+          { "value": 222, "mac": 8 },
+          { "value": 901, "mac": 15233715 }
+        ],
+        "p": 2147483647
+      },
+      "expected": 1234
+    },
+    {
+      "op": "spdz_multiply_open",
+      "inputs": {
+        "alpha_shares": [100, 200, 12045],
+        "x_auth": [
+          { "value": 111, "mac": 7 },
+          { "value": 222, "mac": 8 },
+          { "value": 901, "mac": 15233715 }
+        ],
+        "y_auth": [
+          { "value": 333, "mac": 17 },
+          { "value": 444, "mac": 18 },
+          { "value": 4901, "mac": 70094875 }
+        ],
+        "triple": {
+          "a": [
+            { "value": 10, "mac": 11 },
+            { "value": 20, "mac": 12 },
+            { "value": 969, "mac": 12332632 }
+          ],
+          "b": [
+            { "value": 30, "mac": 13 },
+            { "value": 40, "mac": 14 },
+            { "value": 818, "mac": 10962333 }
+          ],
+          "c": [
+            { "value": 50, "mac": 15 },
+            { "value": 60, "mac": 16 },
+            { "value": 887002, "mac": 213979374 }
+          ]
+        },
+        "p": 2147483647
+      },
+      "expected": 7006652
+    }
+  ]
+}

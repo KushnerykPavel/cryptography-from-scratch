@@ -1,1 +1,165 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "hand-computed with ISSUER_SK=0x01*32, HOLDER_SK=0x02*32",
+  "vectors": [
+    {
+      "description": "did_generate basic",
+      "op": "did_generate",
+      "method": "example",
+      "identifier": "issuer",
+      "expected": "did:example:issuer"
+    },
+    {
+      "description": "did_generate with did:key method",
+      "op": "did_generate",
+      "method": "key",
+      "identifier": "z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+      "expected": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK"
+    },
+    {
+      "description": "did_document_create returns correct id",
+      "op": "did_document_create_id",
+      "did": "did:example:issuer",
+      "public_key_hex": "0101010101010101010101010101010101010101010101010101010101010101",
+      "expected": "did:example:issuer"
+    },
+    {
+      "description": "did_document_create stores pubkey hex",
+      "op": "did_document_create_pubkey",
+      "did": "did:example:issuer",
+      "public_key_hex": "0101010101010101010101010101010101010101010101010101010101010101",
+      "expected": "0101010101010101010101010101010101010101010101010101010101010101"
+    },
+    {
+      "description": "vc_sign produces deterministic HMAC-SHA256 proof",
+      "op": "vc_sign_proof",
+      "vc": {
+        "@context": ["https://www.w3.org/2018/credentials/v1"],
+        "type": ["VerifiableCredential"],
+        "id": "urn:uuid:fixed-0001",
+        "issuer": "did:example:issuer",
+        "issuanceDate": "2024-01-01T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:holder",
+          "name": "Alice",
+          "age": 30
+        }
+      },
+      "issuer_sk_hex": "0101010101010101010101010101010101010101010101010101010101010101",
+      "expected": "1c4067299d963826b158f2af2945872c2f45ae91dcaeafaa9b4c8f677d3b02a7"
+    },
+    {
+      "description": "vc_verify accepts correct key",
+      "op": "vc_verify",
+      "vc": {
+        "@context": ["https://www.w3.org/2018/credentials/v1"],
+        "type": ["VerifiableCredential"],
+        "id": "urn:uuid:fixed-0001",
+        "issuer": "did:example:issuer",
+        "issuanceDate": "2024-01-01T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:holder",
+          "name": "Alice",
+          "age": 30
+        },
+        "proof": {
+          "type": "Hmac2024",
+          "proofValue": "1c4067299d963826b158f2af2945872c2f45ae91dcaeafaa9b4c8f677d3b02a7"
+        }
+      },
+      "pk_hex": "0101010101010101010101010101010101010101010101010101010101010101",
+      "expected": true
+    },
+    {
+      "description": "vc_verify rejects wrong key",
+      "op": "vc_verify",
+      "vc": {
+        "@context": ["https://www.w3.org/2018/credentials/v1"],
+        "type": ["VerifiableCredential"],
+        "id": "urn:uuid:fixed-0001",
+        "issuer": "did:example:issuer",
+        "issuanceDate": "2024-01-01T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:holder",
+          "name": "Alice",
+          "age": 30
+        },
+        "proof": {
+          "type": "Hmac2024",
+          "proofValue": "1c4067299d963826b158f2af2945872c2f45ae91dcaeafaa9b4c8f677d3b02a7"
+        }
+      },
+      "pk_hex": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expected": false
+    },
+    {
+      "description": "vp_sign produces deterministic HMAC-SHA256 proof",
+      "op": "vp_sign_proof",
+      "vp": {
+        "@context": ["https://www.w3.org/2018/credentials/v1"],
+        "type": ["VerifiablePresentation"],
+        "id": "urn:uuid:fixed-vp-0001",
+        "holder": "did:example:holder",
+        "verifiableCredential": [
+          {
+            "@context": ["https://www.w3.org/2018/credentials/v1"],
+            "type": ["VerifiableCredential"],
+            "id": "urn:uuid:fixed-0001",
+            "issuer": "did:example:issuer",
+            "issuanceDate": "2024-01-01T00:00:00Z",
+            "credentialSubject": {
+              "id": "did:example:holder",
+              "name": "Alice",
+              "age": 30
+            },
+            "proof": {
+              "type": "Hmac2024",
+              "proofValue": "1c4067299d963826b158f2af2945872c2f45ae91dcaeafaa9b4c8f677d3b02a7"
+            }
+          }
+        ]
+      },
+      "holder_sk_hex": "0202020202020202020202020202020202020202020202020202020202020202",
+      "expected": "a35bab14fa4f8dacd96e429f2f34a626831b7947fc99d62dda54705d9657d214"
+    },
+    {
+      "description": "vc_check_expiry returns true for future date",
+      "op": "vc_check_expiry",
+      "expiration_date": "2099-01-01T00:00:00Z",
+      "expected": true
+    },
+    {
+      "description": "vc_check_expiry returns false for past date",
+      "op": "vc_check_expiry",
+      "expiration_date": "2000-01-01T00:00:00Z",
+      "expected": false
+    },
+    {
+      "description": "vc_check_expiry returns true when no expiry set",
+      "op": "vc_check_expiry_none",
+      "expected": true
+    },
+    {
+      "description": "vc_selective_fields keeps only requested fields plus id",
+      "op": "vc_selective_fields",
+      "vc": {
+        "@context": ["https://www.w3.org/2018/credentials/v1"],
+        "type": ["VerifiableCredential"],
+        "id": "urn:uuid:fixed-0001",
+        "issuer": "did:example:issuer",
+        "issuanceDate": "2024-01-01T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:holder",
+          "name": "Alice",
+          "age": 30
+        },
+        "proof": {
+          "type": "Hmac2024",
+          "proofValue": "1c4067299d963826b158f2af2945872c2f45ae91dcaeafaa9b4c8f677d3b02a7"
+        }
+      },
+      "fields": ["name"],
+      "expected_subject_keys": ["id", "name"],
+      "age_present": false
+    }
+  ]
+}

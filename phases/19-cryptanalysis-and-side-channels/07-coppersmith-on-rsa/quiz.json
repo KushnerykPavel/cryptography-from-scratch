@@ -1,4 +1,101 @@
 {
-  "title": "Lattice Attacks on RSA \u2014 Coppersmith",
-  "questions": []
+  "title": "Coppersmith’s Method (Idea) — Small Roots Mod N (Toy)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What does it mean for x0 to be a root of f(x) modulo N?",
+      "options": [
+        "f(x0) ≡ 0 (mod N)",
+        "f(x0) = 0 over the reals only",
+        "f(x0) is prime",
+        "x0 divides N"
+      ],
+      "correct": 0,
+      "explanation": "A modular root satisfies f(x0) mod N = 0."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is a “small unknown” in a structured RSA plaintext a red flag?",
+      "options": [
+        "It can sometimes be modeled as a small root of a modular polynomial",
+        "It always makes RSA decryption faster",
+        "It prevents padding oracles",
+        "It forces N to be composite"
+      ],
+      "correct": 0,
+      "explanation": "Small unknowns can be targeted by small-root techniques when a polynomial can be constructed."
+    },
+    {
+      "stage": "post",
+      "question": "In the stereotyped-message setup c ≡ (m0 + x)^e (mod N), what is the attacker trying to recover?",
+      "options": [
+        "The small x",
+        "The primes p and q directly",
+        "The public exponent e",
+        "The hash function used in OAEP"
+      ],
+      "correct": 0,
+      "explanation": "x is the hidden “small” part; once x is known, m is known."
+    },
+    {
+      "stage": "post",
+      "question": "What makes Coppersmith’s method different from brute forcing x?",
+      "options": [
+        "It uses lattice reduction to find small roots efficiently without trying all x",
+        "It requires guessing the private key first",
+        "It works only when x is large",
+        "It replaces RSA with ECC"
+      ],
+      "correct": 0,
+      "explanation": "Brute force is exponential in x size; Coppersmith uses lattices to do better under bounds."
+    },
+    {
+      "stage": "post",
+      "question": "Why are small public exponents (like e=3) often mentioned in small-root RSA attacks?",
+      "options": [
+        "They produce lower-degree polynomials, which can make small-root recovery easier",
+        "They make RSA unkeyed",
+        "They eliminate the need for padding",
+        "They prevent any lattice construction"
+      ],
+      "correct": 0,
+      "explanation": "Lower-degree polynomials can improve the feasibility of small-root methods."
+    },
+    {
+      "stage": "post",
+      "question": "Which mitigation best addresses “structured plaintext + RSA” risks in real systems?",
+      "options": [
+        "Use standardized randomized padding/KEM constructions (e.g., OAEP / hybrid)",
+        "Use a fixed plaintext header",
+        "Use shorter keys to reduce computation",
+        "Use hex encoding for plaintexts"
+      ],
+      "correct": 0,
+      "explanation": "Randomized padding/KEM breaks the attacker’s ability to build a predictable polynomial."
+    },
+    {
+      "stage": "post",
+      "question": "What is the key requirement for small-root recovery to be possible?",
+      "options": [
+        "The root must be sufficiently small relative to N and the polynomial degree",
+        "N must be prime",
+        "The attacker must know the private exponent d",
+        "The ciphertext must be ASCII"
+      ],
+      "correct": 0,
+      "explanation": "Coppersmith-style results require bounds on root size vs modulus and degree."
+    },
+    {
+      "stage": "post",
+      "question": "Why is brute forcing x not a realistic attack on properly sized RSA in practice?",
+      "options": [
+        "Because x is typically too large (many bits), making exhaustive search infeasible",
+        "Because brute force requires factoring N first",
+        "Because brute force cannot evaluate polynomials modulo N",
+        "Because brute force only works on elliptic curves"
+      ],
+      "correct": 0,
+      "explanation": "Brute force scales with the size of x; real unknowns are far too large to enumerate."
+    }
+  ]
 }

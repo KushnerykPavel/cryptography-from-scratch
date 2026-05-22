@@ -1,1 +1,93 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors derived from the lesson implementation in code/main.py (fixed coefficients; fixed RNG seeds where randomness is required).",
+  "vectors": [
+    {
+      "op": "mod_inv",
+      "inputs": {
+        "a": 31,
+        "p": 2089
+      },
+      "expected": 1213
+    },
+    {
+      "op": "mod_div",
+      "inputs": {
+        "a": 17,
+        "b": 31,
+        "p": 2089
+      },
+      "expected": 1820
+    },
+    {
+      "op": "poly_eval",
+      "inputs": {
+        "coeffs": [5, 7, 9],
+        "x": 3,
+        "p": 2089
+      },
+      "expected": 107
+    },
+    {
+      "op": "lagrange_coeffs_at_zero",
+      "inputs": {
+        "xs": [1, 2, 3],
+        "p": 2089
+      },
+      "expected": [3, 2086, 1]
+    },
+    {
+      "op": "shamir_share",
+      "inputs": {
+        "secret": 1234,
+        "n": 5,
+        "t": 2,
+        "p": 2089,
+        "coeffs": [1234, 111, 222]
+      },
+      "expected": [
+        [1, 1567],
+        [2, 255],
+        [3, 1476],
+        [4, 1052],
+        [5, 1072]
+      ]
+    },
+    {
+      "op": "shamir_reconstruct",
+      "inputs": {
+        "shares": [[1, 1567], [2, 255], [3, 1476]],
+        "p": 2089
+      },
+      "expected": 1234
+    },
+    {
+      "op": "shamir_add",
+      "inputs": {
+        "a": [[1, 1567], [2, 255], [3, 1476], [4, 1052], [5, 1072]],
+        "b": [[1, 45], [2, 52], [3, 63], [4, 78], [5, 97]],
+        "p": 2089
+      },
+      "expected": [[1, 1612], [2, 307], [3, 1539], [4, 1130], [5, 1169]]
+    },
+    {
+      "op": "shamir_scalar_mul",
+      "inputs": {
+        "shares": [[1, 45], [2, 52], [3, 63], [4, 78], [5, 97]],
+        "k": 7,
+        "p": 2089
+      },
+      "expected": [[1, 315], [2, 364], [3, 441], [4, 546], [5, 679]]
+    },
+    {
+      "op": "bgw_multiply_secret",
+      "inputs": {
+        "a": [[1, 49], [2, 64], [3, 87], [4, 118], [5, 157]],
+        "b": [[1, 88], [2, 111], [3, 146], [4, 193], [5, 252]],
+        "t": 2,
+        "p": 2089,
+        "seed": 999
+      },
+      "expected": 1145
+    }
+  ]
+}

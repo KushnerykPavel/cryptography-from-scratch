@@ -1,4 +1,101 @@
 {
-  "title": "Lattice Attacks on ECDSA \u2014 HNP",
-  "questions": []
+  "title": "Nonce Leakage in ECDSA — HNP (Toy)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What must be true about the ECDSA nonce k for security?",
+      "options": [
+        "It must be unpredictable and never reused",
+        "It must be equal to the private key",
+        "It must be public so verifiers can check it",
+        "It must be a multiple of q"
+      ],
+      "correct": 0,
+      "explanation": "Nonce reuse or predictability can reveal the private key in ECDSA."
+    },
+    {
+      "stage": "pre",
+      "question": "What kind of information leak about k is dangerous in ECDSA?",
+      "options": [
+        "Leaking even a few bits across many signatures can enable key recovery",
+        "Only leaking the entire k matters",
+        "Only leaking ciphertext length matters",
+        "Leaking message hashes is always sufficient"
+      ],
+      "correct": 0,
+      "explanation": "Partial k leakage across many signatures can be enough to recover the private key."
+    },
+    {
+      "stage": "post",
+      "question": "From the equation s = k^{-1}(h + x*r) mod q, how can you compute k if you guess x?",
+      "options": [
+        "k = s^{-1}(h + x*r) mod q",
+        "k = s(h + x*r) mod q",
+        "k = (h + x*r)^{-1} mod q",
+        "k = r^{-1}(h + x*s) mod q"
+      ],
+      "correct": 0,
+      "explanation": "Multiply both sides by k and then by s^{-1} to isolate k."
+    },
+    {
+      "stage": "post",
+      "question": "What is the Hidden Number Problem (HNP) intuition in this context?",
+      "options": [
+        "Many partial constraints about k values can pin down the hidden x",
+        "A single signature always reveals x directly",
+        "ECDSA becomes secure if k is small",
+        "Only the curve choice matters"
+      ],
+      "correct": 0,
+      "explanation": "Multiple signatures plus partial leakage yield enough constraints to recover x."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the toy demo brute force x, but real attacks use lattices?",
+      "options": [
+        "Real q is enormous, so brute forcing x is infeasible; lattices exploit structure efficiently",
+        "Lattices are required because modular arithmetic is impossible",
+        "Brute force always fails even for small q",
+        "ECDSA keys are always 8-bit"
+      ],
+      "correct": 0,
+      "explanation": "HNP lattice methods scale to real key sizes where brute force does not."
+    },
+    {
+      "stage": "post",
+      "question": "Which mitigation best addresses ECDSA failures caused by weak RNGs?",
+      "options": [
+        "Deterministic nonce generation (RFC 6979) implemented correctly",
+        "Using a shorter message",
+        "Using CBC mode for signatures",
+        "Using base64 encoding"
+      ],
+      "correct": 0,
+      "explanation": "RFC 6979 avoids reliance on external RNG quality for per-signature k."
+    },
+    {
+      "stage": "post",
+      "question": "If an attacker detects nonce reuse in ECDSA, what should you assume?",
+      "options": [
+        "The private key is compromised",
+        "Only that signature is invalid, but the key is safe",
+        "The hash function is broken",
+        "The curve is immune to nonce issues"
+      ],
+      "correct": 0,
+      "explanation": "Nonce reuse can leak x; treat it as key compromise."
+    },
+    {
+      "stage": "post",
+      "question": "Which type of side channel can leak bits of k in practice?",
+      "options": [
+        "Timing/cache/power leaks in scalar multiplication or inversion",
+        "Ciphertext length changes",
+        "DNS lookups",
+        "TLS certificate expiration"
+      ],
+      "correct": 0,
+      "explanation": "k influences secret-dependent operations that can leak through microarchitectural/physical channels."
+    }
+  ]
 }

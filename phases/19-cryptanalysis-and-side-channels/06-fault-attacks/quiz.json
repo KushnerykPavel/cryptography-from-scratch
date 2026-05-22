@@ -1,4 +1,101 @@
 {
-  "title": "Fault Injection & Bellcore Attack",
-  "questions": []
+  "title": "Fault Attacks — RSA-CRT (Bellcore-Style)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why do RSA implementations often use CRT (Chinese Remainder Theorem)?",
+      "options": [
+        "It speeds up decryption/signing by working mod p and mod q separately",
+        "It makes RSA ciphertexts shorter",
+        "It removes the need for padding schemes",
+        "It prevents timing attacks automatically"
+      ],
+      "correct": 0,
+      "explanation": "CRT reduces exponentiation cost by using smaller moduli p and q."
+    },
+    {
+      "stage": "pre",
+      "question": "What is fault injection in the context of implementation security?",
+      "options": [
+        "Inducing computation errors (glitches) and observing outputs",
+        "Choosing a weak public exponent",
+        "Reusing an IV in CBC mode",
+        "Brute forcing the private key"
+      ],
+      "correct": 0,
+      "explanation": "Fault injection attacks exploit incorrect outputs caused by induced errors."
+    },
+    {
+      "stage": "post",
+      "question": "In an RSA-CRT fault attack, what kind of faulty output is most dangerous?",
+      "options": [
+        "A wrong-but-plausible signature/decryption result returned to the attacker",
+        "A crash with no output",
+        "A slower response time only",
+        "A longer ciphertext"
+      ],
+      "correct": 0,
+      "explanation": "Returning faulty outputs provides the data needed to compute a revealing GCD."
+    },
+    {
+      "stage": "post",
+      "question": "Why does a single faulty CRT result help factor N?",
+      "options": [
+        "Correct and faulty outputs match modulo one prime but not the other, making their difference share a factor with N",
+        "Because the faulty output reveals d directly",
+        "Because CRT makes p and q public",
+        "Because RSA becomes linear under faults"
+      ],
+      "correct": 0,
+      "explanation": "The difference is divisible by one prime, so gcd(difference, N) reveals that prime."
+    },
+    {
+      "stage": "post",
+      "question": "What computation is typically used to recover a factor from correct and faulty outputs?",
+      "options": [
+        "gcd(correct − faulty, N)",
+        "hash(correct || faulty)",
+        "xor(correct, faulty)",
+        "sort([correct, faulty])"
+      ],
+      "correct": 0,
+      "explanation": "A GCD with N can reveal a non-trivial common divisor."
+    },
+    {
+      "stage": "post",
+      "question": "Which mitigation most directly prevents CRT-RSA fault attacks from succeeding?",
+      "options": [
+        "Detect faults and abort without returning faulty results (verification/recomputation checks)",
+        "Use a smaller modulus for speed",
+        "Return detailed error messages",
+        "Use ECB mode instead of CBC"
+      ],
+      "correct": 0,
+      "explanation": "If faults are detected and no faulty result is returned, the attacker lacks the needed pair."
+    },
+    {
+      "stage": "post",
+      "question": "Why is this considered an implementation attack rather than a mathematical break of RSA?",
+      "options": [
+        "RSA math remains intact; the attack exploits physical computation errors and error handling",
+        "RSA security proofs assume attackers cannot see ciphertexts",
+        "RSA is broken only for small exponents",
+        "CRT changes RSA into a different algorithm"
+      ],
+      "correct": 0,
+      "explanation": "The weakness is in fault susceptibility and output handling, not in RSA’s core math."
+    },
+    {
+      "stage": "post",
+      "question": "What is the highest-risk mistake to avoid in fault-prone environments?",
+      "options": [
+        "Returning a result without verifying it after CRT recombination",
+        "Using a standard public exponent",
+        "Using big integers",
+        "Using an IV"
+      ],
+      "correct": 0,
+      "explanation": "If you don’t verify CRT results, a single glitch can leak the key via a GCD."
+    }
+  ]
 }

@@ -1,1 +1,67 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Generated deterministically by code/main.py with fixed _SeededRNG seeds.",
+  "vectors": [
+    {
+      "op": "lwe_keygen",
+      "description": "LWE keygen with seed 0xDEAD; check b = As + e (first component)",
+      "seed": "0xDEAD",
+      "b_0": 214,
+      "b_vec": [214, 76, 34, 53, 102, 200, 232, 144],
+      "s_vec": [1, 1, 0, 1, 0, 1, 256, 1],
+      "A_row0": [154, 169, 185, 184, 9, 206, 37, 51]
+    },
+    {
+      "op": "lwe_encaps",
+      "description": "Encapsulate 32 plaintext bytes; verify first (u,v) pair",
+      "seed_keygen": "0xA11CE",
+      "seed_encaps": "0xECA5",
+      "plaintext_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "u0": [94, 80, 37, 39, 55, 239, 199, 196],
+      "v0": 24
+    },
+    {
+      "op": "lwe_decaps",
+      "description": "Decapsulate and recover all 32 bytes",
+      "seed_keygen": "0xA11CE",
+      "seed_encaps": "0xECA5",
+      "plaintext_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "recovered_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+    },
+    {
+      "op": "hkdf",
+      "description": "HKDF RFC 5869 test-case style",
+      "ikm_hex": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+      "salt_hex": "000102030405060708090a0b0c",
+      "info_hex": "746573742d696e666f",
+      "length": 42,
+      "okm_hex": "bca8507690639d303a42e988960f87f0152a770a140464281e4c213524837ae5ce0cfb268edd15c2ecb4"
+    },
+    {
+      "op": "hmac_aead_encrypt",
+      "description": "HMAC-AEAD encrypt with fixed key/nonce",
+      "key_hex": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+      "nonce_hex": "000000000000000000000000",
+      "plaintext_hex": "68656c6c6f2c20707120776f726c64",
+      "aad_hex": "6161642d636f6e74657874",
+      "ciphertext_hex": "233c049fc5cf0bc6269a20803c2e40",
+      "tag_hex": "5c7dce953d9a2348cd06f35816745993d9f4be12d1e6700bba48a63438a93ed8"
+    },
+    {
+      "op": "hmac_aead_decrypt",
+      "description": "HMAC-AEAD decrypt round-trip",
+      "key_hex": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+      "nonce_hex": "000000000000000000000000",
+      "ciphertext_hex": "233c049fc5cf0bc6269a20803c2e40",
+      "tag_hex": "5c7dce953d9a2348cd06f35816745993d9f4be12d1e6700bba48a63438a93ed8",
+      "aad_hex": "6161642d636f6e74657874",
+      "expected_plaintext_hex": "68656c6c6f2c20707120776f726c64"
+    },
+    {
+      "op": "ratchet_key",
+      "description": "Two ratchet steps from fixed seed",
+      "key0_hex": "aabbccddaabbccddaabbccddaabbccddaabbccddaabbccddaabbccddaabbccdd",
+      "key1_hex": "6716f3497e1927e18369363c36317ccec1828711839cf6e6c4d0af2b27b20ada",
+      "key2_hex": "ad54f193fabb1107479edf6051f5d29d166036172ec03dc6e88bfdfdf87384bd"
+    }
+  ]
+}

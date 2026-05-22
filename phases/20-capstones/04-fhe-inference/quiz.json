@@ -1,4 +1,101 @@
 {
   "title": "Build an FHE Inference Service",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why can't you run ML inference on data encrypted with standard symmetric encryption (e.g., AES)?",
+      "options": [
+        "Standard encryption requires decryption before any computation; the server sees plaintext during inference",
+        "AES keys are too short to protect ML model weights",
+        "Neural networks only work on floating-point numbers, which AES cannot encrypt",
+        "Standard encryption produces non-deterministic output, breaking gradient descent"
+      ],
+      "correct": 0,
+      "explanation": "Standard encryption is not homomorphic: you must decrypt to compute, exposing plaintext to whoever runs the computation."
+    },
+    {
+      "stage": "pre",
+      "question": "In BFV, what is the role of the scaling factor Delta = round(q/t)?",
+      "options": [
+        "It lifts the plaintext into the most-significant bits of Z_q so that small noise does not corrupt the message after rounding",
+        "It compresses the ciphertext to save bandwidth",
+        "It is used as the secret key during decryption",
+        "It sets the maximum number of homomorphic multiplications allowed"
+      ],
+      "correct": 0,
+      "explanation": "Delta separates message bits from noise bits: the plaintext sits at the top of Z_q, and noise lives in the low-order bits below Delta/2."
+    },
+    {
+      "stage": "post",
+      "question": "After encrypting m under BFV, decryption computes v = c0 + <c1, s> mod q. What does v contain?",
+      "options": [
+        "encode(m) plus accumulated noise from encryption",
+        "The raw message m with no noise",
+        "The secret key s XORed with the message",
+        "A hash of m that requires a lookup table to invert"
+      ],
+      "correct": 0,
+      "explanation": "v = Delta*m + noise. As long as |noise| < Delta/2, rounding v/Delta recovers m exactly."
+    },
+    {
+      "stage": "post",
+      "question": "Why does homo_scalar_mul(enc(m), w) increase the noise in the ciphertext?",
+      "options": [
+        "Both ciphertext components are multiplied by w, so the embedded noise term is also scaled by w",
+        "The operation re-encrypts with fresh noise of magnitude w",
+        "Scalar multiplication modifies the secret key, adding key-dependent noise",
+        "It does not increase noise; only ciphertext-ciphertext multiplication does"
+      ],
+      "correct": 0,
+      "explanation": "Multiplying (c0, c1) by w scales all components including the noise: new_noise = w * old_noise."
+    },
+    {
+      "stage": "post",
+      "question": "In this toy scheme, what happens when the total accumulated noise exceeds q/(2t)?",
+      "options": [
+        "The rounding step in decryption picks the wrong multiple of Delta, producing an incorrect plaintext",
+        "The ciphertext becomes non-invertible and cannot be decrypted",
+        "The scheme raises a ValueError automatically to signal budget exhaustion",
+        "The noise wraps around mod q and cancels, giving a correct result"
+      ],
+      "correct": 0,
+      "explanation": "Decryption is exact rounding: if noise >= Delta/2 = q/(2t), the nearest-multiple-of-Delta is wrong and m is corrupted."
+    },
+    {
+      "stage": "post",
+      "question": "The server evaluates sum_i(w_i * enc(x_i)) + enc(bias) and returns an encrypted score. What does the server learn about x_i or the final prediction?",
+      "options": [
+        "Nothing — all values remain encrypted throughout; only the client with the secret key can decrypt",
+        "The server learns the feature values because it must decode them to apply the weights",
+        "The server learns the prediction class because it compares the encrypted score to the threshold",
+        "The server learns the bias because it encrypts it itself using the public key"
+      ],
+      "correct": 0,
+      "explanation": "Homomorphic evaluation is done entirely in ciphertext space. The server sees only ciphertexts and public parameters — no plaintext is ever revealed."
+    },
+    {
+      "stage": "post",
+      "question": "Which of these is the main reason real FHE inference uses CKKS instead of BFV?",
+      "options": [
+        "CKKS supports approximate real-valued arithmetic natively, which matches the floating-point weights and activations in neural networks",
+        "CKKS has a smaller ciphertext modulus and therefore runs faster on all hardware",
+        "BFV cannot perform addition homomorphically; only CKKS supports it",
+        "CKKS eliminates noise entirely, making decryption always exact"
+      ],
+      "correct": 0,
+      "explanation": "Neural networks use real-valued arithmetic; BFV works over integers mod t. CKKS encodes approximate real numbers and tolerates small rounding errors, making it a natural fit for ML."
+    },
+    {
+      "stage": "post",
+      "question": "You want to add a sixth feature with weight 5000 to this linear model. The current noise budget headroom is ~2^31. A fresh ciphertext has noise ~B=8. Is this safe?",
+      "options": [
+        "No — homo_scalar_mul by 5000 scales the noise to 5000*8 = 40000 per term; adding six such terms gives ~240000, still well within 2^31, so it is actually safe",
+        "No — a weight of 5000 immediately exhausts the noise budget regardless of B",
+        "Yes — scalar multiplication never affects noise budget",
+        "Yes — only ciphertext-ciphertext multiplication affects the budget; scalar ops are free"
+      ],
+      "correct": 0,
+      "explanation": "Noise after one scalar-mul is |w|*B = 5000*8 = 40000. Summing six terms: ~240000. Budget is ~2^31 ≈ 2,000,000,000. The operation is safe."
+    }
+  ]
 }

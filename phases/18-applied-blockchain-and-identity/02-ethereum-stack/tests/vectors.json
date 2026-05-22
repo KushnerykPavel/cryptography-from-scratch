@@ -1,1 +1,49 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Keccak-256 empty-string vector and EIP-55 worked example from Mastering Ethereum (Chapter 4). secp256k1 ECDSA deterministic signatures (RFC 6979 with low-s normalization) from Cryptography.SE: https://crypto.stackexchange.com/questions/20838/ .",
+  "vectors": [
+    {
+      "op": "keccak_256_hex",
+      "inputs": { "data_utf8": "" },
+      "expected": "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+    },
+    {
+      "op": "keccak_256_hex",
+      "inputs": { "data_utf8": "abc" },
+      "expected": "4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45"
+    },
+    {
+      "op": "keccak_256_hex",
+      "inputs": { "data_utf8": "001d3f1ef827552ae1114027bd3ecf1f086ba0f9" },
+      "expected": "23a69c1653e4ebbb619b0b2cb8a9bad49892a8b9695d9a19d8f673ca991deae1"
+    },
+    {
+      "op": "eip55_checksum_address",
+      "inputs": { "address": "0x001d3f1ef827552ae1114027bd3ecf1f086ba0f9" },
+      "expected": "0x001d3F1ef827552Ae1114027BD3ECF1f086bA0F9"
+    },
+    {
+      "op": "pubkey_keccak256_from_privkey",
+      "inputs": {
+        "privkey_hex": "f8f8a2f43c8376ccb0871305060d7b27b0554d2cc72bccf41b2705608452f315"
+      },
+      "expected": "2a5bc342ed616b5ba5732269001d3f1ef827552ae1114027bd3ecf1f086ba0f9"
+    },
+    {
+      "op": "eth_address_from_privkey",
+      "inputs": {
+        "privkey_hex": "f8f8a2f43c8376ccb0871305060d7b27b0554d2cc72bccf41b2705608452f315"
+      },
+      "expected": "0x001d3f1ef827552ae1114027bd3ecf1f086ba0f9"
+    },
+    {
+      "op": "ecdsa_sign_sha256_der",
+      "inputs": { "privkey_int": 1, "message_utf8": "Absence makes the heart grow fonder." },
+      "expected": "3045022100AFFF580595971B8C1700E77069D73602AEF4C2A760DBD697881423DFFF845DE80220579ADB6A1AC03ACDE461B5821A049EBD39A8A8EBF2506B841B15C27342D2E342"
+    },
+    {
+      "op": "ecdsa_sign_sha256_der",
+      "inputs": { "privkey_int": 2, "message_utf8": "Actions speak louder than words." },
+      "expected": "304502210085F28BBC90975B1907A51CBFE7BF0DC1AC74ADE49318EE97498DBBDE3894A31C0220241D24DA8D263E7AF7FF49BCA6A7A850F0E087FAF6FEF44F85851B0283C3F026"
+    }
+  ]
+}

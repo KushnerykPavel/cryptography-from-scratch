@@ -1,1 +1,75 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "computed by code/main.py over Z_p with P=2^127-1, G=3, fixed demo sk",
+  "P": 170141183460469231731687303715884105727,
+  "G": 3,
+  "sk": 24197857200151252728969465429440056815,
+  "pk": 139035608488617717422538562737471350372,
+  "vectors": [
+    {
+      "description": "bbs_keygen: fixed demo key pair",
+      "op": "bbs_keygen",
+      "expected_sk": 24197857200151252728969465429440056815,
+      "expected_pk": 139035608488617717422538562737471350372
+    },
+    {
+      "description": "bbs_sign + bbs_verify: messages=[42,1337,2024,99]",
+      "op": "bbs_sign_verify",
+      "messages": [42, 1337, 2024, 99],
+      "expected_A": 161558938620020993615967640508059033677,
+      "expected_verify": true
+    },
+    {
+      "description": "bbs_verify: tampered last message should fail",
+      "op": "bbs_verify",
+      "messages": [42, 1337, 2024, 100],
+      "A": 161558938620020993615967640508059033677,
+      "e": 18375241360525329938,
+      "s": 81985529216486895,
+      "expected": false
+    },
+    {
+      "description": "bbs_sign + bbs_verify: messages=[1,2,3]",
+      "op": "bbs_sign_verify",
+      "messages": [1, 2, 3],
+      "expected_A": 90203625917080757976968273002960601576,
+      "expected_verify": true
+    },
+    {
+      "description": "bbs_sign + bbs_verify: messages=[100,200,300]",
+      "op": "bbs_sign_verify",
+      "messages": [100, 200, 300],
+      "expected_A": 45896925465599114406992363953755945214,
+      "expected_verify": true
+    },
+    {
+      "description": "bbs_create_proof + bbs_verify_proof: messages=[42,1337,2024,99] reveal [0,2]",
+      "op": "bbs_proof",
+      "messages": [42, 1337, 2024, 99],
+      "revealed": [0, 2],
+      "expected_proof_verify": true
+    },
+    {
+      "description": "bbs_create_proof + bbs_verify_proof: messages=[1,2,3] reveal [0]",
+      "op": "bbs_proof",
+      "messages": [1, 2, 3],
+      "revealed": [0],
+      "expected_proof_verify": true
+    },
+    {
+      "description": "bbs_create_proof + bbs_verify_proof: messages=[100,200,300] reveal [1,2]",
+      "op": "bbs_proof",
+      "messages": [100, 200, 300],
+      "revealed": [1, 2],
+      "expected_proof_verify": true
+    },
+    {
+      "description": "bbs_verify_proof: tampered revealed message should fail",
+      "op": "bbs_proof_tamper",
+      "messages": [42, 1337, 2024, 99],
+      "revealed": [0, 2],
+      "tamper_index": 0,
+      "tamper_value": 43,
+      "expected_proof_verify": false
+    }
+  ]
+}

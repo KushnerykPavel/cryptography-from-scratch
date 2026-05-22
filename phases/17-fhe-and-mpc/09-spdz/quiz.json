@@ -1,4 +1,101 @@
 {
   "title": "SPDZ \u2014 Active Security with Preprocessing",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In additive secret sharing over a prime field, what does a single share x_i reveal about the secret x (assuming the other shares are unknown)?",
+      "options": [
+        "Essentially nothing; x_i is uniformly random looking",
+        "The least-significant bits of x",
+        "x modulo a small factor of p",
+        "x exactly, because sums are reversible"
+      ],
+      "correct": 0,
+      "explanation": "With additive sharing, any strict subset of shares is consistent with every possible secret, so a single share leaks no information about x."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does Beaver-triple multiplication open d = x - a and e = y - b instead of opening x and y directly?",
+      "options": [
+        "Because a and b act as one-time masks, so d and e reveal nothing about x and y",
+        "Because opening x and y is slower than opening d and e",
+        "Because d and e are always zero for correct triples",
+        "Because it avoids needing a modulus p"
+      ],
+      "correct": 0,
+      "explanation": "If a and b are random and used once, then x-a and y-b are random-looking, so opening them does not reveal x or y."
+    },
+    {
+      "stage": "post",
+      "question": "What makes an SPDZ share \"authenticated\"?",
+      "options": [
+        "Each party holds both a value share x_i and a MAC share m_i such that sum(m_i) = α·x",
+        "Each party signs its share with an RSA signature",
+        "Shares are encrypted under a shared public key",
+        "Shares are stored in a hardware enclave"
+      ],
+      "correct": 0,
+      "explanation": "SPDZ uses information-theoretic MACs: the value is secret-shared, and the MAC on the value is also secret-shared under a global key α."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy MAC-check opening in this lesson, each party computes δ_i = m_i - α_i·x_opened. What condition must hold for the opening to be accepted?",
+      "options": [
+        "The opened sum δ = Σ δ_i equals 0 modulo p",
+        "Every δ_i equals 0 individually without communication",
+        "The opened x equals the party-0 share",
+        "The opened x is less than p/2"
+      ],
+      "correct": 0,
+      "explanation": "The MAC check verifies global consistency: when you sum δ_i you get Σ m_i - x_opened·Σ α_i, which should be 0 if everything is consistent."
+    },
+    {
+      "stage": "post",
+      "question": "A malicious party changes the opened value by a nonzero Δ but does not know the global MAC key α. Roughly what is their chance of also forging the MAC so the check passes (in a prime field F_p)?",
+      "options": [
+        "About 1/p",
+        "About 1/2",
+        "About 1/Δ",
+        "It is always 1 (forging is trivial)"
+      ],
+      "correct": 0,
+      "explanation": "To pass the check they must guess the correct α·Δ correction to the MAC; without α this succeeds with probability about 1/p."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main purpose of the offline (preprocessing) phase in SPDZ-family protocols?",
+      "options": [
+        "Generate input-independent correlated randomness (like Beaver triples) used to speed up online multiplication",
+        "Reveal all private inputs early to reduce latency",
+        "Replace the need for modular arithmetic",
+        "Make the protocol non-interactive"
+      ],
+      "correct": 0,
+      "explanation": "Preprocessing produces triples and other correlated data independent of inputs so the online phase can be fast and mostly local."
+    },
+    {
+      "stage": "post",
+      "question": "What can go wrong if you reuse the same Beaver triple (a, b, c) for multiple multiplications?",
+      "options": [
+        "The openings (x-a) and (y-b) become correlated across uses and can leak information about secrets",
+        "Nothing; triples are safe to reuse if the code is constant-time",
+        "It only breaks if p is not prime",
+        "It only affects performance, not security"
+      ],
+      "correct": 0,
+      "explanation": "Triples are one-time masks: reusing them makes multiple openings share the same mask, enabling information leakage."
+    },
+    {
+      "stage": "post",
+      "question": "When adding a public constant c to an additively shared secret x, which update keeps reconstruction correct?",
+      "options": [
+        "Add c to one party's share (and keep the others unchanged)",
+        "Add c to every party's share",
+        "Subtract c from every party's share",
+        "Do nothing; public constants cannot be added"
+      ],
+      "correct": 0,
+      "explanation": "Because reconstruction is a sum, adding c to a single share increases the total by c while preserving the additive-sharing structure."
+    }
+  ]
 }

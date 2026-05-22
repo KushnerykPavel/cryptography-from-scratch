@@ -1,1 +1,112 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors for the ZK voting demo (hand-checked by running code/main.py with fixed parameters p=1019, q=509, g=4, x=42, pk=473).",
+  "vectors": [
+    {
+      "op": "elgamal_keygen",
+      "note": "Fixed private key x=42; public key h = G^x mod P",
+      "x": 42,
+      "expected_h": 473
+    },
+    {
+      "op": "elgamal_encrypt",
+      "note": "Encrypt vote=0 with r=13 under pk=473",
+      "vote": 0,
+      "pk": 473,
+      "r": 13,
+      "expected_c1": 581,
+      "expected_c2": 706
+    },
+    {
+      "op": "elgamal_encrypt",
+      "note": "Encrypt vote=1 with r=17 under pk=473",
+      "vote": 1,
+      "pk": 473,
+      "r": 17,
+      "expected_c1": 981,
+      "expected_c2": 238
+    },
+    {
+      "op": "elgamal_decrypt",
+      "note": "Decrypt ciphertext of vote=0",
+      "c1": 581,
+      "c2": 706,
+      "sk": 42,
+      "expected_vote": 0
+    },
+    {
+      "op": "elgamal_decrypt",
+      "note": "Decrypt ciphertext of vote=1",
+      "c1": 981,
+      "c2": 238,
+      "sk": 42,
+      "expected_vote": 1
+    },
+    {
+      "op": "homomorphic_tally",
+      "note": "Multiply Enc(0) and Enc(1); should decrypt to 1",
+      "ciphertexts": [
+        {"c1": 581, "c2": 706},
+        {"c1": 981, "c2": 238}
+      ],
+      "sk": 42,
+      "expected_tally_c1": 340,
+      "expected_tally_c2": 912,
+      "expected_tally_value": 1
+    },
+    {
+      "op": "homomorphic_tally",
+      "note": "Three votes: Enc(0,r=13) + Enc(1,r=17) + Enc(1,r=5); decrypt to 2",
+      "ciphertexts": [
+        {"c1": 581, "c2": 706},
+        {"c1": 981, "c2": 238},
+        {"c1": 5,   "c2": 171}
+      ],
+      "sk": 42,
+      "expected_tally_c1": 681,
+      "expected_tally_c2": 45,
+      "expected_tally_value": 2
+    },
+    {
+      "op": "verify_vote_proof",
+      "note": "Valid or-proof for vote=0 (c_false=42, z_false=77, k=99)",
+      "pk": 473,
+      "c1": 581,
+      "c2": 706,
+      "proof": {
+        "a0": 718, "b0": 482,
+        "a1": 348, "b1": 1001,
+        "c0": 414, "c1_branch": 42,
+        "z0": 392, "z1": 77
+      },
+      "expected_valid": true
+    },
+    {
+      "op": "verify_vote_proof",
+      "note": "Valid or-proof for vote=1 (c_false=55, z_false=88, k=111)",
+      "pk": 473,
+      "c1": 981,
+      "c2": 238,
+      "proof": {
+        "a0": 958, "b0": 4,
+        "a1": 861, "b1": 504,
+        "c0": 55,  "c1_branch": 26,
+        "z0": 88,  "z1": 45
+      },
+      "expected_valid": true
+    },
+    {
+      "op": "verify_vote_proof",
+      "note": "Tampered proof: use vote=0 proof on vote=2 ciphertext (G^3, h^3*G^2); must reject",
+      "pk": 473,
+      "c1": 64,
+      "c2": 482,
+      "proof": {
+        "a0": 718, "b0": 482,
+        "a1": 348, "b1": 1001,
+        "c0": 414, "c1_branch": 42,
+        "z0": 392, "z1": 77
+      },
+      "expected_valid": false
+    }
+  ]
+}

@@ -1,4 +1,101 @@
 {
   "title": "BLS Aggregation in Eth2",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Why does Ethereum's beacon chain need signature aggregation?",
+      "options": [
+        "Verifying hundreds of thousands of individual validator signatures per slot would be too slow and bandwidth-heavy",
+        "Individual BLS signatures are too short to carry enough security bits",
+        "Validators are not allowed to sign messages individually under the consensus rules",
+        "Aggregation is required to prevent replay attacks across different epochs"
+      ],
+      "correct": 0,
+      "explanation": "With up to 512,000 active validators, individual signatures would cost ~49 MB of data and hundreds of thousands of pairing operations per slot. Aggregation compresses this to one signature and one pairing check."
+    },
+    {
+      "stage": "pre",
+      "question": "What property of BLS signatures makes aggregation possible?",
+      "options": [
+        "The signature operation is additively homomorphic: the sum of individual signatures equals the signature under the sum of keys",
+        "BLS uses a hash function with a special collision-resistance property that allows merging",
+        "BLS signatures are short (48 bytes on BLS12-381), so concatenation is cheap",
+        "The underlying elliptic curve has a special endomorphism that allows batch verification"
+      ],
+      "correct": 0,
+      "explanation": "BLS signatures are elements of a group where addition distributes over the signing operation. sum(sig_i) = H(m) * sum(sk_i), so the aggregate verifies under the aggregate public key."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy BLS model (Z_Q arithmetic), what is bls_sign(sk, message)?",
+      "options": [
+        "bls_hash_to_g1(message) * sk mod Q",
+        "sha256(message) * sk mod Q, without the mod reduction on the hash",
+        "sk^bls_hash_to_g1(message) mod Q",
+        "sha256(sk || message) mod Q"
+      ],
+      "correct": 0,
+      "explanation": "The signature is hash * sk mod Q. This mirrors real BLS where sig = H(m) * sk in G1."
+    },
+    {
+      "stage": "post",
+      "question": "What is the rogue key attack on naive BLS aggregation?",
+      "options": [
+        "The attacker publishes pk' = attacker_sk - target_pk so that target_pk + pk' = attacker_sk, letting the attacker forge aggregate signatures alone",
+        "The attacker hashes their public key to find a collision with the target's key in G1",
+        "The attacker exploits nonce reuse to extract the target's secret key from two signatures",
+        "The attacker replays an old aggregate signature for a new message by modifying the aggregated public key"
+      ],
+      "correct": 0,
+      "explanation": "By choosing pk' = attacker_sk - target_pk, the naive aggregate becomes agg_pk = attacker_sk. The attacker can sign any message with attacker_sk and have it verify against this aggregate."
+    },
+    {
+      "stage": "post",
+      "question": "Why does proof-of-possession defeat the rogue key attack?",
+      "options": [
+        "A rogue key pk' = attacker_sk - target_pk has no secret key x such that bls_sign(x, BLS-POP | pk') produces a valid PoP, unless the attacker knows log of pk'",
+        "PoP uses a different hash function that is collision-resistant against crafted public keys",
+        "PoP prevents any key from appearing in more than one aggregate at a time",
+        "PoP makes the aggregation operation non-commutative so rogue keys cannot cancel"
+      ],
+      "correct": 0,
+      "explanation": "The attacker can compute rogue_pk arithmetically but cannot produce a valid signature over rogue_pk without knowing a secret key that maps to it. The PoP check rejects any key whose holder cannot prove knowledge of the corresponding secret."
+    },
+    {
+      "stage": "post",
+      "question": "For multi-message BLS aggregation, what does bls_verify_aggregate_multi check?",
+      "options": [
+        "agg_sig == sum(H(m_i) * pk_i) mod Q for all (pk_i, m_i) pairs",
+        "agg_sig == H(concat(m_i)) * agg_pk mod Q using a concatenated message",
+        "agg_sig == H(m) * agg_pk mod Q using the first message only",
+        "Each individual sig_i separately using bls_verify in a loop"
+      ],
+      "correct": 0,
+      "explanation": "Multi-message aggregation verifies that agg_sig = sum(H(m_i) * sk_i) by checking it equals sum(H(m_i) * pk_i). Each (pk, message) pair contributes independently."
+    },
+    {
+      "stage": "post",
+      "question": "What happens if sk = 0 is used in this BLS toy model?",
+      "options": [
+        "All signatures are 0 regardless of message; any message verifies against pk = 0 with sig = 0",
+        "Key generation raises a ZeroDivisionError because pk = sk mod Q divides by zero",
+        "Aggregation fails because sum(pks) would underflow the prime field",
+        "Verification always returns False because the hash cannot multiply by zero"
+      ],
+      "correct": 0,
+      "explanation": "With sk=0: pk = 0, sig = H(m)*0 = 0. Verification checks 0 == H(m)*0 = 0 — True for any message. This is a catastrophic key; implementations must reject sk=0."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best describes the difference between same-message and multi-message BLS aggregation?",
+      "options": [
+        "Same-message aggregation requires only (agg_pk, message, agg_sig) to verify; multi-message aggregation requires every individual (pk_i, message_i) pair",
+        "Multi-message aggregation is faster because it uses a single hash evaluation instead of N hashes",
+        "Same-message aggregation is insecure without PoP; multi-message aggregation is always secure",
+        "Multi-message aggregation produces a longer aggregate signature proportional to the number of signers"
+      ],
+      "correct": 0,
+      "explanation": "Same-message aggregation collapses to one (agg_pk, message, agg_sig) triple — the verifier needs nothing else. Multi-message verification requires all N (pk_i, message_i) pairs because H(m_i) differs per signer."
+    }
+  ]
 }

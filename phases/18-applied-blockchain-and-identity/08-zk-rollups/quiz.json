@@ -1,4 +1,101 @@
 {
-  "title": "ZK Rollups \u2014 How a Rollup Actually Verifies",
-  "questions": []
+  "title": "ZK Rollups — How a Rollup Actually Verifies",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main scalability benefit of a ZK rollup over a plain L1 blockchain?",
+      "options": [
+        "The L1 only verifies a succinct proof of many transactions rather than re-executing each one",
+        "The L1 executes transactions faster because rollup nodes have more hardware",
+        "The L1 skips signature verification for known rollup operators",
+        "The rollup shards transactions across multiple L1 chains in parallel"
+      ],
+      "correct": 0,
+      "explanation": "A ZK rollup moves execution off-chain and posts a single succinct proof to L1. Verification takes milliseconds regardless of batch size."
+    },
+    {
+      "stage": "pre",
+      "question": "In the rollup state model used here, what is the state root?",
+      "options": [
+        "A single hash that commits to the entire account-balance map",
+        "The hash of the most recent transaction in the batch",
+        "The Ethereum block hash at the time of the batch",
+        "A Merkle root of all transaction hashes in the batch"
+      ],
+      "correct": 0,
+      "explanation": "The state root is computed from all account balances sorted by address. It uniquely identifies a state snapshot and is stored on L1."
+    },
+    {
+      "stage": "post",
+      "question": "Why must addresses be sorted before computing the state root?",
+      "options": [
+        "Different insertion orders would produce different hashes for the same logical state",
+        "Sorting reduces the number of SHA-256 calls needed",
+        "The Ethereum EVM requires sorted keys for storage proofs",
+        "Unsorted addresses cause integer overflow in balance encoding"
+      ],
+      "correct": 0,
+      "explanation": "Python dicts are ordered by insertion, not by key. Without sorting, two nodes with the same accounts but different insertion histories compute different roots and disagree on state."
+    },
+    {
+      "stage": "post",
+      "question": "What does a Rank-1 Constraint System (R1CS) constraint look like?",
+      "options": [
+        "(a · w) × (b · w) = (c · w), where a, b, c are coefficient vectors and w is the witness",
+        "a + b = c, where a and b are public inputs and c is the output",
+        "SHA256(witness) = public_hash, checked by the verifier",
+        "w_i × w_j ≤ field_size for all pairs of witness variables"
+      ],
+      "correct": 0,
+      "explanation": "R1CS encodes computation as multiplication gates. Each gate checks that two linear combinations of the witness multiply to a third. Linear constraints (addition) use b = {one: 1}."
+    },
+    {
+      "stage": "post",
+      "question": "Why is the non-negativity check (from_bal >= amount) harder to encode in R1CS than the balance update equations?",
+      "options": [
+        "Inequality constraints cannot be expressed as a single multiplication gate — they require a range proof sub-circuit (bit decomposition or lookup)",
+        "R1CS only supports modular arithmetic so negative numbers wrap around and pass",
+        "The verifier does not have access to the sender's balance, only its hash",
+        "Non-negativity is checked by the sequencer before batching, not by the circuit"
+      ],
+      "correct": 0,
+      "explanation": "R1CS gates check equality of products, not inequalities. Proving x >= 0 requires decomposing x into bits and constraining each bit to {0,1} — many more gates than a single linear check."
+    },
+    {
+      "stage": "post",
+      "question": "What would happen if the toy proof did not include a tx_hash binding the batch contents?",
+      "options": [
+        "An attacker could replay the same proof with a different batch that happens to produce the same old and new state roots",
+        "The proof would be larger because the verifier must hash the transactions itself",
+        "The L1 contract would reject the proof because tx_hash is a required field in the ABI",
+        "The prover could not generate the witness_hash without first computing tx_hash"
+      ],
+      "correct": 0,
+      "explanation": "Without a tx commitment, any batch whose execution transitions between the same two roots would pass verification. An attacker could substitute fraudulent transactions."
+    },
+    {
+      "stage": "post",
+      "question": "In a real Groth16 verifier, what cryptographic operation makes proof verification O(1) regardless of batch size?",
+      "options": [
+        "A bilinear pairing check on elliptic curve points (e.g. over BN254)",
+        "A single SHA-256 hash of all constraint outputs",
+        "A lookup into a precomputed table of valid state transitions",
+        "A threshold signature aggregated from all sequencer nodes"
+      ],
+      "correct": 0,
+      "explanation": "Groth16 reduces verification to a constant number of pairing operations (typically 3 pairings), independent of the number of constraints or transactions in the proof."
+    },
+    {
+      "stage": "post",
+      "question": "A ZK rollup's L1 contract rejects a batch even though the proof is mathematically valid. What is the most likely cause?",
+      "options": [
+        "The old_root in the proof does not match the root stored on L1 from the previous batch",
+        "The prover used a different elliptic curve than the verifier key was generated for",
+        "The batch contained more than the maximum number of transactions per block",
+        "The sequencer did not include a forced transaction from the queue"
+      ],
+      "correct": 0,
+      "explanation": "The L1 contract checks that the proof's old_root matches its stored current root before accepting the state transition. A gap in the root chain (missed batch, wrong ordering) causes rejection."
+    }
+  ]
 }

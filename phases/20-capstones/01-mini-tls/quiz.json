@@ -1,4 +1,101 @@
 {
   "title": "Build a Mini TLS 1.3 Library",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a Diffie-Hellman key exchange, which value is it safe to transmit over an untrusted network?",
+      "options": [
+        "The private scalar",
+        "The shared secret",
+        "The public value g^private mod p",
+        "The prime p and generator g are secret"
+      ],
+      "correct": 2,
+      "explanation": "The public value g^private mod p is designed to be transmitted openly. The hardness of the discrete logarithm problem makes it computationally infeasible to recover the private scalar from the public value. The prime p and generator g are public parameters, not secrets."
+    },
+    {
+      "stage": "pre",
+      "question": "What property does HKDF-Extract serve that raw HMAC over key material alone does not?",
+      "options": [
+        "It compresses arbitrarily long IKM into a fixed-length uniformly random PRK regardless of IKM structure",
+        "It produces more output bytes than HMAC",
+        "It encrypts the input key material before deriving",
+        "It requires a certificate to authenticate the salt"
+      ],
+      "correct": 0,
+      "explanation": "HKDF-Extract (HMAC(salt, IKM)) converts potentially non-uniform or structured key material — like a Diffie-Hellman output — into a uniformly random pseudo-random key (PRK). This 'extraction' step is separate from 'expansion' so that the final keys inherit full PRF security even when the raw DH output is not uniformly random."
+    },
+    {
+      "stage": "post",
+      "question": "In the TLS 1.3 key schedule, why is the ECDHE shared secret mixed in at the second HKDF-Extract step rather than the first?",
+      "options": [
+        "The first step produces early_secret, which is reserved for pre-shared keys (PSK) or zero if no PSK exists",
+        "ECDHE output is too short to use as initial key material",
+        "The first step uses SHA-512 and the second step uses SHA-256",
+        "RFC 8446 requires the ECDHE value to be encrypted before use"
+      ],
+      "correct": 0,
+      "explanation": "The first HKDF-Extract produces early_secret from an optional PSK (or zeros when no PSK is used). This allows 0-RTT early data in PSK mode. The ECDHE output is mixed in at the second step to produce handshake_secret, separating the two sources of entropy so that either alone cannot derive the final keys."
+    },
+    {
+      "stage": "post",
+      "question": "What is the purpose of the 'tls13 ' prefix in HKDF-Expand-Label?",
+      "options": [
+        "It pads the label to a minimum length so HMAC is efficient",
+        "It domain-separates TLS 1.3 label derivations from those of earlier protocol versions that may use the same HKDF implementation",
+        "It encodes the SHA-256 algorithm identifier",
+        "It is required so that the label fits in a single TLS record"
+      ],
+      "correct": 1,
+      "explanation": "Prepending 'tls13 ' to every label ensures that even if TLS 1.2 or another protocol uses the same HKDF-Expand call with the same underlying secret, the outputs are cryptographically independent. This prevents cross-protocol key confusion attacks such as those described in the transcript collision research."
+    },
+    {
+      "stage": "post",
+      "question": "A TLS 1.3 record layer has write_iv = 0xAABBCCDDEEFF and uses a 6-byte nonce. What is the nonce for sequence number 3?",
+      "options": [
+        "0xAABBCCDDEEFF (unchanged)",
+        "0xAABBCCDDEEFC (XOR with 0x000000000003)",
+        "0x000000000003 (sequence number only)",
+        "0xAABBCCDDEEFF03 (appended)"
+      ],
+      "correct": 1,
+      "explanation": "The TLS 1.3 nonce construction is: nonce = write_iv XOR (sequence_number left-padded with zeros to iv_length). For seq=3 and a 6-byte IV, the padded sequence is 0x000000000003. XOR: 0xAABBCCDDEEFF XOR 0x000000000003 = 0xAABBCCDDEEFC."
+    },
+    {
+      "stage": "post",
+      "question": "Why does TLS 1.3 derive separate handshake-traffic secrets and application-traffic secrets instead of using one set of keys for everything?",
+      "options": [
+        "Separate secrets limit the damage if handshake keys are compromised: an attacker who breaks the handshake layer cannot decrypt application data",
+        "The AEAD algorithm used for handshake records is different from the one used for application records",
+        "Handshake keys must be 128-bit and application keys must be 256-bit",
+        "It is purely a performance optimisation to avoid renegotiation"
+      ],
+      "correct": 0,
+      "explanation": "Separating the key layers means that a compromise of the handshake-traffic keys (e.g., through a side-channel on Certificate or Finished processing) cannot be used to decrypt the application data stream. Each layer is derived from a different point in the key schedule chain, so the secrets are cryptographically independent."
+    },
+    {
+      "stage": "post",
+      "question": "In an Encrypt-then-MAC AEAD construction, in what order must decryption proceed, and why?",
+      "options": [
+        "Decrypt first, then verify the MAC — so the receiver can return a specific error message about invalid padding",
+        "Verify the MAC first, then decrypt — to prevent any information about the ciphertext from leaking before authentication is confirmed",
+        "Both operations can run in parallel since they use independent keys",
+        "The order does not matter as long as the same key is used for both"
+      ],
+      "correct": 1,
+      "explanation": "MAC verification must happen before any decryption output is used or returned. If the receiver decrypts first and returns a padding or parse error, the error itself leaks information about the plaintext (a padding oracle). Verifying the MAC first means that unauthenticated ciphertext is never processed as plaintext, eliminating the oracle."
+    },
+    {
+      "stage": "post",
+      "question": "What would happen to TLS 1.3 forward secrecy if the server reused the same ephemeral DH private key across multiple handshakes?",
+      "options": [
+        "Nothing — forward secrecy only depends on the server's long-term certificate key",
+        "Forward secrecy would be lost: an attacker who later obtains that static DH key could decrypt all sessions that used it",
+        "The handshake would become faster but the record layer would be unaffected",
+        "Key reuse only matters for RSA, not for DH-based exchanges"
+      ],
+      "correct": 1,
+      "explanation": "Forward secrecy requires that ephemeral DH keys are generated fresh per handshake and discarded immediately after. If the server reuses the same ephemeral private key, an adversary who records traffic and later obtains that key can recompute the shared secret, reconstruct the entire key schedule, and decrypt all sessions that used it — exactly the scenario TLS 1.3 is designed to prevent."
+    }
+  ]
 }

@@ -1,4 +1,101 @@
 {
-  "title": "Anonymous Credentials \u2014 BBS+",
-  "questions": []
+  "title": "Anonymous Credentials — BBS+",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the main limitation of a standard digital certificate (e.g., X.509) when used for selective attribute disclosure?",
+      "options": [
+        "The verifier sees all attributes even if they only need one, and every presentation is linkable via the signature",
+        "X.509 certificates cannot be verified offline without contacting the issuer",
+        "X.509 uses symmetric keys so the holder cannot prove ownership",
+        "The certificate size grows linearly with the number of attributes, making it too large"
+      ],
+      "correct": 0,
+      "explanation": "Traditional certificates expose all attributes and use a fixed signature, so every presentation leaks the same data and can be tracked by colluding verifiers."
+    },
+    {
+      "stage": "pre",
+      "question": "In a BBS+ credential, what does the 'A' component of the signature represent?",
+      "options": [
+        "A = B^(1/(e+sk)) mod p — a compressed representation of all messages bound under the issuer key",
+        "A = G^sk mod p — the issuer's public key",
+        "A = H(messages) — a hash commitment to all attributes",
+        "A = e + sk mod p — the signature scalar used in verification"
+      ],
+      "correct": 0,
+      "explanation": "A is the BBS+ 'certificate' element computed from the message commitment B raised to the inverse of (e+sk). Verification checks A^(e+sk) == B."
+    },
+    {
+      "stage": "post",
+      "question": "Why does production BBS+ verification use a bilinear pairing e(A, W·G^e) == e(B, G) instead of checking A^(e+sk) == B?",
+      "options": [
+        "The pairing lets the verifier check the equation without knowing sk, so the issuer secret key never needs to be shared",
+        "The pairing is faster than modular exponentiation for large exponents",
+        "The pairing eliminates the need for a public key entirely",
+        "The pairing makes the proof zero-knowledge by hiding the value of A"
+      ],
+      "correct": 0,
+      "explanation": "The pairing equation binds the issuer public key W = G^sk into the check algebraically. Knowing W (not sk) is enough to verify, which is the whole point of a public-key signature scheme."
+    },
+    {
+      "stage": "post",
+      "question": "In the selective disclosure proof, how does the verifier reconstruct B without seeing hidden messages?",
+      "options": [
+        "The prover supplies H_i^{m_i} (partial commitments) for each hidden attribute, allowing B to be reconstructed from revealed values plus these commitments",
+        "The verifier queries the issuer database to fill in missing attribute values",
+        "The prover reveals a hash of hidden attributes and the verifier uses it to reconstruct B",
+        "B is sent directly in the proof; the verifier only needs to check the signature on B"
+      ],
+      "correct": 0,
+      "explanation": "Each hidden attribute m_i is replaced by its generator commitment H_i^{m_i}. The verifier multiplies revealed generator terms and hidden commitments to get the same B that the issuer signed."
+    },
+    {
+      "stage": "post",
+      "question": "What property does the full BBS+ protocol achieve that this toy implementation does NOT?",
+      "options": [
+        "Unlinkability: each presentation randomises A so different verifiers cannot correlate proofs from the same credential",
+        "Selective disclosure: revealing only a subset of signed attributes without re-signing",
+        "Issuer binding: proving the credential came from a specific issuer key",
+        "Multi-message signing: covering all attributes with a single compact signature"
+      ],
+      "correct": 0,
+      "explanation": "The toy passes the same (A, e, s) every time. Full BBS+ randomises A per presentation via a zero-knowledge proof of knowledge, making presentations unlinkable."
+    },
+    {
+      "stage": "post",
+      "question": "An attacker intercepts a BBS+ selective disclosure proof and replays it to a second verifier. Which mechanism prevents this?",
+      "options": [
+        "The verifier supplies a fresh nonce that is bound into the proof; replaying to a different verifier fails because the nonce won't match",
+        "BBS+ signatures include a timestamp that expires after one use",
+        "The issuer revokes the credential after the first presentation is detected",
+        "The holder's public key is included and checked against a live registry on every presentation"
+      ],
+      "correct": 0,
+      "explanation": "Each verifier generates a fresh nonce and requires it to be included in the proof. A replayed proof carries the old nonce and fails the freshness check."
+    },
+    {
+      "stage": "post",
+      "question": "In this toy implementation, bbs_verify requires the issuer secret key sk. What is the practical consequence of this design?",
+      "options": [
+        "Verification cannot be done by a third party without the issuer sharing sk, which breaks the security model of a public-key scheme",
+        "Only the issuer can verify signatures, which is acceptable for credential auditing",
+        "The holder can forge signatures since they need sk to verify their own credential",
+        "sk must be included in the credential so the holder can verify it"
+      ],
+      "correct": 0,
+      "explanation": "In a real scheme the verifier should only need the public key. Requiring sk means the issuer must share secrets with every verifier — exactly the problem bilinear pairings were designed to solve."
+    },
+    {
+      "stage": "post",
+      "question": "Why are production BBS+ generators chosen as hash-to-curve outputs rather than simple powers of G (as in this toy)?",
+      "options": [
+        "Hash-to-curve generators have no known discrete log relationship to each other, preventing a holder from constructing a commitment for one slot that is also valid for another slot",
+        "Hash-to-curve generators are faster to compute than repeated squaring",
+        "Hash-to-curve ensures generators are on the correct side of a Type-3 pairing",
+        "Powers of G would make the public key derivable from any generator"
+      ],
+      "correct": 0,
+      "explanation": "If H_i = G^i, then pow(H_i, m, P) == pow(G, i*m, P) and attribute slots are algebraically related. Hash-to-curve removes these known relations, hardening the binding of each message to its dedicated slot."
+    }
+  ]
 }

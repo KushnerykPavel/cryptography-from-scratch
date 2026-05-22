@@ -1,1 +1,67 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal deterministic vectors for the threshold wallet demo (hand-checked by running code/main.py with fixed seeds).",
+  "vectors": [
+    {
+      "op": "shamir_share",
+      "secret": 100,
+      "t": 2,
+      "n": 3,
+      "rng_seed": 1111,
+      "expected_shares": [[1, 546], [2, 992], [3, 407]]
+    },
+    {
+      "op": "shamir_reconstruct",
+      "shares": [[1, 546], [2, 992]],
+      "expected_secret": 100,
+      "should_fail": false
+    },
+    {
+      "op": "shamir_reconstruct",
+      "shares": [[1, 546], [3, 407]],
+      "expected_secret": 100,
+      "should_fail": false
+    },
+    {
+      "op": "schnorr_sign_verify",
+      "private_key": 500,
+      "public_key": 1151,
+      "msg_hex": "68656c6c6f207468726573686f6c64",
+      "k_seed": 2222,
+      "expected_R": 1119,
+      "expected_s": 85,
+      "verify_ok": true
+    },
+    {
+      "op": "dkg",
+      "t": 3,
+      "n": 5,
+      "rng_seed": 42,
+      "expected_pubkey": 801,
+      "expected_agg_shares": [[1, 46], [2, 25], [3, 711], [4, 42], [5, 80]]
+    },
+    {
+      "op": "threshold_sign",
+      "t": 3,
+      "n": 5,
+      "dkg_seed": 42,
+      "signer_indices": [1, 2, 3],
+      "sign_seed": 77,
+      "msg_hex": "73656e6420312042544320746f20416c696365",
+      "expected_R": 1938,
+      "expected_s": 706,
+      "verify_ok": true
+    },
+    {
+      "op": "threshold_sign",
+      "t": 3,
+      "n": 5,
+      "dkg_seed": 42,
+      "signer_indices": [2, 4, 5],
+      "sign_seed": 88,
+      "msg_hex": "73656e6420312042544320746f20416c696365",
+      "expected_R": 1325,
+      "expected_s": 73,
+      "verify_ok": true
+    }
+  ]
+}

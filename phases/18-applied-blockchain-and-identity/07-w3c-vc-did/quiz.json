@@ -1,4 +1,101 @@
 {
   "title": "W3C Verifiable Credentials & DIDs",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a DID (Decentralized Identifier)?",
+      "options": [
+        "A URI in the form did:<method>:<identifier> that resolves to a document the subject controls",
+        "A username stored in a central identity registry such as LDAP or Active Directory",
+        "A cryptographic hash of the subject's email address",
+        "A UUID assigned by the issuing organisation"
+      ],
+      "correct": 0,
+      "explanation": "A DID is a self-describing URI with three colon-separated parts. It resolves to a DID Document that the subject controls, with no central registry required."
+    },
+    {
+      "stage": "pre",
+      "question": "In the W3C VC model, which party holds the signed credential?",
+      "options": [
+        "The holder (the subject the credential is about)",
+        "The issuer (who created and signed the credential)",
+        "The verifier (who checks the credential)",
+        "A trusted third-party registry"
+      ],
+      "correct": 0,
+      "explanation": "After issuance, the holder stores the credential in a wallet. The issuer does not retain a live copy; the holder presents it when needed."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the 'proof' field be excluded when computing the proof value over a VC?",
+      "options": [
+        "Including it would create a circular dependency — the proof would cover itself",
+        "The proof field is optional and may not exist",
+        "JSON-LD processors strip it automatically before signing",
+        "HMAC requires the input to be shorter than the key"
+      ],
+      "correct": 0,
+      "explanation": "You compute the proof over all other fields first, then attach the resulting proof value. Covering the proof field itself is circular and impossible."
+    },
+    {
+      "stage": "post",
+      "question": "Why is sort_keys=True essential when serialising a VC for signing?",
+      "options": [
+        "Python dict ordering can vary, and different orderings produce different byte sequences and therefore different HMAC values",
+        "JSON-LD requires alphabetical key order by specification",
+        "It compresses the JSON payload so HMAC is faster",
+        "sort_keys=True is required by the HMAC-SHA256 standard"
+      ],
+      "correct": 0,
+      "explanation": "Without sort_keys=True the same logical credential can serialise to different byte strings, causing valid credentials to fail verification on a different machine or Python version."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main cryptographic weakness of using HMAC-SHA256 as a VC proof in production?",
+      "options": [
+        "HMAC is symmetric — anyone who can verify can also forge, because they hold the same secret key",
+        "HMAC-SHA256 is not collision-resistant",
+        "HMAC produces a 256-bit output which is too short for VC proofs",
+        "HMAC cannot be computed over JSON payloads"
+      ],
+      "correct": 0,
+      "explanation": "Real VCs use asymmetric signatures (Ed25519, secp256k1) so the issuer's private key signs and anyone with the public key verifies — but cannot forge."
+    },
+    {
+      "stage": "post",
+      "question": "What does a Verifiable Presentation (VP) add on top of a VC?",
+      "options": [
+        "A holder-signed envelope that proves the holder chose to share these specific credentials with this verifier",
+        "A second issuer signature that re-confirms the claims",
+        "An encrypted version of the VC so only the verifier can read it",
+        "A timestamp proving when the credential was issued"
+      ],
+      "correct": 0,
+      "explanation": "The VP proof binds the presentation to the holder's key. Without it, anyone who intercepts the VC could replay it to a different verifier."
+    },
+    {
+      "stage": "post",
+      "question": "A holder uses vc_selective_fields to remove the 'age' claim before building a VP. What breaks?",
+      "options": [
+        "The issuer's proof no longer verifies, because the proof was computed over the original full credential subject",
+        "Nothing breaks — the issuer's proof only covers the credential metadata, not the claims",
+        "The VP holder proof breaks because VPs cannot contain modified VCs",
+        "Only the JSON-LD context validation fails; the cryptographic check still passes"
+      ],
+      "correct": 0,
+      "explanation": "The issuer's HMAC (or real signature) covers the full credentialSubject. Removing a field changes the canonical bytes and invalidates the proof. Production solutions use SD-JWT or BBS+ to avoid this."
+    },
+    {
+      "stage": "post",
+      "question": "Which DID method allows a DID to be resolved using standard HTTPS without a blockchain?",
+      "options": [
+        "did:web — the DID Document is hosted at a well-known HTTPS URL on the domain",
+        "did:key — the DID Document is derived from the public key with no external lookup",
+        "did:ethr — uses Ethereum smart contracts for resolution",
+        "did:ion — uses the Bitcoin blockchain as an anchoring layer"
+      ],
+      "correct": 0,
+      "explanation": "did:web maps a DID to a URL such as https://example.com/.well-known/did.json, making it the easiest method to self-host without blockchain infrastructure."
+    }
+  ]
 }

@@ -1,4 +1,101 @@
 {
-  "title": "Threshold Wallets \u2014 DKG to Signing",
-  "questions": []
+  "title": "Threshold Wallets — DKG to Signing",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a (t, n) Shamir Secret Sharing scheme, what is the minimum number of shares required to reconstruct the secret?",
+      "options": [
+        "t shares — any t of the n shares suffice; fewer than t reveal nothing",
+        "n shares — all shares must be combined",
+        "n - t shares — the complement of the threshold",
+        "1 share — the secret is embedded in every share"
+      ],
+      "correct": 0,
+      "explanation": "Shamir uses a degree-(t-1) polynomial. Any t points uniquely determine that polynomial (and thus f(0) = secret). Fewer than t points are consistent with any secret."
+    },
+    {
+      "stage": "pre",
+      "question": "Why does Distributed Key Generation (DKG) eliminate the need for a trusted dealer?",
+      "options": [
+        "Each party generates a random polynomial and distributes shares; the group secret is the sum of all parties' constant terms, which no single party ever holds",
+        "The group secret is stored on a blockchain that all parties can audit",
+        "Each party holds a full copy of the private key encrypted with the others' public keys",
+        "The trusted dealer is replaced by a hardware security module that only the quorum can access"
+      ],
+      "correct": 0,
+      "explanation": "In Pedersen DKG, party i's secret contribution f_i(0) is never revealed. The group secret = Σ f_i(0), but each party only holds the sum evaluated at their index, not the group secret itself."
+    },
+    {
+      "stage": "post",
+      "question": "In this implementation, shamir_split and shamir_reconstruct take a 'prime' parameter. Which value should be passed and why?",
+      "options": [
+        "_TW_N (= 2^31 - 1, a prime), because Lagrange interpolation requires a prime field and _TW_ORDER = N-1 is not prime",
+        "_TW_ORDER (= N-1), because shares are scalar values that must fit in the group order",
+        "Any large integer, because modular arithmetic works for any modulus",
+        "_TW_N - 2, to avoid edge cases at the boundary of the field"
+      ],
+      "correct": 0,
+      "explanation": "Shamir's scheme requires GF(p) — a finite field — which requires a prime modulus. _TW_ORDER = 2^31-2 = 2 * 3^2 * 7 * 11 * 31 * 151 * 331 is not prime, so pow(den, ORDER-2, ORDER) does not give the modular inverse."
+    },
+    {
+      "stage": "post",
+      "question": "What does dkg_final_pubkey compute and how?",
+      "options": [
+        "The group public key = product of all parties' commitment[0] values mod N, because commitment[i][0] = G^{a_i0} and G^(Σ a_i0) = Π G^{a_i0}",
+        "The group public key = sum of all parties' commitment[0] values mod ORDER",
+        "The group public key = hash of all parties' secret shares concatenated",
+        "The group public key = the first party's commitment, since other parties contribute only noise"
+      ],
+      "correct": 0,
+      "explanation": "In a multiplicative group, G^(a+b) = G^a * G^b. Summing the secret constant terms corresponds to multiplying their commitments. So PK = Π commitment_i[0] = G^(Σ a_i0) without anyone knowing the exponent."
+    },
+    {
+      "stage": "post",
+      "question": "In threshold_sign_round2, why is the partial signature computed as (nonce_secret + sk_share * challenge) % ORDER rather than % prime?",
+      "options": [
+        "Because the response is a scalar exponent; by Fermat's little theorem, G^s ≡ G^(s mod ORDER) mod prime, so the scalar must be reduced mod ORDER = prime - 1",
+        "Because sk_share is always smaller than ORDER and no reduction is needed",
+        "Because prime is reserved for group element arithmetic and cannot be used for scalar operations",
+        "Because using % prime would make the signature too large to fit in 8 bytes"
+      ],
+      "correct": 0,
+      "explanation": "Exponents in Z_N* live in Z_{N-1}. G^s mod N = G^(s mod (N-1)) mod N by Fermat. Partial sigs and their sum must be reduced mod ORDER so that G^(Σ s_i) = Π G^{s_i} verifies correctly."
+    },
+    {
+      "stage": "post",
+      "question": "What is the rogue-key attack in DKG and which countermeasure defends against it?",
+      "options": [
+        "A malicious party chooses their commitment to cancel honest parties' contributions; defended by requiring each party to prove knowledge of the secret scalar via a Schnorr proof-of-possession alongside their commitment",
+        "A malicious party intercepts shares in transit; defended by encrypting shares with the recipient's public key",
+        "A malicious party broadcasts a commitment of zero, making the group key trivially 1; defended by rejecting commitments smaller than G",
+        "A malicious party submits the same commitment twice, creating a duplicate share; defended by a deduplication check"
+      ],
+      "correct": 0,
+      "explanation": "In a rogue-key attack, party m chooses commitment_m = G^{a_m} / (Π_{i≠m} G^{a_i}) so that the group public key reduces to G^{a_m}. Requiring a Schnorr proof that the party knows a_m prevents choosing a_m retroactively to cancel others."
+    },
+    {
+      "stage": "post",
+      "question": "After running the demo, what does the 'wrong message valid = False' line confirm about threshold_verify?",
+      "options": [
+        "The signature is bound to the specific message via the Fiat-Shamir challenge; changing the message changes the challenge and breaks the verification equation G^s = R * PK^e",
+        "The aggregated nonce R is recomputed fresh for every message, so old signatures expire",
+        "The signing key shares are derived from the message, so a different message requires different shares",
+        "The bundler rejects signatures where the message hash does not match the on-chain calldata"
+      ],
+      "correct": 0,
+      "explanation": "The challenge e = H(R || msg). If msg changes, e changes, so G^s ≠ R * PK^{e'} for the new challenge e'. This is the standard Schnorr message-binding property."
+    },
+    {
+      "stage": "post",
+      "question": "A t-of-n threshold wallet wants to sign with parties {2, 3} instead of {1, 2}. With the simplified additive signing used in this lesson, what additional computation is needed?",
+      "options": [
+        "Lagrange coefficient weighting: each signer multiplies their sk_share by the Lagrange coefficient for their index evaluated at 0, before computing the partial signature, so the sum equals the full secret key's contribution",
+        "Nothing extra — any t parties produce the same partial signatures because sk_shares are identical",
+        "The signing parties must first run a new DKG round to re-derive shares for the new subset",
+        "The group public key must be recomputed excluding the absent parties' commitments"
+      ],
+      "correct": 0,
+      "explanation": "In a proper t-of-n Shamir-based threshold scheme, sk_j is a Shamir share evaluated at x=j. To recover the equivalent of the full secret from a t-subset, each partial sig must be weighted by the Lagrange coefficient L_j(0) for the chosen subset. Omitting this weighting only works when parties {1, ..., t} are always the signers."
+    }
+  ]
 }

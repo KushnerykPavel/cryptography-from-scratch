@@ -1,1 +1,78 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Educational PSI vectors generated from this lesson's reference implementation in code/main.py using p = 2^127-1 and fixed exponents a,b chosen by choose_coprime_exponent(seed=...).",
+  "vectors": [
+    {
+      "op": "hash_to_group_elem",
+      "inputs": {
+        "item": "alice@example.com",
+        "p": "170141183460469231731687303715884105727"
+      },
+      "expected": "30019867062627829773950350970715818716"
+    },
+    {
+      "op": "hash_to_group_elem",
+      "inputs": {
+        "item": "bob@example.com",
+        "p": "170141183460469231731687303715884105727"
+      },
+      "expected": "152662010582249226288391070890033319862"
+    },
+    {
+      "op": "modinv",
+      "inputs": {
+        "a": "7",
+        "m": "40"
+      },
+      "expected": "23"
+    },
+    {
+      "op": "commutative_enc",
+      "inputs": {
+        "m": "7099696872655141015602526101262863334",
+        "e": "136423687570047607565963327987043853615",
+        "p": "170141183460469231731687303715884105727"
+      },
+      "expected": "29503508185837885542130812059209298616"
+    },
+    {
+      "op": "commutative_remove_layer",
+      "inputs": {
+        "c": "29503508185837885542130812059209298616",
+        "e": "136423687570047607565963327987043853615",
+        "p": "170141183460469231731687303715884105727"
+      },
+      "expected": "7099696872655141015602526101262863334"
+    },
+    {
+      "op": "psi_reveal_intersection",
+      "inputs": {
+        "client_items": ["alice", "bob", "carol", "dave"],
+        "server_items": ["bob", "dave", "erin"],
+        "p": "170141183460469231731687303715884105727",
+        "a": "136423687570047607565963327987043853615",
+        "b": "144459269758477908007771844722670086517"
+      },
+      "expected": ["bob", "dave"]
+    },
+    {
+      "op": "psi_cardinality",
+      "inputs": {
+        "client_items": ["alice", "bob", "carol", "dave"],
+        "server_items": ["bob", "dave", "erin"],
+        "p": "170141183460469231731687303715884105727",
+        "a": "136423687570047607565963327987043853615",
+        "b": "144459269758477908007771844722670086517"
+      },
+      "expected": "2"
+    },
+    {
+      "op": "bloom_indices",
+      "inputs": {
+        "key_hex": "7073692d64656d6f",
+        "m_bits": "64",
+        "k_hashes": "4"
+      },
+      "expected": [43, 33, 23, 13]
+    }
+  ]
+}

@@ -1,4 +1,101 @@
 {
   "title": "VRFs \u2014 Verifiable Random Functions",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What three properties distinguish a VRF from an ordinary pseudorandom function?",
+      "options": [
+        "Pseudorandomness, uniqueness, and provability \u2014 the output is unpredictable, fully determined by (sk, m), and accompanied by a verifiable proof",
+        "Secrecy, integrity, and non-repudiation \u2014 the same properties as a digital signature scheme",
+        "Collision resistance, preimage resistance, and second-preimage resistance \u2014 the same as a cryptographic hash function",
+        "Unforgeability, aggregability, and threshold-shareability \u2014 the same properties as BLS signatures"
+      ],
+      "correct": 0,
+      "explanation": "VRF = pseudorandomness (output indistinguishable from random before proof is revealed) + uniqueness (exactly one valid output per (sk, m)) + provability (proof lets anyone verify the output is correct)."
+    },
+    {
+      "stage": "pre",
+      "question": "Why can't a blockchain use an ordinary hash H(seed) for leader election randomness?",
+      "options": [
+        "A malicious proposer can grind seeds until H(seed) produces a favorable output, biasing the election",
+        "Hash functions are too slow to evaluate once per slot at network-wide scale",
+        "Hash outputs are not uniform over the integers, making leader selection unfair",
+        "Hash functions are deterministic, so the leader schedule would repeat every epoch"
+      ],
+      "correct": 0,
+      "explanation": "An adversary who controls the seed input can enumerate many seeds and choose one that benefits them. A VRF output is pseudorandom only before the proof is revealed and cannot be selectively disclosed."
+    },
+    {
+      "stage": "post",
+      "question": "In the DH-VRF construction, what is gamma = H^sk mod p?",
+      "options": [
+        "The core VRF output: pseudorandom because it requires sk to compute, and unique because there is exactly one value for a given (sk, m)",
+        "The Schnorr nonce commitment used to derive the Fiat-Shamir challenge",
+        "The public key corresponding to the message hash, used only during proof verification",
+        "A hash of the secret key and message used to avoid leaking sk in the proof"
+      ],
+      "correct": 0,
+      "explanation": "gamma = H^sk is the VRF's fundamental output. It requires sk to compute (pseudorandomness) and is uniquely determined by sk and m (uniqueness). beta = SHA-256(gamma) is the final byte output."
+    },
+    {
+      "stage": "post",
+      "question": "What does the dleq proof (c, s) in this VRF certify?",
+      "options": [
+        "That the same secret key sk was used to compute both pk = g^sk and gamma = H^sk, without revealing sk",
+        "That the message m was hashed correctly to produce H before gamma was computed",
+        "That the nonce k used during evaluation is uniformly random and was not reused",
+        "That gamma lies in the correct subgroup of order q and is not a degenerate element"
+      ],
+      "correct": 0,
+      "explanation": "The dleq proof is a Schnorr-style zero-knowledge proof of discrete-log equality: log_g(pk) == log_H(gamma) == sk. It lets a verifier confirm the output is correct without learning sk."
+    },
+    {
+      "stage": "post",
+      "question": "Why does vrf_proof_to_hash return SHA-256(gamma) instead of gamma directly?",
+      "options": [
+        "To produce a fixed-length uniform byte string and remove any algebraic structure from the group element that could leak information",
+        "To make the output longer so it can be split into multiple random values",
+        "Because gamma must remain secret; hashing it makes beta public without exposing gamma",
+        "To satisfy the Fiat-Shamir requirement that all outputs are in the same hash domain"
+      ],
+      "correct": 0,
+      "explanation": "Group elements have algebraic structure (quadratic residuosity, subgroup membership) that could distinguish them from uniform random bytes. Hashing via SHA-256 maps to a fixed 32-byte uniform output with no observable structure."
+    },
+    {
+      "stage": "post",
+      "question": "What happens if the nonce k is reused across two VRF evaluations with the same sk?",
+      "options": [
+        "The two (c, s) pairs yield a linear system that exposes sk, identical to Schnorr nonce reuse",
+        "Verification fails for both proofs because the Fiat-Shamir challenge detects duplicate nonces",
+        "The two gamma values become identical, revealing that the same message was signed twice",
+        "Only the second proof is insecure; the first evaluation remains safe"
+      ],
+      "correct": 0,
+      "explanation": "With k reused: s1 = k - sk*c1 and s2 = k - sk*c2. Subtracting gives sk = (s1 - s2) / (c2 - c1) mod q. RFC 9381 mandates deterministic nonce derivation from (sk, m, randomness) to prevent this."
+    },
+    {
+      "stage": "post",
+      "question": "In hash_to_group for a safe prime p = 2q+1, why does squaring (candidate^2 mod p) produce an element of the q-order subgroup?",
+      "options": [
+        "For a safe prime, the squares form the unique subgroup of order q = (p-1)/2; every quadratic residue has order dividing q",
+        "Squaring doubles the exponent, which halves the order of any element in Z_p*",
+        "The generator g=2 is itself a square, so any power of g is also a square",
+        "Squaring applies the Legendre symbol which maps all elements into {0, 1} mod p"
+      ],
+      "correct": 0,
+      "explanation": "Z_p* has order p-1 = 2q. The subgroup of quadratic residues (squares) has order (p-1)/2 = q. Squaring a uniformly random non-trivial element lands in this unique q-order subgroup."
+    },
+    {
+      "stage": "post",
+      "question": "Which check must a VRF verifier perform to prevent a malicious prover from submitting a gamma outside the correct subgroup?",
+      "options": [
+        "Verify that pow(gamma, q, p) == 1, confirming gamma has order dividing q",
+        "Verify that gamma < p/2, confirming it is in the lower half of the field",
+        "Verify that gamma is not equal to pk, confirming distinct group elements were used",
+        "Verify that SHA-256(gamma) has a certain prefix, confirming the hash-to-group was applied"
+      ],
+      "correct": 0,
+      "explanation": "A valid group element of order q satisfies g^q = 1 (mod p). Checking pow(gamma, q, p) == 1 rejects elements outside the subgroup. Skipping this check may allow crafted gamma values to bypass the proof."
+    }
+  ]
 }

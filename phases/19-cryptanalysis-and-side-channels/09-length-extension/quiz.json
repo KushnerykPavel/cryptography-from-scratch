@@ -1,4 +1,101 @@
 {
-  "title": "Length Extension & Hash Misuse",
-  "questions": []
+  "title": "Length Extension — Secret-Prefix MAC is a Trap (MD4)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a secret-prefix MAC?",
+      "options": [
+        "MAC = Hash(key || message)",
+        "MAC = Hash(message || key)",
+        "MAC = Encrypt(key, message)",
+        "MAC = message XOR key"
+      ],
+      "correct": 0,
+      "explanation": "Secret-prefix MACs prepend the key to the message before hashing."
+    },
+    {
+      "stage": "pre",
+      "question": "What property do many Merkle–Damgård hashes have that enables length extension?",
+      "options": [
+        "The digest is the final internal chaining state after processing blocks",
+        "They are collision-resistant by definition",
+        "They use AES internally",
+        "They always output 512-bit digests"
+      ],
+      "correct": 0,
+      "explanation": "Knowing the final state allows continuing compression on additional blocks."
+    },
+    {
+      "stage": "post",
+      "question": "In a length extension attack, what does the attacker typically know?",
+      "options": [
+        "message and Hash(key||message), but not the key",
+        "the key and the private exponent d",
+        "only the ciphertext length",
+        "only the public key"
+      ],
+      "correct": 0,
+      "explanation": "The attacker uses the known digest as a starting state to append data."
+    },
+    {
+      "stage": "post",
+      "question": "Why does the attacker need to guess the key length?",
+      "options": [
+        "Because padding depends on the total length of key||message",
+        "Because hash functions require the key length as input",
+        "Because the key length changes the digest size",
+        "Because MD4 uses the key length as an IV"
+      ],
+      "correct": 0,
+      "explanation": "MD-style padding includes the bit-length of the full input, including the secret key."
+    },
+    {
+      "stage": "post",
+      "question": "What does the attacker produce as the forged message in a secret-prefix MAC length extension?",
+      "options": [
+        "message || glue_padding || suffix",
+        "suffix || message",
+        "key || message || suffix",
+        "message with one bit flipped"
+      ],
+      "correct": 0,
+      "explanation": "The “glue padding” is exactly what the hash would append after key||message."
+    },
+    {
+      "stage": "post",
+      "question": "Which construction is the standard fix for “hash-as-MAC” mistakes like this?",
+      "options": [
+        "HMAC",
+        "ECB mode encryption",
+        "Base64 encoding",
+        "CRC32"
+      ],
+      "correct": 0,
+      "explanation": "HMAC is designed to avoid length extension and related weaknesses for MD hashes."
+    },
+    {
+      "stage": "post",
+      "question": "Does length extension mean the attacker can recover the secret key?",
+      "options": [
+        "Not necessarily; they can often forge tags for extended messages without learning the key",
+        "Yes, length extension always reveals the key directly",
+        "Yes, but only if the hash is SHA-256",
+        "No, forging is impossible"
+      ],
+      "correct": 0,
+      "explanation": "The attack is typically a forgery attack, not a key-recovery attack."
+    },
+    {
+      "stage": "post",
+      "question": "Why is MD4 used in the demo even though it is obsolete?",
+      "options": [
+        "It makes the Merkle–Damgård chaining and state continuation easy to demonstrate",
+        "Because MD4 is secure and recommended for production",
+        "Because MD4 prevents padding oracles",
+        "Because MD4 is an AEAD mode"
+      ],
+      "correct": 0,
+      "explanation": "The demo focuses on the construction’s property, not on MD4’s modern security."
+    }
+  ]
 }

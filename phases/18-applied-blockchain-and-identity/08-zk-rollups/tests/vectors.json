@@ -1,1 +1,111 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "hand-computed with genesis {alice:100, bob:50, carol:75, dave:25}",
+  "vectors": [
+    {
+      "description": "state_root of genesis balances",
+      "op": "state_root",
+      "balances": {"alice": 100, "bob": 50, "carol": 75, "dave": 25},
+      "expected_hex": "27937d7c1f4aa6ff2ad5646eb605469b2e462b21db18cca6aab92664951ff653"
+    },
+    {
+      "description": "rollup_genesis_state root field matches state_root",
+      "op": "genesis_root",
+      "balances": {"alice": 100, "bob": 50, "carol": 75, "dave": 25},
+      "expected_hex": "27937d7c1f4aa6ff2ad5646eb605469b2e462b21db18cca6aab92664951ff653"
+    },
+    {
+      "description": "apply_transfer: alice sends 20 to bob",
+      "op": "apply_transfer_balances",
+      "genesis": {"alice": 100, "bob": 50, "carol": 75, "dave": 25},
+      "tx": {"from": "alice", "to": "bob", "amount": 20},
+      "expected_alice": 80,
+      "expected_bob": 70,
+      "expected_root_hex": "918bca1c47d82ad2b68f88bf2afe7f677401aef8baf53cc5008676bda2f2980f"
+    },
+    {
+      "description": "apply_batch: three transfers",
+      "op": "apply_batch_balances",
+      "genesis": {"alice": 100, "bob": 50, "carol": 75, "dave": 25},
+      "txs": [
+        {"from": "alice", "to": "bob",   "amount": 20},
+        {"from": "carol", "to": "dave",  "amount": 10},
+        {"from": "bob",   "to": "carol", "amount": 5}
+      ],
+      "expected": {"alice": 80, "bob": 65, "carol": 70, "dave": 35},
+      "expected_root_hex": "76323741ee2fc9854eaa67b56647d864feb9dd91575111ba4520eb59b99453cd"
+    },
+    {
+      "description": "prove_batch: tx_hash is deterministic",
+      "op": "prove_batch_tx_hash",
+      "genesis": {"alice": 100, "bob": 50, "carol": 75, "dave": 25},
+      "txs": [
+        {"from": "alice", "to": "bob",   "amount": 20},
+        {"from": "carol", "to": "dave",  "amount": 10},
+        {"from": "bob",   "to": "carol", "amount": 5}
+      ],
+      "expected_tx_hash": "a57ad9715333f02ccb163e7e9614865a2e97c39f7f8ed2103ddbe32e7fd3fb37"
+    },
+    {
+      "description": "verify_proof: correct roots accepted",
+      "op": "verify_proof",
+      "old_root_hex": "27937d7c1f4aa6ff2ad5646eb605469b2e462b21db18cca6aab92664951ff653",
+      "new_root_hex": "76323741ee2fc9854eaa67b56647d864feb9dd91575111ba4520eb59b99453cd",
+      "proof": {
+        "old_root": "27937d7c1f4aa6ff2ad5646eb605469b2e462b21db18cca6aab92664951ff653",
+        "new_root": "76323741ee2fc9854eaa67b56647d864feb9dd91575111ba4520eb59b99453cd",
+        "tx_hash": "a57ad9715333f02ccb163e7e9614865a2e97c39f7f8ed2103ddbe32e7fd3fb37",
+        "witness_hash": "fd64c0ec69b495568c0cf743e57e0ea4dc4e8fd99343e6a406b66aa489282b6a"
+      },
+      "expected": true
+    },
+    {
+      "description": "verify_proof: wrong old_root rejected",
+      "op": "verify_proof",
+      "old_root_hex": "0000000000000000000000000000000000000000000000000000000000000000",
+      "new_root_hex": "76323741ee2fc9854eaa67b56647d864feb9dd91575111ba4520eb59b99453cd",
+      "proof": {
+        "old_root": "27937d7c1f4aa6ff2ad5646eb605469b2e462b21db18cca6aab92664951ff653",
+        "new_root": "76323741ee2fc9854eaa67b56647d864feb9dd91575111ba4520eb59b99453cd",
+        "tx_hash": "a57ad9715333f02ccb163e7e9614865a2e97c39f7f8ed2103ddbe32e7fd3fb37",
+        "witness_hash": "fd64c0ec69b495568c0cf743e57e0ea4dc4e8fd99343e6a406b66aa489282b6a"
+      },
+      "expected": false
+    },
+    {
+      "description": "r1cs_check_satisfied: valid witness",
+      "op": "r1cs_check",
+      "from_bal": 100,
+      "to_bal": 50,
+      "amount": 20,
+      "witness": {
+        "from_bal": 100, "to_bal": 50, "amount": 20,
+        "from_new": 80, "to_new": 70, "nonneg": 80, "one": 1
+      },
+      "expected": true
+    },
+    {
+      "description": "r1cs_check_satisfied: wrong from_new rejected",
+      "op": "r1cs_check",
+      "from_bal": 100,
+      "to_bal": 50,
+      "amount": 20,
+      "witness": {
+        "from_bal": 100, "to_bal": 50, "amount": 20,
+        "from_new": 90, "to_new": 70, "nonneg": 80, "one": 1
+      },
+      "expected": false
+    },
+    {
+      "description": "r1cs_check_satisfied: overdraft (nonneg < 0) rejected",
+      "op": "r1cs_check",
+      "from_bal": 10,
+      "to_bal": 50,
+      "amount": 20,
+      "witness": {
+        "from_bal": 10, "to_bal": 50, "amount": 20,
+        "from_new": -10, "to_new": 70, "nonneg": -10, "one": 1
+      },
+      "expected": false
+    }
+  ]
+}

@@ -1,4 +1,101 @@
 {
   "title": "Build a Threshold Wallet",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In Shamir secret sharing with threshold t and n shares, how many shares are required to reconstruct the secret?",
+      "options": [
+        "Exactly t shares — any t of the n shares are sufficient",
+        "All n shares — every party must participate",
+        "n - 1 shares — all but one party must cooperate",
+        "Just 1 share — each share encodes the full secret"
+      ],
+      "correct": 0,
+      "explanation": "Shamir SSS uses a degree-(t-1) polynomial. Any t evaluation points determine the polynomial uniquely, recovering f(0) = secret. Fewer than t reveal nothing."
+    },
+    {
+      "stage": "pre",
+      "question": "What property of Schnorr signatures makes them suitable for threshold construction?",
+      "options": [
+        "Linearity: partial responses can be summed to produce a valid aggregate signature",
+        "Non-interactivity: each party can sign independently without communicating",
+        "Determinism: the nonce k is derived from the message, so parties agree automatically",
+        "Homomorphic encryption: the key is encrypted under each party's public key"
+      ],
+      "correct": 0,
+      "explanation": "Schnorr responses are of the form s = k - x*e. Because this is linear in k and x, partial responses s_i = k_i - x_i*e*lambda_i sum to a valid Schnorr response under the aggregate key."
+    },
+    {
+      "stage": "post",
+      "question": "In the Pedersen DKG, each party i publishes X_i = g^x_i and distributes Shamir shares of x_i. What is the aggregate public key?",
+      "options": [
+        "Product of all X_i mod p, equal to g^(sum x_i)",
+        "Sum of all X_i mod p",
+        "The X_i of the party with the highest index",
+        "Hash of all X_i concatenated"
+      ],
+      "correct": 0,
+      "explanation": "Since g^a * g^b = g^(a+b), the product of X_i = g^x_i equals g^(sum x_i). This is the aggregate public key, even though no party computes sum x_i directly."
+    },
+    {
+      "stage": "post",
+      "question": "In threshold Schnorr signing, why must each signer use the Lagrange coefficient lambda_i for their index?",
+      "options": [
+        "So that sum(x_i * lambda_i) = x, making the aggregate response verify under the full private key",
+        "To prevent the nonce k from being reused across signing sessions",
+        "To ensure each party's contribution is weighted equally",
+        "To encrypt the partial signature before broadcasting it"
+      ],
+      "correct": 0,
+      "explanation": "Lagrange interpolation guarantees sum(x_i * lambda_i) = x (the aggregate secret at index 0). Without lambda_i the partial responses would not sum to a valid Schnorr signature under the aggregate key."
+    },
+    {
+      "stage": "post",
+      "question": "A 3-of-5 threshold wallet has parties 1..5. Parties 1 and 2 collude and attempt to reconstruct the private key using only their two shares. What happens?",
+      "options": [
+        "They recover a random-looking value that is not the private key — t-1 shares reveal nothing about the secret",
+        "They recover exactly half the private key",
+        "They can brute-force the remaining share because only one degree of freedom remains",
+        "They reconstruct the correct key because any two distinct parties always suffice"
+      ],
+      "correct": 0,
+      "explanation": "In Shamir SSS with threshold t=3, any set of t-1=2 shares is consistent with every possible secret value. The information-theoretic security guarantees that 2 shares reveal nothing about the degree-2 polynomial's constant term."
+    },
+    {
+      "stage": "post",
+      "question": "What is the critical difference between this simplified threshold Schnorr and production FROST?",
+      "options": [
+        "FROST adds a pre-commitment round where signers commit to their nonces before seeing the message, preventing nonce-reuse and rogue-key attacks",
+        "FROST uses RSA instead of Schnorr to avoid the linearity requirement",
+        "FROST requires all n parties to sign rather than just t",
+        "FROST replaces Lagrange coefficients with a fixed equal weight for each signer"
+      ],
+      "correct": 0,
+      "explanation": "The simplified protocol here is vulnerable to nonce reuse and rushing attacks. FROST's round 1 has signers commit to (D_i, E_i) binding nonces before the message is fixed, making the protocol secure against adaptive adversaries."
+    },
+    {
+      "stage": "post",
+      "question": "Why is threshold ECDSA (e.g., GG20) significantly more complex than threshold Schnorr?",
+      "options": [
+        "ECDSA's response includes a modular inverse (r^{-1} mod q) that is not linear, so parties cannot simply sum partial values",
+        "ECDSA keys are larger than Schnorr keys, requiring more communication rounds",
+        "ECDSA does not support Shamir secret sharing because the group order is composite",
+        "ECDSA requires a trusted setup ceremony that Schnorr avoids"
+      ],
+      "correct": 0,
+      "explanation": "Schnorr's s = k - x*e is linear, enabling straightforward aggregation. ECDSA's s = k^{-1}*(z + r*x) contains an inversion and a product of secret values, requiring MPC techniques like multiplicative-to-additive share conversion."
+    },
+    {
+      "stage": "post",
+      "question": "A party in the DKG receives a share (j, v) from party i. How can it verify the share is correct without learning party i's secret x_i?",
+      "options": [
+        "Check that g^v == product of C_{ik}^(j^k) for k=0..t-1, where C_{ik} = g^(a_{ik}) are i's published polynomial commitments",
+        "Ask a third party to re-run the DKG with the same seed and compare",
+        "Decrypt the share using the aggregate public key and verify it equals v",
+        "Request that party i reveal x_i privately and recompute f_i(j) locally"
+      ],
+      "correct": 0,
+      "explanation": "In VSS (Verifiable Secret Sharing), each dealer publishes Feldman-style commitments C_{ik} = g^(a_{ik}). The recipient checks g^(f_i(j)) = product(C_{ik}^(j^k)) without learning any coefficient — the check works because exponentiation is homomorphic over the polynomial evaluation."
+    }
+  ]
 }

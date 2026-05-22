@@ -1,1 +1,41 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Hand-constructed small-field examples for this lesson (prime p=101). Values are chosen to be easy to verify by inspection and to deterministically exercise beaver_multiply_shares.",
+  "vectors": [
+    {
+      "op": "reconstruct",
+      "p": 101,
+      "shares": [10, 20, 12],
+      "expected": 42
+    },
+    {
+      "op": "share_add",
+      "p": 101,
+      "x_sh": [10, 20, 12],
+      "y_sh": [5, 7, 65],
+      "expected": [15, 27, 77]
+    },
+    {
+      "op": "share_sub",
+      "p": 101,
+      "x_sh": [10, 20, 12],
+      "y_sh": [1, 2, 6],
+      "expected": [9, 18, 6]
+    },
+    {
+      "op": "beaver_multiply_shares",
+      "p": 101,
+      "dealer_party": 0,
+      "x_sh": [10, 20, 12],
+      "y_sh": [5, 7, 65],
+      "a_sh": [1, 2, 6],
+      "b_sh": [3, 4, 6],
+      "c_sh": [50, 40, 27],
+      "expected": {
+        "z_sh": [2, 98, 3],
+        "d": 33,
+        "e": 64,
+        "z_open": 2
+      }
+    }
+  ]
+}

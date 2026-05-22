@@ -1,1 +1,162 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "deterministic-educational",
+  "vectors": [
+    {
+      "op": "shamir_split_reconstruct",
+      "label": "2of3",
+      "secret": 12345,
+      "t": 2,
+      "n": 3,
+      "prime": 2147483647,
+      "expected_shares": [[1, 57839113], [2, 115665881], [3, 173492649]],
+      "expected_secret": 12345
+    },
+    {
+      "op": "shamir_split_reconstruct",
+      "label": "3of5",
+      "secret": 99999,
+      "t": 3,
+      "n": 5,
+      "prime": 2147483647,
+      "expected_shares": [
+        [1, 1189998651], [2, 1142154264], [3, 2004050485],
+        [4, 1628203667], [5, 14613810]
+      ],
+      "expected_secret": 99999
+    },
+    {
+      "op": "shamir_split_reconstruct",
+      "label": "2of2_minimal",
+      "secret": 1,
+      "t": 2,
+      "n": 2,
+      "prime": 2147483647,
+      "expected_shares": [[1, 669705562], [2, 1339411123]],
+      "expected_secret": 1
+    },
+    {
+      "op": "shamir_split_reconstruct",
+      "label": "2of3_boundary",
+      "secret": 2147483646,
+      "t": 2,
+      "n": 3,
+      "prime": 2147483647,
+      "expected_shares": [[1, 522319521], [2, 1044639043], [3, 1566958565]],
+      "expected_secret": 2147483646
+    },
+    {
+      "op": "shamir_reconstruct",
+      "label": "subset_01",
+      "shares": [[1, 57839113], [2, 115665881]],
+      "prime": 2147483647,
+      "expected": 12345
+    },
+    {
+      "op": "shamir_reconstruct",
+      "label": "subset_12",
+      "shares": [[2, 115665881], [3, 173492649]],
+      "prime": 2147483647,
+      "expected": 12345
+    },
+    {
+      "op": "shamir_reconstruct",
+      "label": "subset_02",
+      "shares": [[1, 57839113], [3, 173492649]],
+      "prime": 2147483647,
+      "expected": 12345
+    },
+    {
+      "op": "dkg_round1",
+      "label": "party1",
+      "party_id": 1,
+      "n": 3,
+      "t": 2,
+      "prime": 2147483647,
+      "expected_coeffs": [961191570, 410607253],
+      "expected_commitments": [894543763, 317660749]
+    },
+    {
+      "op": "dkg_round1",
+      "label": "party2",
+      "party_id": 2,
+      "n": 3,
+      "t": 2,
+      "prime": 2147483647,
+      "expected_coeffs": [1094104324, 1776496728],
+      "expected_commitments": [1843529448, 1254274493]
+    },
+    {
+      "op": "dkg_round1",
+      "label": "party3",
+      "party_id": 3,
+      "n": 3,
+      "t": 2,
+      "prime": 2147483647,
+      "expected_coeffs": [1620750332, 774737435],
+      "expected_commitments": [1249207070, 670146417]
+    },
+    {
+      "op": "dkg_round2",
+      "label": "party1",
+      "party_id": 1,
+      "other_shares": [[1, 1371798823], [1, 723117406], [1, 248004121]],
+      "prime": 2147483647,
+      "expected_sk_share": 195436704
+    },
+    {
+      "op": "dkg_round2",
+      "label": "party2",
+      "party_id": 2,
+      "other_shares": [[2, 1782406076], [2, 352130488], [2, 1022741556]],
+      "prime": 2147483647,
+      "expected_sk_share": 1009794474
+    },
+    {
+      "op": "dkg_round2",
+      "label": "party3",
+      "party_id": 3,
+      "other_shares": [[3, 45529683], [3, 2128627216], [3, 1797478991]],
+      "prime": 2147483647,
+      "expected_sk_share": 1824152244
+    },
+    {
+      "op": "threshold_sign_round1",
+      "label": "party1",
+      "party_id": 1,
+      "prime": 2147483647,
+      "expected_nonce": 358751011,
+      "expected_commitment": 672365229
+    },
+    {
+      "op": "threshold_sign_round1",
+      "label": "party2",
+      "party_id": 2,
+      "prime": 2147483647,
+      "expected_nonce": 589033483,
+      "expected_commitment": 1054945858
+    },
+    {
+      "op": "threshold_sign_verify",
+      "label": "2of3_alice",
+      "signing_parties": [1, 2],
+      "sk_shares": [195436704, 1009794474, 1824152244],
+      "message_hex": "73656e6420312042544320746f20416c696365",
+      "prime": 2147483647,
+      "expected_agg_nonce": 1857575935,
+      "expected_partial_sigs": [248340241, 1323925981],
+      "expected_agg_sig": 1572266222,
+      "expected_signing_pk": 1747823997,
+      "expected_valid": true
+    },
+    {
+      "op": "threshold_verify",
+      "label": "wrong_message",
+      "agg_pk": 1747823997,
+      "agg_nonce": 1857575935,
+      "message_hex": "77726f6e67",
+      "sig": 1572266222,
+      "prime": 2147483647,
+      "expected": false
+    }
+  ]
+}

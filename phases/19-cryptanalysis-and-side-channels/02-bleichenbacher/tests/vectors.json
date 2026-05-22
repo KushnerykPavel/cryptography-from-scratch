@@ -1,1 +1,38 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, deterministic vectors for toy RSA + PKCS#1 v1.5 formatting helpers and the toy header-oracle demo.",
+  "vectors": [
+    {
+      "op": "i2osp",
+      "x": 3181152807243071734939738,
+      "k": 12,
+      "expected_hex": "0002a1a2a3a4a5a6a7a8005a"
+    },
+    {
+      "op": "os2ip",
+      "bytes_hex": "0002a1a2a3a4a5a6a7a8005a",
+      "expected": 3181152807243071734939738
+    },
+    {
+      "op": "pkcs1v15_is_conformant",
+      "em_hex": "0002a1a2a3a4a5a6a7a8005a",
+      "expected": true
+    },
+    {
+      "op": "pkcs1v15_is_conformant",
+      "em_hex": "0001a1a2a3a4a5a6a7a8005a",
+      "expected": false
+    },
+    {
+      "op": "toy_prefix_encode",
+      "message_hex": "5a",
+      "k": 12,
+      "expected_hex": "02000000000000000000005a"
+    },
+    {
+      "op": "toy_prefix_decode",
+      "em_hex": "02000000000000000000005a",
+      "message_len": 1,
+      "expected_hex": "5a"
+    }
+  ]
+}

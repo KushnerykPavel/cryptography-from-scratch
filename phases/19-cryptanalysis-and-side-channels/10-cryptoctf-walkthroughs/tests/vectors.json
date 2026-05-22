@@ -1,1 +1,22 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, deterministic vectors for the toy CTF triage helpers.",
+  "vectors": [
+    {
+      "op": "decode_hex_or_base64",
+      "s": "48656c6c6f2c2043544621",
+      "expected_hex": "48656c6c6f2c2043544621"
+    },
+    {
+      "op": "break_single_byte_xor",
+      "ciphertext_hex": "4958535a5e450a43590a4c5f44",
+      "expected_key": 42,
+      "expected_plaintext_hex": "63727970746f2069732066756e"
+    },
+    {
+      "op": "find_shared_prime",
+      "n1": 1000003,
+      "n2": 1000003,
+      "expected": null
+    }
+  ]
+}

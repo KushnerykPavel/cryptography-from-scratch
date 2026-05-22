@@ -1,1 +1,20 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "RFC 1320 test vectors for MD4 plus a project-internal length-extension sanity case.",
+  "vectors": [
+    {
+      "op": "md4_digest",
+      "msg_hex": "",
+      "expected_hex": "31d6cfe0d16ae931b73c59d7e0c089c0"
+    },
+    {
+      "op": "md4_digest",
+      "msg_hex": "61",
+      "expected_hex": "bde52cb31de33e46245e05fbdbd6fb24"
+    },
+    {
+      "op": "md4_digest",
+      "msg_hex": "616263",
+      "expected_hex": "a448017aaf21d8525fc10ae87aa6729d"
+    }
+  ]
+}

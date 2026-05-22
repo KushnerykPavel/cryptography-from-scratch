@@ -1,1 +1,17 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, deterministic vectors for the toy cache + Prime+Probe simulation.",
+  "vectors": [
+    {
+      "op": "cache_access",
+      "num_sets": 16,
+      "accesses": [0, 0, 16],
+      "expected": [10, 1, 10]
+    },
+    {
+      "op": "recover_secret_prime_probe",
+      "cache_sets": 16,
+      "secret_index": 7,
+      "expected": 7
+    }
+  ]
+}

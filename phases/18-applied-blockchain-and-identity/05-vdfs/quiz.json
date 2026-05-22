@@ -1,4 +1,101 @@
 {
-  "title": "VDFs \u2014 Verifiable Delay Functions",
-  "questions": []
+  "title": "VDFs — Verifiable Delay Functions",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What property makes a VDF different from a regular hash function?",
+      "options": [
+        "A VDF requires a minimum sequential computation time that cannot be parallelised",
+        "A VDF is faster to compute than to verify",
+        "A VDF output is unpredictable even after the input is known",
+        "A VDF uses a secret key that only the verifier knows"
+      ],
+      "correct": 0,
+      "explanation": "The defining property of a VDF is sequentiality: T steps cannot be parallelised, enforcing a minimum wall-clock delay regardless of how many cores an attacker uses."
+    },
+    {
+      "stage": "pre",
+      "question": "In the RSA-group VDF y = x^(2^T) mod N, why is the group of unknown order important?",
+      "options": [
+        "Without knowing φ(N), an attacker cannot shortcut 2^T squarings to fewer operations",
+        "An unknown group order prevents the verifier from checking the proof",
+        "It ensures that x and N are always coprime",
+        "It makes the modular squaring operation constant-time"
+      ],
+      "correct": 0,
+      "explanation": "Knowing φ(N) = (p-1)(q-1) lets you reduce the exponent 2^T mod φ(N) and evaluate the VDF in O(log T) work. Unknown order closes this shortcut."
+    },
+    {
+      "stage": "post",
+      "question": "In the Wesolowski proof, what is π (pi)?",
+      "options": [
+        "π = x^(floor(2^T / l)) mod N, where l is the hash-derived challenge",
+        "π = y^l mod N, a commitment to the output",
+        "π = H(x || y || T), the challenge itself",
+        "π = x^(2^T mod l) mod N, the residual squaring"
+      ],
+      "correct": 0,
+      "explanation": "The prover computes q = floor(2^T / l) and sets π = x^q mod N. Verification then checks π^l * x^r == y where r = 2^T mod l."
+    },
+    {
+      "stage": "post",
+      "question": "How does the Wesolowski verifier check the proof without redoing all T squarings?",
+      "options": [
+        "It checks (π^l * x^r) mod N == y, where r = 2^T mod l",
+        "It checks π^(2^T) mod N == y directly",
+        "It re-runs T/2 squarings and compares with π",
+        "It checks H(π || l) == y"
+      ],
+      "correct": 0,
+      "explanation": "The verification equation π^l * x^r == y follows from the definition of π = x^q and the identity 2^T = q*l + r. The verifier only needs two modular exponentiations."
+    },
+    {
+      "stage": "post",
+      "question": "What attack does trapdoor-free RSA modulus generation prevent?",
+      "options": [
+        "An attacker who knows p and q can compute φ(N) and shortcut the VDF evaluation",
+        "An attacker can forge Wesolowski proofs without knowing x",
+        "An attacker can recover x from y using the discrete logarithm",
+        "An attacker can parallelise the T squarings across many cores"
+      ],
+      "correct": 0,
+      "explanation": "Knowing p and q gives φ(N), which allows reducing 2^T mod φ(N) and computing y in O(log T) work. Discarding p and q after generating N prevents this."
+    },
+    {
+      "stage": "post",
+      "question": "In a VDF-based time-lock encryption scheme, what is published alongside the ciphertext?",
+      "options": [
+        "The puzzle input x and the delay T (but not y or the key)",
+        "The VDF output y encrypted with the public key",
+        "The Wesolowski proof π so anyone can decrypt immediately",
+        "A commitment to y using a hash function"
+      ],
+      "correct": 0,
+      "explanation": "Publishing x and T lets anyone solve the puzzle to derive y = VDF(x, T, N) and then decrypt. Publishing y directly would bypass the delay entirely."
+    },
+    {
+      "stage": "post",
+      "question": "Why should the input x to a time-lock puzzle be derived from a future-committed nonce?",
+      "options": [
+        "To prevent the puzzle creator from pre-computing y before publishing the ciphertext",
+        "To ensure x is always smaller than N",
+        "To make the Wesolowski challenge l unpredictable",
+        "To guarantee gcd(x, N) == 1"
+      ],
+      "correct": 0,
+      "explanation": "If the creator can choose x freely they can run the VDF privately before announcing the puzzle, learning y (and hence the decryption key) before the intended delay expires."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main limitation of the toy VDF implemented in this lesson compared to production systems like Chiavdf?",
+      "options": [
+        "The 92-bit RSA modulus is easily factorable, making the group order known and the delay bypassable",
+        "The Wesolowski proof is incorrect and always returns pi = 1",
+        "Repeated squaring cannot be parallelised even in this implementation",
+        "The SHA-256 challenge hash is not collision-resistant enough for VDF use"
+      ],
+      "correct": 0,
+      "explanation": "With a 92-bit modulus, an attacker can factor N in seconds using standard tools, learn φ(N), and shortcut all T squarings. Production VDFs use ≥1024-bit moduli with trapdoor-free setup."
+    }
+  ]
 }

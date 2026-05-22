@@ -1,4 +1,101 @@
 {
-  "title": "DPA \u2014 Differential Power Analysis",
-  "questions": []
+  "title": "Differential Power Analysis (DPA) — CPA in Miniature",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a “power trace” in side-channel analysis?",
+      "options": [
+        "A measurement of device power consumption over time during computation",
+        "A log of ciphertexts produced by an algorithm",
+        "A proof that a key is random",
+        "A list of CPU cache misses"
+      ],
+      "correct": 0,
+      "explanation": "A power trace records power usage over time; attackers use it as side-channel data."
+    },
+    {
+      "stage": "pre",
+      "question": "What does a leakage model attempt to predict?",
+      "options": [
+        "How measured side-channel data relates to internal intermediate values",
+        "How to generate primes for RSA",
+        "How to compress ciphertexts",
+        "How to choose an IV for CBC"
+      ],
+      "correct": 0,
+      "explanation": "A leakage model maps intermediates (e.g., bits) to expected leakage (e.g., power)."
+    },
+    {
+      "stage": "post",
+      "question": "In a classic AES CPA setup, which intermediate is often targeted for a 1-byte attack?",
+      "options": [
+        "SBOX[plaintext_byte XOR key_byte]",
+        "The final ciphertext byte",
+        "The RSA modulus n",
+        "The IV used by CBC"
+      ],
+      "correct": 0,
+      "explanation": "The first-round S-box output depends on one plaintext byte and one key byte."
+    },
+    {
+      "stage": "post",
+      "question": "Why does correlation help recover the key byte in CPA?",
+      "options": [
+        "The correct key guess makes predicted leakage align with measured leakage across traces",
+        "Correlation directly computes the secret key from one trace",
+        "Correlation removes the need for any model assumptions",
+        "Correlation works only when there is no noise"
+      ],
+      "correct": 0,
+      "explanation": "The correct guess produces the strongest statistical relationship between prediction and observation."
+    },
+    {
+      "stage": "post",
+      "question": "What does Hamming weight represent in a common leakage model?",
+      "options": [
+        "The number of 1-bits in a byte/word value",
+        "The time to execute a loop",
+        "The number of cache sets in a CPU",
+        "The RSA public exponent"
+      ],
+      "correct": 0,
+      "explanation": "Hamming weight is a simple proxy for switching activity that can correlate with power."
+    },
+    {
+      "stage": "post",
+      "question": "What happens to CPA effectiveness if you add random noise to traces?",
+      "options": [
+        "It typically needs more traces, but can still succeed if signal remains",
+        "It becomes impossible regardless of trace count",
+        "It always makes the key unrecoverable in theory",
+        "It turns CPA into a padding oracle attack"
+      ],
+      "correct": 0,
+      "explanation": "Noise reduces SNR; collecting more traces can recover the signal by averaging."
+    },
+    {
+      "stage": "post",
+      "question": "Which mitigation is most directly aimed at reducing power-analysis leakage?",
+      "options": [
+        "Masking intermediate values with randomness",
+        "Using a longer ciphertext",
+        "Switching from CBC to ECB",
+        "Base64-encoding the plaintext"
+      ],
+      "correct": 0,
+      "explanation": "Masking randomizes intermediates so leakage is less correlated with secrets."
+    },
+    {
+      "stage": "post",
+      "question": "Why is side-channel security separate from mathematical cryptographic security?",
+      "options": [
+        "Physical implementations can leak information through timing/power/EM/faults even when the math is sound",
+        "Side channels only apply to broken ciphers",
+        "Side channels only exist on old hardware",
+        "Side channels are prevented automatically by using HTTPS"
+      ],
+      "correct": 0,
+      "explanation": "Security proofs assume black-box behavior; real devices leak through measurable phenomena."
+    }
+  ]
 }

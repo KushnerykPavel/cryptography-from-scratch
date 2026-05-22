@@ -1,1 +1,43 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, deterministic vectors for the toy CBC + PKCS#7 + padding-oracle demo (hand-checked by running code/main.py with fixed key/iv).",
+  "vectors": [
+    {
+      "op": "pkcs7_pad",
+      "block_size": 16,
+      "data_hex": "59454c4c4f57205355424d4152494e45",
+      "expected_hex": "59454c4c4f57205355424d4152494e4510101010101010101010101010101010"
+    },
+    {
+      "op": "pkcs7_unpad",
+      "block_size": 16,
+      "padded_hex": "59454c4c4f57205355424d4152494e4510101010101010101010101010101010",
+      "expected_hex": "59454c4c4f57205355424d4152494e45"
+    },
+    {
+      "op": "toy_cipher_encrypt_block",
+      "key_hex": "00112233445566778899aabbccddeeff",
+      "block_hex": "000102030405060708090a0b0c0d0e0f",
+      "expected_hex": "10fa41d66021af0fce167b31e7e4f6da"
+    },
+    {
+      "op": "toy_cipher_decrypt_block",
+      "key_hex": "00112233445566778899aabbccddeeff",
+      "block_hex": "10fa41d66021af0fce167b31e7e4f6da",
+      "expected_hex": "000102030405060708090a0b0c0d0e0f"
+    },
+    {
+      "op": "cbc_encrypt",
+      "key_hex": "00112233445566778899aabbccddeeff",
+      "iv_hex": "0f0e0d0c0b0a09080706050403020100",
+      "plaintext_hex": "61747461636b206174206461776e3b206272696e6720636f66666565",
+      "expected_hex": "e79e50feea5daacbf62ec5330cfdb9db6dd590c4233b9039dcd095e1f15d9b9c"
+    },
+    {
+      "op": "cbc_decrypt",
+      "key_hex": "00112233445566778899aabbccddeeff",
+      "iv_hex": "0f0e0d0c0b0a09080706050403020100",
+      "ciphertext_hex": "e79e50feea5daacbf62ec5330cfdb9db6dd590c4233b9039dcd095e1f15d9b9c",
+      "expected_hex": "61747461636b206174206461776e3b206272696e6720636f66666565"
+    }
+  ]
+}

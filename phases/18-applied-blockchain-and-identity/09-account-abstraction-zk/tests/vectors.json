@@ -1,1 +1,121 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "deterministic-educational",
+  "vectors": [
+    {
+      "op": "aa_compute_address",
+      "owner_sk": 1,
+      "expected": "0x0000000000000003"
+    },
+    {
+      "op": "aa_compute_address",
+      "owner_sk": 3,
+      "expected": "0x000000000000001b"
+    },
+    {
+      "op": "aa_compute_address",
+      "owner_sk": 424242,
+      "expected": "0x000000004775b9fd"
+    },
+    {
+      "op": "aa_compute_address",
+      "owner_sk": 7777,
+      "expected": "0x000000005931dc2a"
+    },
+    {
+      "op": "aa_compute_address",
+      "owner_sk": 999999,
+      "expected": "0x00000000182962ff"
+    },
+    {
+      "op": "aa_create_account",
+      "owner_sk": 1,
+      "expected_commitment": 3,
+      "expected_address": "0x0000000000000003",
+      "expected_nonce": 0
+    },
+    {
+      "op": "aa_create_account",
+      "owner_sk": 424242,
+      "expected_commitment": 1198897661,
+      "expected_address": "0x000000004775b9fd",
+      "expected_nonce": 0
+    },
+    {
+      "op": "aa_create_user_op",
+      "owner_sk": 424242,
+      "calldata_hex": "12347472616e73666572283078426f622c3130303029",
+      "max_fee": 50000,
+      "expected_sender": "0x000000004775b9fd",
+      "expected_nonce": 0,
+      "expected_calldata": "12347472616e73666572283078426f622c3130303029",
+      "expected_max_fee": 50000
+    },
+    {
+      "op": "aa_zk_proof_verify",
+      "label": "main",
+      "owner_sk": 424242,
+      "calldata_hex": "63616c6c3a343234323432",
+      "max_fee": 10000,
+      "expected_R": 2037526833,
+      "expected_s": 1855266146,
+      "expected_valid": true
+    },
+    {
+      "op": "aa_zk_proof_verify",
+      "label": "second",
+      "owner_sk": 7777,
+      "calldata_hex": "63616c6c3a37373737",
+      "max_fee": 10000,
+      "expected_R": 2066954993,
+      "expected_s": 1390370858,
+      "expected_valid": true
+    },
+    {
+      "op": "aa_zk_proof_verify",
+      "label": "minimal",
+      "owner_sk": 1,
+      "calldata_hex": "63616c6c3a31",
+      "max_fee": 10000,
+      "expected_R": 559648721,
+      "expected_s": 1085272107,
+      "expected_valid": true
+    },
+    {
+      "op": "aa_paymaster_check",
+      "label": "allow",
+      "max_fee": 50000,
+      "sender": "0x000000004775b9fd",
+      "policy": {
+        "max_fee": 100000,
+        "whitelist": [
+          "0x000000004775b9fd"
+        ]
+      },
+      "expected": true
+    },
+    {
+      "op": "aa_paymaster_check",
+      "label": "deny_fee",
+      "max_fee": 50000,
+      "sender": "0x000000004775b9fd",
+      "policy": {
+        "max_fee": 10000,
+        "whitelist": []
+      },
+      "expected": false
+    },
+    {
+      "op": "aa_paymaster_check",
+      "label": "deny_wl",
+      "max_fee": 50000,
+      "sender": "0x000000004775b9fd",
+      "policy": {
+        "max_fee": 100000,
+        "whitelist": [
+          "0xnotme"
+        ]
+      },
+      "expected": false
+    }
+  ]
+}

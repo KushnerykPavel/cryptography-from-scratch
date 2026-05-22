@@ -1,4 +1,101 @@
 {
   "title": "Beaver Triples & Multiplication Triples",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In additive secret sharing over a field F_p with n parties, which statement is true?",
+      "options": [
+        "Each party holds x_i such that sum_i x_i ≡ x (mod p).",
+        "Each party holds x_i such that product_i x_i ≡ x (mod p).",
+        "Each party holds x_i such that x_i ≡ x (mod p).",
+        "Each party holds x_i such that sum_i x_i = x over the integers (no mod)."
+      ],
+      "correct": 0,
+      "explanation": "Additive sharing represents x as a sum of shares modulo p; individual shares alone reveal nothing about x."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is multiplication harder than addition in additive-sharing MPC?",
+      "options": [
+        "x·y expands into cross-terms across parties that no one can compute locally.",
+        "Multiplication is impossible in finite fields.",
+        "Addition leaks the secret but multiplication does not.",
+        "You need division, not multiplication, for arithmetic circuits."
+      ],
+      "correct": 0,
+      "explanation": "With additive shares, addition is local, but multiplication creates cross-party terms that require interaction or preprocessing."
+    },
+    {
+      "stage": "post",
+      "question": "A Beaver triple (a, b, c) satisfies which relation (mod p)?",
+      "options": [
+        "c = a · b",
+        "c = a + b",
+        "c = a − b",
+        "c = a / b"
+      ],
+      "correct": 0,
+      "explanation": "A Beaver triple is correlated randomness where c equals the product of a and b in the field."
+    },
+    {
+      "stage": "post",
+      "question": "In the Beaver multiplication protocol for shared x and y, which values are typically opened (reconstructed publicly)?",
+      "options": [
+        "d = x − a and e = y − b",
+        "a and b",
+        "x and y",
+        "c and z"
+      ],
+      "correct": 0,
+      "explanation": "Parties open the masked differences d and e; a and b remain secret, so d and e do not reveal x or y."
+    },
+    {
+      "stage": "post",
+      "question": "Which expression equals z = x·y using a triple and opened d=x−a, e=y−b (mod p)?",
+      "options": [
+        "z = c + d·b + e·a + d·e",
+        "z = c + d + e",
+        "z = c + d·e",
+        "z = c + x·b + y·a"
+      ],
+      "correct": 0,
+      "explanation": "Expanding (a+d)(b+e) gives ab + d b + e a + d e, and ab is c."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it safe (in the semi-honest model) to open d=x−a and e=y−b?",
+      "options": [
+        "Because a and b are random and unknown, so d and e are one-time masked values.",
+        "Because d and e are always zero in a correct protocol.",
+        "Because opening any value in MPC never leaks information.",
+        "Because c hides both x and y even if a and b are revealed."
+      ],
+      "correct": 0,
+      "explanation": "If a and b are uniform and independent, then d and e are information-theoretically masked versions of x and y."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what is a real risk if the same Beaver triple is reused for multiple multiplications?",
+      "options": [
+        "If any masked value later becomes linkable to a known input, the fixed mask can be solved for and other masked opens can be unmasked.",
+        "Nothing; reuse is always safe because d and e are random.",
+        "Only performance degrades; privacy is unchanged.",
+        "It only breaks correctness, not privacy."
+      ],
+      "correct": 0,
+      "explanation": "Reusing the same a or b creates a repeated mask; once the mask is recovered or correlated across runs, past/future openings can leak inputs."
+    },
+    {
+      "stage": "post",
+      "question": "If an arithmetic circuit has k multiplication gates, how many Beaver triples does it consume (ignoring malicious-security extras)?",
+      "options": [
+        "k",
+        "1",
+        "2k",
+        "0 (triples are only for addition)"
+      ],
+      "correct": 0,
+      "explanation": "Each multiplication gate consumes one triple in the basic protocol; additions are local and consume none."
+    }
+  ]
 }

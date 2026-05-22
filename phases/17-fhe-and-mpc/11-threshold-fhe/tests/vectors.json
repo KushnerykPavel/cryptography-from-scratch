@@ -1,1 +1,183 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors for the toy Paillier + Shamir threshold-decryption demo in this lesson (p=101, q=113). Values are generated from the code in code/main.py and fixed nonces/coefficients so tests are stable.",
+  "vectors": [
+    {
+      "op": "lcm",
+      "a": 12,
+      "b": 18,
+      "expected": 36
+    },
+    {
+      "op": "modinv",
+      "a": 3,
+      "m": 11,
+      "expected": 4
+    },
+    {
+      "op": "paillier_keygen_from_primes",
+      "p": 101,
+      "q": 113,
+      "expected": {
+        "n": 11413,
+        "g": 11414,
+        "n_sq": 130256569,
+        "lam": 2800,
+        "mu": 2947
+      }
+    },
+    {
+      "op": "paillier_encrypt",
+      "p": 101,
+      "q": 113,
+      "m": 1234,
+      "r": 2,
+      "expected": 70864439
+    },
+    {
+      "op": "paillier_hom_add_decrypt",
+      "p": 101,
+      "q": 113,
+      "m1": 20,
+      "r1": 3,
+      "m2": 7,
+      "r2": 5,
+      "expected": 27
+    },
+    {
+      "op": "paillier_hom_scalar_mul_decrypt",
+      "p": 101,
+      "q": 113,
+      "m": 20,
+      "r": 3,
+      "k": 10,
+      "expected": 200
+    },
+    {
+      "op": "shamir_split",
+      "prime": 170141183460469231731687303715884105727,
+      "secret": 4242,
+      "n_shares": 5,
+      "threshold": 3,
+      "coefficients": [
+        1,
+        2
+      ],
+      "expected": [
+        {
+          "x": 1,
+          "y": 4245
+        },
+        {
+          "x": 2,
+          "y": 4252
+        },
+        {
+          "x": 3,
+          "y": 4263
+        },
+        {
+          "x": 4,
+          "y": 4278
+        },
+        {
+          "x": 5,
+          "y": 4297
+        }
+      ]
+    },
+    {
+      "op": "shamir_reconstruct_at_zero",
+      "prime": 170141183460469231731687303715884105727,
+      "shares": [
+        {
+          "x": 1,
+          "y": 4245
+        },
+        {
+          "x": 2,
+          "y": 4252
+        },
+        {
+          "x": 3,
+          "y": 4263
+        }
+      ],
+      "expected": 4242
+    },
+    {
+      "op": "threshold_split_paillier_private_key",
+      "p": 101,
+      "q": 113,
+      "prime": 170141183460469231731687303715884105727,
+      "n_shares": 5,
+      "threshold": 3,
+      "lam_coefficients": [
+        10,
+        20
+      ],
+      "mu_coefficients": [
+        30,
+        40
+      ],
+      "expected": [
+        {
+          "x": 1,
+          "lam_y": 2830,
+          "mu_y": 3017
+        },
+        {
+          "x": 2,
+          "lam_y": 2900,
+          "mu_y": 3167
+        },
+        {
+          "x": 3,
+          "lam_y": 3010,
+          "mu_y": 3397
+        },
+        {
+          "x": 4,
+          "lam_y": 3160,
+          "mu_y": 3707
+        },
+        {
+          "x": 5,
+          "lam_y": 3350,
+          "mu_y": 4097
+        }
+      ]
+    },
+    {
+      "op": "vote_tally_cipher_and_threshold_decrypt",
+      "p": 101,
+      "q": 113,
+      "prime": 170141183460469231731687303715884105727,
+      "n_shares": 5,
+      "threshold": 3,
+      "lam_coefficients": [
+        10,
+        20
+      ],
+      "mu_coefficients": [
+        30,
+        40
+      ],
+      "votes": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "rs": [
+        7,
+        11,
+        13,
+        17
+      ],
+      "expected": {
+        "c_total": 60213038,
+        "total": 3
+      }
+    }
+  ]
+}

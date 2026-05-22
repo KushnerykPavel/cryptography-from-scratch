@@ -1,4 +1,101 @@
 {
   "title": "Bitcoin Crypto Stack \u2014 secp256k1, SHA-256, Schnorr",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In Bitcoin code, what does HASH256 (sometimes written SHA256d) mean?",
+      "options": [
+        "SHA256(SHA256(m))",
+        "SHA256(m || m)",
+        "SHA256(m) truncated to 256 bits",
+        "SHA256(SHA1(m))"
+      ],
+      "correct": 0,
+      "explanation": "HASH256 is the double-SHA256 construction: hash the input with SHA-256 twice."
+    },
+    {
+      "stage": "pre",
+      "question": "What is a BIP340 x-only public key?",
+      "options": [
+        "A 32-byte x-coordinate with the convention that the corresponding y is even",
+        "A 33-byte compressed SEC1 public key (02/03 || x)",
+        "A 64-byte (x || y) point encoding without any prefix",
+        "A 32-byte secret scalar reduced modulo p"
+      ],
+      "correct": 0,
+      "explanation": "BIP340 public keys are 32 bytes (x-only) and rely on an even-y convention to remove ambiguity."
+    },
+    {
+      "stage": "post",
+      "question": "Which definition matches BIP340 tagged_hash(tag, m)?",
+      "options": [
+        "SHA256(SHA256(tag) || SHA256(tag) || m)",
+        "SHA256(tag || m)",
+        "SHA256(SHA256(tag || m))",
+        "SHA256(m || SHA256(tag))"
+      ],
+      "correct": 0,
+      "explanation": "Tagged hashing domain-separates contexts by hashing the tag twice and prefixing the message with it."
+    },
+    {
+      "stage": "post",
+      "question": "Why does BIP340 require the points P (pubkey) and R (nonce point) to have even y-coordinates?",
+      "options": [
+        "To make encodings unique and avoid malleability from choosing y vs. \u2212y",
+        "To ensure the curve equation has exactly one y solution for every x",
+        "To make scalar multiplication faster by skipping inversions",
+        "To prevent SHA-256 length extension attacks"
+      ],
+      "correct": 0,
+      "explanation": "For a given x there are two possible y values (y and \u2212y). Fixing an even-y convention makes the mapping unique."
+    },
+    {
+      "stage": "post",
+      "question": "In BIP340 verification, what inputs are hashed to form the challenge e?",
+      "options": [
+        "r || pubkey_x || msg (with the BIP0340/challenge tag)",
+        "s || pubkey_x || msg (with the BIP0340/challenge tag)",
+        "pubkey_x || msg (with the BIP0340/nonce tag)",
+        "msg only (with no tag)"
+      ],
+      "correct": 0,
+      "explanation": "The challenge binds the signature's r, the public key, and the message under the challenge tag."
+    },
+    {
+      "stage": "post",
+      "question": "Attack scenario: what happens if the same nonce k is reused to sign two different messages with the same secret key?",
+      "options": [
+        "The secret key can be recovered from the two signatures",
+        "Only the public key leaks, but the secret key remains safe",
+        "Verification becomes impossible because r is random",
+        "Nothing breaks because Schnorr is deterministic"
+      ],
+      "correct": 0,
+      "explanation": "Nonce reuse makes the signatures algebraically related; an attacker can solve for the secret key."
+    },
+    {
+      "stage": "post",
+      "question": "Which checks should a BIP340 verifier do before expensive curve operations?",
+      "options": [
+        "Reject if r \u2265 p, s \u2265 n, or the x-only pubkey cannot be lifted to a curve point",
+        "Reject if r \u2265 n, s \u2265 p, or the pubkey has odd x",
+        "Reject if the signature length is 65 bytes instead of 64 bytes",
+        "Reject if the message length is not exactly 32 bytes"
+      ],
+      "correct": 0,
+      "explanation": "BIP340 uses field size p for r and group order n for s, and requires pubkey lifting to succeed."
+    },
+    {
+      "stage": "post",
+      "question": "In Bitcoin transaction signing, which statement is most accurate?",
+      "options": [
+        "Wallets sign a context-specific sighash derived from the transaction, not the txid",
+        "Wallets sign the txid directly because it uniquely identifies the transaction",
+        "Wallets sign the Merkle root of the block that will contain the transaction",
+        "Wallets sign the recipient address string with SHA-256"
+      ],
+      "correct": 0,
+      "explanation": "The txid is an identifier; the signature commits to a sighash derived from transaction data under protocol rules."
+    }
+  ]
 }

@@ -1,4 +1,101 @@
 {
-  "title": "Ethereum Crypto Stack \u2014 secp256k1, Keccak, BLS",
-  "questions": []
+  "title": "Ethereum Crypto Stack — Keccak-256, secp256k1, EIP-55, EIP-191",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "Which statement best matches your current comfort level with Ethereum cryptography?",
+      "options": [
+        "I can explain Keccak vs SHA3 and how Ethereum addresses are derived.",
+        "I can use web3 libraries, but I’m fuzzy on the exact byte-level steps.",
+        "I know Ethereum uses signatures and hashes, but not the details.",
+        "I’m new to both blockchains and cryptography."
+      ],
+      "correct": 1,
+      "explanation": "This is a pacing question. Any answer is fine; it helps choose how much detail to emphasize."
+    },
+    {
+      "stage": "pre",
+      "question": "In Python, which built-in hash most closely matches Ethereum’s keccak256?",
+      "options": [
+        "hashlib.sha256",
+        "hashlib.sha3_256",
+        "There is no built-in Keccak-256 in hashlib",
+        "hashlib.md5"
+      ],
+      "correct": 2,
+      "explanation": "Python’s stdlib includes SHA-3 (FIPS 202), but not Ethereum’s Keccak-256 variant."
+    },
+    {
+      "stage": "post",
+      "question": "Why do Keccak-256 and SHA3-256 produce different digests for the same input?",
+      "options": [
+        "They use different internal state sizes (1600 vs 1024 bits).",
+        "They use different padding/domain separation, even though both use Keccak-f[1600].",
+        "Keccak-256 is keyed and SHA3-256 is unkeyed.",
+        "SHA3-256 truncates the output but Keccak-256 does not."
+      ],
+      "correct": 1,
+      "explanation": "Ethereum uses Keccak-256 with a different suffix/padding than the standardized SHA3-256."
+    },
+    {
+      "stage": "post",
+      "question": "How is an Ethereum EOA address derived from an uncompressed public key?",
+      "options": [
+        "address = sha256(0x04 || X || Y)[12:]",
+        "address = keccak256(0x04 || X || Y)[12:]",
+        "address = keccak256(X || Y)[12:]",
+        "address = ripemd160(keccak256(X || Y))"
+      ],
+      "correct": 2,
+      "explanation": "Ethereum drops the 0x04 prefix and hashes the 64 bytes X||Y, then keeps the last 20 bytes."
+    },
+    {
+      "stage": "post",
+      "question": "EIP-55 checksums are encoded by:",
+      "options": [
+        "Appending 4 checksum bytes to the address.",
+        "Base58Check encoding the address bytes.",
+        "Uppercasing hex letters based on the Keccak-256 hash of the lowercase hex address string.",
+        "Signing the address with ECDSA and embedding the signature."
+      ],
+      "correct": 2,
+      "explanation": "EIP-55 uses capitalization as a checksum derived from keccak256(lowercase_hex_address)."
+    },
+    {
+      "stage": "post",
+      "question": "What does EIP-191 (personal_sign) hash before signing?",
+      "options": [
+        "keccak256(message)",
+        "keccak256(\"\\x19Ethereum Signed Message:\\n\" + len(message) + message)",
+        "sha3_256(\"\\x19Ethereum Signed Message:\\n\" + len(message) + message)",
+        "sha256(message)"
+      ],
+      "correct": 1,
+      "explanation": "personal_sign prefixes the message with a length-bearing string and hashes with Keccak-256."
+    },
+    {
+      "stage": "post",
+      "question": "Why do many Ethereum implementations enforce a 'low-s' rule for ECDSA signatures? (Attack-themed)",
+      "options": [
+        "It prevents signature malleability where (r, s) and (r, n − s) both verify.",
+        "It makes signatures smaller in DER encoding.",
+        "It allows recovering the public key without extra data.",
+        "It converts ECDSA into a deterministic signature scheme."
+      ],
+      "correct": 0,
+      "explanation": "Because both s and (n−s) verify, enforcing low-s makes the signature canonical and removes a malleability vector."
+    },
+    {
+      "stage": "post",
+      "question": "Which mismatch is most likely to cause a valid-looking signature to fail verification in an Ethereum integration?",
+      "options": [
+        "Using UTF-16 instead of UTF-8 for the signed message bytes.",
+        "Verifying on the wrong message hash (e.g., raw bytes vs EIP-191 prefixed hash).",
+        "Using big-endian integer encoding for r and s.",
+        "Using a 32-byte hash instead of a 64-byte hash."
+      ],
+      "correct": 1,
+      "explanation": "Most real-world failures come from signing/verification hashing different byte sequences (prefixing and encoding)."
+    }
+  ]
 }

@@ -1,1 +1,27 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, deterministic vectors for toy CPA/DPA helpers (no-noise trace model).",
+  "vectors": [
+    {
+      "op": "hamming_weight",
+      "x": 0,
+      "expected": 0
+    },
+    {
+      "op": "hamming_weight",
+      "x": 255,
+      "expected": 8
+    },
+    {
+      "op": "leakage_model",
+      "pt": 0,
+      "k": 58,
+      "expected": 1
+    },
+    {
+      "op": "pearson_corr",
+      "xs": [1.0, 2.0, 3.0],
+      "ys": [1.0, 2.0, 3.0],
+      "expected": 1.0
+    }
+  ]
+}

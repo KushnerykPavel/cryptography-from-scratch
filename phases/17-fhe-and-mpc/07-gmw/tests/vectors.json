@@ -1,1 +1,103 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Deterministic vectors generated from the implementations in code/main.py using HashRNG seeds.",
+  "vectors": [
+    {
+      "op": "xor_share_bit_seeded",
+      "bit": 0,
+      "seed": 1,
+      "expected": [1, 1]
+    },
+    {
+      "op": "xor_share_bit_seeded",
+      "bit": 1,
+      "seed": 1,
+      "expected": [0, 1]
+    },
+    {
+      "op": "xor_share_bit_seeded",
+      "bit": 1,
+      "seed": 2026,
+      "expected": [0, 1]
+    },
+    {
+      "op": "ot1of2_simplest_bit_seeded",
+      "m0_bit": 0,
+      "m1_bit": 1,
+      "choice": 0,
+      "seed": 5,
+      "expected": 0
+    },
+    {
+      "op": "ot1of2_simplest_bit_seeded",
+      "m0_bit": 0,
+      "m1_bit": 1,
+      "choice": 1,
+      "seed": 5,
+      "expected": 1
+    },
+    {
+      "op": "ot1of2_simplest_bit_seeded",
+      "m0_bit": 1,
+      "m1_bit": 0,
+      "choice": 1,
+      "seed": 123,
+      "expected": 0
+    },
+    {
+      "op": "gmw_and_plain_seeded",
+      "x": 0,
+      "y": 0,
+      "seed": 7,
+      "expected": { "z0": 1, "z1": 1, "z": 0 }
+    },
+    {
+      "op": "gmw_and_plain_seeded",
+      "x": 0,
+      "y": 1,
+      "seed": 7,
+      "expected": { "z0": 1, "z1": 1, "z": 0 }
+    },
+    {
+      "op": "gmw_and_plain_seeded",
+      "x": 1,
+      "y": 1,
+      "seed": 7,
+      "expected": { "z0": 0, "z1": 1, "z": 1 }
+    },
+    {
+      "op": "gmw_and_plain_seeded",
+      "x": 1,
+      "y": 0,
+      "seed": 99,
+      "expected": { "z0": 1, "z1": 1, "z": 0 }
+    },
+    {
+      "op": "gmw_eq2_plain_seeded",
+      "a": 2,
+      "b": 2,
+      "seed": 42,
+      "expected": 1
+    },
+    {
+      "op": "gmw_eq2_plain_seeded",
+      "a": 3,
+      "b": 1,
+      "seed": 42,
+      "expected": 0
+    },
+    {
+      "op": "gmw_eq2_plain_seeded",
+      "a": 0,
+      "b": 0,
+      "seed": 42,
+      "expected": 1
+    },
+    {
+      "op": "gmw_eq2_plain_seeded",
+      "a": 1,
+      "b": 2,
+      "seed": 12345,
+      "expected": 0
+    }
+  ]
+}

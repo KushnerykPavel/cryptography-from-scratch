@@ -1,4 +1,101 @@
 {
-  "title": "CryptoCTF Walkthroughs",
-  "questions": []
+  "title": "Crypto CTF Walkthroughs — A Practical Triage Loop (Toy)",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is a good first step when you see an unknown-looking ciphertext string?",
+      "options": [
+        "Validate the encoding (hex/base64) and decode layers",
+        "Immediately try lattice attacks",
+        "Assume it is AES-GCM and search for the nonce",
+        "Guess the key by brute force without decoding"
+      ],
+      "correct": 0,
+      "explanation": "Correct decoding prevents wasted effort and corrupted assumptions."
+    },
+    {
+      "stage": "pre",
+      "question": "Why are GCD checks useful in RSA CTF tasks with multiple moduli?",
+      "options": [
+        "They can instantly reveal shared prime factors from bad key generation",
+        "They compute discrete logs efficiently",
+        "They always recover OAEP padding",
+        "They detect base64 strings"
+      ],
+      "correct": 0,
+      "explanation": "If two moduli share a prime, gcd exposes it immediately."
+    },
+    {
+      "stage": "post",
+      "question": "What does a single-byte XOR breaker typically rely on?",
+      "options": [
+        "Trying all 256 keys and scoring plaintext likelihood",
+        "Factoring an RSA modulus",
+        "Solving a lattice basis reduction",
+        "Finding a collision in SHA-256"
+      ],
+      "correct": 0,
+      "explanation": "Single-byte XOR is small enough to brute force; scoring selects plausible plaintext."
+    },
+    {
+      "stage": "post",
+      "question": "If gcd(n1, n2) returns a non-trivial factor p, what does that imply?",
+      "options": [
+        "n1 and n2 share p, so at least one modulus is factorable immediately",
+        "RSA is broken for all keys",
+        "The public exponent is invalid",
+        "The ciphertext is not base64"
+      ],
+      "correct": 0,
+      "explanation": "A shared prime indicates catastrophic key generation failure."
+    },
+    {
+      "stage": "post",
+      "question": "After factoring n = p*q, what is the next standard step to decrypt textbook RSA?",
+      "options": [
+        "Compute d = e^{-1} mod (p−1)(q−1) and then m = c^d mod n",
+        "Hash the ciphertext to get plaintext",
+        "XOR the ciphertext with p",
+        "Use CBC decryption with IV = p"
+      ],
+      "correct": 0,
+      "explanation": "With p and q you can compute φ(n) and invert e to get d."
+    },
+    {
+      "stage": "post",
+      "question": "What is the main purpose of a triage loop in crypto challenges?",
+      "options": [
+        "Run cheap, high-yield checks first before deep attacks",
+        "Avoid learning any math",
+        "Guarantee a solution in one step",
+        "Only solve encoding tasks"
+      ],
+      "correct": 0,
+      "explanation": "Triage prioritizes quick wins and prevents time sinks."
+    },
+    {
+      "stage": "post",
+      "question": "Which mistake commonly causes “nonsense” plaintext in early attempts?",
+      "options": [
+        "Decoding with the wrong format (treating base64 as hex or vice versa)",
+        "Using too many tests",
+        "Using Python instead of Rust",
+        "Using a longer key"
+      ],
+      "correct": 0,
+      "explanation": "Incorrect decoding corrupts data and leads to false conclusions."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it dangerous to skip basic RSA sanity checks and jump to advanced attacks?",
+      "options": [
+        "You can miss catastrophic configuration failures that solve the problem immediately",
+        "Advanced attacks never work",
+        "RSA moduli cannot be checked with gcd",
+        "Advanced attacks require internet access"
+      ],
+      "correct": 0,
+      "explanation": "Many CTF tasks hinge on simple mistakes; basic checks can solve them quickly."
+    }
+  ]
 }

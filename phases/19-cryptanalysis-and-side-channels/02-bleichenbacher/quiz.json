@@ -1,4 +1,101 @@
 {
-  "title": "Bleichenbacher's Million Message Attack",
-  "questions": []
+  "title": "Bleichenbacher’s Attack — RSA PKCS#1 v1.5",
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "What is the PKCS#1 v1.5 (block type 2) encoded message format (high level)?",
+      "options": [
+        "0x00 || 0x02 || PS (non-zero) || 0x00 || M",
+        "0x00 || 0x01 || 0xFF... || 0x00 || M",
+        "H(M) || M (hash-prefix padding)",
+        "M || random (append randomness to the end)"
+      ],
+      "correct": 0,
+      "explanation": "RSAES-PKCS1-v1_5 uses 0x00 0x02, then non-zero padding bytes, then 0x00, then the message."
+    },
+    {
+      "stage": "pre",
+      "question": "What property of RSA enables multiplying a ciphertext by s^e mod n to transform the plaintext?",
+      "options": [
+        "RSA is multiplicatively homomorphic modulo n: (m^e)(s^e) = (m*s)^e",
+        "RSA decryption is linear over bytes",
+        "RSA uses XOR so it commutes with masking",
+        "RSA always preserves message length exactly"
+      ],
+      "correct": 0,
+      "explanation": "Because encryption is exponentiation, multiplying by s^e corresponds to multiplying plaintext by s mod n."
+    },
+    {
+      "stage": "post",
+      "question": "In Bleichenbacher’s setting, what does the attacker’s oracle typically reveal?",
+      "options": [
+        "Whether the decrypted plaintext is PKCS#1 v1.5 conformant (accept/reject)",
+        "The full decrypted plaintext bytes",
+        "The private key exponent d",
+        "A random nonce used during decryption"
+      ],
+      "correct": 0,
+      "explanation": "The attack needs only a conformant/non-conformant signal, not the plaintext."
+    },
+    {
+      "stage": "post",
+      "question": "What is the role of B in the interval narrowing view of the attack?",
+      "options": [
+        "It defines the numeric range corresponding to the required header bits (e.g., 2B..3B-1)",
+        "It is the RSA private exponent",
+        "It is the block size of the hash function",
+        "It is the number of oracle queries required"
+      ],
+      "correct": 0,
+      "explanation": "Conformance implies the plaintext integer lies in a specific interval determined by the header bits."
+    },
+    {
+      "stage": "post",
+      "question": "Why does “uniform error handling” matter for preventing Bleichenbacher-style attacks?",
+      "options": [
+        "It removes the observable oracle signal tied to padding/format validity",
+        "It makes RSA mathematically non-homomorphic",
+        "It increases key size automatically",
+        "It prevents attackers from sending ciphertexts"
+      ],
+      "correct": 0,
+      "explanation": "If the attacker can’t distinguish accept/reject (or timing), they can’t adaptively narrow intervals."
+    },
+    {
+      "stage": "post",
+      "question": "Which statement best describes why OAEP is preferred over PKCS#1 v1.5 encryption padding?",
+      "options": [
+        "OAEP is designed to provide chosen-ciphertext security under standard assumptions when correctly implemented",
+        "OAEP makes RSA decryption faster",
+        "OAEP removes the need for randomness in encryption",
+        "OAEP is deterministic, which prevents malleability"
+      ],
+      "correct": 0,
+      "explanation": "OAEP was created to avoid the brittle, oracle-exploitable structure of v1.5 padding."
+    },
+    {
+      "stage": "post",
+      "question": "In the interval view, what does finding a new conformant multiplier s achieve?",
+      "options": [
+        "It adds a new constraint that shrinks the set of possible plaintexts",
+        "It reveals the prime factors of n immediately",
+        "It proves the ciphertext was not tampered with",
+        "It converts RSA into a symmetric cipher"
+      ],
+      "correct": 0,
+      "explanation": "Each conformant s implies 2B <= (m*s mod n) < 3B, narrowing m’s possible values."
+    },
+    {
+      "stage": "post",
+      "question": "Why can this be called an “adaptive chosen-ciphertext” attack?",
+      "options": [
+        "The attacker chooses ciphertexts based on prior oracle answers and repeats",
+        "The attacker must know the plaintext before starting",
+        "The attacker only observes public keys, not decryption behavior",
+        "The attacker can only choose plaintexts, not ciphertexts"
+      ],
+      "correct": 0,
+      "explanation": "“Adaptive” means each query depends on previous results from the decryption-related oracle."
+    }
+  ]
 }

@@ -1,1 +1,13 @@
-{"source": "TBD", "vectors": []}
+{
+  "source": "Project-internal, deterministic vectors for toy ECDSA-like equations and nonce-prefix leakage demo.",
+  "vectors": [
+    {
+      "op": "toy_ecdsa_sign",
+      "q": 65537,
+      "h": 12345,
+      "x": 4242,
+      "k": 40000,
+      "expected": [40000, 30154]
+    }
+  ]
+}

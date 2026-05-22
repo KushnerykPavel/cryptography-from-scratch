@@ -1,4 +1,86 @@
 {
   "title": "Threshold FHE & Distributed Decryption",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In a t-of-n threshold decryption setting with t = 3, what is the minimum number of parties (shares) needed to decrypt?",
+      "options": ["2", "3", "4", "n"],
+      "correct": 1,
+      "explanation": "By definition, any 3 shares are sufficient when t=3, and fewer than 3 are not."
+    },
+    {
+      "stage": "pre",
+      "question": "Paillier encryption is best described as homomorphic for which plaintext operation?",
+      "options": ["Addition (mod n)", "Multiplication (mod n)", "Both addition and multiplication", "Neither"],
+      "correct": 0,
+      "explanation": "Paillier is additively homomorphic: multiplying ciphertexts corresponds to adding plaintexts modulo n."
+    },
+    {
+      "stage": "post",
+      "question": "Why must the x-coordinates in Shamir secret sharing be distinct when reconstructing the secret?",
+      "options": [
+        "So Lagrange interpolation denominators are invertible",
+        "So the shares can be sorted without ambiguity",
+        "So the secret is always smaller than the prime",
+        "So the polynomial degree becomes smaller"
+      ],
+      "correct": 0,
+      "explanation": "Reconstruction uses terms like 1/(x_m - x_j); if x values repeat, those denominators become 0 and interpolation breaks."
+    },
+    {
+      "stage": "post",
+      "question": "In Paillier encryption, why is it required that gcd(r, n) = 1 for the random value r?",
+      "options": [
+        "To ensure r is invertible modulo n (so encryption lands in the right multiplicative group)",
+        "To ensure g is a generator of Z*_n",
+        "To ensure the plaintext m is prime",
+        "To ensure n is prime"
+      ],
+      "correct": 0,
+      "explanation": "Paillier’s security/correctness assumptions use r ∈ Z*_n; requiring gcd(r,n)=1 ensures r is invertible modulo n."
+    },
+    {
+      "stage": "post",
+      "question": "If c1 encrypts m1 and c2 encrypts m2 under the same Paillier public key, what does decrypt(c1 * c2 mod n^2) return?",
+      "options": ["m1 + m2 (mod n)", "m1 * m2 (mod n)", "m1 XOR m2", "A random value unrelated to m1 and m2"],
+      "correct": 0,
+      "explanation": "Paillier’s additive homomorphism means ciphertext multiplication corresponds to plaintext addition modulo n."
+    },
+    {
+      "stage": "post",
+      "question": "Attack question: what can go wrong if the same Paillier randomness r is reused to encrypt two different messages m1 and m2?",
+      "options": [
+        "An attacker can eliminate r and learn a relationship between m1 and m2 (e.g., their difference mod n)",
+        "Nothing; r reuse is safe as long as n is large",
+        "It only affects performance, not security",
+        "It makes decryption impossible for the honest recipient"
+      ],
+      "correct": 0,
+      "explanation": "With reused r, ratios/products of ciphertexts can cancel the r^n term and expose g^(m1-m2), leaking relationships between plaintexts."
+    },
+    {
+      "stage": "post",
+      "question": "Why is it a security red flag if a single combiner machine reconstructs the full secret key during 'threshold decryption'?",
+      "options": [
+        "Because the combiner can now decrypt arbitrary ciphertexts alone and becomes a single point of compromise",
+        "Because it makes homomorphic evaluation impossible",
+        "Because it forces the threshold t to equal n",
+        "Because it makes ciphertexts larger"
+      ],
+      "correct": 0,
+      "explanation": "If any one place can hold the whole secret key, then compromising that place defeats the threshold protection."
+    },
+    {
+      "stage": "post",
+      "question": "What do production threshold decryption protocols usually add beyond 'collect shares and combine' to handle malicious parties?",
+      "options": [
+        "Verifiability (proofs or consistency checks) for partial decryptions/shares",
+        "A requirement that ciphertexts be prime numbers",
+        "A requirement that all parties always be online",
+        "A requirement that r be set to 1"
+      ],
+      "correct": 0,
+      "explanation": "Without verifiability, a malicious party can send incorrect partial decryptions and stall or corrupt results; proofs/checks make the protocol robust."
+    }
+  ]
 }

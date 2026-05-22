@@ -1,4 +1,101 @@
 {
   "title": "Build a PQ-Secure Messenger",
-  "questions": []
+  "questions": [
+    {
+      "stage": "pre",
+      "question": "In LWE (Learning With Errors), the public key is b = As + e. What does adding the error vector e achieve?",
+      "options": [
+        "It hides s: without knowing the error distribution, recovering s from (A, b) is believed to be hard",
+        "It provides integrity: e acts as a HMAC over s",
+        "It compresses the public key by reducing b modulo q",
+        "It makes encryption faster by reducing the dimension of A"
+      ],
+      "correct": 0,
+      "explanation": "LWE security relies on the computational hardness of distinguishing As+e from a uniformly random vector. The small error prevents direct inversion of A."
+    },
+    {
+      "stage": "pre",
+      "question": "Why is a hybrid KEM (classical DH + post-quantum KEM combined via HKDF) considered safer during the PQ migration period than a PQ-only KEM?",
+      "options": [
+        "If either the classical or PQ component is broken, the combined session key is still secure as long as the other holds",
+        "Hybrid KEMs are faster because two smaller key agreements replace one large one",
+        "HKDF neutralizes any weakness in the individual KEMs by adding extra entropy",
+        "Classical DH provides forward secrecy while PQ KEM provides authentication"
+      ],
+      "correct": 0,
+      "explanation": "A hybrid session key K = KDF(K_classical || K_PQ) inherits the security of whichever component is stronger. An attacker must break both to compromise K."
+    },
+    {
+      "stage": "post",
+      "question": "In our toy Fiat-Shamir lattice signature, the verifier checks A·z - c·t = w'. Why does this equal the signer's commitment w = A·y?",
+      "options": [
+        "Because z = y + c·s, so A·z - c·t = A·y + c·A·s - c·A·s = A·y",
+        "Because the challenge c cancels out when added mod q",
+        "Because A is an orthogonal matrix, so A·(y+cs) = A·y + A·s",
+        "Because t = A·y and the signer stores w inside t"
+      ],
+      "correct": 0,
+      "explanation": "The algebra: A·z = A·(y+cs) = A·y + c·A·s = w + c·t. Subtracting c·t recovers w = A·y, which the verifier then re-hashes to check the Fiat-Shamir challenge."
+    },
+    {
+      "stage": "post",
+      "question": "In the toy LWE decapsulation, we compute w = v - <s, u> mod q and decide bit = 0 if w is close to 0, else bit = 1. What makes this work despite the error terms?",
+      "options": [
+        "The error terms e, e', e'' are small (drawn from chi), so they shift w by much less than q/4, keeping the rounded value correct",
+        "The modulus q is chosen to be a power of 2 so rounding is exact",
+        "The matrix A is invertible, so error cancels during matrix multiplication",
+        "HKDF post-processes the noisy bits and corrects any errors before output"
+      ],
+      "correct": 0,
+      "explanation": "With chi = {-1, 0, +1} and small n, the accumulated error <e,r> - <e',s> - e'' is bounded well below q/4 = 64. Any value of w within q/4 of 0 decodes to 0; within q/4 of q/2 decodes to 1."
+    },
+    {
+      "stage": "post",
+      "question": "Our HMAC-AEAD uses two separate subkeys: enc_key = HKDF(nonce, key, 'pq-messenger-enc') and mac_key = HKDF(nonce, key, 'pq-messenger-mac'). Why not use the same key for both?",
+      "options": [
+        "Using the same key for encryption and authentication can allow an attacker to relate the keystream output to the tag, potentially forging or leaking information",
+        "HMAC requires a longer key than the keystream PRF, so they must be separated",
+        "The nonce is only 12 bytes and cannot seed two independent KDF calls with the same key",
+        "MAC verification is timing-sensitive and using a separate key avoids cache-timing leaks"
+      ],
+      "correct": 0,
+      "explanation": "Key separation is a foundational principle. The enc_key and mac_key are domain-separated by the info label so the key stream generator and authenticator see cryptographically independent keys."
+    },
+    {
+      "stage": "post",
+      "question": "After Alice sends her first message, both parties advance to a ratcheted key via ratchet_key(session_key). What forward-secrecy property does this provide?",
+      "options": [
+        "If an attacker later learns session_key, they cannot reverse the ratchet to decrypt future messages encrypted under the ratcheted key — but they can decrypt the first message",
+        "An attacker who learns the ratcheted key can also decrypt the first message because HKDF is reversible",
+        "Forward secrecy is not achieved; the ratchet only prevents replay attacks",
+        "The ratchet erases session_key from memory automatically, achieving perfect forward secrecy for both directions"
+      ],
+      "correct": 0,
+      "explanation": "The ratchet is a one-way HKDF step: k_next = HKDF(k_curr, 'ratchet'). Deriving k_next from k_curr is easy; going backwards is computationally hard. So compromising k_next does not help decrypt messages from k_curr. The converse (k_curr leaks k_next) is why proper double-ratchet also performs a DH step."
+    },
+    {
+      "stage": "post",
+      "question": "In Regev-style LWE encryption, what happens to correctness if we increase the error magnitude significantly (e.g., draw errors from {-32, ..., +32} instead of {-1, 0, +1})?",
+      "options": [
+        "Decryption errors increase because accumulated errors may exceed q/4, causing bits to flip",
+        "Security decreases because larger errors are easier to distinguish from noise",
+        "Correctness is unaffected as long as q is increased proportionally",
+        "The public key size increases but correctness remains perfect"
+      ],
+      "correct": 0,
+      "explanation": "Correctness requires the total noise in v - <s,u> to stay below q/4. With n=8 and errors up to 32, the worst-case accumulated noise can reach n*32 = 256, which equals q-1 and breaks decryption."
+    },
+    {
+      "stage": "post",
+      "question": "Which NIST PQ standardisation document specifies ML-KEM (the production version of Kyber)?",
+      "options": [
+        "FIPS 203 — Module-Lattice-Based Key-Encapsulation Mechanism Standard",
+        "FIPS 204 — Module-Lattice-Based Digital Signature Standard",
+        "FIPS 205 — Stateless Hash-Based Digital Signature Standard",
+        "SP 800-56C — Key-Derivation Methods in Key-Establishment Schemes"
+      ],
+      "correct": 0,
+      "explanation": "NIST FIPS 203 (2024) specifies ML-KEM (formerly Kyber). FIPS 204 specifies ML-DSA (formerly Dilithium). FIPS 205 specifies SLH-DSA (formerly SPHINCS+)."
+    }
+  ]
 }
